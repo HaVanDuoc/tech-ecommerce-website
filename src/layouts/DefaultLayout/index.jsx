@@ -1,10 +1,10 @@
 import React from "react";
-import { TopBar } from "~/components";
+import { Header } from "~/components";
 
 const DefaultLayout = ({ children }) => {
   return (
     <React.Fragment>
-      <TopBar />
+      <Header />
       {children}
     </React.Fragment>
   );

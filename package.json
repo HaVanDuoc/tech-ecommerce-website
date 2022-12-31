@@ -12,6 +12,16 @@
     "sass": "^1.57.1",
     "web-vitals": "^2.1.4"
   },
+  "devDependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.2",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "customize-cra": "^1.0.0",
+    "react-app-rewired": "^2.2.1",
+    "react-router-dom": "^6.6.1"
+  },
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
@@ -35,11 +45,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "babel-plugin-module-resolver": "^4.1.0",
-    "customize-cra": "^1.0.0",
-    "react-app-rewired": "^2.2.1",
-    "react-router-dom": "^6.6.1"
   }
 }
