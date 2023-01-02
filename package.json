@@ -6,8 +6,15 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "bootstrap": "^5.2.3",
+    "browserslist": "^4.21.4",
+    "jquery": "^3.6.3",
+    "owl.carousel": "^2.3.4",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.7.0",
     "react-dom": "^18.2.0",
+    "react-material-ui-carousel": "^3.4.2",
+    "react-owl-carousel": "^2.3.3",
     "react-scripts": "5.0.1",
     "sass": "^1.57.1",
     "web-vitals": "^2.1.4"
@@ -19,6 +26,7 @@
     "@mui/material": "^5.11.2",
     "babel-plugin-module-resolver": "^4.1.0",
     "customize-cra": "^1.0.0",
+    "prop-types": "^15.8.1",
     "react-app-rewired": "^2.2.1",
     "react-router-dom": "^6.6.1"
   },

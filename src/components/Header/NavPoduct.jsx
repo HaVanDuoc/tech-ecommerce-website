@@ -1,6 +1,6 @@
-import { Box, Container, Stack, styled, Typography } from "@mui/material";
 import React from "react";
 import { productList } from "./ArrayData";
+import { Box, Container, Stack, styled } from "@mui/material";
 
 const Nav = styled(Container)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
