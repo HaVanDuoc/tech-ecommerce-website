@@ -1,23 +1,40 @@
-#banner-main {
+#carouselProductFocus {
+    
     .owl-carousel {
+        position: relative;
+
         &:hover {
-            .owl-nav button {
-                opacity: 1;
+            .owl-nav {
+                button{
+                    opacity: 1;
+                }
+            }
+        }
+
+        .owl-stage-outer {
+            z-index: 2;
+
+            .owl-stage {
+                .owl-item {
+                    cursor: pointer;
+                }
             }
         }
 
         .owl-nav {
+            z-index: 1;
+            width: calc(100% + 10vw);
+            left: -5vw;
+
             button {
                 position: relative;
-                margin: 3vw;
                 border: none;
-                border-radius: 50%;
                 cursor: pointer;
                 z-index: 1;
-                background-color: var(--bs-gray-700);
                 overflow: hidden;
                 opacity: 0;
                 transition: opacity .5s ease;
+                color: black !important;
 
                 span {
                     display: flex;
@@ -27,9 +44,9 @@
                     height: 50px;
                     font-size: 50px;
                     transform: translateY(-12%);
-                    color: aliceblue;
                 }
             }
         }
     }
+
 }

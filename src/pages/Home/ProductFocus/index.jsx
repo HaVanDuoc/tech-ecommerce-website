@@ -1,11 +1,5 @@
-import {
-  Box,
-  Container,
-  styled,
-  Tab,
-  Tabs,
-  Typography,
-} from "@mui/material";
+import "./ProductFocus.scss";
+import { Box, Container, styled, Tab, Tabs, Typography } from "@mui/material";
 import React from "react";
 import PropTypes from "prop-types";
 import CarouselProduct from "./CarouselProduct";
@@ -76,10 +70,10 @@ const ProductFocus = () => {
           <CarouselProduct />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <CarouselProduct />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          <CarouselProduct />
         </TabPanel>
       </Box>
     </Option>
