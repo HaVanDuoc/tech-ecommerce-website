@@ -1,41 +1,49 @@
 import React from "react";
-import { productList } from "./ArrayData";
-import { Box, Container, Stack, styled } from "@mui/material";
+import { NavProductData } from "./Data";
+import {
+  BottomNavigation,
+  BottomNavigationAction,
+  Container,
+  styled,
+} from "@mui/material";
+import { selectedIndexNavbar } from "~/redux/Navbar/NavbarReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { GetIndex } from "~/redux/Navbar/NavbarAction";
 
 const Nav = styled(Container)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.main,
-}));
-
-const Product = styled(Box)(({ theme }) => ({
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100%",
-  width: "100%",
-  cursor: "pointer",
+  backgroundColor: theme.palette.secondary,
 }));
 
 const NavProduct = () => {
+  const value = useSelector(selectedIndexNavbar);
+  const dispatch = useDispatch();
+
   return (
-    <Nav maxWidth="xl" disableGutters>
-      <Container disableGutters>
-        <Stack
-          alignItems="center"
-          height="auto"
-          flexDirection="row"
-          sx={{
-            display: { xs: "none", md: "flex" },
-          }}
-        >
-          {productList
-            .filter((productList) => productList.navbarProduct)
-            .map((product, index) => (
-              <Product flexGrow={1} key={index} sx={{ height: "4rem" }}>
-                {product.icon}
-                {product.name}
-              </Product>
-            ))}
-        </Stack>
+    <Nav
+      maxWidth="xl"
+      disableGutters
+      sx={{
+        display: { xs: "none", md: "flex" },
+      }}
+    >
+      <Container maxWidth="lg">
+        <BottomNavigation showLabels value={value}>
+          {NavProductData.filter((data) => data.navbarProduct).map(
+            (data, index) => {
+              return (
+                <BottomNavigationAction
+                  key={index}
+                  href={data.url}
+                  label={data.name}
+                  icon={data.icon}
+                  onClick={() => {
+                    dispatch(GetIndex(index));
+                  }}
+                />
+              );
+            }
+          )}
+        </BottomNavigation>
       </Container>
     </Nav>
   );

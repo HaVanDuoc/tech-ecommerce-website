@@ -1,7 +1,7 @@
 import React from "react";
 
-const PC = () => {
-  return <div>PC</div>;
+const Watch = () => {
+  return <div>Watch</div>;
 };
 
-export default PC;
+export default Watch;

@@ -18,7 +18,7 @@ const Brand = () => {
         textDecoration: "none",
       }}
     >
-      Logo
+      Tech
     </Typography>
   );
 };

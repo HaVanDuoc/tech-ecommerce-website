@@ -2,10 +2,11 @@ import React from "react";
 import "./Header.scss";
 import {
   AppBar,
+  BottomNavigation,
+  BottomNavigationAction,
   Container,
   IconButton,
   Menu,
-  MenuItem,
   Stack,
   styled,
   Toolbar,
@@ -14,7 +15,7 @@ import Brand from "./Brand";
 import SearchNavbar from "./SearchNavbar";
 import RightNavbar from "./RightNavbar";
 import MenuIcon from "@mui/icons-material/Menu";
-import { productList } from "./ArrayData";
+import { NavProductData } from "./Data";
 import NavProduct from "./NavPoduct";
 
 const Navbar = styled(AppBar)(({ theme }) => ({
@@ -43,8 +44,19 @@ const StyledMenu = styled((props) => (
     top: "84px !important",
     left: "0px !important",
     backgroundColor: theme.palette.primary.main,
-    minHeight: "calc(100vh - 84px)",
+    // minHeight: "calc(100vh - 84px)",
   },
+}));
+
+const StyledBottomNavigation = styled(BottomNavigation)(({ theme }) => ({
+  height: "auto",
+  flexDirection: "column",
+  backgroundColor: theme.palette.primary.main,
+
+  "& button":{
+    maxWidth: "none !important",
+    padding: "10px"
+  }
 }));
 
 const Header = () => {
@@ -88,32 +100,29 @@ const Header = () => {
           </Toolbar>
         </Container>
       </Navbar>
+
       <NavProduct />
+
       <StyledMenu
         id="menu-navbar"
         anchorEl={toggleNav}
         open={open}
         onClose={handleCloseNav}
       >
-        {productList
-          .filter((productList) => productList.menuNavbarProduct)
-          .map((item, index) => (
-            <MenuItem
-              key={index}
-              onClick={handleCloseNav}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "4rem",
-                width: "100%",
-                cursor: "pointer",
-              }}
-            >
-              {item.icon}
-              {item.name}
-            </MenuItem>
-          ))}
+        <StyledBottomNavigation
+          showLabels
+          sx={{ height: "auto", flexDirection: "column" }}
+        >
+          {NavProductData
+            .filter((productList) => productList.menuNavbarProduct)
+            .map((item, index) => (
+              <BottomNavigationAction
+                key={index}
+                label={item.name}
+                icon={item.icon}
+              />
+            ))}
+        </StyledBottomNavigation>
       </StyledMenu>
     </React.Fragment>
   );

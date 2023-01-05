@@ -6,6 +6,8 @@ import { GlobalStyles } from "./styles";
 
 // Importing the Boostrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Provider } from "react-redux";
+import store from "./redux/store";
 
 const theme = createTheme({});
 
@@ -14,7 +16,9 @@ root.render(
   <React.StrictMode>
     <GlobalStyles>
       <ThemeProvider theme={theme}>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </ThemeProvider>
     </GlobalStyles>
   </React.StrictMode>

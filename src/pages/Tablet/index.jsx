@@ -1,7 +1,7 @@
 import React from "react";
 
-const Laptop = () => {
-  return <div>Laptop</div>;
+const Tablet = () => {
+  return <div>Tablet</div>;
 };
 
-export default Laptop;
+export default Tablet;
