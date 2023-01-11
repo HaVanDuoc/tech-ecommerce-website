@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetIndex } from "~/redux/Navbar/NavbarAction";
 
 const Nav = styled(Container)(({ theme }) => ({
-  backgroundColor: theme.palette.secondary,
+  backgroundColor: "var(--color-main)",
 }));
 
 const NavProduct = () => {
@@ -24,10 +24,17 @@ const NavProduct = () => {
       disableGutters
       sx={{
         display: { xs: "none", md: "flex" },
+        padding: "15px auto",
       }}
     >
       <Container maxWidth="lg">
-        <BottomNavigation showLabels value={value}>
+        <BottomNavigation
+          showLabels
+          value={value}
+          sx={{
+            backgroundColor: "var(--color-main)",
+          }}
+        >
           {NavProductData.filter((data) => data.navbarProduct).map(
             (data, index) => {
               return (

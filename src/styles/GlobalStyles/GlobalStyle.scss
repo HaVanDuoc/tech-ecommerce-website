@@ -1,9 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
 :root {
-    --color-main: #FE0000;
-    --color-secondary: lightgray;
-    --color-background: #fff
+    --color-main: #e2ba48;
+    --color-light: #e2c165;
+    --color-dark: #ca9c1d;
+    --color-secondary: #666666d9;
+    --color-background: #fff;
+    --color-text: #282323d9;
+    --hover-black: #000;
+    --margin-component-home: 80px 0;
+    --padding-component-home: 20px;
 }
 
 * {
@@ -17,6 +23,7 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     text-rendering: optimizeSpeed;
+    background-color: #f9f9f9;
 }
 
 input {
@@ -26,6 +33,22 @@ input {
 // Owl-Carousel
 .owl-carousel {
     position: relative;
+
+    // .owl-stage-outer {
+    //     padding: 10px 0;
+    // }
+
+    // .owl-stage {
+    //     padding: 10px 0;
+    // }
+
+    .owl-item {
+        padding: 10px 0;
+    }
+
+    // .cloned{
+    //     display: none;
+    // }
 
     .owl-dots {
         display: none;
@@ -39,9 +62,26 @@ input {
         top: 50%;
         transform: translateY(-50%);
 
-        button{
+        button {
             width: 50px;
             height: 50px;
         }
     }
+}
+
+a {
+    // color: var(--color-main);
+    transition: color .4s ease !important;
+    text-decoration: none !important;
+    cursor: pointer;
+
+    // &:hover {
+    //     color: var(--color-dark) !important;
+    // }
+}
+
+hr {
+    margin: 0 10px !important;
+    color: var(--color-main) !important;
+    border-width: 1px !important;
 }

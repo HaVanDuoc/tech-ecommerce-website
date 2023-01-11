@@ -6,7 +6,7 @@ import WatchIcon from "@mui/icons-material/Watch";
 import ImportantDevicesIcon from "@mui/icons-material/ImportantDevices";
 import LoginIcon from "@mui/icons-material/Login";
 
-export const NavProductData = [
+export const NavHeaderData = [
   {
     icon: <PhoneIphoneIcon />,
     name: "Điện thoại",
