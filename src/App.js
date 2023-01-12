@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { DefaultLayout } from "./layouts";
 import { publicRoutes } from "./Routes";
 
-const App = () => {
+const App = () => {    
   return (
     <div className="__havanduoc">
       <BrowserRouter>
