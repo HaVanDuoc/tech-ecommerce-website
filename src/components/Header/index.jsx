@@ -1,16 +1,14 @@
+import { Box, styled } from "@mui/material";
 import React from "react";
-import "./Header.scss";
 import MainHeader from "./MainHeader";
-import NavHeader from "./NavHeader";
-// import TopHeader2 from "./components/TopHeader2";
+
+const Styled = styled(Box)(({ theme }) => ({}));
 
 const Header = () => {
   return (
-    <React.Fragment>
-      {/* <TopHeader2 /> */}
+    <Styled>
       <MainHeader />
-      <NavHeader />
-    </React.Fragment>
+    </Styled>
   );
 };
 

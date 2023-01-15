@@ -1,48 +1,26 @@
-import { Box, Container } from "@mui/material";
-
+import { Box, Container, Stack, styled } from "@mui/material";
 import React from "react";
-import DrawerHeader from "../DrawerHeader";
 import Brand from "./Brand";
-import RightNavbar from "./RightNavbar";
-import SearchMainHeader from "./SearchMainHeader";
+import RightItems from "./RightItems";
+import Search from "./Search";
+
+const HeaderWrapper = styled(Box)(({ theme }) => ({
+  backgroundColor: "#fff",
+}));
 
 const MainHeader = () => {
   return (
-    <Container disableGutters maxWidth="xl" position="static" enableColorOnDark sx={{backgroundColor: "#fff"}}>
-      <Container
-        maxWidth="lg"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <Box
-          flexGrow={1}
-          display="flex"
-          justifyContent="start"
-          sx={{ display: { xs: "flex", md: "none" } }}
-        >
-          <DrawerHeader />
-        </Box>
-
-        <Box
-          flexGrow={1}
-          display="flex"
-          justifyContent="start"
-          sx={{ display: { xs: "none", md: "flex" } }}
-        >
-          <SearchMainHeader />
-        </Box>
-
-        <Box flexGrow={1} display="flex" justifyContent="center">
-          <Brand />
-        </Box>
-
-        <Box flexGrow={1} display="flex" justifyContent="end">
-          <RightNavbar />
-        </Box>
+    <HeaderWrapper>
+      <Container maxWidth="xl">
+        <Container maxWidth="lg" disableGutters>
+          <Stack flexDirection="row" alignItems="center" padding={1}>
+            <Brand />
+            <Search />
+            <RightItems />
+          </Stack>
+        </Container>
       </Container>
-    </Container>
+    </HeaderWrapper>
   );
 };
 

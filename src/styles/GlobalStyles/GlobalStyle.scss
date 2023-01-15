@@ -1,15 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
 :root {
-    --color-main: #e2ba48;
-    --color-light: #e2c165;
-    --color-dark: #ca9c1d;
-    --color-secondary: #666666d9;
-    --color-background: #fff;
-    --color-text: #282323d9;
-    --hover-black: #000;
-    --margin-component-home: 80px 0;
-    --padding-component-home: 20px;
+    --color-main: #0b74e5;
+    --color-secondary: #808089;
+    --color-text: #27272a;
+    --background-color-hover: #27272a1f;
+    --border-radius: 10px;
 }
 
 * {
@@ -23,7 +19,7 @@ body {
     font-size: 1rem;
     line-height: 1.5;
     text-rendering: optimizeSpeed;
-    background-color: #f9f9f9;
+    background-color: #efefef;
 }
 
 input {
@@ -78,10 +74,4 @@ a {
     // &:hover {
     //     color: var(--color-dark) !important;
     // }
-}
-
-hr {
-    margin: 0 10px !important;
-    color: var(--color-main) !important;
-    border-width: 1px !important;
 }

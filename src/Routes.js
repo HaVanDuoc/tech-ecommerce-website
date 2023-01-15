@@ -1,4 +1,5 @@
-import { Accessory, Home, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
+import { Accessory, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
+import Home from "~/pages/Home_v2";
 
 export const publicRoutes = [
   { path: "/", page: Home },

@@ -1,12 +1,22 @@
 import React from "react";
-import { Header } from "~/components";
+import { Box, styled } from "@mui/material";
+import { Footer, Header } from "~/components";
+
+const DefaultLayoutWrapper = styled(Box)(() => ({}));
+
+const Body = styled(Box)(() => ({
+  padding: "15px",
+}));
 
 const DefaultLayout = ({ children }) => {
   return (
-    <React.Fragment>
+    <DefaultLayoutWrapper>
       <Header />
-      {children}
-    </React.Fragment>
+
+      <Body>{children}</Body>
+
+      <Footer />
+    </DefaultLayoutWrapper>
   );
 };
 
