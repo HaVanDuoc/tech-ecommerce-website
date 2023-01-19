@@ -2,15 +2,11 @@ import express from "express";
 
 const router = express.Router();
 
-//
-router.get("/login", (req, res) => {
-  res.json("This is auth login");
-});
+// POST - server/auth/register
+router.post("/register", (req, res) => res.json("This is route register"));
 
-//
-router.get("/register", (req, res) => {
-  res.json("This is auth register");
-});
+// POST - server/auth/login
+router.post("/login", (req, res) => res.json("This is route login"));
 
 //
 router.get("/logout", (req, res) => {
