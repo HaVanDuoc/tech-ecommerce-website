@@ -12,13 +12,11 @@ const MainHeader = () => {
   return (
     <HeaderWrapper>
       <Container maxWidth="xl">
-        <Container maxWidth="lg" disableGutters>
-          <Stack flexDirection="row" alignItems="center" padding={1}>
-            <Brand />
-            <Search />
-            <RightItems />
-          </Stack>
-        </Container>
+        <Stack flexDirection="row" alignItems="center" padding={1}>
+          <Brand />
+          <Search />
+          <RightItems />
+        </Stack>
       </Container>
     </HeaderWrapper>
   );
