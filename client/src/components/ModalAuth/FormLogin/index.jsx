@@ -55,7 +55,7 @@ const FieldPassword = () => {
       sx={{ width: "100%", marginBottom: "10px" }}
       variant="outlined"
     >
-      <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+      <InputLabel htmlFor="outlined-adornment-password">Mật khẩu</InputLabel>
       <OutlinedInput
         id="outlined-adornment-password"
         type={showPassword ? "text" : "password"}
@@ -138,7 +138,7 @@ const FormLogin = () => {
   return (
     <FormLoginWrapper>
       <Title>Đăng nhập</Title>
-      <FieldInput label="Đăng nhập" />
+      <FieldInput label="Tên đăng nhập" />
       <FieldPassword />
       <FieldForgotPasswordLink>Quên mật khẩu?</FieldForgotPasswordLink>
       <ButtonSubmit>Đăng nhập</ButtonSubmit>
