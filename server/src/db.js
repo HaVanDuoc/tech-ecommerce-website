@@ -1,10 +1,22 @@
-const mysql = require("mysql");
+const { Sequelize } = require("sequelize");
 
-const db = mysql.createConnection({
+const database = "tech";
+const username = "root";
+const password = "MS.1810duoc2000";
+
+const sequelize = new Sequelize(database, username, password, {
   host: "localhost",
-  user: "root",
-  password: "MS.1810duoc2000",
-  database: "ecommercetech",
+  dialect: "mysql",
+  logging: false, // không ghi lại nhật ký
 });
 
-module.exports = db;
+const connectionDatabase = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log(`Kết nối CSDL ${database} thành công...`);
+  } catch (error) {
+    console.error("Kết nối CSDL thất bại:", error);
+  }
+};
+
+connectionDatabase();

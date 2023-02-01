@@ -7,13 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // Connect to DB
-db.connect((error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("Connected to mySQL success...");
-  }
-});
+require("./db");
 
 // Middleware
 app.use(cors());
