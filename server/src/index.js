@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
-const db = require("./db");
 const initRoute = require("./routes");
 
 const app = express();
@@ -15,7 +14,7 @@ app.use(morgan("common"));
 app.use(express.json());
 
 // Connect to DB
-require("./db");
+require("./connectDB");
 
 // Routes
 initRoute(app)

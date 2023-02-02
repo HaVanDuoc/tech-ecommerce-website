@@ -1,4 +1,4 @@
-// route/index.jsx
+// routes/index.jsx
 
 const authRoute = require("./authRoute");
 
