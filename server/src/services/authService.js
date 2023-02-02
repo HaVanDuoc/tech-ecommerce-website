@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken");
 const hashPassword = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
+// SERVICE REGISTER
 const register = ({ username, password }) =>
   new Promise(async (resolve, reject) => {
     try {
@@ -18,6 +19,7 @@ const register = ({ username, password }) =>
           username,
           password: hashPassword(password),
         },
+        raw: true, // chuyển instants thành object json
       });
 
       // jwt.sign(payload, secretOrPrivateKey, [options, callback])
@@ -30,7 +32,7 @@ const register = ({ username, password }) =>
             },
             process.env.JWT_SECRET,
             {
-              expiresIn: '7d' // phiên đăng nhập
+              expiresIn: "7d", // phiên đăng nhập
             }
           )
         : null;
@@ -38,11 +40,51 @@ const register = ({ username, password }) =>
       resolve({
         err: response[1] ? 0 : 1,
         mess: response[1] ? "Đăng ký thành công" : "Tài khoản đã tồn tại",
-        token,
+        access_token: token ? `Bearer ${token}` : token,
       });
     } catch (error) {
       reject(error);
     }
   });
 
-module.exports = { register };
+// SERVICE LOGIN
+const login = ({ username, password }) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.User.findOne({
+        where: { username },
+        raw: true, // chuyển instants thành object json
+      });
+
+      // Check password
+      const isCheckedPassword =
+        response && bcrypt.compareSync(password, response.password);
+      const token = isCheckedPassword
+        ? jwt.sign(
+            {
+              id: response.id,
+              username: response.username,
+              role_code: response.role_code,
+            },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "7d", // phiên đăng nhập
+            }
+          )
+        : null;
+
+      resolve({
+        err: token ? 0 : 1,
+        msg: token
+          ? "Đăng nhập thành công"
+          : response
+          ? "Sai mật khẩu"
+          : "Tài khoản chưa được đăng ký",
+        access_token: token ? `Bearer ${token}` : token,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+module.exports = { register, login };
