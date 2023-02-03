@@ -39,7 +39,7 @@ const register = ({ username, password }) =>
 
       resolve({
         err: response[1] ? 0 : 1,
-        mess: response[1] ? "Đăng ký thành công" : "Tài khoản đã tồn tại",
+        msg: response[1] ? "Đăng ký thành công" : "Tài khoản đã tồn tại",
         access_token: token ? `Bearer ${token}` : token,
       });
     } catch (error) {
