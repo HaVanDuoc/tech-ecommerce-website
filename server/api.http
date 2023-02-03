@@ -1,7 +1,10 @@
 ### api.http
 
+### Not Found
+POST http://localhost:4000/api/v1/notFound
+
 ### Register
-POST http://localhost:4000/api/v1/auth/register
+POST http://localhost:4000/api/v1/auth/register2
 Content-Type: application/json
 
 {
@@ -14,7 +17,7 @@ POST http://localhost:4000/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "username": "havanduoc22",
+    "username": "havanduoc",
     "password": "123456"
 }
 

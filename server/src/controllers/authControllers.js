@@ -1,8 +1,9 @@
 // authController.js
 
+const { intervalServerError } = require("../middleware/handleError");
 const services = require("../services");
 
-const register = async (req, res, next) => {
+const register = async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -17,14 +18,11 @@ const register = async (req, res, next) => {
     return res.status(200).json(response);
     //
   } catch (error) {
-    return res.status(500).json({
-      err: -1,
-      mes: "Internal Server Error",
-    });
+    return intervalServerError;
   }
 };
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -39,10 +37,7 @@ const login = async (req, res, next) => {
     return res.status(200).json(response);
     //
   } catch (error) {
-    return res.status(500).json({
-      err: -1,
-      mes: "Internal Server Error",
-    });
+    return intervalServerError;
   }
 };
 
