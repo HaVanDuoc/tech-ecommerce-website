@@ -1,43 +1,38 @@
 // authController.js
 
-const { intervalServerError } = require("../middleware/handleError");
+const {
+  intervalServerError,
+  badRequest,
+} = require("../middleware/handleError");
 const services = require("../services");
+const Joi = require("joi");
+const { username, password } = require("../helper/joiSchema");
 
 const register = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { error } = Joi.object({ username, password }).validate(req.body);
+    if (error) return badRequest(res, error.details[0]?.message);
 
-    if (!username || !password)
-      return res.status(400).json({
-        err: 1,
-        msg: "Vui lòng nhập đầy đủ thông tin!",
-      });
-
-    const response = await services.register({ username, password });
+    const response = await services.register(req.body);
 
     return res.status(200).json(response);
     //
   } catch (error) {
-    return intervalServerError;
+    return intervalServerError(res);
   }
 };
 
 const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { error } = Joi.object({ username, password }).validate(req.body);
+    if (error) return badRequest(res, error.details[0]?.message);
 
-    if (!username || !password)
-      return res.status(400).json({
-        err: 1,
-        msg: "Vui lòng nhập đầy đủ thông tin!",
-      });
-
-    const response = await services.login({ username, password });
+    const response = await services.login(req.body);
 
     return res.status(200).json(response);
     //
   } catch (error) {
-    return intervalServerError;
+    return intervalServerError(res);
   }
 };
 

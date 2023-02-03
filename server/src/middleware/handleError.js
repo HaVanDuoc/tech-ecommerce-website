@@ -13,15 +13,23 @@ errors.notFound = (req, res, err) => {
 };
 
 // Error - Interval Server Error
-errors.intervalServerError = (req, res, err) => {
+errors.intervalServerError = (res) => {
   const error = createError.InternalServerError("Lỗi máy chủ!");
 
   return res.status(error.status).json({
     err: 1,
     msg: error.message,
   });
+};
 
-  console.log(res);
+// Error - Bad Request
+errors.badRequest = (res, err) => {
+  const error = createError.BadRequest(err);
+
+  return res.status(error.status).json({
+    err: 1,
+    msg: error.message,
+  });
 };
 
 module.exports = errors;

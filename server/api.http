@@ -4,11 +4,11 @@
 POST http://localhost:4000/api/v1/notFound
 
 ### Register
-POST http://localhost:4000/api/v1/auth/register2
+POST http://localhost:4000/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "username": "havanduoc2",
+    "username": "havanduoc",
     "password": "123456"
 }
 
