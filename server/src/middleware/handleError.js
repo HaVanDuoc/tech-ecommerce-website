@@ -1,9 +1,7 @@
 const createError = require("http-errors");
 
-const errors = {}
-
 // Error - Not Found
-errors.notFound = (req, res, err) => {
+const notFound = (req, res, err) => {
   const error = createError.NotFound("Trang hiện tại không khả dụng!");
 
   return res.status(error.status).json({
@@ -13,7 +11,7 @@ errors.notFound = (req, res, err) => {
 };
 
 // Error - Interval Server Error
-errors.intervalServerError = (res) => {
+const intervalServerError = (res) => {
   const error = createError.InternalServerError("Lỗi máy chủ!");
 
   return res.status(error.status).json({
@@ -23,7 +21,7 @@ errors.intervalServerError = (res) => {
 };
 
 // Error - Bad Request
-errors.badRequest = (res, err) => {
+const badRequest = (res, err) => {
   const error = createError.BadRequest(err);
 
   return res.status(error.status).json({
@@ -32,4 +30,4 @@ errors.badRequest = (res, err) => {
   });
 };
 
-module.exports = errors;
+module.exports = { notFound, intervalServerError, badRequest };

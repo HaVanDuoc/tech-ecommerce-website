@@ -1,10 +1,11 @@
 const express = require("express");
+const { register, login } = require("../controllers/authControllers");
+
 const router = express.Router();
-const controllers = require("../controllers");
 
-router.post("/register", controllers.register);
+router.post("/register", register);
 
-router.post("/login", controllers.login);
+router.post("/login", login);
 
 router.post("/logout", async (req, res) => res.json("logout"));
 

@@ -1,8 +1,7 @@
 // authController.js
 
 const {
-  intervalServerError,
-  badRequest,
+  intervalServerError, badRequest,
 } = require("../middleware/handleError");
 const services = require("../services");
 const Joi = require("joi");
