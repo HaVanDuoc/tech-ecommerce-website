@@ -1,13 +1,14 @@
 // authController.js
 
 const {
-  intervalServerError, badRequest,
+  intervalServerError,
+  badRequest,
 } = require("../middleware/handleError");
 const services = require("../services");
 const Joi = require("joi");
 const { username, password } = require("../helper/joiSchema");
 
-const register = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const { error } = Joi.object({ username, password }).validate(req.body);
     if (error) return badRequest(res, error.details[0]?.message);
@@ -21,7 +22,7 @@ const register = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+exports.login = async (req, res) => {
   try {
     const { error } = Joi.object({ username, password }).validate(req.body);
     if (error) return badRequest(res, error.details[0]?.message);
@@ -34,5 +35,3 @@ const login = async (req, res) => {
     return intervalServerError(res);
   }
 };
-
-module.exports = { register, login };

@@ -1,20 +1,18 @@
-// const { badRequest, unauthorized } = require("./handleError");
-// const jwt = require("jsonwebtoken");
-
-import jwt from "jsonwebtoken";
-import { badRequest, unauthorized } from "./handleError";
+const jwt = require("jsonwebtoken");
+const { badRequest, unauthorized } = require("./handleError");
 
 const verifyToken = (req, res, next) => {
   const token = req.headers.authorization;
 
-  if (!token) return badRequest("Yêu cầu đăng nhập");
+  if (!token) return badRequest("Yêu cầu đăng nhập", res);
 
   // split: tách chuỗi thành mảng
   // access_token = Bearer token -> split access_token = ["Bearer", "token"]
   const accessToken = token.split(" ")[1];
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+
+  jwt.verify(accessToken, process.env.JWT_SECRET, (err, user) => {
     if (err)
-      return unauthorized("Phiên đăng nhập hết hạn. Yêu cầu đăng nhập lại");
+      return unauthorized("Phiên đăng nhập hết hạn. Yêu cầu đăng nhập lại", res);
 
     req.user = user;
   });
@@ -22,4 +20,4 @@ const verifyToken = (req, res, next) => {
   next();
 };
 
-export default verifyToken;
+module.exports = verifyToken

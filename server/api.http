@@ -21,3 +21,10 @@ Content-Type: application/json
     "password": "123456"
 }
 
+### Get current user
+GET http://localhost:4000/api/v1/user/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJoYXZhbmR1b2MiLCJyb2xlX2NvZGUiOiJyMSIsImlhdCI6MTY3NTc1MjE0NSwiZXhwIjoxNjc2MzU2OTQ1fQ.hDutZsXcA4gsXncvky9GorT9rgY2ozDuQLyBLo4eZ18
+
+### Access admin page
+POST http://localhost:4000/api/v1/admin/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJoYXZhbmR1b2MiLCJyb2xlX2NvZGUiOiJyMSIsImlhdCI6MTY3NTc1MjE0NSwiZXhwIjoxNjc2MzU2OTQ1fQ.hDutZsXcA4gsXncvky9GorT9rgY2ozDuQLyBLo4eZ18
