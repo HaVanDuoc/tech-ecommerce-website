@@ -8,15 +8,15 @@ const hashPassword = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
 // SERVICE REGISTER
-const register = ({ username, password }) =>
+const register = ({ email, password }) =>
   new Promise(async (resolve, reject) => {
     try {
       // kết quả trả về một array [data: object, created: boolean]
       const response = await db.User.findOrCreate({
-        where: { username }, // tìm thấy username created=false -> Tài khoản đã tồn tại
+        where: { email }, // tìm thấy email created=false -> Tài khoản đã tồn tại
         defaults: {
           // Ko tìm thấy dữ liệu -> created=true -> tạo dữ liệu mới theo defaults -> Đăng ký thành công
-          username,
+          email,
           password: hashPassword(password),
         },
         raw: true, // chuyển instants thành object json
@@ -27,7 +27,7 @@ const register = ({ username, password }) =>
         ? jwt.sign(
             {
               id: response[0].id,
-              username: response[0].username,
+              email: response[0].email,
               role_code: response[0].role_code,
             },
             process.env.JWT_SECRET,
@@ -48,11 +48,11 @@ const register = ({ username, password }) =>
   });
 
 // SERVICE LOGIN
-const login = ({ username, password }) =>
+const login = ({ email, password }) =>
   new Promise(async (resolve, reject) => {
     try {
       const response = await db.User.findOne({
-        where: { username },
+        where: { email },
         raw: true, // chuyển instants thành object json
       });
 
@@ -63,7 +63,7 @@ const login = ({ username, password }) =>
         ? jwt.sign(
             {
               id: response.id,
-              username: response.username,
+              email: response.email,
               role_code: response.role_code,
             },
             process.env.JWT_SECRET,
