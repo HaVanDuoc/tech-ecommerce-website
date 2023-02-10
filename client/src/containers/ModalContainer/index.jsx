@@ -25,8 +25,6 @@ const ModalContainer = ({ children }) => {
 
   const show = useSelector(selectorShow);
 
-  console.log(show)
-
   return (
     <Styled>
       {/* Button use Modal */}

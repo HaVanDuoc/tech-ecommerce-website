@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Chip,
@@ -15,6 +16,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
 import { showSignUpForm } from "~/redux/ModalContainer/ModalContainerAction";
+import axios from "axios";
+import { refreshPage } from "~/utils";
 
 const Styled = styled(Box)(() => ({
   width: 400,
@@ -90,6 +93,9 @@ const MethodLoginOther = () => {
 };
 
 const LoginForm = () => {
+  const [error, setError] = React.useState(null);
+  const [isSubmitting, setSubmitting] = React.useState(false);
+
   return (
     <Styled>
       <Formik
@@ -104,10 +110,28 @@ const LoginForm = () => {
           password: Yup.string().min(6).required("*Bắt buộc"),
         })}
         onSubmit={(values, props) => {
-          setTimeout(() => {
-            props.setSubmitting(false);
-            props.resetForm(true);
-          }, 1500);
+          setSubmitting(true); // click submit khóa liền
+
+          setTimeout(async () => {
+            // get data from DB
+            const response = await axios({
+              method: "post",
+              url: "/auth/login",
+              data: values,
+            });
+
+            if (response.data.err !== 0) {
+              // Đăng nhập thất bại
+              setError(response.data.msg);
+
+              setSubmitting(false); // submit xong mở khóa
+            } else {
+              // Đăng nhập thành công, lưu token vào LocalStorage
+              localStorage.setItem("access_token", response.data.access_token);
+
+              refreshPage();
+            }
+          }, 2000);
         }}
       >
         {(props) => (
@@ -140,6 +164,12 @@ const LoginForm = () => {
 
             <LinkForgotPassword>Quên mật khẩu?</LinkForgotPassword>
 
+            {error && (
+              <Alert severity="error" sx={{ marginTop: 1 }}>
+                {error}
+              </Alert>
+            )}
+
             <Button
               variant="contained"
               fullWidth
@@ -149,7 +179,7 @@ const LoginForm = () => {
                 height: "50px",
                 borderRadius: "var(--border-radius)",
               }}
-              disabled={props.isSubmitting}
+              disabled={isSubmitting}
             >
               Đăng nhập
             </Button>
