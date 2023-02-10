@@ -8,7 +8,7 @@ const hashPassword = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
 // SERVICE REGISTER
-const register = ({ email, password }) =>
+const register = ({ email, password, firstName, lastName }) =>
   new Promise(async (resolve, reject) => {
     try {
       // kết quả trả về một array [data: object, created: boolean]
@@ -18,6 +18,8 @@ const register = ({ email, password }) =>
           // Ko tìm thấy dữ liệu -> created=true -> tạo dữ liệu mới theo defaults -> Đăng ký thành công
           email,
           password: hashPassword(password),
+          firstName,
+          lastName,
         },
         raw: true, // chuyển instants thành object json
       });
@@ -28,6 +30,8 @@ const register = ({ email, password }) =>
             {
               id: response[0].id,
               email: response[0].email,
+              firstName: response[0].firstName,
+              lastName: response[0].lastName,
               role_code: response[0].role_code,
             },
             process.env.JWT_SECRET,
@@ -64,6 +68,8 @@ const login = ({ email, password }) =>
             {
               id: response.id,
               email: response.email,
+              firstName: response[0].firstName,
+              lastName: response[0].lastName,
               role_code: response.role_code,
             },
             process.env.JWT_SECRET,

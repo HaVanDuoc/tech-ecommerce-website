@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Link,
@@ -12,6 +13,8 @@ import * as Yup from "yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch } from "react-redux";
 import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
+import axios from "axios";
+import { refreshPage } from "~/utils";
 
 const Styled = styled(Box)(() => ({
   width: 400,
@@ -49,6 +52,9 @@ const LinkBackToLogin = () => {
 };
 
 const SignUpForm = () => {
+  const [error, setError] = React.useState(null);
+  const [isSubmitting, setSubmitting] = React.useState(false);
+
   return (
     <Styled>
       <Formik
@@ -75,10 +81,29 @@ const SignUpForm = () => {
             .required("*Bắt buộc"),
         })}
         onSubmit={(values, props) => {
-          setTimeout(() => {
-            props.setSubmitting(false);
-            props.resetForm(true);
-          }, 1500);
+          // destructuring - loại property 'confirmPassword'
+          const { firstName, lastName, email, password } = values;
+
+          setTimeout(async () => {
+            // get data from DB
+            const response = await axios({
+              method: "post",
+              url: "/auth/register",
+              data: { firstName, lastName, email, password },
+            });
+
+            if (response.data.err !== 0) {
+              // Đăng ký thất bại
+              setError(response.data.msg);
+
+              setSubmitting(false); // submit xong mở khóa
+            } else {
+              // Đăng ký thành công, lưu token vào LocalStorage
+              localStorage.setItem("access_token", response.data.access_token);
+
+              refreshPage();
+            }
+          }, 2000);
         }}
       >
         {(props) => (
@@ -144,6 +169,12 @@ const SignUpForm = () => {
               helperText={<ErrorMessage name="confirmPassword" />}
             />
 
+            {error && (
+              <Alert severity="error" sx={{ marginTop: 1 }}>
+                {error}
+              </Alert>
+            )}
+
             <Button
               variant="contained"
               fullWidth
@@ -153,7 +184,7 @@ const SignUpForm = () => {
                 height: "50px",
                 borderRadius: "var(--border-radius)",
               }}
-              disabled={props.isSubmitting}
+              disabled={isSubmitting}
             >
               Đăng ký
             </Button>

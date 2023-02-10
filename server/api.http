@@ -8,8 +8,10 @@ POST http://localhost:4000/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "havanduoc@gmail.com",
-    "password": "123456"
+    "email": "havanduoc3@gmail.com",
+    "password": "123456",
+    "firstName": "Ha",
+    "lastName": "Duoc"
 }
 
 ### Login
@@ -18,7 +20,7 @@ Content-Type: application/json
 
 {
     "email": "havanduoc@gmail.com",
-    "password": "123456"
+    "password": "123456",
 }
 
 ### Get current user
