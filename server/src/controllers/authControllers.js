@@ -25,7 +25,7 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   try {
     const { error } = Joi.object({ username, password }).validate(req.body);
-    if (error) return badRequest(res, error.details[0]?.message);
+    if (error) return badRequest(error.details[0]?.message, res);
 
     const response = await services.login(req.body);
 

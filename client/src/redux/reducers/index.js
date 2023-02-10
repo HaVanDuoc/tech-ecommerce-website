@@ -1,11 +1,11 @@
-import ModalAuthReducer from "../ModalAuth/ModalAuthReducer";
 import NavbarReducer from "../Navbar/NavbarReducer";
+import ModalContainerReducer from "../ModalContainer/ModalContainerReducer";
 
 const { combineReducers } = require("redux");
 
 const rootReducer = combineReducers({
   Navbar: NavbarReducer,
-  ModalAuth: ModalAuthReducer,
+  ModalContainer: ModalContainerReducer,
 });
 
 export default rootReducer;

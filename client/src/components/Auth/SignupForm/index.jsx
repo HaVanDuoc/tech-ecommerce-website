@@ -1,9 +1,21 @@
-import { Box, Button, styled, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  Link,
+  styled,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useDispatch } from "react-redux";
+import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
 
 const Styled = styled(Box)(() => ({
+  width: 400,
+
   "& .MuiFormHelperText-root": {
     color: "red",
   },
@@ -15,125 +27,26 @@ const Title = styled(Box)(() => ({
   textAlign: "center",
   marginBottom: "20px",
 }));
-//   const formik = useFormik({
-//     initialValues: {
-//       firstName: "",
-//       lastName: "",
-//       email: "",
-//       password: "",
-//       confirmPassword: "",
-//     },
-//     validationSchema: Yup.object({
-//       firstName: Yup.string().max(15, "*Tối đa 15 ký tự").required("*Bắt buộc"),
-//       lastName: Yup.string().max(20, "Tối đa 20 ký tự").required("*Bắt buộc"),
-//       email: Yup.string()
-//         .email("*Định dạng email không chính xác")
-//         .required("*Bắt buộc"),
-//       password: Yup.string().min(6).required("*Bắt buộc"),
-//       confirmPassword: Yup.string().oneOf(
-//         [Yup.ref("password"), null],
-//         "*Mật khẩu không trùng khớp"
-//       ),
-//     }),
-//     onSubmit: (values, { setSubmitting }) => {
-//       setTimeout(() => {
-//         alert(JSON.stringify(values, null, 2));
-//         setSubmitting(false);
-//       }, 400);
-//     },
-//   });
 
-//   return (
-//     <FormSignUp>
-//       <Title>Đăng ký</Title>
+const LinkBackToLogin = () => {
+  const dispatch = useDispatch();
 
-//       {/* form */}
-//       <form onSubmit={formik.handleSubmit}>
-//         <TextField
-//           label="Họ"
-//           variant="outlined"
-//           fullWidth
-//           sx={{ marginBottom: "15px" }}
-//           id="firstName"
-//           name="firstName"
-//           type="text"
-//           onChange={formik.handleChange}
-//           onBlur={formik.handleBlur}
-//           value={formik.values.firstName}
-//         />
-//         {formik.touched.firstName && formik.errors.firstName ? (
-//           <div>{formik.errors.firstName}</div>
-//         ) : null}
-
-//         <TextField
-//           label="Tên"
-//           variant="outlined"
-//           fullWidth
-//           sx={{ marginBottom: "15px" }}
-//           id="lastName"
-//           name="lastName"
-//           type="text"
-//           onChange={formik.handleChange}
-//           onBlur={formik.handleBlur}
-//           value={formik.values.lastName}
-//         />
-//         {formik.touched.lastName && formik.errors.lastName ? (
-//           <div>{formik.errors.lastName}</div>
-//         ) : null}
-
-//         <TextField
-//           label="Email"
-//           variant="outlined"
-//           fullWidth
-//           sx={{ marginBottom: "15px" }}
-//           id="email"
-//           name="email"
-//           type="email"
-//           onChange={formik.handleChange}
-//           onBlur={formik.handleBlur}
-//           value={formik.values.email}
-//         />
-//         {formik.touched.email && formik.errors.email ? (
-//           <div>{formik.errors.email}</div>
-//         ) : null}
-
-//         <TextField
-//           label="Mật khẩu"
-//           variant="outlined"
-//           fullWidth
-//           sx={{ marginBottom: "15px" }}
-//           id="password"
-//           name="password"
-//           type="text"
-//           onChange={formik.handleChange}
-//           onBlur={formik.handleBlur}
-//           value={formik.values.password}
-//         />
-//         {formik.touched.password && formik.errors.password ? (
-//           <div>{formik.errors.password}</div>
-//         ) : null}
-
-//         <TextField
-//           label="Nhập lại mật khẩu"
-//           variant="outlined"
-//           fullWidth
-//           sx={{ marginBottom: "15px" }}
-//           id="confirmPassword"
-//           name="confirmPassword"
-//           type="text"
-//           onChange={formik.handleChange}
-//           onBlur={formik.handleBlur}
-//           value={formik.values.confirmPassword}
-//         />
-//         {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
-//           <div>{formik.errors.confirmPassword}</div>
-//         ) : null}
-
-//         <ButtonSubmit>Đăng ký</ButtonSubmit>
-//       </form>
-//     </FormSignUp>
-//   );
-// };
+  return (
+    <Box textAlign="center">
+      <Link
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={() => dispatch(showLoginForm())}
+      >
+        <ArrowBackIcon />
+        <Typography>Trở về đăng nhập</Typography>
+      </Link>
+    </Box>
+  );
+};
 
 const SignUpForm = () => {
   return (
@@ -244,6 +157,8 @@ const SignUpForm = () => {
             >
               Đăng ký
             </Button>
+
+            <LinkBackToLogin />
           </Form>
         )}
       </Formik>

@@ -18,7 +18,7 @@ Content-Type: application/json
 
 {
     "username": "havanduoc",
-    "password": "123456"
+    "password": ""
 }
 
 ### Get current user

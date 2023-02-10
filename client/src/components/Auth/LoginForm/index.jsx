@@ -13,8 +13,12 @@ import GoogleIcon from "@mui/icons-material/Google";
 import React from "react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { showSignUpForm } from "~/redux/ModalContainer/ModalContainerAction";
 
 const Styled = styled(Box)(() => ({
+  width: 400,
+
   "& .MuiFormHelperText-root": {
     color: "red",
   },
@@ -36,9 +40,12 @@ const LinkForgotPassword = ({ children }) => {
 };
 
 const LinkSignUp = ({ children }) => {
+  const dispatch = useDispatch();
+
   return (
     <Box textAlign="center">
-      Bạn chưa có tài khoản? <Link>{children}</Link>
+      Bạn chưa có tài khoản?{" "}
+      <Link onClick={() => dispatch(showSignUpForm())}>{children}</Link>
     </Box>
   );
 };
