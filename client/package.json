@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://localhost:4000/api/v1",
   "dependencies": {
+    "@mui/x-data-grid": "^5.17.23",
     "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -16,6 +17,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
+    "recharts": "^2.4.1",
     "redux": "^4.2.0",
     "sass": "^1.57.1",
     "slick-carousel": "^1.8.1",
