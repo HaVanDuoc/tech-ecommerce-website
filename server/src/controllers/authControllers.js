@@ -6,7 +6,13 @@ const {
 } = require("../middleware/handleError");
 const services = require("../services");
 const Joi = require("joi");
-const { email, password, firstName, lastName } = require("../helper/joiSchema");
+const {
+  email,
+  password,
+  firstName,
+  lastName,
+  role_code,
+} = require("../helper/joiSchema");
 
 exports.register = async (req, res) => {
   try {
@@ -15,10 +21,11 @@ exports.register = async (req, res) => {
       password,
       firstName,
       lastName,
+      role_code,
     }).validate(req.body);
 
-    if (error) return badRequest(res, error.details[0]?.message);
-    
+    if (error) return badRequest(error.details[0]?.message, res);
+
     const response = await services.register(req.body);
 
     return res.status(200).json(response);

@@ -16,3 +16,5 @@ exports.password = Joi.string()
 exports.firstName = Joi.string().min(1).max(30).required();
 
 exports.lastName = Joi.string().min(1).max(30).required();
+
+exports.role_code = Joi.string().min(2);
