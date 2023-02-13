@@ -8,10 +8,11 @@ POST http://localhost:4000/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "havanduoc3@gmail.com",
+    "email": "admin2@gmail.com",
     "password": "123456",
     "firstName": "Ha",
-    "lastName": "Duoc"
+    "lastName": "Duoc",
+    "role_code": "r2"
 }
 
 ### Login
@@ -19,8 +20,8 @@ POST http://localhost:4000/api/v1/auth/login
 Content-Type: application/json
 
 {
-    "email": "havanduoc@gmail.com",
-    "password": "123456",
+    "email": "admin@gmail.com",
+    "password": "123456"
 }
 
 ### Get current user
@@ -29,4 +30,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hb
 
 ### Access admin page
 POST http://localhost:4000/api/v1/admin/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJoYXZhbmR1b2MiLCJyb2xlX2NvZGUiOiJyMSIsImlhdCI6MTY3NTc1MjE0NSwiZXhwIjoxNjc2MzU2OTQ1fQ.hDutZsXcA4gsXncvky9GorT9rgY2ozDuQLyBLo4eZ18
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
+
+### Get All User
+GET http://localhost:4000/api/v1/admin/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
