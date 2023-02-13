@@ -4,9 +4,9 @@ const { getAllUser } = require("../controllers/adminController");
 
 const router = require("express").Router();
 
-router.use(verifyToken);
+// router.use(verifyToken);
 
-router.use(verifyRole.isAdmin);
+// router.use(verifyRole.isAdmin);
 
 router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }));
 

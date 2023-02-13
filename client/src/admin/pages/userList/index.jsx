@@ -1,12 +1,19 @@
 import "./userList.css";
-import { userRows } from "../../dummyData";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { DataGrid } from "@mui/x-data-grid";
+import { FetchUserList } from "./fetchData";
 
 export default function UserList() {
-  const [data, setData] = useState(userRows);
+  const [data, setData] = useState([]);
+
+  // Fetch list user
+  const response = FetchUserList();
+  React.useEffect(() => {
+    setData(response);
+  }, [response]);
+  // 
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -16,13 +23,15 @@ export default function UserList() {
     { field: "id", headerName: "ID", width: 90 },
     {
       field: "user",
-      headerName: "User",
-      width: 200,
+      headerName: "Name",
+      width: 300,
       renderCell: (params) => {
+        const firstName = params.row.firstName ? params.row.firstName : "";
+        const lastName = params.row.lastName ? params.row.lastName : "";
         return (
           <div className="userListUser">
             <img className="userListImg" src={params.row.avatar} alt="" />
-            {params.row.username}
+            {firstName + " " + lastName}
           </div>
         );
       },
@@ -64,8 +73,9 @@ export default function UserList() {
         rows={data}
         disableSelectionOnClick
         columns={columns}
-        pageSize={8}
+        pageSize={10}
         checkboxSelection
+        autoHeight
       />
     </div>
   );
