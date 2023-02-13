@@ -8,7 +8,7 @@ const hashPassword = (password) =>
   bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 
 // SERVICE REGISTER
-const register = ({ email, password, firstName, lastName }) =>
+const register = ({ email, password, firstName, lastName, role_code }) =>
   new Promise(async (resolve, reject) => {
     try {
       // kết quả trả về một array [data: object, created: boolean]
@@ -20,6 +20,7 @@ const register = ({ email, password, firstName, lastName }) =>
           password: hashPassword(password),
           firstName,
           lastName,
+          role_code,
         },
         raw: true, // chuyển instants thành object json
       });
@@ -59,17 +60,18 @@ const login = ({ email, password }) =>
         where: { email },
         raw: true, // chuyển instants thành object json
       });
-
+      
       // Check password
       const isCheckedPassword =
         response && bcrypt.compareSync(password, response.password);
+
       const token = isCheckedPassword
         ? jwt.sign(
             {
               id: response.id,
               email: response.email,
-              firstName: response[0].firstName,
-              lastName: response[0].lastName,
+              firstName: response.firstName,
+              lastName: response.lastName,
               role_code: response.role_code,
             },
             process.env.JWT_SECRET,
