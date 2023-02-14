@@ -24,10 +24,19 @@ module.exports = {
       password: {
         type: Sequelize.STRING,
       },
+      avatar: {
+        type: Sequelize.STRING,
+      },
       phoneNumber: {
         type: Sequelize.STRING,
       },
-      avatar: {
+      address: {
+        type: Sequelize.STRING,
+      },
+      gender: {
+        type: Sequelize.STRING,
+      },
+      status: {
         type: Sequelize.STRING,
       },
       role_code: {

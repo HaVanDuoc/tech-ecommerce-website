@@ -13,7 +13,7 @@ export default function UserList() {
   React.useEffect(() => {
     setData(response);
   }, [response]);
-  // 
+  //
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -69,6 +69,11 @@ export default function UserList() {
 
   return (
     <div className="userList">
+      <div className="productListOption">
+        <Link to="/admin/newUser">
+          <button className="productAddButton">Thêm</button>
+        </Link>
+      </div>
       <DataGrid
         rows={data}
         disableSelectionOnClick
