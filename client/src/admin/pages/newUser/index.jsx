@@ -1,8 +1,13 @@
 import "./newUser.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import React from "react";
+import axios from "axios";
 
 export default function NewUser() {
+  const [error, setError] = React.useState(null);
+  const [isSubmitting, setSubmitting] = React.useState(false);
+
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -10,6 +15,7 @@ export default function NewUser() {
     <Formik
       initialValues={{
         firstName: "",
+        middleName: "",
         lastName: "",
         email: "",
         password: "",
@@ -22,24 +28,49 @@ export default function NewUser() {
         firstName: Yup.string()
           .max(15, "*Tối đa 15 ký tự")
           .required("*Bắt buộc"),
+        middleName: Yup.string()
+          .max(15, "*Tối đa 15 ký tự")
+          .required("*Bắt buộc"),
         lastName: Yup.string()
           .max(20, "*Tối đa 20 ký tự")
           .required("*Bắt buộc"),
         email: Yup.string()
           .email("*Định dạng email không chính xác")
           .required("*Bắt buộc"),
-        password: Yup.string().min(6).required("*Bắt buộc"),
+        password: Yup.string()
+          .min(6, "Mật khẩu phải có tối thiểu 6 ký tự")
+          .required("*Bắt buộc"),
         phoneNumber: Yup.string().matches(
           phoneRegExp,
           "*Đinh dạng số điện thoại không chính xác"
         ),
         address: Yup.string(),
       })}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
+
+      // SUBMIT
+      onSubmit={(values) => {
+        setSubmitting(true); // click submit khóa liền
+
+        setTimeout(async () => {
+          // get data from DB
+          const response = await axios({
+            method: "post",
+            url: "/auth/login",
+            data: values,
+          });
+
+          if (response.data.err !== 0) {
+            // Đăng nhập thất bại
+            setError(response.data.msg);
+
+            setSubmitting(false); // submit xong mở khóa
+          } else {
+            // Đăng nhập thành công, lưu token vào LocalStorage
+            localStorage.setItem("access_token", response.data.access_token);
+
+            // refreshPage();
+          }
+        }, 2000);
       }}
     >
       <div className="newUser">
@@ -50,6 +81,13 @@ export default function NewUser() {
             <Field name="firstName" type="text" placeholder="Họ" />
             <div className="errorMessage">
               <ErrorMessage name="firstName" />
+            </div>
+          </div>
+          <div className="newUserItem">
+            <label>Tên đệm</label>
+            <Field name="middleName" type="text" placeholder="Tên đệm" />
+            <div className="errorMessage">
+              <ErrorMessage name="middleName" />
             </div>
           </div>
           <div className="newUserItem">
@@ -99,10 +137,10 @@ export default function NewUser() {
           <div className="newUserItem">
             <label>Phân quyền</label>
             <Field as="select" className="newUserSelect" name="role" id="role">
-              <option value="r1" >
-                User
+              <option value="r1">User</option>
+              <option value="r2" selected>
+                Admin
               </option>
-              <option value="r2" selected>Admin</option>
             </Field>
           </div>
           <button type="submit" className="newUserButton">

@@ -24,10 +24,6 @@ Content-Type: application/json
     "password": "123456"
 }
 
-### Get current user
-GET http://localhost:4000/api/v1/user/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJoYXZhbmR1b2MiLCJyb2xlX2NvZGUiOiJyMSIsImlhdCI6MTY3NTc1MjE0NSwiZXhwIjoxNjc2MzU2OTQ1fQ.hDutZsXcA4gsXncvky9GorT9rgY2ozDuQLyBLo4eZ18
-
 ### Access admin page
 POST http://localhost:4000/api/v1/admin/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
@@ -35,3 +31,25 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiO
 ### Get All User
 GET http://localhost:4000/api/v1/admin/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
+
+
+### API USER
+### Get current user
+GET http://localhost:4000/api/v1/user/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJoYXZhbmR1b2MiLCJyb2xlX2NvZGUiOiJyMSIsImlhdCI6MTY3NTc1MjE0NSwiZXhwIjoxNjc2MzU2OTQ1fQ.hDutZsXcA4gsXncvky9GorT9rgY2ozDuQLyBLo4eZ18
+
+### CREAET NEW USER
+POST http://localhost:4000/api/v1/user/newUser
+Content-Type: application/json
+
+{
+    "firstName": "Hà",
+    "middleName": "Văn",
+    "lastName": "Được",
+    "email": "havanduoc@gmail.com",
+    "password": "123456",
+    "phoneNumber": "0123456789",
+    "address": "Việt nam",
+    "gender": "male",
+    "role_code": "r2"
+}

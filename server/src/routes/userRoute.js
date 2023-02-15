@@ -1,12 +1,13 @@
 const express = require("express");
-const getCurrent = require("../controllers/userControllers");
+const userController = require("../controllers/userControllers");
 const verifyToken = require("../middleware/verifyToken");
 
 const router = express.Router();
 
-// PRIVATE ROUTE
-router.use(verifyToken);
+// router.use(verifyToken);
 
-router.get("/", getCurrent);
+router.get("/", userController.getCurrent);
+
+router.post("/newUser", userController.newUser);
 
 module.exports = router;

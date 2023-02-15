@@ -20,3 +20,19 @@ exports.getOneUser = (userId) =>
       reject(error);
     }
   });
+
+// POST - CREATE NEW USER
+exports.createNewUser = (user) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.User.create(user);
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Đã thêm người dùng mới" : "Tạo người dùng thất bại",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });

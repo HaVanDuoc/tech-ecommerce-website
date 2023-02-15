@@ -1,12 +1,27 @@
 // userControllers.js
-const { intervalServerError } = require("../middleware/handleError");
-const { getOneUser } = require("../services/userService");
+const {
+  intervalServerError,
+  badRequest,
+} = require("../middleware/handleError");
+const userService = require("../services/userService");
+const Joi = require("joi");
+const {
+  firstName,
+  middleName,
+  lastName,
+  email,
+  password,
+  phoneNumber,
+  address,
+  gender,
+  role_code,
+} = require("../helper/joiSchema");
 
-const getCurrent = async (req, res) => {
+exports.getCurrent = async (req, res) => {
   try {
     const { id } = req.user; // req.user get from verifyToken
 
-    const response = await getOneUser(id); // get from userService
+    const response = await userService.getOneUser(id); // get from userService
 
     return res.status(200).json(response);
   } catch (error) {
@@ -14,4 +29,27 @@ const getCurrent = async (req, res) => {
   }
 };
 
-module.exports = getCurrent;
+// Create new user
+exports.newUser = async (req, res) => {
+  try {
+    const { error } = Joi.object({
+      firstName,
+      middleName,
+      lastName,
+      email,
+      password,
+      phoneNumber,
+      address,
+      gender,
+      role_code,
+    }).validate(req.body);
+
+    if (error) return badRequest(error.details[0]?.message, res);
+
+    const response = await userService.createNewUser(req.body);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
