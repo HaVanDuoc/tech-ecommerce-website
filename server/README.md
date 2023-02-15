@@ -20,12 +20,15 @@ npx sequelize-cli db:migrate:undo --name create-feature.js
 npx sequelize-cli db:migrate:undo --name create-specification.js
 npx sequelize-cli db:migrate:undo --name create-category.js
 
-> Running seeds Sequelize
+> Creating the Seed
 
+npx sequelize-cli seed:generate --name role
 npx sequelize-cli seed:generate --name category
+
+> Running Seeds
 
 npx sequelize-cli db:seed:all
 
-> Undo 1 migration
+> Undoing Seeds
 
-npx sequelize-cli db:migrate:undo --name create-user.js
+npx sequelize-cli db:seed:undo:all
