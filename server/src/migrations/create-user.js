@@ -9,6 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      userId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
       firstName: {
         type: Sequelize.STRING,
       },
@@ -47,12 +52,12 @@ module.exports = {
         defaultValue: false,
         allowNull: false,
       },
-      role_id: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1,
+      roleId: {
+        type: Sequelize.STRING,
+        defaultValue: "001",
         references: {
           model: "roles",
-          key: "id",
+          key: "roleId",
         },
       },
       createdAt: {

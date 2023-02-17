@@ -9,38 +9,43 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      productId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
       name: {
         type: Sequelize.STRING,
       },
       price: {
         type: Sequelize.STRING,
       },
-      category_id: {
-        type: Sequelize.INTEGER,
+      categoryId: {
+        type: Sequelize.STRING,
         references: {
           model: "categories",
-          key: "id",
+          key: "categoryId",
         },
       },
-      manufacturer_id: {
-        type: Sequelize.INTEGER,
+      manufacturerId: {
+        type: Sequelize.STRING,
         references: {
           model: "Manufacturers",
-          key: "id",
+          key: "manufacturerId",
         },
       },
-      specification_id: {
-        type: Sequelize.INTEGER,
+      specificationId: {
+        type: Sequelize.STRING,
         references: {
           model: "Specifications",
-          key: "id",
+          key: "specificationId",
         },
       },
-      feature_id: {
-        type: Sequelize.INTEGER,
+      featureId: {
+        type: Sequelize.STRING,
         references: {
           model: "Features",
-          key: "id",
+          key: "featureId",
         },
       },
       createdAt: {

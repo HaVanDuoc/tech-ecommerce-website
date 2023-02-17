@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   User.init(
     {
+      userId: DataTypes.STRING,
       firstName: DataTypes.STRING,
       middleName: DataTypes.STRING,
       lastName: DataTypes.STRING,
@@ -25,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
       gender: DataTypes.STRING,
       status: DataTypes.STRING,
       isAdmin: DataTypes.BOOLEAN,
-      role_id: DataTypes.INTEGER,
+      roleId: DataTypes.STRING,
     },
     {
       sequelize,

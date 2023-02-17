@@ -13,12 +13,13 @@ module.exports = (sequelize, DataTypes) => {
   }
   Product.init(
     {
+      productId: DataTypes.STRING,
       name: DataTypes.STRING,
       price: DataTypes.STRING,
-      category_id: DataTypes.INTEGER,
-      manufacturer_id: DataTypes.INTEGER,
-      specification_id: DataTypes.INTEGER,
-      feature_id: DataTypes.INTEGER,
+      categoryId: DataTypes.STRING,
+      manufacturerId: DataTypes.STRING,
+      specificationId: DataTypes.STRING,
+      featureId: DataTypes.STRING,
     },
     {
       sequelize,

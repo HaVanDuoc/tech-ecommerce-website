@@ -9,16 +9,21 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      featureId: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
       name: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
       },
-      category_id: {
-        type: Sequelize.INTEGER,
+      categoryId: {
+        type: Sequelize.STRING,
         references: {
           model: "categories",
-          key: "id",
+          key: "categoryId",
         },
       },
       createdAt: {
