@@ -60,3 +60,11 @@ Content-Type: application/json
 {
     "name": ""
 }
+
+### CREATE NEW CATEGORY
+POST http://localhost:4000/api/v1/admin/database/newCategory
+Content-Type: application/json
+
+{
+    "name": "thẻ cào"
+}
