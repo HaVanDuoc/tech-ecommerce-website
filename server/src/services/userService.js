@@ -25,7 +25,18 @@ exports.getOneUser = (userId) =>
 exports.createNewUser = (user) =>
   new Promise(async (resolve, reject) => {
     try {
-      const response = await db.User.create(user);
+      const response = await db.User.create({
+        firstName: "Hà",
+        middleName: "Văn",
+        lastName: "Được",
+        email: "havanduoc@gmail.com",
+        password: "123456",
+        phoneNumber: "0123456789",
+        address: "Việt nam",
+        gender: "male",
+      });
+
+      console.log("response", response);
 
       resolve({
         err: response ? 0 : 1,

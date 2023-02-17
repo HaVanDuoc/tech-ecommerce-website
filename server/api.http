@@ -50,6 +50,5 @@ Content-Type: application/json
     "password": "123456",
     "phoneNumber": "0123456789",
     "address": "Việt nam",
-    "gender": "male",
-    "role_code": "r2"
+    "gender": "male"
 }

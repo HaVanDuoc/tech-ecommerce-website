@@ -8,10 +8,12 @@ exports.lastName = Joi.string().min(1).max(30).required();
 
 exports.username = Joi.string().alphanum().min(3).max(30).required();
 
-exports.email = Joi.string().email({
-  minDomainSegments: 2,
-  tlds: { allow: ["com", "net"] },
-});
+exports.email = Joi.string()
+  .email({
+    minDomainSegments: 2,
+    tlds: { allow: ["com", "net"] },
+  })
+  .required();
 
 exports.password = Joi.string()
   .min(6)
@@ -27,4 +29,6 @@ exports.address = Joi.string();
 
 exports.gender = Joi.string();
 
-exports.role_code = Joi.string().min(2);
+exports.isAdmin = Joi.boolean();
+
+exports.role_id = Joi.string();

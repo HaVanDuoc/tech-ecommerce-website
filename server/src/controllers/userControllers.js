@@ -14,7 +14,8 @@ const {
   phoneNumber,
   address,
   gender,
-  role_code,
+  isAdmin,
+  role_id,
 } = require("../helper/joiSchema");
 
 exports.getCurrent = async (req, res) => {
@@ -41,7 +42,8 @@ exports.newUser = async (req, res) => {
       phoneNumber,
       address,
       gender,
-      role_code,
+      isAdmin,
+      role_id,
     }).validate(req.body);
 
     if (error) return badRequest(error.details[0]?.message, res);
