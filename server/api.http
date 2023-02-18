@@ -28,7 +28,7 @@ Content-Type: application/json
 POST http://localhost:4000/api/v1/admin/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
 
-### Get All User
+### Get All User Admin
 GET http://localhost:4000/api/v1/admin/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
 
@@ -53,7 +53,7 @@ Content-Type: application/json
     "gender": "male"
 }
 
-### CREATE NEW ROLE
+### CREATE NEW ROLE AMDIN
 POST http://localhost:4000/api/v1/admin/database/newRole
 Content-Type: application/json
 
@@ -61,10 +61,18 @@ Content-Type: application/json
     "name": ""
 }
 
-### CREATE NEW CATEGORY
+### CREATE NEW CATEGORY ADMIN
 POST http://localhost:4000/api/v1/admin/database/newCategory
 Content-Type: application/json
 
 {
     "name": "thẻ cào"
+}
+
+### CREATE NEW STATUS ADMIN
+POST http://localhost:4000/api/v1/admin/database/newStatus
+Content-Type: application/json
+
+{
+    "name": "disable"
 }

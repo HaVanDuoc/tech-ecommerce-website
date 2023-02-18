@@ -27,6 +27,11 @@ exports.padSpecificationId = (x) => {
   return "S" + Array(3 - String(x).length + 1).join("0") + x;
 };
 
+// Status ID
+exports.padStatusId = (x) => {
+  return "STA" + Array(2 - String(x).length + 1).join("0") + x;
+};
+
 // User ID
 exports.padUserId = (x) => {
   return "U" + Array(8 - String(x).length + 1).join("0") + x;

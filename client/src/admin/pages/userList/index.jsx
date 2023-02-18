@@ -12,6 +12,8 @@ export default function UserList() {
   const response = FetchUserList();
   React.useEffect(() => {
     setData(response);
+
+    console.log(data)
   }, [response]);
   //
 
@@ -27,11 +29,12 @@ export default function UserList() {
       width: 300,
       renderCell: (params) => {
         const firstName = params.row.firstName ? params.row.firstName : "";
+        const middleName = params.row.middleName ? params.row.middleName : "";
         const lastName = params.row.lastName ? params.row.lastName : "";
         return (
           <div className="userListUser">
             <img className="userListImg" src={params.row.avatar} alt="" />
-            {firstName + " " + lastName}
+            {firstName + " " + middleName + " " + lastName}
           </div>
         );
       },

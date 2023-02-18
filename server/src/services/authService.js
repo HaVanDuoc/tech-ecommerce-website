@@ -73,9 +73,7 @@ const login = (data) =>
         where: { email },
         raw: true, // chuyển instants thành object json
       });
-
-      console.log(response)
-
+      
       // Check password
       const isCheckedPassword =
         response && bcrypt.compareSync(password, response.password);

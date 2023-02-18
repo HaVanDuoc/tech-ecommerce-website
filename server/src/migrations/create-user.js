@@ -44,17 +44,22 @@ module.exports = {
       gender: {
         type: Sequelize.STRING,
       },
-      status: {
-        type: Sequelize.STRING,
-      },
       isAdmin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
       },
+      statusId: {
+        type: Sequelize.STRING,
+        defaultValue: "STA01",
+        references: {
+          model: "statuses",
+          key: "statusId",
+        },
+      },
       roleId: {
         type: Sequelize.STRING,
-        defaultValue: "001",
+        defaultValue: "R001",
         references: {
           model: "roles",
           key: "roleId",

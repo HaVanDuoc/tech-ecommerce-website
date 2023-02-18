@@ -1,8 +1,13 @@
 # CLI sequelize
 
+> Creating the first Model (and Migration)
+
+npx sequelize-cli model:generate --name User --attributes firstName:string,lastName:string,email:string
+
 > Running migrations Sequelize
 
 npx sequelize-cli db:migrate --name create-role.js
+npx sequelize-cli db:migrate --name create-status.js
 npx sequelize-cli db:migrate --name create-user.js
 npx sequelize-cli db:migrate --name create-category.js
 npx sequelize-cli db:migrate --name create-manufacturer.js
@@ -14,6 +19,7 @@ npx sequelize-cli db:migrate --name create-product.js
 
 npx sequelize-cli db:migrate:undo --name create-user.js
 npx sequelize-cli db:migrate:undo --name create-role.js
+npx sequelize-cli db:migrate:undo --name create-status.js
 npx sequelize-cli db:migrate:undo --name create-product.js
 npx sequelize-cli db:migrate:undo --name create-manufacturer.js
 npx sequelize-cli db:migrate:undo --name create-feature.js
