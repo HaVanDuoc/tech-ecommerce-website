@@ -7,21 +7,21 @@ const {
 const services = require("../services");
 const Joi = require("joi");
 const {
+  firstName,
+  middleName,
+  lastName,
   email,
   password,
-  firstName,
-  lastName,
-  role_code,
 } = require("../helper/joiSchema");
 
 exports.register = async (req, res) => {
   try {
     const { error } = Joi.object({
+      firstName,
+      middleName,
+      lastName,
       email,
       password,
-      firstName,
-      lastName,
-      role_code,
     }).validate(req.body);
 
     if (error) return badRequest(error.details[0]?.message, res);

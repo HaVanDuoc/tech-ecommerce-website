@@ -60,6 +60,7 @@ const SignUpForm = () => {
       <Formik
         initialValues={{
           firstName: "",
+          middleName: "",
           lastName: "",
           email: "",
           password: "",
@@ -67,6 +68,9 @@ const SignUpForm = () => {
         }}
         validationSchema={Yup.object({
           firstName: Yup.string()
+            .max(15, "*Tối đa 15 ký tự")
+            .required("*Bắt buộc"),
+          middleName: Yup.string()
             .max(15, "*Tối đa 15 ký tự")
             .required("*Bắt buộc"),
           lastName: Yup.string()
@@ -82,14 +86,14 @@ const SignUpForm = () => {
         })}
         onSubmit={(values, props) => {
           // destructuring - loại property 'confirmPassword'
-          const { firstName, lastName, email, password } = values;
+          const { firstName, middleName, lastName, email, password } = values;
 
           setTimeout(async () => {
             // get data from DB
             const response = await axios({
               method: "post",
               url: "/auth/register",
-              data: { firstName, lastName, email, password },
+              data: { firstName, middleName, lastName, email, password },
             });
 
             if (response.data.err !== 0) {
@@ -109,29 +113,43 @@ const SignUpForm = () => {
         {(props) => (
           <Form>
             <Title>Đăng ký</Title>
-            <Field
-              as={TextField}
-              label="Họ"
-              variant="outlined"
-              fullWidth
-              sx={{ marginBottom: "15px" }}
-              id="firstName"
-              name="firstName"
-              type="text"
-              helperText={<ErrorMessage name="firstName" />}
-            />
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Field
+                as={TextField}
+                label="Họ"
+                variant="outlined"
+                // fullWidth
+                sx={{ marginBottom: "15px", width: "30%" }}
+                id="firstName"
+                name="firstName"
+                type="text"
+                helperText={<ErrorMessage name="firstName" />}
+              />
 
-            <Field
-              as={TextField}
-              label="Tên"
-              variant="outlined"
-              fullWidth
-              sx={{ marginBottom: "15px" }}
-              id="lastName"
-              name="lastName"
-              type="text"
-              helperText={<ErrorMessage name="lastName" />}
-            />
+              <Field
+                as={TextField}
+                label="Tên đệm"
+                variant="outlined"
+                // fullWidth
+                sx={{ marginBottom: "15px", width: "30%" }}
+                id="middleName"
+                name="middleName"
+                type="text"
+                helperText={<ErrorMessage name="middleName" />}
+              />
+
+              <Field
+                as={TextField}
+                label="Tên"
+                variant="outlined"
+                // fullWidth
+                sx={{ marginBottom: "15px", width: "30%" }}
+                id="lastName"
+                name="lastName"
+                type="text"
+                helperText={<ErrorMessage name="lastName" />}
+              />
+            </Box>
 
             <Field
               as={TextField}

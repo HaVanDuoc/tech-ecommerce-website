@@ -3,37 +3,48 @@
 const db = require("../models");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
-const hashPassword = (password) =>
-  bcrypt.hashSync(password, bcrypt.genSaltSync(10));
+const { padUserId } = require("../helper/padLeft");
+const { hashPassword } = require("../helper/hashPassword");
 
 // SERVICE REGISTER
-const register = ({ email, password, firstName, lastName, role_code }) =>
+const register = (data) =>
   new Promise(async (resolve, reject) => {
     try {
+      const { firstName, middleName, lastName, email, password } = data;
+
+      // Create User Id
+      const responseId = await db.User.count({ distinct: true, col: "id" });
+      const userId = padUserId(responseId + 1);
+
+      const roleId = "R001"; // Role default is "R001" - "khách hàng"
+
       // kết quả trả về một array [data: object, created: boolean]
       const response = await db.User.findOrCreate({
         where: { email }, // tìm thấy email created=false -> Tài khoản đã tồn tại
+        // Ko tìm thấy dữ liệu -> created=true -> tạo dữ liệu mới theo defaults -> Đăng ký thành công
         defaults: {
-          // Ko tìm thấy dữ liệu -> created=true -> tạo dữ liệu mới theo defaults -> Đăng ký thành công
+          userId,
+          firstName,
+          middleName,
+          lastName,
           email,
           password: hashPassword(password),
-          firstName,
-          lastName,
-          role_code,
+          roleId,
         },
         raw: true, // chuyển instants thành object json
       });
 
+      // Nếu đăng ký thành công xem như đã đăng nhập nên tạo token luôn
       // jwt.sign(payload, secretOrPrivateKey, [options, callback])
       const token = response[1]
         ? jwt.sign(
             {
-              id: response[0].id,
+              userId: response[0].userId,
               email: response[0].email,
               firstName: response[0].firstName,
+              middleName: response[0].middleName,
               lastName: response[0].lastName,
-              role_code: response[0].role_code,
+              roleId: response[0].roleId,
             },
             process.env.JWT_SECRET,
             {
@@ -60,7 +71,7 @@ const login = ({ email, password }) =>
         where: { email },
         raw: true, // chuyển instants thành object json
       });
-      
+
       // Check password
       const isCheckedPassword =
         response && bcrypt.compareSync(password, response.password);

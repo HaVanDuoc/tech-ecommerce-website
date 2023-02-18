@@ -8,11 +8,11 @@ POST http://localhost:4000/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "admin2@gmail.com",
-    "password": "123456",
-    "firstName": "Ha",
-    "lastName": "Duoc",
-    "role_code": "r2"
+    "firstName": "Hà",
+    "middleName": "Văn",
+    "lastName": "Được",
+    "email": "havanduoc@gmail.com",
+    "password": "123456"
 }
 
 ### Login
