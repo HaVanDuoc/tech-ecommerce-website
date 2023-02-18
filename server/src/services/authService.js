@@ -64,13 +64,17 @@ const register = (data) =>
   });
 
 // SERVICE LOGIN
-const login = ({ email, password }) =>
+const login = (data) =>
   new Promise(async (resolve, reject) => {
     try {
+      const { email, password } = data;
+
       const response = await db.User.findOne({
         where: { email },
         raw: true, // chuyển instants thành object json
       });
+
+      console.log(response)
 
       // Check password
       const isCheckedPassword =
@@ -79,11 +83,12 @@ const login = ({ email, password }) =>
       const token = isCheckedPassword
         ? jwt.sign(
             {
-              id: response.id,
+              userId: response.userId,
               email: response.email,
               firstName: response.firstName,
+              middleName: response.middleName,
               lastName: response.lastName,
-              role_code: response.role_code,
+              roleId: response.roleId,
             },
             process.env.JWT_SECRET,
             {
