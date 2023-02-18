@@ -2,6 +2,7 @@ import { Accessory, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
 import Home from "~/pages/Home_v2";
 import AdminLayout from "./admin/layouts";
 import {
+  DatabaseAdmin,
   HomeAdmin,
   NewProductAdmin,
   NewUserAdmin,
@@ -34,4 +35,5 @@ export const privateRoutes = [
     layout: AdminLayout,
   },
   { path: "/admin/newProduct", page: NewProductAdmin, layout: AdminLayout },
+  { path: "/admin/database", page: DatabaseAdmin, layout: AdminLayout },
 ];
