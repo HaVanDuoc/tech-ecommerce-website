@@ -44,6 +44,10 @@ module.exports = {
       gender: {
         type: Sequelize.STRING,
       },
+      transactionVolume: {
+        type: Sequelize.STRING,
+        defaultValue: "0",
+      },
       isAdmin: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
