@@ -41,9 +41,6 @@ module.exports = {
       address: {
         type: Sequelize.STRING,
       },
-      gender: {
-        type: Sequelize.STRING,
-      },
       transactionVolume: {
         type: Sequelize.STRING,
         defaultValue: "0",
@@ -52,6 +49,14 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
         allowNull: false,
+      },
+      genderCode: {
+        type: Sequelize.STRING,
+        defaultValue: "-1",
+        references: {
+          model: "genders",
+          key: "code",
+        },
       },
       statusId: {
         type: Sequelize.STRING,
