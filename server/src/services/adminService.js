@@ -1,5 +1,11 @@
 const { QueryTypes } = require("sequelize");
-const { padRoleId, padCategoryId, padStatusId } = require("../helper/padLeft");
+const {
+  padRoleId,
+  padCategoryId,
+  padStatusId,
+  padUserId,
+} = require("../helper/padLeft");
+const { hashPassword } = require("../helper/hashPassword");
 const { badRequest } = require("../middleware/handleError");
 const { sequelize } = require("../models");
 const db = require("../models");
@@ -30,6 +36,54 @@ exports.getAllUser = () =>
         err: response ? 0 : 1,
         msg: response ? "Get data successfully" : "Get data failed",
         data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.createNewUser = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const {
+        firstName,
+        middleName,
+        lastName,
+        email,
+        password,
+        phoneNumber,
+        address,
+        gender,
+        role,
+      } = data;
+
+      // Create User Id
+      const responseId = await db.User.count({ distinct: true, col: "id" });
+      const userId = padUserId(responseId + 1);
+
+      // kết quả trả về một array [data: object, created: boolean]
+      const response = await db.User.findOrCreate({
+        where: { email }, // tìm thấy email created=false -> Tài khoản đã tồn tại
+        // Ko tìm thấy dữ liệu -> created=true -> tạo dữ liệu mới theo defaults -> Đăng ký thành công
+        defaults: {
+          userId,
+          firstName,
+          middleName,
+          lastName,
+          email,
+          password: hashPassword(password),
+          phoneNumber,
+          address,
+          genderCode: gender,
+          roleId: role,
+        },
+        raw: true, // chuyển instants thành object json
+      });
+
+      resolve({
+        err: response[1] ? 0 : 1,
+        msg: response[1] ? "Create successfully" : "Email đã được đăng ký",
+        data: response[1] ? response[0] : null,
       });
     } catch (error) {
       reject(error);

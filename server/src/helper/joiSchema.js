@@ -31,5 +31,4 @@ exports.gender = Joi.string();
 
 exports.isAdmin = Joi.boolean();
 
-exports.role_id = Joi.string();
-
+exports.role = Joi.string();

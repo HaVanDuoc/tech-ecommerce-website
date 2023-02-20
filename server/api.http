@@ -32,6 +32,21 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiO
 GET http://localhost:4000/api/v1/admin/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
 
+### CREATE NEW USER [ADMIN]
+POST http://localhost:4000/api/v1/admin/user/newUser
+Content-Type: application/json
+
+{
+    "firstName": "Hà",
+    "middleName": "Văn",
+    "lastName": "Được",
+    "email": "havanduoc3@gmail.com",
+    "password": "123456",
+    "phoneNumber": "0382494285",
+    "gender": "0",
+    "role": "R001"
+}
+
 
 ### API USER
 ### Get current user

@@ -10,14 +10,16 @@ const router = require("express").Router();
 
 router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }));
 
-router.get("/users", adminController.getAllUser)
+router.get("/users", adminController.getAllUser);
 
-router.post("/database/newRole", adminController.createNewRole)
+router.post("/user/newUser", adminController.createNewUser);
 
-router.post("/database/newCategory", adminController.createNewCategory)
+router.post("/database/newCategory", adminController.createNewCategory);
 
-router.post("/database/newStatus", adminController.createNewStatus)
+router.post("/database/newStatus", adminController.createNewStatus);
 
-router.get("/roles", adminController.getListRole)
+router.get("/roles", adminController.getListRole);
+
+router.post("/database/newRole", adminController.createNewRole);
 
 module.exports = router;
