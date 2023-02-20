@@ -3,6 +3,32 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import React from "react";
 import axios from "axios";
+import { FetchRoleList } from "~/helper/fetch";
+import { MenuItem, Select } from "@mui/material";
+
+const FieldSelect = () => {
+  // FETCH ROLE LIST
+  const [role, setRole] = React.useState([]);
+  const roleList = FetchRoleList();
+
+  React.useEffect(() => {
+    setRole(roleList);
+  }, [roleList]);
+
+  return (
+    <Field as={Select} className="newUserSelect" name="role" id="role">
+      {role.map((item) => (
+        <MenuItem
+          key={item.id}
+          value={item.roleId}
+          className="newUserSelectOption"
+        >
+          {item.name}
+        </MenuItem>
+      ))}
+    </Field>
+  );
+};
 
 export default function NewUser() {
   const [error, setError] = React.useState(null);
@@ -46,7 +72,6 @@ export default function NewUser() {
         ),
         address: Yup.string(),
       })}
-
       // SUBMIT
       onSubmit={(values) => {
         setSubmitting(true); // click submit khóa liền
@@ -129,19 +154,14 @@ export default function NewUser() {
             <label>Giới tính</label>
             <div className="newUserGender">
               <Field type="radio" name="gender" id="male" value="male" />
-              <label for="male">Nam</label>
+              <label htmlFor="male">Nam</label>
               <Field type="radio" name="gender" id="female" value="female" />
-              <label for="female">Nữ</label>
+              <label htmlFor="female">Nữ</label>
             </div>
           </div>
           <div className="newUserItem">
-            <label>Phân quyền</label>
-            <Field as="select" className="newUserSelect" name="role" id="role">
-              <option value="r1">User</option>
-              <option value="r2" selected>
-                Admin
-              </option>
-            </Field>
+            <label>Tài khoản dành cho</label>
+            <FieldSelect />
           </div>
           <button type="submit" className="newUserButton">
             Create

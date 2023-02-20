@@ -18,4 +18,6 @@ router.post("/database/newCategory", adminController.createNewCategory)
 
 router.post("/database/newStatus", adminController.createNewStatus)
 
+router.get("/roles", adminController.getListRole)
+
 module.exports = router;

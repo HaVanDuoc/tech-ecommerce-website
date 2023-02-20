@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { DataGrid } from "@mui/x-data-grid";
-import { FetchUserList } from "./fetchData";
+import { Avatar } from "@mui/material";
+import { FetchUserList } from "~/helper/fetch";
 
 export default function UserList() {
   const [data, setData] = useState([]);
@@ -12,8 +13,6 @@ export default function UserList() {
   const response = FetchUserList();
   React.useEffect(() => {
     setData(response);
-
-    console.log(data)
   }, [response]);
   //
 
@@ -22,33 +21,37 @@ export default function UserList() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "userId", headerName: "ID", width: 110 },
     {
       field: "user",
       headerName: "Name",
-      width: 300,
+      width: 250,
       renderCell: (params) => {
         const firstName = params.row.firstName ? params.row.firstName : "";
         const middleName = params.row.middleName ? params.row.middleName : "";
         const lastName = params.row.lastName ? params.row.lastName : "";
         return (
           <div className="userListUser">
-            <img className="userListImg" src={params.row.avatar} alt="" />
+            <Avatar
+              alt="avatar"
+              src={params.row.avatar}
+              className="userListImg"
+            />
             {firstName + " " + middleName + " " + lastName}
           </div>
         );
       },
     },
-    { field: "email", headerName: "Email", width: 200 },
+    { field: "email", headerName: "Email", width: 180 },
     {
       field: "status",
       headerName: "Status",
       width: 120,
     },
     {
-      field: "transaction",
+      field: "transactionVolume",
       headerName: "Transaction Volume",
-      width: 160,
+      width: 200,
     },
     {
       field: "action",

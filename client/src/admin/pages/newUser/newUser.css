@@ -31,7 +31,7 @@
   font-size: 16px;
 }
 
-.newUserItem .errorMessage{
+.newUserItem .errorMessage {
   color: red;
   font-size: 13px;
 }
@@ -40,25 +40,30 @@
   margin-top: 15px;
 }
 
-.newUserGender>label{
-    margin: 10px;
-    font-size: 18px;
-    color: #555;
+.newUserGender > label {
+  margin: 10px;
+  font-size: 18px;
+  color: #555;
 }
 
-.newUserSelect{
-    height: 40px;
-    border-radius: 5px;
+.newUserSelect {
+  height: 40px;
+  border-radius: 5px;
 }
 
-.newUserButton{
-    width: 200px;
-    border: none;
-    background-color: darkblue;
-    color: white;
-    padding: 7px 10px;
-    font-weight: 600;
-    border-radius: 10px;
-    margin-top: 30px;
-    cursor: pointer;
+.newUserSelect,
+.newUserSelectOption {
+  text-transform: capitalize;
+}
+
+.newUserButton {
+  width: 200px;
+  border: none;
+  background-color: darkblue;
+  color: white;
+  padding: 7px 10px;
+  font-weight: 600;
+  border-radius: 10px;
+  margin-top: 30px;
+  cursor: pointer;
 }
