@@ -16,10 +16,24 @@ const {
   role,
 } = require("../helper/joiSchema");
 
+const { updateUser } = require("../helper/joiSchema");
+const { response } = require("express");
+
 exports.getAllUser = async (req, res) => {
   try {
     const response = await adminService.getAllUser(); // service
 
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const response = await adminService.getUser(userId);
     res.status(200).json(response);
   } catch (error) {
     return intervalServerError(res);
@@ -43,6 +57,33 @@ exports.createNewUser = async (req, res) => {
     if (error) return badRequest(error.details[0]?.message, res);
 
     const response = await adminService.createNewUser(req.body); // service
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+// Update User
+exports.updateUser = async (req, res) => {
+  try {
+    const { error } = Joi.object({
+      firstName: updateUser.firstName,
+      middleName: updateUser.middleName,
+      lastName: updateUser.lastName,
+      email: updateUser.email,
+      password: updateUser.password,
+      phoneNumber: updateUser.phoneNumber,
+      address: updateUser.address,
+      gender: updateUser.gender,
+      role: updateUser.role,
+    }).validate(req.body);
+
+    if (error) return badRequest(error.details[0]?.message, res);
+
+    const userId = req.params.userId;
+
+    const response = await adminService.updateUser(userId, req.body);
 
     res.status(200).json(response);
   } catch (error) {

@@ -3,6 +3,8 @@
 ### Not Found
 POST http://localhost:4000/api/v1/notFound
 
+# ---------------- Auth ------------------
+
 ### Register
 POST http://localhost:4000/api/v1/auth/register
 Content-Type: application/json
@@ -24,15 +26,21 @@ Content-Type: application/json
     "password": "123456"
 }
 
+
+# ------------------- Admin ----------------------
+
 ### Access admin page
 POST http://localhost:4000/api/v1/admin/
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
 
-### Get All User Admin
+### Get All User
 GET http://localhost:4000/api/v1/admin/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJIw6AiLCJsYXN0TmFtZSI6IlbEg24gxJDGsOG7o2MiLCJyb2xlX2NvZGUiOiJyMiIsImlhdCI6MTY3NjI2OTg5NCwiZXhwIjoxNjc2ODc0Njk0fQ.vsT-ydusjGtLjSWpW-YxbZi6MW2fQzUa4q2s42JI8s8
 
-### CREATE NEW USER [ADMIN]
+### Get One User
+GET http://localhost:4000/api/v1/admin/user/U00000005
+
+### CREATE NEW USER
 POST http://localhost:4000/api/v1/admin/user/newUser
 Content-Type: application/json
 
@@ -45,6 +53,14 @@ Content-Type: application/json
     "phoneNumber": "0382494285",
     "gender": "0",
     "role": "R001"
+}
+
+### Update User
+PUT http://localhost:4000/api/v1/admin/user/U00000003
+Content-Type: application/json
+
+{
+    "address": "Long Khánh, Đồng Nai"
 }
 
 

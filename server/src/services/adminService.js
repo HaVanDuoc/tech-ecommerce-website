@@ -14,21 +14,22 @@ exports.getAllUser = () =>
   new Promise(async (resolve, reject) => {
     try {
       const query = `SELECT
-                          users.id,
-                          userId,
-                          firstName,
-                          middleName,
-                          lastName,
-                          email,
-                          avatar,
-                          transactionVolume,
-                          isAdmin,
-                          statuses.name as 'status',
-                          roles.name as "role"
-                      FROM
-                          users
-                          left join statuses on users.statusId = statuses.statusId
-                          left join roles on users.roleId = roles.roleId`;
+                        users.id,
+                        userId,
+                        firstName,
+                        middleName,
+                        lastName,
+                        userName,
+                        email,
+                        avatar,
+                        dateOfBirth,
+                        transactionVolume,
+                        statuses.name as 'status',
+                        roles.name as "role"
+                    FROM
+                        users
+                        left join statuses on users.statusId = statuses.statusId
+                        left join roles on users.roleId = roles.roleId;`;
 
       const [response] = await sequelize.query(query, { raw: true });
 
@@ -36,6 +37,48 @@ exports.getAllUser = () =>
         err: response ? 0 : 1,
         msg: response ? "Get data successfully" : "Get data failed",
         data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.getUser = (userId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const query = `SELECT
+                        users.id,
+                        userId,
+                        firstName,
+                        middleName,
+                        lastName,
+                        userName,
+                        email,
+                        password,
+                        avatar,
+                        dateOfBirth,
+                        phoneNumber,
+                        address,
+                        transactionVolume,
+                        genders.name as 'gender',
+                        statuses.name as 'status',
+                        roles.name as "role"
+                    FROM
+                        users
+                        left join statuses on users.statusId = statuses.statusId
+                        left join roles on users.roleId = roles.roleId
+                        left join genders on users.genderCode = genders.code
+                    WhERE
+                        userId = "${userId}"
+                    LIMIT
+                        1;`;
+
+      const [response] = await sequelize.query(query, { raw: true });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failed",
+        data: response[0],
       });
     } catch (error) {
       reject(error);
@@ -84,6 +127,24 @@ exports.createNewUser = (data) =>
         err: response[1] ? 0 : 1,
         msg: response[1] ? "Create successfully" : "Email đã được đăng ký",
         data: response[1] ? response[0] : null,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.updateUser = (userId, data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.User.update(data, {
+        where: { userId },
+        raw: true,
+      });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Cập nhật thành công" : "Cập nhật thất bại",
+        data: response[0],
       });
     } catch (error) {
       reject(error);

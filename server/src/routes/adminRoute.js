@@ -12,7 +12,11 @@ router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }));
 
 router.get("/users", adminController.getAllUser);
 
+router.get("/user/:userId", adminController.getUser);
+
 router.post("/user/newUser", adminController.createNewUser);
+
+router.put("/user/:userId", adminController.updateUser);
 
 router.post("/database/newCategory", adminController.createNewCategory);
 
