@@ -17,7 +17,7 @@ const {
 } = require("../helper/joiSchema");
 
 const { updateUser } = require("../helper/joiSchema");
-const { response } = require("express");
+
 const { CheckUserNameExists } = require("../helper/checkExists");
 
 exports.getAllUser = async (req, res) => {
@@ -85,10 +85,8 @@ exports.updateUser = async (req, res) => {
     if (error) return badRequest(error.details[0]?.message, res);
 
     // Check Username Exists
-    const checkUserName = CheckUserNameExists(req.body.userName);
-    return console.log("checkUserName", checkUserName);
-    if (checkUserName === true)
-      return badRequest("Tên người dùng đã được sử dụng", res);
+    const checkUserName = await CheckUserNameExists(req.body.userName);
+    if (checkUserName.err === 1) return res.status(200).json(checkUserName);
 
     const userId = req.params.userId;
 
