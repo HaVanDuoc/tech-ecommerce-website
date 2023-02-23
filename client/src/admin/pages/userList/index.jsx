@@ -60,7 +60,7 @@ export default function UserList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/user/" + params.row.id}>
+            <Link to={"/admin/user/" + params.row.userId}>
               <button className="userListEdit">Edit</button>
             </Link>
             <DeleteOutlineIcon
@@ -77,7 +77,7 @@ export default function UserList() {
     <div className="userList">
       <div className="productListOption">
         <Link to="/admin/newUser">
-          <button className="productAddButton">Thêm</button>
+          <button className="userAddButton">Create</button>
         </Link>
       </div>
       <DataGrid

@@ -32,3 +32,25 @@ exports.gender = Joi.string();
 exports.isAdmin = Joi.boolean();
 
 exports.role = Joi.string();
+
+exports.updateUser = {
+  firstName: Joi.string().min(1).max(30),
+  middleName: Joi.string().min(1).max(30),
+  lastName: Joi.string().min(1).max(30),
+  userName: Joi.string().min(1).max(30),
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: { allow: ["com", "net"] },
+  }),
+  password: Joi.string()
+    .min(6)
+    .max(30)
+    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+  phoneNumber: Joi.string()
+    .length(10)
+    .pattern(/^[0-9]+$/),
+  address: Joi.string(),
+  genderCode: Joi.string(),
+  roleId: Joi.string(),
+  statusId: Joi.string(),
+};

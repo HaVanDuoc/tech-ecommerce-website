@@ -5,15 +5,14 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.addColumn(
+        queryInterface.addConstraint(
           "Users",
-          "genderCode",
           {
-            type: Sequelize.DataTypes.STRING,
-            defaultValue: "-1",
+            type: "foreign key",
+            fields: ["genderCode"],
             references: {
-              model: "genders",
-              key: "code",
+              table: "genders",
+              field: "code",
             },
           },
           { transaction: t }
@@ -25,9 +24,13 @@ module.exports = {
   async down(queryInterface, Sequelize) {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn("Users", "genderCode", {
-          transaction: t,
-        }),
+        queryInterface.removeConstraint(
+          "Users",
+          "Users_genderCode_foreign_idx",
+          {
+            transaction: t,
+          }
+        ),
       ]);
     });
   },

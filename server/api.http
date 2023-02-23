@@ -56,11 +56,11 @@ Content-Type: application/json
 }
 
 ### Update User
-PUT http://localhost:4000/api/v1/admin/user/U00000003
+PUT http://localhost:4000/api/v1/admin/user/U00000002
 Content-Type: application/json
 
 {
-    "address": ""
+    "userName": "havanduoc1"
 }
 
 
@@ -115,3 +115,9 @@ GET http://localhost:4000/api/v1/admin/roles
 
 ### Get Gender
 GET http://localhost:4000/api/v1/db/getGender
+
+### Get List Role
+GET http://localhost:4000/api/v1/db/listRole
+
+### Get Status Account
+GET http://localhost:4000/api/v1/db/statusAccount

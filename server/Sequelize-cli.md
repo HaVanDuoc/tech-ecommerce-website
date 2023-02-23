@@ -42,4 +42,4 @@ npx sequelize-cli db:seed:undo:all
 
 > Migration Skeleton
 
-npx sequelize-cli migration:generate --name add-foreign-key-gender
+npx sequelize-cli migration:generate --name add-column-users

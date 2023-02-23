@@ -18,6 +18,7 @@ const {
 
 const { updateUser } = require("../helper/joiSchema");
 const { response } = require("express");
+const { CheckUserNameExists } = require("../helper/checkExists");
 
 exports.getAllUser = async (req, res) => {
   try {
@@ -71,15 +72,23 @@ exports.updateUser = async (req, res) => {
       firstName: updateUser.firstName,
       middleName: updateUser.middleName,
       lastName: updateUser.lastName,
+      userName: updateUser.userName,
       email: updateUser.email,
       password: updateUser.password,
       phoneNumber: updateUser.phoneNumber,
       address: updateUser.address,
-      gender: updateUser.gender,
-      role: updateUser.role,
+      genderCode: updateUser.genderCode,
+      roleId: updateUser.roleId,
+      statusId: updateUser.statusId,
     }).validate(req.body);
 
     if (error) return badRequest(error.details[0]?.message, res);
+
+    // Check Username Exists
+    const checkUserName = CheckUserNameExists(req.body.userName);
+    return console.log("checkUserName", checkUserName);
+    if (checkUserName === true)
+      return badRequest("Tên người dùng đã được sử dụng", res);
 
     const userId = req.params.userId;
 

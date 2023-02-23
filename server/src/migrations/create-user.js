@@ -26,8 +26,11 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
       },
-      username: {
+      userName: {
         type: Sequelize.STRING,
+      },
+      dateOfBirth: {
+        type: Sequelize.DATE,
       },
       password: {
         type: Sequelize.STRING,
@@ -44,11 +47,6 @@ module.exports = {
       transactionVolume: {
         type: Sequelize.STRING,
         defaultValue: "0",
-      },
-      isAdmin: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
       },
       genderCode: {
         type: Sequelize.STRING,

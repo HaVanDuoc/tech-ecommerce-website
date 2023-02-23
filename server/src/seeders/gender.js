@@ -7,16 +7,16 @@ module.exports = {
       "Genders",
       [
         {
-          code: "-1",
-          name: "chưa rõ",
-        },
-        {
           code: "0",
-          name: "ông",
+          name: "Nam",
         },
         {
           code: "1",
-          name: "bà",
+          name: "Nữ",
+        },
+        {
+          code: "-1",
+          name: "Chưa rõ",
         },
       ],
       {}
