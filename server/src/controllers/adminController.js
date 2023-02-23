@@ -18,7 +18,10 @@ const {
 
 const { updateUser } = require("../helper/joiSchema");
 
-const { CheckUserNameExists } = require("../helper/checkExists");
+const {
+  CheckUserNameExists,
+  CheckEmailExists,
+} = require("../helper/checkExists");
 
 exports.getAllUser = async (req, res) => {
   try {
@@ -84,9 +87,17 @@ exports.updateUser = async (req, res) => {
 
     if (error) return badRequest(error.details[0]?.message, res);
 
+    // Check Email Exists
+    if (req.body.email) {
+      const checkEmail = await CheckEmailExists(req.body.email);
+      if (checkEmail.err === 1) return res.status(200).json(checkEmail);
+    }
+
     // Check Username Exists
-    const checkUserName = await CheckUserNameExists(req.body.userName);
-    if (checkUserName.err === 1) return res.status(200).json(checkUserName);
+    if (req.body.userName) {
+      const checkUserName = await CheckUserNameExists(req.body.userName);
+      if (checkUserName.err === 1) return res.status(200).json(checkUserName);
+    }
 
     const userId = req.params.userId;
 

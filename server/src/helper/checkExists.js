@@ -21,3 +21,22 @@ exports.CheckUserNameExists = (userName) =>
       reject(error);
     }
   });
+
+exports.CheckEmailExists = (email) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const { count, data } = await db.User.findAndCountAll({
+        where: { email },
+        attributes: ["id", "email"],
+        raw: true,
+      });
+
+      resolve({
+        err: count === 0 ? 0 : 1,
+        msg: count === 0 ? "Email có thể sử dụng" : "Email đã được sử dụng",
+        data: data,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });

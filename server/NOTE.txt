@@ -1,1 +1,3 @@
-Tên model nhớ thêm 's' số nhiều
+-- Tên model nhớ thêm 's' số nhiều
+
+-- client dùng `async/await` nhưng bên server dùng `new Promise` nhớ

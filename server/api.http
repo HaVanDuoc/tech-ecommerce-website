@@ -56,11 +56,11 @@ Content-Type: application/json
 }
 
 ### Update User
-PUT http://localhost:4000/api/v1/admin/user/U00000002
+PUT http://localhost:4000/api/v1/admin/user/U00000001
 Content-Type: application/json
 
 {
-    "userName": "havanduoc4"
+    "userName": "havanduoc2"
 }
 
 
