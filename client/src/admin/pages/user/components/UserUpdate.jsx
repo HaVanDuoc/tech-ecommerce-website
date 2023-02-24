@@ -2,11 +2,9 @@ import React from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import * as Yup from "yup";
-import { useParams } from "react-router-dom";
-
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider, MobileDatePicker } from "@mui/x-date-pickers";
+import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { Button, Grid, TextField } from "@mui/material";
 import removeEmpty from "~/helper/removeEmpty";
 import Notification from "~/components/Notification";
@@ -15,21 +13,22 @@ import StatusAccount from "~/components/StatusAccount";
 import SelectRole from "~/components/SelectRole";
 import UploadAvatar from "./UploadAvatar";
 
-const UserUpdate = () => {
+const UserUpdate = ({ fetch }) => {
+  const { userId } = fetch;
   const [data, setData] = React.useState({ err: "", msg: "", data: "" });
-  const [isSubmitting, setSubmitting] = React.useState(false);
-  const userId = useParams().userId;
-  const [value, setValue] = React.useState(dayjs("2014-08-18T21:11:54"));
+  const [isSubmitting, setSubmitting] = React.useState(false); // Block button submit when its submitting
+  const [value, setValue] = React.useState(dayjs(new Date())); // Date of birth
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
-  };
+  // For UploadAvatar components
 
   const onSubmit = (values, props) => {
-    const data = removeEmpty(values);
+    const data = removeEmpty(values); // exclude prop blank
 
-    setSubmitting(true);
+    // return alert(JSON.stringify(data));
 
+    setSubmitting(true); // block button submit
+
+    // handle update
     setTimeout(async () => {
       const response = await axios({
         method: "put",
@@ -37,14 +36,12 @@ const UserUpdate = () => {
         data: data,
       });
 
-      // Set data phản hồi
       setData(response.data);
 
-      // Nếu tạo thành công thì reset form
-      if (response.data.err === 0) return props.resetForm();
+      if (response.data.err === 0) return props.resetForm(); // if successful then reset form
     }, 2000);
 
-    setSubmitting(false);
+    setSubmitting(false); // unlock button submit
   };
 
   return (
@@ -79,19 +76,23 @@ const UserUpdate = () => {
 
                 <Grid item xs={6}>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <MobileDatePicker
+                    <DesktopDatePicker
                       label="Ngày sinh"
                       inputFormat="DD/MM/YYYY"
                       value={value}
-                      onChange={handleChange}
-                      renderInput={(params) => (
-                        <Field
-                          as={TextField}
-                          id="dateOfBirth"
-                          name="dateOfBirth"
-                          {...params}
-                        />
-                      )}
+                      onChange={(newValue) => {
+                        setValue(newValue);
+                        props.setFieldValue("dateOfBirth", newValue);
+                      }}
+                      renderInput={(params) => {
+                        return (
+                          <Field
+                            as={TextField}
+                            name="dateOfBirth"
+                            {...params}
+                          />
+                        );
+                      }}
                     />
                   </LocalizationProvider>
                 </Grid>
@@ -118,7 +119,7 @@ const UserUpdate = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <UploadAvatar />
+                <UploadAvatar props={props} />
 
                 <Button
                   type="submit"

@@ -25,7 +25,7 @@ const {
 
 exports.getAllUser = async (req, res) => {
   try {
-    const response = await adminService.getAllUser(); // service
+    const response = await adminService.getAllUser();
 
     res.status(200).json(response);
   } catch (error) {
@@ -80,6 +80,8 @@ exports.updateUser = async (req, res) => {
       password: updateUser.password,
       phoneNumber: updateUser.phoneNumber,
       address: updateUser.address,
+      dateOfBirth: updateUser.dateOfBirth,
+      avatar: updateUser.avatar,
       genderCode: updateUser.genderCode,
       roleId: updateUser.roleId,
       statusId: updateUser.statusId,

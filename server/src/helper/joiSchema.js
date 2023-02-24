@@ -50,6 +50,8 @@ exports.updateUser = {
     .length(10)
     .pattern(/^[0-9]+$/),
   address: Joi.string(),
+  dateOfBirth: Joi.string(),
+  avatar: Joi.string(),
   genderCode: Joi.string(),
   roleId: Joi.string(),
   statusId: Joi.string(),

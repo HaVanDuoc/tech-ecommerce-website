@@ -136,7 +136,7 @@ exports.createNewUser = (data) =>
 exports.updateUser = (userId, data) =>
   new Promise(async (resolve, reject) => {
     try {
-      const response = await db.User.update(data, {
+      response = await db.User.update(data, {
         where: { userId },
         raw: true,
       });

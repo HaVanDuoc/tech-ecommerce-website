@@ -8,22 +8,11 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
 import formatPhoneNumber from "~/helper/formatPhoneNumber";
 import { Avatar } from "@mui/material";
-import { useParams } from "react-router-dom";
-import { FetchUser } from "~/helper/fetch";
 import React from "react";
+import FormatFullName from "~/helper/formatFullName";
+import dayjs from "dayjs";
 
-const UserShow = () => {
-  const [user, setUser] = React.useState({});
-
-  // Lấy UID từ url hiện tại
-  const userId = useParams().userId;
-
-  // Fetch thông tin user
-  const response = FetchUser(userId);
-  React.useEffect(() => {
-    setUser(response);
-  }, [response]);
-
+const UserShow = ({ fetch }) => {
   const {
     firstName,
     middleName,
@@ -37,11 +26,14 @@ const UserShow = () => {
     email,
     address,
     status,
-  } = user;
+  } = fetch;
 
   const AccountDetails = [
     { value: userName, icon: <PermIdentityIcon className="userShowIcon" /> },
-    { value: dateOfBirth, icon: <CakeOutlinedIcon className="userShowIcon" /> },
+    {
+      value: String(dayjs(dateOfBirth).format('DD/MM/YYYY')),
+      icon: <CakeOutlinedIcon className="userShowIcon" />,
+    },
     {
       value: transactionVolume,
       icon: <AttachMoneyIcon className="userShowIcon" />,
@@ -66,8 +58,8 @@ const UserShow = () => {
   ];
 
   // FullName
-  const fullName =
-    (firstName || "") + " " + (middleName || "") + " " + (lastName || "");
+  const fullName = FormatFullName(firstName, middleName, lastName);
+
   return (
     <div className="userShow">
       <div className="userShowTop">
