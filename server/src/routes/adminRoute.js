@@ -18,6 +18,8 @@ router.post("/user/newUser", adminController.createNewUser);
 
 router.put("/user/:userId", adminController.updateUser);
 
+router.delete("/user/:userId", adminController.deleteUser);
+
 router.post("/database/newCategory", adminController.createNewCategory);
 
 router.post("/database/newStatus", adminController.createNewStatus);

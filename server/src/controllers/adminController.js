@@ -111,6 +111,19 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// Delete User
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const response = await adminService.deleteUser(userId);
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
 exports.createNewRole = async (req, res) => {
   try {
     const name = Joi.string().min(1).required();

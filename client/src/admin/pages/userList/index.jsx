@@ -3,11 +3,46 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { DataGrid } from "@mui/x-data-grid";
-import { Avatar } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import { FetchUserList } from "~/helper/fetch";
+import FormatFullName from "~/helper/formatFullName";
+import axios from "axios";
 
 export default function UserList() {
   const [data, setData] = useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [userDelete, setUserDelete] = useState(null);
+  const {
+    avatar,
+    dateOfBirth,
+    email,
+    firstName,
+    id,
+    lastName,
+    middleName,
+    role,
+    status,
+    transactionVolume,
+    userId,
+    userName,
+  } = data; // Data available
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // Fetch list user
   const response = FetchUserList();
@@ -16,8 +51,26 @@ export default function UserList() {
   }, [response]);
   //
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
+  const handleDelete = (userId, firstName, middleName, lastName) => {
+    setOpen(true);
+    setUserDelete({
+      userId,
+      fullName: FormatFullName(firstName, middleName, lastName),
+    }); // Transmission userId and fullName for Alert
+  };
+
+  const handleAgreeDelete = (userId) => {
+    setTimeout(async () => {
+      const response = await axios({
+        method: "delete",
+        url: `/admin/user/${userId}`,
+      });
+
+      if (response.data.err === 0) {
+        setData(data.filter((item) => item.userId !== userId));
+        handleClose(); // Close Delete Box
+      }
+    }, 1500);
   };
 
   const columns = [
@@ -65,7 +118,14 @@ export default function UserList() {
             </Link>
             <DeleteOutlineIcon
               className="userListDelete"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() =>
+                handleDelete(
+                  params.row.userId,
+                  params.row.firstName,
+                  params.row.middleName,
+                  params.row.lastName
+                )
+              }
             />
           </>
         );
@@ -88,6 +148,42 @@ export default function UserList() {
         checkboxSelection
         autoHeight
       />
+
+      {/* Dialog Delete Box */}
+      {open && (
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Bạn chắc chắn muốn xóa?"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Người dùng{" "}
+              <Typography variant="span" fontWeight={600}>
+                {userDelete.fullName}
+              </Typography>{" "}
+              có ID{" "}
+              <Typography variant="span" fontWeight={600}>
+                {userDelete.userId}
+              </Typography>{" "}
+              sẽ được loại bỏ..!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Hủy</Button>
+            <Button
+              onClick={() => handleAgreeDelete(userDelete.userId)}
+              autoFocus
+            >
+              Xóa
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 }

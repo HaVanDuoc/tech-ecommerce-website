@@ -151,6 +151,24 @@ exports.updateUser = (userId, data) =>
     }
   });
 
+exports.deleteUser = (userId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.User.destroy({
+        where: { userId },
+        raw: true,
+      });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Đã xóa" : "Xóa thất bại",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
 exports.createNewRole = (data) =>
   new Promise(async (resolve, reject) => {
     try {
