@@ -47,3 +47,4 @@ WhERE
     userId = "U00000001"
 LIMIT
     1;
+    

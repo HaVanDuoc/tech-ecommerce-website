@@ -8,6 +8,7 @@ import {
 import { Field } from "formik";
 import React from "react";
 import { FetchStatusAccount } from "~/helper/fetch";
+import formatCapitalization from "~/helper/formatCapitalization";
 
 const StatusAccount = () => {
   const [status, setStatus] = React.useState([]);
@@ -32,7 +33,7 @@ const StatusAccount = () => {
             name="statusId"
             value={item.statusId}
             control={<Radio size="small" />}
-            label={item.name}
+            label={formatCapitalization(item.name)}
           />
         ))}
       </RadioGroup>

@@ -43,8 +43,9 @@ const DbManagement = () => {
                   <Link
                     to={`/admin/database/${item.Tables_in_tech}`}
                     className="link"
+                    key={index}
                   >
-                    <li key={index} sx={{ pl: 4 }} className="sidebarListItem">
+                    <li sx={{ pl: 4 }} className="sidebarListItem">
                       <SubdirectoryArrowRightIcon />
                       <ListItemText primary={item.Tables_in_tech} />
                     </li>

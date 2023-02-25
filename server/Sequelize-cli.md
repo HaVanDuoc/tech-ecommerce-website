@@ -11,7 +11,7 @@ npx sequelize-cli db:migrate --name create-status.js
 npx sequelize-cli db:migrate --name create-gender.js
 npx sequelize-cli db:migrate --name create-user.js
 npx sequelize-cli db:migrate --name create-category.js
-npx sequelize-cli db:migrate --name create-manufacturer.js
+npx sequelize-cli db:migrate --name create-brand.js
 npx sequelize-cli db:migrate --name create-feature.js
 npx sequelize-cli db:migrate --name create-specification.js
 npx sequelize-cli db:migrate --name create-product.js
@@ -23,7 +23,7 @@ npx sequelize-cli db:migrate:undo --name create-role.js
 npx sequelize-cli db:migrate:undo --name create-status.js
 npx sequelize-cli db:migrate:undo --name create-gender.js
 npx sequelize-cli db:migrate:undo --name create-product.js
-npx sequelize-cli db:migrate:undo --name create-manufacturer.js
+npx sequelize-cli db:migrate:undo --name create-brand.js
 npx sequelize-cli db:migrate:undo --name create-feature.js
 npx sequelize-cli db:migrate:undo --name create-specification.js
 npx sequelize-cli db:migrate:undo --name create-category.js
@@ -31,6 +31,8 @@ npx sequelize-cli db:migrate:undo --name create-category.js
 > Creating the Seed
 
 npx sequelize-cli seed:generate --name gender
+npx sequelize-cli seed:generate --name category
+npx sequelize-cli seed:generate --name brand
 
 > Running Seeds
 

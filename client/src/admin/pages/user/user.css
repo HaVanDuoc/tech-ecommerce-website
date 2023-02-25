@@ -90,6 +90,9 @@
 
 .userShowInfoTitle {
   margin-left: 10px;
+}
+
+.userShowInfoTitle::first-letter {
   text-transform: capitalize;
 }
 

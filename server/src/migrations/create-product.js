@@ -17,7 +17,13 @@ module.exports = {
       name: {
         type: Sequelize.STRING,
       },
+      image: {
+        type: Sequelize.STRING,
+      },
       price: {
+        type: Sequelize.STRING,
+      },
+      rating: {
         type: Sequelize.STRING,
       },
       categoryId: {
@@ -27,27 +33,27 @@ module.exports = {
           key: "categoryId",
         },
       },
-      manufacturerId: {
+      brandId: {
         type: Sequelize.STRING,
         references: {
-          model: "Manufacturers",
-          key: "manufacturerId",
+          model: "Brands",
+          key: "brandId",
         },
       },
-      specificationId: {
-        type: Sequelize.STRING,
-        references: {
-          model: "Specifications",
-          key: "specificationId",
-        },
-      },
-      featureId: {
-        type: Sequelize.STRING,
-        references: {
-          model: "Features",
-          key: "featureId",
-        },
-      },
+      // specificationId: {
+      //   type: Sequelize.STRING,
+      //   references: {
+      //     model: "Specifications",
+      //     key: "specificationId",
+      //   },
+      // },
+      // featureId: {
+      //   type: Sequelize.STRING,
+      //   references: {
+      //     model: "Features",
+      //     key: "featureId",
+      //   },
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

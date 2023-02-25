@@ -8,6 +8,7 @@ import {
 import { Field } from "formik";
 import React from "react";
 import { FetchGender } from "~/helper/fetch";
+import formatCapitalization from "~/helper/formatCapitalization";
 
 const RadioGender = () => {
   const [gender, setGender] = React.useState([]);
@@ -27,12 +28,12 @@ const RadioGender = () => {
       >
         {gender.map((item, index) => (
           <Field
-            key={index}
             as={FormControlLabel}
+            key={index}
             name="genderCode"
             value={item.code}
             control={<Radio size="small" />}
-            label={item.name}
+            label={formatCapitalization(item.name)}
           />
         ))}
       </RadioGroup>
