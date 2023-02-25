@@ -1,7 +1,8 @@
 import React from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 import Topbar from "../components/topbar/Topbar";
-import '../App.css'
+import "../App.css";
+import { Box } from "@mui/material";
 
 const AdminLayout = ({ children }) => {
   return (
@@ -9,7 +10,7 @@ const AdminLayout = ({ children }) => {
       <Topbar />
       <div className="container">
         <Sidebar />
-        {children}
+        <Box flex={4}>{children}</Box>
       </div>
     </React.Fragment>
   );

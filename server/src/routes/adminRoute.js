@@ -20,6 +20,9 @@ router.put("/user/:userId", adminController.updateUser);
 
 router.delete("/user/:userId", adminController.deleteUser);
 
+router.get("/products", adminController.getListProduct);
+
+
 router.post("/database/newCategory", adminController.createNewCategory);
 
 router.post("/database/newStatus", adminController.createNewStatus);

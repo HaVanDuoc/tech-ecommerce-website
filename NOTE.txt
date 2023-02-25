@@ -1,5 +1,9 @@
 -- CLIENT
 
+    -- array.map is not function: lỗi xảy ra khi array rỗng 
+        --> Đầu tiền check array có phải là mảng hay ko 
+            bằng cách Array.isArray(thêm cái mảng vào đây) rồi check 3 ngôi
+
 -- SERVER
 
     -- Tên model nhớ thêm 's' số nhiều

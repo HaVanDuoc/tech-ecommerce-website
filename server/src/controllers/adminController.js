@@ -124,6 +124,17 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+// Get List Product
+exports.getListProduct = async (req, res) => {
+  try {
+    const response = await adminService.getListProduct();
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
 exports.createNewRole = async (req, res) => {
   try {
     const name = Joi.string().min(1).required();

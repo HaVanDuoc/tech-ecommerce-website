@@ -2,11 +2,19 @@ import "./productList.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { productRows } from "../../dummyData";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { FetchUserList } from "~/helper/fetch";
 
 export default function ProductList() {
   const [data, setData] = useState(productRows);
+
+  // Fetch list product
+  const response = FetchUserList();
+  React.useEffect(() => {
+    setData(response);
+  }, [response]);
+  //
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));

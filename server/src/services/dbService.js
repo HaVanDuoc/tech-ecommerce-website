@@ -5,6 +5,22 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { padUserId } = require("../helper/padLeft");
 const { hashPassword } = require("../helper/hashPassword");
+const { sequelize } = require("../models");
+
+exports.ListTables = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const [response] = await sequelize.query("SHOW tables");
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failure",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
 
 exports.getGender = (data) =>
   new Promise(async (resolve, reject) => {

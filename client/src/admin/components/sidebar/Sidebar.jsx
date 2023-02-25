@@ -12,10 +12,9 @@ import DynamicFeedIcon from "@mui/icons-material/DynamicFeed";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import ReportIcon from "@mui/icons-material/Report";
-import StorageIcon from "@mui/icons-material/Storage";
+import DbManagement from "./components/DbManagement";
 
 export default function Sidebar() {
-  
   return (
     <div className="sidebar">
       <div className="sidebarWrapper">
@@ -84,15 +83,7 @@ export default function Sidebar() {
         </div>
 
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Database</h3>
-          <ul className="sidebarList">
-            <Link to="/admin/database" className="link">
-              <li className="sidebarListItem">
-                <StorageIcon className="sidebarIcon" />
-                Tech
-              </li>
-            </Link>
-          </ul>
+          <DbManagement />
         </div>
 
         <div className="sidebarMenu">
