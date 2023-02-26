@@ -41,7 +41,3 @@ export const LabelField = ({ children }) => (
     {children}
   </Box>
 );
-
-export const CatchError = ({ children }) => (
-  <Box sx={{ color: "red", fontSize: "13px" }}>{children}</Box>
-);

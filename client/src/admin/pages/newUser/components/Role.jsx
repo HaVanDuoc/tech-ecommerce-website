@@ -1,7 +1,14 @@
 import React from "react";
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  Box,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { FetchRoleList } from "~/helper/fetch";
-import { Field } from "formik";
+import { ErrorMessage, Field } from "formik";
 
 const Role = ({ props }) => {
   // FETCH ROLE LIST
@@ -42,6 +49,10 @@ const Role = ({ props }) => {
             ))}
         </Field>
       </FormControl>
+
+      <FormHelperText>
+        <ErrorMessage name="role" />
+      </FormHelperText>
     </Box>
   );
 };

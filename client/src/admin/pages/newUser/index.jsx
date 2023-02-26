@@ -3,9 +3,9 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import React from "react";
 import axios from "axios";
-import { Button, TextField } from "@mui/material";
+import { FormHelperText, TextField } from "@mui/material";
 import Notification from "~/components/Notification";
-import { AdminTitle, CatchError, FieldForm } from "~/admin/Styled";
+import { AdminTitle, FieldForm } from "~/admin/Styled";
 import Gender from "./components/Gender";
 import Role from "./components/Role";
 import removeEmpty from "~/helper/removeEmpty";
@@ -25,6 +25,7 @@ const initialValues = {
   address: "",
   gender: "",
   role: "",
+  birthday: "",
 };
 
 const validationSchema = Yup.object({
@@ -37,13 +38,13 @@ const validationSchema = Yup.object({
   password: Yup.string()
     .min(6, "Mật khẩu phải có tối thiểu 6 ký tự")
     .required("*Bắt buộc"),
-  phoneNumber: Yup.string().matches(
-    phoneRegExp,
-    "*Đinh dạng số điện thoại không chính xác"
-  ),
-  address: Yup.string(),
+  phoneNumber: Yup.string()
+    .matches(phoneRegExp, "*Đinh dạng số điện thoại không chính xác")
+    .required("*Bắt buộc"),
+  address: Yup.string().required("*Bắt buộc"),
   birthday: Yup.string().required("*Bắt buộc"),
   role: Yup.string().required("*Bắt buộc"),
+  gender: Yup.string().required("*Bắt buộc"),
 });
 
 const fields = [
@@ -139,9 +140,9 @@ export default function NewUser() {
                     name={item.name}
                     type={item.type}
                   />
-                  <CatchError>
+                  <FormHelperText>
                     <ErrorMessage name={item.name} />
-                  </CatchError>
+                  </FormHelperText>
                 </FieldForm>
               ))}
 
@@ -159,28 +160,6 @@ export default function NewUser() {
 
             <FieldForm>
               <ButtonSubmit disabled={isSubmitting}>Create</ButtonSubmit>
-              {/* <Button
-                type="submit"
-                disabled={isSubmitting}
-                sx={{
-                  width: 200,
-                  border: "2px solid transparent",
-                  borderRadius: 3,
-                  backgroundColor: "darkblue",
-                  color: "white",
-                  padding: "7px 10px",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                  transition: "all .4s ease",
-
-                  "&:hover": {
-                    border: "2px solid darkblue",
-                    color: "darkblue !important",
-                  },
-                }}
-              >
-                Create
-              </Button> */}
             </FieldForm>
           </Form>
         </div>

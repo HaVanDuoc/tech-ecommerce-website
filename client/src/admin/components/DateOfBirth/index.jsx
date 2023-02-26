@@ -1,8 +1,8 @@
-import { TextField } from "@mui/material";
+import { FormHelperText, TextField } from "@mui/material";
 import { DesktopDatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
-import { Field } from "formik";
+import { ErrorMessage, Field } from "formik";
 import React from "react";
 
 const DateOfBirth = ({ props }) => {
@@ -22,6 +22,9 @@ const DateOfBirth = ({ props }) => {
           return <Field as={TextField} name="birthday" {...params} />;
         }}
       />
+      <FormHelperText>
+        <ErrorMessage name="birthday" />
+      </FormHelperText>
     </LocalizationProvider>
   );
 };
