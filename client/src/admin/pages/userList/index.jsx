@@ -14,8 +14,8 @@ import {
   Typography,
 } from "@mui/material";
 import { FetchUserList } from "~/helper/fetch";
-import FormatFullName from "~/helper/formatFullName";
 import axios from "axios";
+import { FormatFullName } from "~/helper/format";
 
 export default function UserList() {
   const [data, setData] = useState([]);

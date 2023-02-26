@@ -98,6 +98,7 @@ exports.createNewUser = (data) =>
         address,
         gender,
         role,
+        birthday,
       } = data;
 
       // Create User Id
@@ -117,6 +118,7 @@ exports.createNewUser = (data) =>
           password: hashPassword(password),
           phoneNumber,
           address,
+          dateOfBirth: birthday,
           genderCode: gender,
           roleId: role,
         },

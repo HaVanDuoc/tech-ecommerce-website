@@ -95,6 +95,8 @@ const UserUpdate = ({ fetch }) => {
                       }}
                     />
                   </LocalizationProvider>
+
+                  {/* <DateOfBirth props={props} /> */}
                 </Grid>
 
                 <Grid item xs={6}>

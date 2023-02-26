@@ -48,11 +48,11 @@ Content-Type: application/json
     "firstName": "Hà",
     "middleName": "Văn",
     "lastName": "Được",
-    "email": "havanduoc3@gmail.com",
+    "email": "havanduoc6@gmail.com",
     "password": "123456",
     "phoneNumber": "0382494285",
-    "gender": "0",
-    "role": "R001"
+    "gender": "1",
+    "role": "R002"
 }
 
 ### Update User

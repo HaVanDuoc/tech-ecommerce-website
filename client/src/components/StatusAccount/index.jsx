@@ -8,7 +8,7 @@ import {
 import { Field } from "formik";
 import React from "react";
 import { FetchStatusAccount } from "~/helper/fetch";
-import formatCapitalization from "~/helper/formatCapitalization";
+import { formatCapitalization } from "~/helper/format";
 
 const StatusAccount = () => {
   const [status, setStatus] = React.useState([]);

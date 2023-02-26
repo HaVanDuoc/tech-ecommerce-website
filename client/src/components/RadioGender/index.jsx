@@ -8,7 +8,7 @@ import {
 import { Field } from "formik";
 import React from "react";
 import { FetchGender } from "~/helper/fetch";
-import formatCapitalization from "~/helper/formatCapitalization";
+import { formatCapitalization } from "~/helper/format";
 
 const RadioGender = () => {
   const [gender, setGender] = React.useState([]);

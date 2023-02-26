@@ -69,7 +69,7 @@ export default function ProductList() {
   return (
     <div className="productList">
       <div className="productListOption">
-        <Link to="/newProduct">
+        <Link to="/admin/newProduct">
           <button className="productAddButton">Thêm</button>
         </Link>
       </div>

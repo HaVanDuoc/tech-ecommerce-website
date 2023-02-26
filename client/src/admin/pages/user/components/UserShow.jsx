@@ -6,11 +6,10 @@ import PhoneIphoneOutlinedIcon from "@mui/icons-material/PhoneIphoneOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
-import formatPhoneNumber from "~/helper/formatPhoneNumber";
-import { Avatar } from "@mui/material";
+import { Avatar, Tooltip } from "@mui/material";
 import React from "react";
-import FormatFullName from "~/helper/formatFullName";
 import dayjs from "dayjs";
+import { FormatFullName, formatPhoneNumber } from "~/helper/format";
 
 const UserShow = ({ fetch }) => {
   const {
@@ -29,29 +28,46 @@ const UserShow = ({ fetch }) => {
   } = fetch;
 
   const AccountDetails = [
-    { value: userName, icon: <PermIdentityIcon className="userShowIcon" /> },
     {
-      value: String(dayjs(dateOfBirth).format('DD/MM/YYYY')),
-      icon: <CakeOutlinedIcon className="userShowIcon" />,
+      tooltip: "Tên người dùng",
+      value: userName,
+      icon: <PermIdentityIcon className="userShowIcon" />,
     },
     {
+      tooltip: "Tổng mua",
       value: transactionVolume,
       icon: <AttachMoneyIcon className="userShowIcon" />,
     },
-    { value: status, icon: <TaskAltOutlinedIcon className="userShowIcon" /> },
-    { value: role, icon: <WorkspacePremiumIcon className="userShowIcon" /> },
+    {
+      tooltip: "Ngày sinh",
+      value: String(dayjs(dateOfBirth).format("DD/MM/YYYY")),
+      icon: <CakeOutlinedIcon className="userShowIcon" />,
+    },
+    {
+      tooltip: "Trạng thái",
+      value: status,
+      icon: <TaskAltOutlinedIcon className="userShowIcon" />,
+    },
+    {
+      tooltip: "Quyền hạn",
+      value: role,
+      icon: <WorkspacePremiumIcon className="userShowIcon" />,
+    },
   ];
 
   const ContactDetails = [
     {
+      tooltip: "Số điện thoại",
       value: formatPhoneNumber(phoneNumber),
       icon: <PhoneIphoneOutlinedIcon className="userShowIcon" />,
     },
     {
+      tooltip: "Email",
       value: email,
       icon: <EmailOutlinedIcon className="userShowIcon" />,
     },
     {
+      tooltip: "Địa chỉ",
       value: address,
       icon: <LocationOnOutlinedIcon className="userShowIcon" />,
     },
@@ -76,10 +92,12 @@ const UserShow = ({ fetch }) => {
         {AccountDetails.map((item, index) => {
           return (
             item.value && (
-              <div className="userShowInfo" key={index}>
-                {item.icon}
-                <span className="userShowInfoTitle">{item.value}</span>
-              </div>
+              <Tooltip title={item.tooltip} placement="left-start">
+                <div className="userShowInfo" key={index}>
+                  {item.icon}
+                  <span className="userShowInfoTitle">{item.value}</span>
+                </div>
+              </Tooltip>
             )
           );
         })}
@@ -89,10 +107,12 @@ const UserShow = ({ fetch }) => {
         {ContactDetails.map((item, index) => {
           return (
             item.value && (
-              <div className="userShowInfo" key={index}>
-                {item.icon}
-                <span className="userShowInfoTitle">{item.value}</span>
-              </div>
+              <Tooltip title={item.tooltip} placement="left-start">
+                <div className="userShowInfo" key={index}>
+                  {item.icon}
+                  <span className="userShowInfoTitle">{item.value}</span>
+                </div>
+              </Tooltip>
             )
           );
         })}

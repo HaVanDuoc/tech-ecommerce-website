@@ -4,19 +4,7 @@ const {
   badRequest,
 } = require("../middleware/handleError");
 const adminService = require("../services/adminService");
-const {
-  firstName,
-  middleName,
-  lastName,
-  email,
-  password,
-  phoneNumber,
-  address,
-  gender,
-  role,
-} = require("../helper/joiSchema");
-
-const { updateUser } = require("../helper/joiSchema");
+const { createUser, updateUser } = require("../helper/joiSchema");
 
 const {
   CheckUserNameExists,
@@ -47,15 +35,16 @@ exports.getUser = async (req, res) => {
 exports.createNewUser = async (req, res) => {
   try {
     const { error } = Joi.object({
-      firstName,
-      middleName,
-      lastName,
-      email,
-      password,
-      phoneNumber,
-      address,
-      gender,
-      role,
+      firstName: createUser.firstName,
+      middleName: createUser.middleName,
+      lastName: createUser.lastName,
+      email: createUser.email,
+      password: createUser.password,
+      phoneNumber: createUser.phoneNumber,
+      address: createUser.address,
+      gender: createUser.gender,
+      role: createUser.role,
+      birthday: createUser.birthday,
     }).validate(req.body);
 
     if (error) return badRequest(error.details[0]?.message, res);

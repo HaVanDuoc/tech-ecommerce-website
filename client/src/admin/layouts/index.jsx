@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 import Topbar from "../components/topbar/Topbar";
-import "../App.css";
+import "../Admin.css";
 import { Box } from "@mui/material";
 
 const AdminLayout = ({ children }) => {

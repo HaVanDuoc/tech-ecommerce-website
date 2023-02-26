@@ -3,80 +3,106 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import React from "react";
 import axios from "axios";
-import { FetchRoleList } from "~/helper/fetch";
-import { MenuItem, Select } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import Notification from "~/components/Notification";
+import { AdminTitle, CatchError, FieldForm } from "~/admin/Styled";
+import Gender from "./components/Gender";
+import Role from "./components/Role";
+import removeEmpty from "~/helper/removeEmpty";
+import DateOfBirth from "~/admin/components/DateOfBirth";
+import ButtonSubmit from "~/admin/components/ButtonSubmit";
 
-const FieldSelect = () => {
-  // FETCH ROLE LIST
-  const [role, setRole] = React.useState([]);
-  const roleList = FetchRoleList();
+const phoneRegExp =
+  /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-  React.useEffect(() => {
-    setRole(roleList);
-  }, [roleList]);
-
-  return (
-    <Field as={Select} className="newUserSelect" name="role" id="role">
-      {role.map((item) => (
-        <MenuItem
-          key={item.id}
-          value={item.roleId}
-          className="newUserSelectOption"
-        >
-          {item.name}
-        </MenuItem>
-      ))}
-    </Field>
-  );
+const initialValues = {
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  phoneNumber: "",
+  address: "",
+  gender: "",
+  role: "",
 };
+
+const validationSchema = Yup.object({
+  firstName: Yup.string().max(15, "*Tối đa 15 ký tự").required("*Bắt buộc"),
+  middleName: Yup.string().max(15, "*Tối đa 15 ký tự"),
+  lastName: Yup.string().max(20, "*Tối đa 20 ký tự").required("*Bắt buộc"),
+  email: Yup.string()
+    .email("*Định dạng email không chính xác")
+    .required("*Bắt buộc"),
+  password: Yup.string()
+    .min(6, "Mật khẩu phải có tối thiểu 6 ký tự")
+    .required("*Bắt buộc"),
+  phoneNumber: Yup.string().matches(
+    phoneRegExp,
+    "*Đinh dạng số điện thoại không chính xác"
+  ),
+  address: Yup.string(),
+  birthday: Yup.string().required("*Bắt buộc"),
+  role: Yup.string().required("*Bắt buộc"),
+});
+
+const fields = [
+  {
+    label: "Họ",
+    as: TextField,
+    name: "firstName",
+    type: "text",
+  },
+  {
+    label: "Tên đệm",
+    as: TextField,
+    name: "middleName",
+    type: "text",
+  },
+  {
+    label: "Tên",
+    as: TextField,
+    name: "lastName",
+    type: "text",
+  },
+  {
+    label: "Email",
+    as: TextField,
+    name: "email",
+    type: "text",
+  },
+  {
+    label: "Mật khẩu",
+    as: TextField,
+    name: "password",
+    type: "text",
+  },
+  {
+    label: "Số điện thoại",
+    as: TextField,
+    name: "phoneNumber",
+    type: "text",
+  },
+  {
+    label: "Địa chỉ",
+    as: TextField,
+    name: "address",
+    type: "text",
+  },
+];
 
 export default function NewUser() {
   const [data, setData] = React.useState({ err: "", msg: "", data: "" });
   const [isSubmitting, setSubmitting] = React.useState(false);
 
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-
   return (
     <Formik
-      initialValues={{
-        firstName: "",
-        middleName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        phoneNumber: "",
-        address: "",
-        gender: "",
-        role: "",
-      }}
-      validationSchema={Yup.object({
-        firstName: Yup.string()
-          .max(15, "*Tối đa 15 ký tự")
-          .required("*Bắt buộc"),
-        middleName: Yup.string()
-          .max(15, "*Tối đa 15 ký tự")
-          .required("*Bắt buộc"),
-        lastName: Yup.string()
-          .max(20, "*Tối đa 20 ký tự")
-          .required("*Bắt buộc"),
-        email: Yup.string()
-          .email("*Định dạng email không chính xác")
-          .required("*Bắt buộc"),
-        password: Yup.string()
-          .min(6, "Mật khẩu phải có tối thiểu 6 ký tự")
-          .required("*Bắt buộc"),
-        phoneNumber: Yup.string().matches(
-          phoneRegExp,
-          "*Đinh dạng số điện thoại không chính xác"
-        ),
-        address: Yup.string(),
-      })}
-      // SUBMIT
+      initialValues={initialValues}
+      validationSchema={validationSchema}
       onSubmit={(values, props) => {
-        // Test submit data
-        // return alert(JSON.stringify(values, null, 2));
+        const data = removeEmpty(values); // Exclude filed data blank
+
+        // return alert(JSON.stringify(data, null, 2)); // Test submit
 
         setSubmitting(true); // click submit khóa liền
 
@@ -85,7 +111,7 @@ export default function NewUser() {
           const response = await axios({
             method: "post",
             url: "/admin/user/newUser",
-            data: values,
+            data: data,
           });
 
           setData(response.data);
@@ -99,84 +125,63 @@ export default function NewUser() {
     >
       {(props) => (
         <div className="newUser">
-          <h1 className="newUserTitle">Người dùng mới</h1>
+          <AdminTitle>Người dùng mới</AdminTitle>
+
           <Notification data={data} />
 
           <Form className="newUserForm">
-            <div className="newUserItem">
-              <label>Họ</label>
-              <Field name="firstName" type="text" placeholder="Họ" />
-              <div className="errorMessage">
-                <ErrorMessage name="firstName" />
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Tên đệm</label>
-              <Field name="middleName" type="text" placeholder="Tên đệm" />
-              <div className="errorMessage">
-                <ErrorMessage name="middleName" />
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Tên</label>
-              <Field name="lastName" type="text" placeholder="Tên" />
-              <div className="errorMessage">
-                <ErrorMessage name="lastName" />
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Email</label>
-              <Field name="email" type="email" placeholder="email@gmail.com" />
-              <div className="errorMessage">
-                <ErrorMessage name="email" />
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Mật khẩu</label>
-              <Field name="password" type="text" placeholder="Mật khẩu" />
-              <div className="errorMessage">
-                <ErrorMessage name="password" />
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Số điện thoại</label>
-              <Field
-                name="phoneNumber"
-                type="text"
-                placeholder="+1 123 456 78"
-              />
-              <div className="errorMessage">
-                <ErrorMessage name="phoneNumber" />
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Địa chỉ</label>
-              <Field name="address" type="text" placeholder="Vietnam | VN" />
-              <div className="">
-                <ErrorMessage name="address" />
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Giới tính</label>
-              <div className="newUserGender">
-                <Field type="radio" name="gender" id="male" value="0" />
-                <label htmlFor="male">Nam</label>
-                <Field type="radio" name="gender" id="female" value="1" />
-                <label htmlFor="female">Nữ</label>
-              </div>
-            </div>
-            <div className="newUserItem">
-              <label>Tài khoản dành cho</label>
-              <FieldSelect />
-            </div>
+            {Array.isArray(fields) &&
+              fields.map((item, index) => (
+                <FieldForm key={index}>
+                  <Field
+                    as={item.as}
+                    label={item.label}
+                    name={item.name}
+                    type={item.type}
+                  />
+                  <CatchError>
+                    <ErrorMessage name={item.name} />
+                  </CatchError>
+                </FieldForm>
+              ))}
 
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="newUserButton"
-            >
-              Create
-            </button>
+            <FieldForm>
+              <DateOfBirth props={props} />
+            </FieldForm>
+
+            <FieldForm>
+              <Gender />
+            </FieldForm>
+
+            <FieldForm>
+              <Role props={props} />
+            </FieldForm>
+
+            <FieldForm>
+              <ButtonSubmit disabled={isSubmitting}>Create</ButtonSubmit>
+              {/* <Button
+                type="submit"
+                disabled={isSubmitting}
+                sx={{
+                  width: 200,
+                  border: "2px solid transparent",
+                  borderRadius: 3,
+                  backgroundColor: "darkblue",
+                  color: "white",
+                  padding: "7px 10px",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  transition: "all .4s ease",
+
+                  "&:hover": {
+                    border: "2px solid darkblue",
+                    color: "darkblue !important",
+                  },
+                }}
+              >
+                Create
+              </Button> */}
+            </FieldForm>
           </Form>
         </div>
       )}

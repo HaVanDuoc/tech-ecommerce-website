@@ -1,5 +1,7 @@
 .newProduct {
   flex: 4;
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
 .addProductForm {

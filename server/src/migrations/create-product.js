@@ -23,7 +23,13 @@ module.exports = {
       price: {
         type: Sequelize.STRING,
       },
+      stock: {
+        type: Sequelize.STRING,
+      },
       rating: {
+        type: Sequelize.STRING,
+      },
+      isActive: {
         type: Sequelize.STRING,
       },
       categoryId: {
