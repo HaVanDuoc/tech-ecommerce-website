@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import React from "react";
 
 const ButtonSubmit = ({ children, disabled }) => {
@@ -23,7 +23,18 @@ const ButtonSubmit = ({ children, disabled }) => {
         },
       }}
     >
-      {children}
+      {disabled ? (
+        <CircularProgress
+          sx={{
+            "&.MuiCircularProgress-root": {
+              width: "25px !important",
+              height: "25px !important",
+            },
+          }}
+        />
+      ) : (
+        children
+      )}
     </Button>
   );
 };

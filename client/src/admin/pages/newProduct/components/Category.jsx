@@ -1,37 +1,84 @@
 import {
   Box,
+  Chip,
   FormControl,
+  FormControlLabel,
   FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
+  FormLabel,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
-import React from "react";
+import { ErrorMessage, Field } from "formik";
+import React, { useState } from "react";
+import { FetchCategorySelect } from "~/helper/fetch";
+import { formatCapitalization } from "~/helper/format";
+import Brands from "./Brand";
 
-const Categories = () => {
-  const [category, setCategory] = React.useState("");
+const Categories = ({ props, name }) => {
+  const [listCategory, setListCategory] = useState([]);
 
+  // Fetch list category
+  const categoryList = FetchCategorySelect();
+  React.useEffect(() => {
+    setListCategory(categoryList);
+  }, [categoryList]);
+
+  const [value, setValue] = React.useState("");
   const handleChange = (event) => {
-    setCategory(event.target.value);
+    setValue(event.target.value);
+    props.setFieldValue(name, event.target.value);
   };
 
   return (
     <Box>
-      <FormControl fullWidth size="small">
-        <InputLabel>Phân loại</InputLabel>
-        <Select
-          label="Phân loại"
-          value={category}
-          onChange={handleChange}
-          displayEmpty
-          inputProps={{ "aria-label": "Without label" }}
-        >
-          <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem>
-        </Select>
-        <FormHelperText>Without label</FormHelperText>
-      </FormControl>
+      {/* Phân loại */}
+      <Box>
+        <FormControl>
+          <FormLabel sx={{ marginBottom: 1 }}>Phân loại</FormLabel>
+          <Field
+            as={RadioGroup}
+            row
+            name={name}
+            value={value}
+            onChange={handleChange}
+            sx={{
+              "& .MuiRadio-root ": {
+                display: "none",
+              },
+            }}
+          >
+            {Array.isArray(listCategory) &&
+              listCategory.map((item) => (
+                <FormControlLabel
+                  key={item.id}
+                  name={item.name}
+                  value={item.categoryId}
+                  control={<Radio />}
+                  label={
+                    <Chip
+                      label={formatCapitalization(item.name)}
+                      variant={
+                        value === item.categoryId ? "contained" : "outlined"
+                      }
+                      color={value === item.categoryId ? "primary" : "default"}
+                      sx={{
+                        marginLeft: 1,
+                        marginBottom: 1,
+                      }}
+                    />
+                  }
+                />
+              ))}
+          </Field>
+        </FormControl>
+
+        <FormHelperText>
+          <ErrorMessage name={name} />
+        </FormHelperText>
+      </Box>
+
+      {/* Thương hiệu */}
+      {value && <Brands name="brand" props={props} categoryId={value} />}
     </Box>
   );
 };

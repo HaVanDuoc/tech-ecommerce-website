@@ -11,6 +11,6 @@ router.get("/listRole", dbController.listRole);
 
 router.get("/statusAccount", dbController.statusAccount);
 
-router.get("/categories", dbController.statusAccount);
+router.get("/listCategory", dbController.listCategory);
 
 module.exports = router;

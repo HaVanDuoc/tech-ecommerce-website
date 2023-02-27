@@ -1,9 +1,8 @@
-import "./newUser.css";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import React from "react";
 import axios from "axios";
-import { FormHelperText, TextField } from "@mui/material";
+import { Box, FormHelperText } from "@mui/material";
 import Notification from "~/components/Notification";
 import { AdminTitle, FieldForm } from "~/admin/Styled";
 import Gender from "./components/Gender";
@@ -11,6 +10,7 @@ import Role from "./components/Role";
 import removeEmpty from "~/helper/removeEmpty";
 import DateOfBirth from "~/admin/components/DateOfBirth";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
+import { fields } from "./components/array";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -47,51 +47,6 @@ const validationSchema = Yup.object({
   gender: Yup.string().required("*Bắt buộc"),
 });
 
-const fields = [
-  {
-    label: "Họ",
-    as: TextField,
-    name: "firstName",
-    type: "text",
-  },
-  {
-    label: "Tên đệm",
-    as: TextField,
-    name: "middleName",
-    type: "text",
-  },
-  {
-    label: "Tên",
-    as: TextField,
-    name: "lastName",
-    type: "text",
-  },
-  {
-    label: "Email",
-    as: TextField,
-    name: "email",
-    type: "text",
-  },
-  {
-    label: "Mật khẩu",
-    as: TextField,
-    name: "password",
-    type: "text",
-  },
-  {
-    label: "Số điện thoại",
-    as: TextField,
-    name: "phoneNumber",
-    type: "text",
-  },
-  {
-    label: "Địa chỉ",
-    as: TextField,
-    name: "address",
-    type: "text",
-  },
-];
-
 export default function NewUser() {
   const [data, setData] = React.useState({ err: "", msg: "", data: "" });
   const [isSubmitting, setSubmitting] = React.useState(false);
@@ -125,12 +80,12 @@ export default function NewUser() {
       }}
     >
       {(props) => (
-        <div className="newUser">
+        <Box sx={{ flex: 4, paddingLeft: 4, paddingRight: 4 }}>
           <AdminTitle>Người dùng mới</AdminTitle>
 
           <Notification data={data} />
 
-          <Form className="newUserForm">
+          <Form style={{ display: "flex", flexWrap: "wrap" }}>
             {Array.isArray(fields) &&
               fields.map((item, index) => (
                 <FieldForm key={index}>
@@ -162,7 +117,7 @@ export default function NewUser() {
               <ButtonSubmit disabled={isSubmitting}>Create</ButtonSubmit>
             </FieldForm>
           </Form>
-        </div>
+        </Box>
       )}
     </Formik>
   );

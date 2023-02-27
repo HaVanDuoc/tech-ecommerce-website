@@ -4,13 +4,16 @@ import { productRows } from "../../dummyData";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { FetchUserList } from "~/helper/fetch";
+import { FetchProductList } from "~/helper/fetch";
+import { formatVND } from "~/helper/format";
+import { ButtonCreate, StackButtons } from "~/admin/Styled";
+import { Box } from "@mui/material";
 
 export default function ProductList() {
   const [data, setData] = useState(productRows);
 
   // Fetch list product
-  const response = FetchUserList();
+  const response = FetchProductList();
   React.useEffect(() => {
     setData(response);
   }, [response]);
@@ -21,30 +24,42 @@ export default function ProductList() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "productId", headerName: "ID", width: 100 },
     {
-      field: "product",
+      field: "name",
       headerName: "Product",
       width: 300,
       renderCell: (params) => {
         return (
           <div className="productListItem">
-            <img className="productListImg" src={params.row.img} alt="" />
+            {params.row.image && (
+              <img className="productListImg" src={params.row.image} alt="" />
+            )}
             {params.row.name}
           </div>
         );
       },
     },
-    { field: "stock", headerName: "Stock", width: 200 },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-    },
     {
       field: "price",
       headerName: "Price",
       width: 160,
+      renderCell: (params) => {
+        return formatVND(params.row.price);
+      },
+    },
+    { field: "stock", headerName: "Stock", width: 200 },
+    {
+      field: "isActive",
+      headerName: "Status",
+      width: 150,
+      renderCell: (params) => {
+        return params.row.isActive === "0"
+          ? params.row.stock === "0"
+            ? "Hết hàng"
+            : "Còn hàng"
+          : "Không kinh doanh";
+      },
     },
     {
       field: "action",
@@ -67,12 +82,10 @@ export default function ProductList() {
   ];
 
   return (
-    <div className="productList">
-      <div className="productListOption">
-        <Link to="/admin/newProduct">
-          <button className="productAddButton">Thêm</button>
-        </Link>
-      </div>
+    <Box flex={4}>
+      <StackButtons>
+        <ButtonCreate href="/admin/product/newProduct" />
+      </StackButtons>
       <DataGrid
         rows={data}
         disableSelectionOnClick
@@ -82,6 +95,6 @@ export default function ProductList() {
         autoHeight
         autoPageSize
       />
-    </div>
+    </Box>
   );
 }

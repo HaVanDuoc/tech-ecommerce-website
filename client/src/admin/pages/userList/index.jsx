@@ -16,29 +16,12 @@ import {
 import { FetchUserList } from "~/helper/fetch";
 import axios from "axios";
 import { FormatFullName } from "~/helper/format";
+import { ButtonCreate, StackButtons } from "~/admin/Styled";
 
 export default function UserList() {
   const [data, setData] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [userDelete, setUserDelete] = useState(null);
-  const {
-    avatar,
-    dateOfBirth,
-    email,
-    firstName,
-    id,
-    lastName,
-    middleName,
-    role,
-    status,
-    transactionVolume,
-    userId,
-    userName,
-  } = data; // Data available
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
 
   const handleClose = () => {
     setOpen(false);
@@ -113,7 +96,7 @@ export default function UserList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/admin/user/" + params.row.userId}>
+            <Link to={"/admin/user/update/" + params.row.userId}>
               <button className="userListEdit">Edit</button>
             </Link>
             <DeleteOutlineIcon
@@ -135,11 +118,10 @@ export default function UserList() {
 
   return (
     <div className="userList">
-      <div className="productListOption">
-        <Link to="/admin/newUser">
-          <button className="userAddButton">Create</button>
-        </Link>
-      </div>
+      <StackButtons>
+        <ButtonCreate href="/admin/user/newUser" />
+      </StackButtons>
+
       <DataGrid
         rows={data}
         disableSelectionOnClick

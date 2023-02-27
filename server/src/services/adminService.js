@@ -4,11 +4,20 @@ const {
   padCategoryId,
   padStatusId,
   padUserId,
+  padProductId,
 } = require("../helper/padLeft");
 const { hashPassword } = require("../helper/hashPassword");
 const { badRequest } = require("../middleware/handleError");
 const { sequelize } = require("../models");
 const db = require("../models");
+
+// ---------- Find ------------
+//#region USER SERVICES
+//#region PRODUCT SERVICES
+//#region DATABASE SERVICES
+// ----------------------------
+
+//#region USER SERVICES
 
 exports.getAllUser = () =>
   new Promise(async (resolve, reject) => {
@@ -171,27 +180,32 @@ exports.deleteUser = (userId) =>
     }
   });
 
-// Get List Product
+//#region
+
+//----------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+//#region PRODUCT SERVICES
+
 exports.getListProduct = () =>
   new Promise(async (resolve, reject) => {
     try {
-      const query = `SELECT
-                        users.id,
-                        userId,
-                        firstName,
-                        middleName,
-                        lastName,
-                        userName,
-                        email,
-                        avatar,
-                        dateOfBirth,
-                        transactionVolume,
-                        statuses.name as 'status',
-                        roles.name as "role"
-                    FROM
-                        users
-                        left join statuses on users.statusId = statuses.statusId
-                        left join roles on users.roleId = roles.roleId;`;
+      const query = `select
+                        products.id,
+                        products.productId,
+                        products.name,
+                        products.image,
+                        products.price,
+                        products.stock,
+                        products.rating,
+                        products.isActive,
+                        products.categoryId as 'category',
+                        products.brandId as 'brand'
+                    from
+                        products
+                        left join categories on products.categoryId = categories.categoryId
+                        left join brands on products.brandId = brands.brandId`;
 
       const [response] = await sequelize.query(query, { raw: true });
 
@@ -199,6 +213,39 @@ exports.getListProduct = () =>
         err: response ? 0 : 1,
         msg: response ? "Get data successfully" : "Get data failed",
         data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.createNewProduct = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const { name, image, price, stock, category, brand } = data;
+
+      // Create Product Id
+      const responseId = await db.Product.count({ distinct: true, col: "id" });
+      const productId = padProductId(responseId + 1);
+
+      const response = await db.Product.findOrCreate({
+        where: { name },
+        defaults: {
+          productId,
+          name,
+          image,
+          price,
+          stock,
+          categoryId: category,
+          brandId: brand,
+        },
+        raw: true,
+      });
+
+      resolve({
+        err: response[1] ? 0 : 1,
+        msg: response[1] ? "Create successfully" : `${name} đã tồn tại!`,
+        data: response[1] ? response[0] : null,
       });
     } catch (error) {
       reject(error);
@@ -273,6 +320,49 @@ exports.createNewStatus = (data) =>
       reject(error);
     }
   });
+
+exports.getListCategory = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Category.findAll({
+        attributes: ["id", "categoryId", "name"],
+        raw: true,
+      });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failed",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.getListSelectBrand = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Brand.findAll({
+        where: { categoryId: data.categoryId },
+        attributes: ["id", "brandId", "name"],
+        raw: true,
+      });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failed",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+//#endregion
+
+//----------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
 
 exports.getListRole = (data) =>
   new Promise(async (resolve, reject) => {

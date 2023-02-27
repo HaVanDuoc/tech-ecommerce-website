@@ -35,9 +35,22 @@ exports.listRole = async (req, res) => {
   }
 };
 
+// Status Account
 exports.statusAccount = async (req, res) => {
   try {
     const response = await dbService.statusAccount();
+
+    return res.status(200).json(response);
+    //
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+// List Category
+exports.listCategory = async (req, res) => {
+  try {
+    const response = await dbService.listCategory();
 
     return res.status(200).json(response);
     //

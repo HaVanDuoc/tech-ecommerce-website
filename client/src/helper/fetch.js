@@ -107,7 +107,7 @@ export const FetchProductList = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/users");
+      const response = await axios("/admin/products");
       setList(response.data.data);
     };
 
@@ -131,4 +131,42 @@ export const FetchListTables = () => {
   }, []);
 
   return list;
+};
+
+// Fetch List Categories
+export const FetchCategorySelect = () => {
+  const [category, setCategory] = React.useState([]);
+
+  React.useEffect(() => {
+    const fetch = async () => {
+      const response = await axios("/admin/product/newProduct/listCategory");
+
+      setCategory(response.data.data);
+    };
+
+    fetch();
+  }, []);
+
+  return category;
+};
+
+// Fetch List Brand
+export const FetchBrand = (categoryId) => {
+  const [brand, setBrand] = useState([]);
+
+  React.useEffect(() => {
+    const fetch = async () => {
+      const response = await axios({
+        method: "post",
+        url: "/admin/product/newProduct/listSelectBrand",
+        data: { categoryId },
+      });
+
+      setBrand(response.data.data);
+    };
+
+    fetch();
+  }, [categoryId]);
+
+  return brand;
 };

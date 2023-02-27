@@ -48,3 +48,9 @@ WhERE
 LIMIT
     1;
     
+-- Get List Product
+select products.id, products.productId, products.name, products.image, products.price, products.stock, products.rating, products.isActive, products.categoryId as 'category', products.brandId as 'brand'
+from products
+left join categories on products.categoryId = categories.categoryId
+left join brands on products.brandId = brands.brandId
+

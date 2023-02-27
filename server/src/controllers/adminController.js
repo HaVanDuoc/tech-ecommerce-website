@@ -4,13 +4,22 @@ const {
   badRequest,
 } = require("../middleware/handleError");
 const adminService = require("../services/adminService");
-const { createUser, updateUser } = require("../helper/joiSchema");
+const { createUser, updateUser, createProduct } = require("../helper/joiSchema");
 
 const {
   CheckUserNameExists,
   CheckEmailExists,
 } = require("../helper/checkExists");
 
+// ---------- Find ------------
+//#region USER CONTROLLERS
+//#region PRODUCT CONTROLLERS
+//#region DATABASE CONTROLLERS
+// ----------------------------
+
+//#region USER CONTROLLERS
+
+// List users
 exports.getAllUser = async (req, res) => {
   try {
     const response = await adminService.getAllUser();
@@ -21,6 +30,7 @@ exports.getAllUser = async (req, res) => {
   }
 };
 
+// Get a user
 exports.getUser = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -32,6 +42,7 @@ exports.getUser = async (req, res) => {
   }
 };
 
+// Create new user
 exports.createNewUser = async (req, res) => {
   try {
     const { error } = Joi.object({
@@ -113,7 +124,15 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
-// Get List Product
+//#endregion
+
+//----------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+//#region PRODUCT CONTROLLERS
+
+// List Product
 exports.getListProduct = async (req, res) => {
   try {
     const response = await adminService.getListProduct();
@@ -124,13 +143,21 @@ exports.getListProduct = async (req, res) => {
   }
 };
 
-exports.createNewRole = async (req, res) => {
+// Create new product
+exports.createNewProduct = async (req, res) => {
   try {
-    const name = Joi.string().min(1).required();
-    const { error } = Joi.object({ name }).validate(req.body);
+    const { error } = Joi.object({
+      name: createProduct.name,
+      image: createProduct.image,
+      price: createProduct.price,
+      stock: createProduct.stock,
+      category: createProduct.category,
+      brand: createProduct.brand,
+    }).validate(req.body);
+
     if (error) return badRequest(error.details[0]?.message, res);
 
-    const response = await adminService.createNewRole(req.body); // service
+    const response = await adminService.createNewProduct(req.body); // service
 
     res.status(200).json(response);
   } catch (error) {
@@ -138,6 +165,36 @@ exports.createNewRole = async (req, res) => {
   }
 };
 
+// List category
+exports.getListCategory = async (req, res) => {
+  try {
+    const response = await adminService.getListCategory();
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+exports.getListSelectBrand = async (req, res) => {
+  try {
+    const response = await adminService.getListSelectBrand(req.body);
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+//#endregion
+
+//----------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
+
+//#region DATABASE CONTROLLERS
+
+// Create new category
 exports.createNewCategory = async (req, res) => {
   try {
     const name = Joi.string().min(1).required();
@@ -152,6 +209,22 @@ exports.createNewCategory = async (req, res) => {
   }
 };
 
+// Create new role
+exports.createNewRole = async (req, res) => {
+  try {
+    const name = Joi.string().min(1).required();
+    const { error } = Joi.object({ name }).validate(req.body);
+    if (error) return badRequest(error.details[0]?.message, res);
+
+    const response = await adminService.createNewRole(req.body); // service
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+// Create new status
 exports.createNewStatus = async (req, res) => {
   try {
     const name = Joi.string().min(1).required();
@@ -165,6 +238,12 @@ exports.createNewStatus = async (req, res) => {
     return intervalServerError(res);
   }
 };
+
+//#endregion
+
+//----------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------
 
 exports.getListRole = async (req, res) => {
   try {

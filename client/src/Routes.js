@@ -24,18 +24,26 @@ export const publicRoutes = [
 ];
 
 export const privateRoutes = [
-  // admin routes
-  { path: "/admin", page: HomeAdmin, layout: AdminLayout },
-  { path: "/admin/users", page: UserListAdmin, layout: AdminLayout },
-  { path: "/admin/user/:userId", page: UserAdmin, layout: AdminLayout },
-  { path: "/admin/newUser", page: NewUserAdmin, layout: AdminLayout },
-  { path: "/admin/products", page: ProductListAdmin, layout: AdminLayout },
+  //#region ADMIN ROUTES
+
+  // Home routes
+  { path: "/admin", page: HomeAdmin, layout: AdminLayout }, // Home
+
+  // User routes
+  { path: "/admin/users", page: UserListAdmin, layout: AdminLayout }, // User
+  { path: "/admin/user/update/:userId", page: UserAdmin, layout: AdminLayout }, // Update user
+  { path: "/admin/user/newUser", page: NewUserAdmin, layout: AdminLayout }, // Create new user
+
+  // Product routes
+  { path: "/admin/products", page: ProductListAdmin, layout: AdminLayout }, // Products
+  { path: "/admin/product/newProduct", page: NewProductAdmin, layout: AdminLayout }, // Create new product
+
+  // Database routes
   {
     path: "/admin/product/:productId",
     page: ProductAdmin,
     layout: AdminLayout,
   },
-  { path: "/admin/newProduct", page: NewProductAdmin, layout: AdminLayout },
   { path: "/admin/database", page: DatabaseAdmin, layout: AdminLayout },
   { path: "/admin/database/categories", page: categories, layout: AdminLayout },
 ];

@@ -48,3 +48,12 @@ exports.updateUser = {
   roleId: Joi.string(),
   statusId: Joi.string(),
 };
+
+exports.createProduct = {
+  name: Joi.string().min(1).required(),
+  price: Joi.number().min(1),
+  stock: Joi.number().min(1),
+  category: Joi.string().min(1).required(),
+  brand: Joi.string().min(1).required(),
+  image: Joi.string(),
+};

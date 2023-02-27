@@ -1,4 +1,6 @@
-const { Typography, Box } = require("@mui/material");
+import { Link } from "react-router-dom";
+
+const { Typography, Box, Button, Stack } = require("@mui/material");
 
 export const AdminTitle = ({ children }) => (
   <Typography variant="h4" marginBottom={4}>
@@ -41,3 +43,40 @@ export const LabelField = ({ children }) => (
     {children}
   </Box>
 );
+
+export const StackButtons = ({ children }) => {
+  return (
+    <Stack
+      flex={1}
+      display="flex"
+      flexDirection="row"
+      justifyContent="right"
+      sx={{ borderTop: "1px solid rgba(224, 224, 224, 1)", padding: 2 }}
+    >
+      {children}
+    </Stack>
+  );
+};
+
+export const ButtonCreate = ({ children, href }) => {
+  return (
+    <Button
+      variant="contained"
+      sx={{
+        backgroundColor: "teal",
+        paddingLeft: 4,
+        paddingRight: 4,
+        borderRadius: 2,
+        textTransform: "capitalize",
+
+        "&:hover": {
+          backgroundColor: "#036363",
+        },
+      }}
+    >
+      <Link to={href} className="link">
+        {children || "Create new"}
+      </Link>
+    </Button>
+  );
+};

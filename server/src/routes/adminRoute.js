@@ -10,25 +10,25 @@ const router = require("express").Router();
 
 router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }));
 
-router.get("/users", adminController.getAllUser);
+// User
+router.get("/users", adminController.getAllUser); // List users
+router.get("/user/:userId", adminController.getUser); // Get a user
+router.post("/user/newUser", adminController.createNewUser); // Create new user
+router.put("/user/:userId", adminController.updateUser); // Update a user
+router.delete("/user/:userId", adminController.deleteUser); // Delete a user
 
-router.get("/user/:userId", adminController.getUser);
+// Product
+router.get("/products", adminController.getListProduct); // List products
+router.post("/product/newProduct", adminController.createNewProduct); // Create new products
+router.get("/product/newProduct/listCategory", adminController.getListCategory); // List category
+router.post("/product/newProduct/listSelectBrand", adminController.getListSelectBrand); // List brand
 
-router.post("/user/newUser", adminController.createNewUser);
+// Database
+router.post("/database/newCategory", adminController.createNewCategory); // Create new category
+router.post("/database/newStatus", adminController.createNewStatus); // Create new status
+router.post("/database/newRole", adminController.createNewRole); // Create new role
 
-router.put("/user/:userId", adminController.updateUser);
-
-router.delete("/user/:userId", adminController.deleteUser);
-
-router.get("/products", adminController.getListProduct);
-
-
-router.post("/database/newCategory", adminController.createNewCategory);
-
-router.post("/database/newStatus", adminController.createNewStatus);
-
+// Role
 router.get("/roles", adminController.getListRole);
-
-router.post("/database/newRole", adminController.createNewRole);
 
 module.exports = router;

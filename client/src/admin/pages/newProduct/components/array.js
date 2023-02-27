@@ -5,18 +5,18 @@ export const products = [
     as: TextField,
     label: "Tên sản phẩm",
     type: "text",
-    name: "small",
+    name: "name",
   },
   {
     as: TextField,
     label: "Giá",
     type: "number",
-    name: "small",
+    name: "price",
   },
   {
     as: TextField,
     label: "Số lượng nhập kho",
     type: "number",
-    name: "small",
+    name: "stock",
   },
 ];
