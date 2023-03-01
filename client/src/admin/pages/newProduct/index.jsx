@@ -8,6 +8,8 @@ import removeEmpty from "~/helper/removeEmpty";
 import Categories from "./components/Category";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import axios from "axios";
+import UploadFile from "~/components/UploadFile";
+import { useSnackbar } from "notistack";
 
 const initialValues = {
   name: "",
@@ -20,7 +22,7 @@ const initialValues = {
 
 const validationSchema = Yup.object({
   name: Yup.string().required("*Bắt buộc"),
-  // image: Yup.string().required("*Bắt buộc"),
+  image: Yup.mixed().required("*Bắt buộc"),
   price: Yup.string().required("*Bắt buộc"),
   stock: Yup.string().required("*Bắt buộc"),
   category: Yup.string().required("*Bắt buộc"),
@@ -29,14 +31,22 @@ const validationSchema = Yup.object({
 
 export default function NewProduct() {
   const [isSubmitting, setSubmitting] = React.useState(false);
-  const [data, setData] = React.useState({});
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleSnackBar = (res) => {
+    enqueueSnackbar(res.data.msg, {
+      variant: `${res.data.err === 0 ? "success" : "error"}`,
+      TransitionComponent: "down",
+      anchorOrigin: { vertical: "top", horizontal: "center" },
+    });
+  };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values, props) => {
-        const data = removeEmpty(values); // Exclude filed data blank
+        var data = removeEmpty(values); // Exclude filed data blank
 
         // return alert(JSON.stringify(data, null, 2)); // Test submit
 
@@ -50,21 +60,21 @@ export default function NewProduct() {
             data: data,
           });
 
-          setData(response.data);
-
           setSubmitting(false);
 
           // Nếu tạo thành công thì reset form
           if (response.data.err === 0) return props.resetForm();
+
+          handleSnackBar(response);
         }, 2000);
       }}
     >
       {(props) => (
-        <Form>
+        <Form method="post" encType="multipart/form-data">
           <Box sx={{ flex: 4, paddingLeft: 4, paddingRight: 4 }}>
             <AdminTitle>Sản phẩm mới</AdminTitle>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={4.5}>
                 {Array.isArray(products) &&
                   products.map((item, index) => (
                     <FieldForm key={index}>
@@ -88,7 +98,9 @@ export default function NewProduct() {
                   <ButtonSubmit disabled={isSubmitting}>Create</ButtonSubmit>
                 </FieldForm>
               </Grid>
-              <Grid item xs={8}></Grid>
+              <Grid item xs={7.5}>
+                <UploadFile props={props} name="image" />
+              </Grid>
             </Grid>
           </Box>
         </Form>

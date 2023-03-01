@@ -31,12 +31,18 @@ export default function ProductList() {
       width: 300,
       renderCell: (params) => {
         return (
-          <div className="productListItem">
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             {params.row.image && (
-              <img className="productListImg" src={params.row.image} alt="" />
+              <img src={params.row.image} alt="" style={{ width: "100px" }} />
             )}
             {params.row.name}
-          </div>
+          </Box>
         );
       },
     },
@@ -90,10 +96,11 @@ export default function ProductList() {
         rows={data}
         disableSelectionOnClick
         columns={columns}
-        pageSize={10}
+        pageSize={3}
         checkboxSelection
         autoHeight
         autoPageSize
+        rowHeight={150}
       />
     </Box>
   );

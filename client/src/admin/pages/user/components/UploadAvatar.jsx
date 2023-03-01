@@ -16,23 +16,6 @@ import Avatar from "react-avatar-edit";
 const UploadAvatar = ({ props }) => {
   const [image, setImage] = React.useState(null);
 
-  // Khi setAvt ảnh sẽ được lưu tạm vào bộ nhớ
-  // khi chuyển sang ảnh khác buộc phải xóa ảnh cũ đi tránh lãng phí bộ nhớ
-  // clean up
-  React.useEffect(() => {
-    return () => {
-      image && URL.revokeObjectURL(image);
-    };
-  }, [image]);
-
-  // const handlePreviewAvatar = (e) => {
-  //   const file = e.target.files[0];
-
-  //   file.preview = URL.createObjectURL(file); // file is a obj. Add props `preview` contains URL temporary
-
-  //   setImage(file);
-  // };
-
   // For Dialog Avatar
   const [open, setOpen] = React.useState(false);
 

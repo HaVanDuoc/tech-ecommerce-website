@@ -21,7 +21,10 @@ router.delete("/user/:userId", adminController.deleteUser); // Delete a user
 router.get("/products", adminController.getListProduct); // List products
 router.post("/product/newProduct", adminController.createNewProduct); // Create new products
 router.get("/product/newProduct/listCategory", adminController.getListCategory); // List category
-router.post("/product/newProduct/listSelectBrand", adminController.getListSelectBrand); // List brand
+router.post(
+  "/product/newProduct/listSelectBrand",
+  adminController.getListSelectBrand
+); // List brand
 
 // Database
 router.post("/database/newCategory", adminController.createNewCategory); // Create new category
