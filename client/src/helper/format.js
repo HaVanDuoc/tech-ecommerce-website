@@ -25,3 +25,11 @@ export const formatVND = (price) => {
     currency: "VND",
   }).format(price);
 };
+
+export const formatStatusProduct = (isActive, stock) => {
+  return isActive === "0"
+    ? stock === "0"
+      ? "Hết hàng"
+      : "Còn hàng"
+    : "Không kinh doanh";
+};

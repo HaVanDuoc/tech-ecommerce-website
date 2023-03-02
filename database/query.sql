@@ -49,8 +49,23 @@ LIMIT
     1;
     
 -- Get List Product
-select products.id, products.productId, products.name, products.image, products.price, products.stock, products.rating, products.isActive, products.categoryId as 'category', products.brandId as 'brand'
-from products
-left join categories on products.categoryId = categories.categoryId
-left join brands on products.brandId = brands.brandId
+SELECT
+    products.id,
+    products.productId,
+    products.name,
+    products.image,
+    products.price,
+    products.rating,
+    products.stock,
+    products.isActive,
+    categories.name as 'category',
+    brands.name as 'brand'
+FROM
+    products
+    LEFT JOIN categories on products.categoryId = categories.categoryId
+    LEFT JOIN brands on products.brandId = brands.brandId
+Where
+    products.productId = "P00000001"
+LIMIT
+    1;
 

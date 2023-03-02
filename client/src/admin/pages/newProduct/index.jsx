@@ -34,11 +34,19 @@ export default function NewProduct() {
   const { enqueueSnackbar } = useSnackbar();
 
   const handleSnackBar = (res) => {
-    enqueueSnackbar(res.data.msg, {
-      variant: `${res.data.err === 0 ? "success" : "error"}`,
-      TransitionComponent: "down",
-      anchorOrigin: { vertical: "top", horizontal: "center" },
-    });
+    if (res.data.err === 0) {
+      enqueueSnackbar(res.data.msg, {
+        variant: "success",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    } else {
+      enqueueSnackbar(res.data.msg, {
+        variant: "error",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    }
   };
 
   return (
@@ -62,10 +70,10 @@ export default function NewProduct() {
 
           setSubmitting(false);
 
+          handleSnackBar(response);
+
           // Nếu tạo thành công thì reset form
           if (response.data.err === 0) return props.resetForm();
-
-          handleSnackBar(response);
         }, 2000);
       }}
     >

@@ -7,6 +7,7 @@ import {
 } from "@mui/material";
 import { Field } from "formik";
 import React from "react";
+import { formatStatus } from "~/admin/pages/user/components/formatStatus";
 import { FetchStatusAccount } from "~/helper/fetch";
 import { formatCapitalization } from "~/helper/format";
 
@@ -33,7 +34,7 @@ const StatusAccount = () => {
             name="statusId"
             value={item.statusId}
             control={<Radio size="small" />}
-            label={formatCapitalization(item.name)}
+            label={formatCapitalization(formatStatus(item.name))}
           />
         ))}
       </RadioGroup>

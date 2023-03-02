@@ -20,6 +20,8 @@ router.delete("/user/:userId", adminController.deleteUser); // Delete a user
 // Product
 router.get("/products", adminController.getListProduct); // List products
 router.post("/product/newProduct", adminController.createNewProduct); // Create new products
+router.get("/product/:productId", adminController.getProduct); // Get a product
+router.delete("/product/:productId", adminController.deleteProduct); // Delete a product
 router.get("/product/newProduct/listCategory", adminController.getListCategory); // List category
 router.post(
   "/product/newProduct/listSelectBrand",

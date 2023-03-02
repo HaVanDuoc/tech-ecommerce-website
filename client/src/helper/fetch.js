@@ -170,3 +170,20 @@ export const FetchBrand = (categoryId) => {
 
   return brand;
 };
+
+// Fetch product
+export const FetchProduct = (id) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios(`/admin/product/${id}`);
+
+      setData(response.data.data);
+    };
+
+    fetch();
+  }, [id]);
+
+  return data;
+};

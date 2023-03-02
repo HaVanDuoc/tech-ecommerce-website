@@ -147,6 +147,31 @@ exports.getListProduct = async (req, res) => {
   }
 };
 
+exports.getProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    const response = await adminService.getProduct(productId);
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+// Delete product
+exports.deleteProduct = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+
+    const response = await adminService.deleteProduct(productId);
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
 // Create new product
 exports.createNewProduct = async (req, res) => {
   try {

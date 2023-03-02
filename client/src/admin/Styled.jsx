@@ -2,6 +2,23 @@ import { Link } from "react-router-dom";
 
 const { Typography, Box, Button, Stack } = require("@mui/material");
 
+export const Container = ({ children }) => (
+  <Box sx={{ paddingLeft: 2, paddingRight: 2 }}>{children}</Box>
+);
+
+export const Wrap = ({ children }) => {
+  return (
+    <Box
+      sx={{
+        borderRadius: 2,
+        boxShadow: " 0px 0px 15px 0px rgba(0,0,0,0.35)",
+      }}
+    >
+      {children}
+    </Box>
+  );
+};
+
 export const AdminTitle = ({ children }) => (
   <Typography variant="h4" marginBottom={4}>
     {children}
@@ -68,6 +85,7 @@ export const ButtonCreate = ({ children, href }) => {
         paddingRight: 4,
         borderRadius: 2,
         textTransform: "capitalize",
+        maxHeight: "42px",
 
         "&:hover": {
           backgroundColor: "#036363",

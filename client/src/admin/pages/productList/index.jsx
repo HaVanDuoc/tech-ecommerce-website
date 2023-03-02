@@ -5,12 +5,32 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { FetchProductList } from "~/helper/fetch";
-import { formatVND } from "~/helper/format";
+import { formatStatusProduct, formatVND } from "~/helper/format";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { Box } from "@mui/material";
+import axios from "axios";
+import { useSnackbar } from "notistack";
 
 export default function ProductList() {
   const [data, setData] = useState(productRows);
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleSnackBar = (res) => {
+    if (res.data.err === 0) {
+      enqueueSnackbar(res.data.msg, {
+        variant: "success",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    } else {
+      enqueueSnackbar(res.data.msg, {
+        variant: "error",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    }
+  };
 
   // Fetch list product
   const response = FetchProductList();
@@ -19,8 +39,18 @@ export default function ProductList() {
   }, [response]);
   //
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
+  const handleDelete = (productId) => {
+    setTimeout(async () => {
+      const response = await axios({
+        method: "delete",
+        url: `/admin/product/${productId}`,
+      });
+
+      if (response.data.err === 0) {
+        handleSnackBar(response);
+        setData(data.filter((item) => item.productId !== productId));
+      }
+    });
   };
 
   const columns = [
@@ -60,11 +90,7 @@ export default function ProductList() {
       headerName: "Status",
       width: 150,
       renderCell: (params) => {
-        return params.row.isActive === "0"
-          ? params.row.stock === "0"
-            ? "Hết hàng"
-            : "Còn hàng"
-          : "Không kinh doanh";
+        return formatStatusProduct(params.row.isActive, params.row.stock);
       },
     },
     {
@@ -74,12 +100,12 @@ export default function ProductList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/product/" + params.row.id}>
+            <Link to={"/admin/product/update/" + params.row.productId}>
               <button className="productListEdit">Edit</button>
             </Link>
             <DeleteOutlineIcon
               className="productListDelete"
-              onClick={() => handleDelete(params.row.id)}
+              onClick={() => handleDelete(params.row.productId)}
             />
           </>
         );

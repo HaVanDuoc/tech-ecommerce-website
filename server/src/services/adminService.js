@@ -219,6 +219,59 @@ exports.getListProduct = () =>
     }
   });
 
+exports.getProduct = (productId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const query = `SELECT
+                        products.id,
+                        products.productId,
+                        products.name,
+                        products.image,
+                        products.price,
+                        products.rating,
+                        products.stock,
+                        products.isActive,
+                        categories.name as 'category',
+                        brands.name as 'brand'
+                    FROM
+                        products
+                        LEFT JOIN categories on products.categoryId = categories.categoryId
+                        LEFT JOIN brands on products.brandId = brands.brandId
+                    Where
+                        products.productId = "${productId}"
+                    LIMIT
+                        1;`;
+
+      const [response] = await sequelize.query(query, { raw: true });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failed",
+        data: response[0],
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.deleteProduct = (productId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Product.destroy({
+        where: { productId },
+        raw: true,
+      });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Đã xóa sản phẩm!" : "Xóa thất bại",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
 exports.createNewProduct = (data) =>
   new Promise(async (resolve, reject) => {
     try {

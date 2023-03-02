@@ -6,10 +6,12 @@ import PhoneIphoneOutlinedIcon from "@mui/icons-material/PhoneIphoneOutlined";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import TaskAltOutlinedIcon from "@mui/icons-material/TaskAltOutlined";
+import TransgenderOutlinedIcon from "@mui/icons-material/TransgenderOutlined";
 import { Avatar, Tooltip } from "@mui/material";
 import React from "react";
 import dayjs from "dayjs";
 import { FormatFullName, formatPhoneNumber } from "~/helper/format";
+import { formatStatus } from "./formatStatus";
 
 const UserShow = ({ fetch }) => {
   const {
@@ -25,6 +27,7 @@ const UserShow = ({ fetch }) => {
     email,
     address,
     status,
+    gender,
   } = fetch;
 
   const AccountDetails = [
@@ -44,12 +47,17 @@ const UserShow = ({ fetch }) => {
       icon: <CakeOutlinedIcon className="userShowIcon" />,
     },
     {
+      tooltip: "Giới tính",
+      value: gender,
+      icon: <TransgenderOutlinedIcon className="userShowIcon" />,
+    },
+    {
       tooltip: "Trạng thái",
-      value: status,
+      value: formatStatus(status),
       icon: <TaskAltOutlinedIcon className="userShowIcon" />,
     },
     {
-      tooltip: "Quyền hạn",
+      tooltip: "Tài khoản thuộc quyền hạn",
       value: role,
       icon: <WorkspacePremiumIcon className="userShowIcon" />,
     },

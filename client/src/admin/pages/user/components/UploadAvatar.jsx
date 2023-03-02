@@ -25,7 +25,7 @@ const UploadAvatar = ({ props }) => {
 
   const AvatarEdit = () => {
     const [preview, setPreview] = useState(null);
-    const [src, setSrc] = useState(null);
+    const [src] = useState(null);
 
     const onClose = () => {
       setPreview(null);

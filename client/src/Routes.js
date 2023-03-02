@@ -12,6 +12,7 @@ import {
   UserListAdmin,
 } from "./admin/pages";
 import categories from "./admin/pages/database/categories";
+import UpdateProduct from "./admin/pages/UpdateProduct";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -36,7 +37,16 @@ export const privateRoutes = [
 
   // Product routes
   { path: "/admin/products", page: ProductListAdmin, layout: AdminLayout }, // Products
-  { path: "/admin/product/newProduct", page: NewProductAdmin, layout: AdminLayout }, // Create new product
+  {
+    path: "/admin/product/newProduct",
+    page: NewProductAdmin,
+    layout: AdminLayout,
+  }, // Create new product
+  {
+    path: "/admin/product/update/:productId",
+    page: UpdateProduct,
+    layout: AdminLayout,
+  }, // Update product
 
   // Database routes
   {
