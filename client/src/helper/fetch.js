@@ -23,7 +23,7 @@ export const FetchRoleList = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/roles");
+      const response = await axios("/admin/user/newUser/listRoles");
       setList(response.data.data);
     };
 

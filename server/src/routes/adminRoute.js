@@ -1,7 +1,8 @@
 const verifyToken = require("../middleware/verifyToken");
 const verifyRole = require("../middleware/verifyRole");
-const adminController = require("../controllers/adminController");
-
+const userControllers = require("../controllers/adminControllers/userControllers");
+const productControllers = require("../controllers/adminControllers/productControllers");
+const databaseControllers = require("../controllers/adminControllers/databaseControllers");
 const router = require("express").Router();
 
 // router.use(verifyToken);
@@ -11,29 +12,31 @@ const router = require("express").Router();
 router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }));
 
 // User
-router.get("/users", adminController.getAllUser); // List users
-router.get("/user/:userId", adminController.getUser); // Get a user
-router.post("/user/newUser", adminController.createNewUser); // Create new user
-router.put("/user/:userId", adminController.updateUser); // Update a user
-router.delete("/user/:userId", adminController.deleteUser); // Delete a user
+router.post("/user/newUser", userControllers.createNewUser); // Create new user
+router.get("/users", userControllers.getAllUser); // List users
+router.get("/user/:userId", userControllers.getUser); // Get a user
+router.put("/user/:userId", userControllers.updateUser); // Update a user
+router.delete("/user/:userId", userControllers.deleteUser); // Delete a user
+router.get("/user/newUser/listRoles", userControllers.getListRole);
 
 // Product
-router.get("/products", adminController.getListProduct); // List products
-router.post("/product/newProduct", adminController.createNewProduct); // Create new products
-router.get("/product/:productId", adminController.getProduct); // Get a product
-router.delete("/product/:productId", adminController.deleteProduct); // Delete a product
-router.get("/product/newProduct/listCategory", adminController.getListCategory); // List category
+router.post("/product/newProduct", productControllers.createNewProduct); // Create new products
+router.get("/products", productControllers.getListProduct); // List products
+router.get("/product/:productId", productControllers.getProduct); // Get a product
+
+router.delete("/product/:productId", productControllers.deleteProduct); // Delete a product
+router.get(
+  "/product/newProduct/listCategory",
+  productControllers.getListCategory
+); // List category
 router.post(
   "/product/newProduct/listSelectBrand",
-  adminController.getListSelectBrand
+  productControllers.getListSelectBrand
 ); // List brand
 
 // Database
-router.post("/database/newCategory", adminController.createNewCategory); // Create new category
-router.post("/database/newStatus", adminController.createNewStatus); // Create new status
-router.post("/database/newRole", adminController.createNewRole); // Create new role
-
-// Role
-router.get("/roles", adminController.getListRole);
+router.post("/database/newCategory", databaseControllers.createNewCategory); // Create new category
+router.post("/database/newStatus", databaseControllers.createNewStatus); // Create new status
+router.post("/database/newRole", databaseControllers.createNewRole); // Create new role
 
 module.exports = router;
