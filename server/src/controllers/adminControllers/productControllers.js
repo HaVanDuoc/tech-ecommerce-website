@@ -6,6 +6,7 @@ const {
   intervalServerError,
 } = require("../../middleware/handleError");
 const { createProduct } = require("../../helper/joiSchema");
+const productServices = require("../../services/adminServices/productServices");
 
 // Create new product
 exports.createNewProduct = async (req, res) => {
@@ -21,7 +22,7 @@ exports.createNewProduct = async (req, res) => {
 
     if (error) return badRequest(error.details[0]?.message, res);
 
-    const response = await adminService.createNewProduct(req.body); // service
+    const response = await productServices.createNewProduct(req.body); // service
 
     res.status(200).json(response);
   } catch (error) {
@@ -32,7 +33,7 @@ exports.createNewProduct = async (req, res) => {
 // Get list Product
 exports.getListProduct = async (req, res) => {
   try {
-    const response = await adminService.getListProduct();
+    const response = await productServices.getListProduct();
 
     res.status(200).json(response);
   } catch (error) {
@@ -45,7 +46,7 @@ exports.getProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
 
-    const response = await adminService.getProduct(productId);
+    const response = await productServices.getProduct(productId);
 
     res.status(200).json(response);
   } catch (error) {
@@ -61,7 +62,7 @@ exports.deleteProduct = async (req, res) => {
   try {
     const productId = req.params.productId;
 
-    const response = await adminService.deleteProduct(productId);
+    const response = await productServices.deleteProduct(productId);
 
     res.status(200).json(response);
   } catch (error) {
@@ -72,7 +73,7 @@ exports.deleteProduct = async (req, res) => {
 // List category
 exports.getListCategory = async (req, res) => {
   try {
-    const response = await adminService.getListCategory();
+    const response = await productServices.getListCategory();
 
     res.status(200).json(response);
   } catch (error) {
@@ -83,7 +84,7 @@ exports.getListCategory = async (req, res) => {
 // List brand
 exports.getListSelectBrand = async (req, res) => {
   try {
-    const response = await adminService.getListSelectBrand(req.body);
+    const response = await productServices.getListSelectBrand(req.body);
 
     res.status(200).json(response);
   } catch (error) {

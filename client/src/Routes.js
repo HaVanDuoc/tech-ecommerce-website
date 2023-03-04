@@ -1,5 +1,4 @@
 import { Accessory, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
-import Home from "~/pages/Home_v2";
 import AdminLayout from "./admin/layouts";
 import {
   DatabaseAdmin,
@@ -13,6 +12,7 @@ import {
 } from "./admin/pages";
 import categories from "./admin/pages/database/categories";
 import UpdateProduct from "./admin/pages/UpdateProduct";
+import Home from "./pages/Home_v3";
 
 export const publicRoutes = [
   { path: "/", page: Home },

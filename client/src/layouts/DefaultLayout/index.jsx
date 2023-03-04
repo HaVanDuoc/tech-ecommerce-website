@@ -4,9 +4,7 @@ import { Footer, Header } from "~/components";
 
 const DefaultLayoutWrapper = styled(Box)(() => ({}));
 
-const Body = styled(Box)(() => ({
-  padding: "15px",
-}));
+const Body = styled(Box)(() => ({}));
 
 const DefaultLayout = ({ children }) => {
   return (

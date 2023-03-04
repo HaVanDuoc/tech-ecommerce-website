@@ -1,5 +1,13 @@
 // productServices.js
 
+const {
+  padProductId,
+  padRoleId,
+  padCategoryId,
+  padStatusId,
+} = require("../../helper/padLeft");
+const { sequelize } = require("../../models");
+
 // Create new product
 exports.createNewProduct = (data) =>
   new Promise(async (resolve, reject) => {
@@ -92,9 +100,17 @@ exports.getProduct = (productId) =>
 
       const [response] = await sequelize.query(query, { raw: true });
 
+      // check object is exists
+      if (Array.isArray(response) && !response.length)
+        return resolve({
+          err: 1,
+          msg: "Not find object",
+          data: response[0],
+        });
+
       resolve({
         err: response ? 0 : 1,
-        msg: response ? "Get data successfully" : "Get data failed",
+        msg: response ? "Get data successfully" : "Get data failure",
         data: response[0],
       });
     } catch (error) {
