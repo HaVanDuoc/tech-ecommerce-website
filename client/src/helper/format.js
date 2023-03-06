@@ -1,3 +1,5 @@
+import { Typography } from "@mui/material";
+
 // Format Capitalization first letter
 export const formatCapitalization = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
@@ -24,6 +26,22 @@ export const formatVND = (price) => {
     style: "currency",
     currency: "VND",
   }).format(price);
+};
+
+export const formatCost = (cost) => {
+  return (
+    <Typography sx={{ textDecorationLine: "line-through", fontSize: "14px" }}>
+      {cost}
+    </Typography>
+  );
+};
+
+export const formatDiscount = (discount) => {
+  return "-" + discount + "%";
+};
+
+export const getPrice = (cost, discount) => {
+  return cost - cost * (discount / 100);
 };
 
 export const formatStatusProduct = (isActive, stock) => {

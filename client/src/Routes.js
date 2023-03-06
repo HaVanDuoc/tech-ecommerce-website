@@ -13,6 +13,7 @@ import {
 import categories from "./admin/pages/database/categories";
 import UpdateProduct from "./admin/pages/UpdateProduct";
 import Home from "./pages/Home_v3";
+import Banner from "./admin/pages/banner";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -47,6 +48,13 @@ export const privateRoutes = [
     page: UpdateProduct,
     layout: AdminLayout,
   }, // Update product
+
+  // Display routes
+  {
+    path: "/admin/display/banner",
+    page: Banner,
+    layout: AdminLayout,
+  },
 
   // Database routes
   {

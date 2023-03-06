@@ -6,20 +6,26 @@ module.exports = {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.addColumn(
-          "Products",
-          "stock",
+          "Categories",
+          "illustration",
           {
-            type: Sequelize.DataTypes.STRING,
-            defaultValue: "0",
+            type: Sequelize.DataTypes.TEXT('long'),
           },
           { transaction: t }
         ),
         queryInterface.addColumn(
-          "Products",
-          "isActive",
+          "Categories",
+          "accessTime",
           {
             type: Sequelize.DataTypes.STRING,
-            defaultValue: "0",
+          },
+          { transaction: t }
+        ),
+        queryInterface.addColumn(
+          "Categories",
+          "link",
+          {
+            type: Sequelize.DataTypes.STRING,
           },
           { transaction: t }
         ),
@@ -29,10 +35,13 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn("Products", "stock", {
+        queryInterface.removeColumn("Categories", "illustration", {
           transaction: t,
         }),
-        queryInterface.removeColumn("Products", "isActive", {
+        queryInterface.removeColumn("Categories", "accessTime", {
+          transaction: t,
+        }),
+        queryInterface.removeColumn("Categories", "link", {
           transaction: t,
         }),
       ]);

@@ -13,6 +13,7 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import ReportIcon from "@mui/icons-material/Report";
 import DbManagement from "./components/DbManagement";
+import Display from "./components/Display";
 
 export default function Sidebar() {
   return (
@@ -80,6 +81,10 @@ export default function Sidebar() {
               Messages
             </li>
           </ul>
+        </div>
+
+        <div className="sidebarMenu">
+          <Display />
         </div>
 
         <div className="sidebarMenu">
