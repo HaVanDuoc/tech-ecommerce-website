@@ -14,6 +14,9 @@ import categories from "./admin/pages/database/categories";
 import UpdateProduct from "./admin/pages/UpdateProduct";
 import Home from "./pages/Home_v3";
 import Banner from "./admin/pages/banner";
+import DisplayCategory from "./admin/pages/display/category";
+import NewCategory from "./admin/pages/display/category/NewCategory";
+import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -53,6 +56,21 @@ export const privateRoutes = [
   {
     path: "/admin/display/banner",
     page: Banner,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/display/category",
+    page: DisplayCategory,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/display/category/newCategory",
+    page: NewCategory,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/display/category/updateCategory/:categoryId",
+    page: UpdateCategory,
     layout: AdminLayout,
   },
 

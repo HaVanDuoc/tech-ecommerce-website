@@ -82,3 +82,15 @@ Where
     products.productId = "P00000001"
 LIMIT
     1;
+
+-- 
+select
+    id,
+    categoryId,
+    name,
+    link,
+    accessTime
+from
+    categories
+order by
+    accessTime;

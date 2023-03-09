@@ -3,6 +3,7 @@ const verifyRole = require("../middleware/verifyRole");
 const userControllers = require("../controllers/adminControllers/userControllers");
 const productControllers = require("../controllers/adminControllers/productControllers");
 const databaseControllers = require("../controllers/adminControllers/databaseControllers");
+const displayControllers = require("../controllers/adminControllers/display");
 const router = require("express").Router();
 
 // router.use(verifyToken);
@@ -33,6 +34,12 @@ router.post(
   "/product/newProduct/listSelectBrand",
   productControllers.getListSelectBrand
 ); // List brand
+
+// ---- Display
+router.get("/display/category", displayControllers.listCategories);
+router.post("/display/category/newCategory", displayControllers.createNewCategory);
+router.get("/display/category/:categoryId", displayControllers.getCategory);
+router.put("/display/category/:categoryId", displayControllers.updateCategory);
 
 // Database
 router.post("/database/newCategory", databaseControllers.createNewCategory); // Create new category

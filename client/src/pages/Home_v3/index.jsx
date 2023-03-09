@@ -4,6 +4,7 @@ import Banner from "./Banner";
 import Categories from "./Categories";
 import FlashSale from "./FlashSale";
 import { Wrap } from "./StyledHome";
+import TodaySuggestions from "./TodaySuggestions";
 import TopFind from "./TopFind";
 
 const WrapHome = styled(Box)(() => ({}));
@@ -16,6 +17,7 @@ const Home = () => {
         <Categories />
         <FlashSale />
         <TopFind />
+        <TodaySuggestions />
       </Wrap>
     </WrapHome>
   );

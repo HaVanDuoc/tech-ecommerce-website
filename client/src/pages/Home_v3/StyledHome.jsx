@@ -22,5 +22,22 @@ export const Section = ({ children, backgroundColor }) => {
 };
 
 export const Title = ({ children }) => {
-  return <Typography>{children}</Typography>;
+  return (
+    <Typography
+      sx={{
+        paddingBottom: 2,
+        color: "#333",
+        fontWeight: 500,
+        textTransform: "uppercase",
+        fontSize: "24px",
+        lineHeight: "36px",
+      }}
+    >
+      {children}
+    </Typography>
+  );
+};
+
+export const List = ({ children }) => {
+  return <Box>{children}</Box>;
 };

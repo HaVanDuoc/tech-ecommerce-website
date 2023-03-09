@@ -173,3 +173,31 @@ Content-Type: application/json
     "category": "C001",
     "brand": "M001"
 }
+
+### [GET] get category
+GET http://localhost:4000/api/v1/client/nav
+
+### [GET] get category
+GET http://localhost:4000/api/v1/admin/display/category
+
+### [POST] create new category
+POST http://localhost:4000/api/v1/admin/display/category/newCategory
+Content-Type: application/json
+
+{
+    "name": "Điện thoại",
+    "image": "iamge",
+    "link": "link"
+}
+
+### [GET] get category
+GET http://localhost:4000/api/v1/admin/display/category/C001
+
+### [PUT] update category
+PUT http://localhost:4000/api/v1/admin/display/category/C009
+Content-Type: application/json
+
+{
+    "name": "Ti vi"
+}
+

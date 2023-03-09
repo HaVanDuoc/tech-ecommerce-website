@@ -15,7 +15,7 @@ const Display = () => {
             Banner
           </li>
         </Link>
-        <Link to="/admin/display/banner" className="link">
+        <Link to="/admin/display/category" className="link">
           <li className="sidebarListItem">
             <CategoryIcon className="sidebarIcon" />
             Category

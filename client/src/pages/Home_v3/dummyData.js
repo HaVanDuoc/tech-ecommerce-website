@@ -1,0 +1,66 @@
+export const dummyData = [
+  {
+    id: 1,
+    name: "Sharp Android TV 4T-C55EK2X",
+    image: "android-tivi-sharp-4k-50-inch-4t-c-101022-112216-550x340.webp",
+    cost: "8000000",
+    discount: "20",
+  },
+  {
+    id: 2,
+    name: "Nồi chiên không dầu Crystal AF7002A-N 6.8 lít",
+    image:
+      "noi-chien-khong-dau-crystal-af7002a-n-68-lit-090822-042946-600x600.webp",
+    cost: "8000000",
+    discount: "20",
+  },
+  {
+    id: 3,
+    name: "Casper Android TV 55UG6100",
+    image: "smart-casper-4k-55-inch-55ug6100-(78).webp",
+    cost: "8800000",
+    discount: "20",
+  },
+  {
+    id: 4,
+    name: "Samsung Inverter 236 lít RT22M4032BY/SV",
+    image: "samsung-rt22m4032by-sv-300x300.webp",
+    cost: "7200000",
+    discount: "20",
+  },
+  {
+    id: 5,
+    name: "Máy khoan động lực điện Bosch GSB 16 RE 750W",
+    image: "bosch-gsb-16-re-11-300x300.webp",
+    cost: "1400000",
+    discount: "20",
+  },
+  {
+    id: 1,
+    name: "Sharp Android TV 4T-C55EK2X",
+    image: "android-tivi-sharp-4k-50-inch-4t-c-101022-112216-550x340.webp",
+    cost: "8000000",
+    discount: "20",
+  },
+  {
+    id: 1,
+    name: "Sharp Android TV 4T-C55EK2X",
+    image: "android-tivi-sharp-4k-50-inch-4t-c-101022-112216-550x340.webp",
+    cost: "8000000",
+    discount: "20",
+  },
+  {
+    id: 1,
+    name: "Sharp Android TV 4T-C55EK2X",
+    image: "android-tivi-sharp-4k-50-inch-4t-c-101022-112216-550x340.webp",
+    cost: "8000000",
+    discount: "20",
+  },
+  {
+    id: 1,
+    name: "Sharp Android TV 4T-C55EK2X",
+    image: "android-tivi-sharp-4k-50-inch-4t-c-101022-112216-550x340.webp",
+    cost: "8000000",
+    discount: "20",
+  },
+];

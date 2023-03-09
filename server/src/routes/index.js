@@ -5,6 +5,7 @@ const authRoute = require("./authRoute");
 const userRoute = require("./userRoute");
 const adminRoute = require("./adminRoute");
 const dbRoute = require("./dbRoute");
+const clientRoute = require("./client");
 
 const initRoute = (app) => {
   // Routes
@@ -12,6 +13,7 @@ const initRoute = (app) => {
   app.use("/api/v1/user", userRoute);
   app.use("/api/v1/admin", adminRoute);
   app.use("/api/v1/db", dbRoute);
+  app.use("/api/v1/client", clientRoute);
 
   // Route không xác định được response error not found
   return app.use(notFound);
