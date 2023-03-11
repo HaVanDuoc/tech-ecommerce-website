@@ -84,6 +84,7 @@ LIMIT
     1;
 
 -- 
+-- 
 select
     id,
     categoryId,
@@ -94,3 +95,23 @@ from
     categories
 order by
     accessTime;
+
+-- 
+-- 
+SELECT
+    products.id,
+    products.productId,
+    products.name,
+    products.image,
+    products.price,
+    products.rating,
+    products.stock,
+    products.isActive,
+    categories.name as 'category',
+    brands.name as 'brand'
+FROM
+    products
+    LEFT JOIN categories on products.categoryId = categories.categoryId
+    LEFT JOIN brands on products.brandId = brands.brandId
+WHERE
+    categories.name = "Điện thoại";

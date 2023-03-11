@@ -1,144 +1,133 @@
 import {
   Box,
-  Button,
   Grid,
-  IconButton,
-  Popover,
-  Stack,
-  TextField,
+  Paper,
+  Rating,
+  styled,
+  Table,
+  TableBody,
+  TableCell,
+  tableCellClasses,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
-import React, { Fragment } from "react";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import { formatStatusProduct } from "~/helper/format";
-import { PhotoCamera } from "@mui/icons-material";
+import React from "react";
+import { formatDiscount, formatVND } from "~/helper/format";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 const InfoProduct = ({ data }) => {
   const {
-    id,
     productId,
     name,
     image,
     price,
+    discount,
     rating,
     stock,
     isActive,
     category,
-    brand,
   } = data;
 
-  const fields = [
-    { name: "ID", value: productId, isEdit: false },
-    { name: "Tên", value: name, isEdit: true, popLabel: "Nhập tên mới" },
-    { name: "Giá", value: price, isEdit: true, popLabel: "Nhập giá" },
-    { name: "Số lượng", value: stock, isEdit: true, popLabel: "Nhập số lượng" },
-    {
-      name: "Trạng thái",
-      value: isActive === "0" ? "Đang kinh doanh" : "Không kinh doanh",
-      isEdit: true,
-      popLabel: "Chọn trạng thái",
-    },
-    { name: "Đánh giá", value: rating, isEdit: false },
+  function createData(name, value) {
+    return { name, value };
+  }
+
+  const rows = [
+    createData("ID", productId),
+    createData("Tên", name),
+    createData("Giá", formatVND(price)),
+    createData(
+      "Giảm giá",
+      discount ? formatDiscount(discount) : "Không có chương trình giảm giá"
+    ),
+    createData("Số lượng", stock !== 0 ? stock : "Hết hàng"),
+    createData("Tình trạng", isActive ? "Đang kinh doanh" : "Không kinh doanh"),
+    createData(
+      "Đánh giá",
+      rating ? (
+        <Rating name="read-only" value={rating} readOnly />
+      ) : (
+        "Chưa có đánh giá"
+      )
+    ),
   ];
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const idPop = open ? "simple-popover" : undefined;
-
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexWrap: "nowrap",
-      }}
-    >
-      <Box sx={{ minWidth: "400px" }}>
-        <form action="#">
-          <img src={image} alt="Ảnh minh họa sản phẩm" width="400px" />
-        </form>
-      </Box>
-      <Box>
-        {fields.map((item, index) => {
-          return (
-            <Stack
-              key={index}
-              alignItems="center"
-              flexDirection="row"
-              height="56px"
-              sx={{
-                paddingTop: 1,
-                paddingBottom: 1,
+    <Grid container>
+      <Grid item xs={4}>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <img
+            src={image}
+            alt="Ảnh minh họa sản phẩm"
+            style={{ minWidth: 350, minHeight: 350, width: 350 }}
+          />
+        </Box>
+      </Grid>
 
-                "&:hover": {
-                  ".buttonEdit": {
-                    opacity: 1,
-                  },
-                },
-              }}
-            >
-              {item.value && (
-                <Stack flexDirection="row">
-                  <Typography fontWeight={500} width="100px">
-                    {item.name}
-                  </Typography>
-                  <Typography>{item.value}</Typography>
-                </Stack>
-              )}
-              {item.isEdit && (
-                <Box>
-                  <IconButton
-                    disableRipple
-                    onClick={handleClick}
-                    className="buttonEdit"
-                    sx={{ transition: "opacity .3s ease", opacity: 0 }}
-                  >
-                    <ModeEditOutlineOutlinedIcon />
-                  </IconButton>
-
-                  <Popover
-                    id={idPop}
-                    open={open}
-                    anchorEl={anchorEl}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                      vertical: "center",
-                      horizontal: "right",
-                    }}
-                    transformOrigin={{
-                      vertical: "center",
-                      horizontal: "left",
-                    }}
+      <Grid item xs={8}>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <TableCell colSpan={2}>
+                  <Typography
                     sx={{
-                      paddingTop: 1,
-
-                      ".css-3bmhjh-MuiPaper-root-MuiPopover-paper": {
-                        boxShadow: "none",
-                      },
+                      fontWeight: 500,
+                      fontSize: 18,
                     }}
                   >
-                    <form action="#">
-                      <TextField label={item.popLabel} size="small" name="" />
-                      <Button type="submit" variant="contained">
-                        OK
-                      </Button>
-                    </form>
-                  </Popover>
-                </Box>
-              )}
-            </Stack>
-          );
-        })}
-      </Box>
-    </Box>
+                    {`Chi tiết ${category} ${name}`}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <StyledTableRow key={row.name}>
+                  <StyledTableCell
+                    component="th"
+                    scope="row"
+                    sx={{ fontWeight: 500 }}
+                  >
+                    {row.name}
+                  </StyledTableCell>
+                  <StyledTableCell align="left">{row.value}</StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   );
 };
 

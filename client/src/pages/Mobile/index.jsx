@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import React from "react";
+import ListProduct from "~/components/ListProduct";
 import Nav from "~/components/Nav";
 import Banner from "../Home_v3/Banner";
 
@@ -8,6 +9,7 @@ const Mobile = () => {
     <Box>
       <Nav />
       <Banner />
+      <ListProduct />
     </Box>
   );
 };

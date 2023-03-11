@@ -201,3 +201,7 @@ Content-Type: application/json
     "name": "Ti vi"
 }
 
+### Section Product
+
+### List product
+POST http://localhost:4000/api/v1/sectionProduct/getListProduct/laptop

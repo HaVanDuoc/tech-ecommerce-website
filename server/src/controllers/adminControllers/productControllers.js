@@ -7,6 +7,7 @@ const {
 } = require("../../middleware/handleError");
 const { createProduct } = require("../../helper/joiSchema");
 const productServices = require("../../services/adminServices/productServices");
+const { CheckUserNameExists } = require("../../helper/checkExists");
 
 // Create new product
 exports.createNewProduct = async (req, res) => {
@@ -55,7 +56,30 @@ exports.getProduct = async (req, res) => {
 };
 
 // Update product
-exports.updateProduct = async (req, res) => {};
+exports.updateProduct = async (req, res) => {
+  try {
+    const { error } = Joi.object({
+      name: Joi.string(),
+      price: Joi.number(),
+      stock: Joi.number(),
+      discount: Joi.number(),
+      isActive: Joi.string(),
+      category: Joi.string(),
+      brand: Joi.string(),
+      image: Joi.string(),
+    }).validate(req.body);
+
+    if (error) return badRequest(error.details[0]?.message, res);
+
+    const productId = req.params.productId;
+
+    const response = await productServices.updateProduct(productId, req.body);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
 
 // Delete product
 exports.deleteProduct = async (req, res) => {

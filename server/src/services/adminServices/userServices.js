@@ -23,9 +23,9 @@ exports.createNewUser = (data) =>
       } = data;
 
       // Create User Id
-      const query = `select productId from products order by id desc limit 1;`;
+      const query = `select userId from users order by id desc limit 1;`;
       const [idUserFinal] = await sequelize.query(query, { raw: true }); // Get uid of user final e.g 'U00000006'
-      const sliceId = idUserFinal[0].productId.slice(-8); // get 8 char final to result e.g '00000006'
+      const sliceId = idUserFinal[0].userId.slice(-8); // get 8 char final to result e.g '00000006'
       const userId = padUserId(parseInt(sliceId) + 1); // parseInt is convert 00000006 to 6
 
       // kết quả trả về một array [data: object, created: boolean]

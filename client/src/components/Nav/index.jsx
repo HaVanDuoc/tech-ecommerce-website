@@ -4,23 +4,9 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import { formatCapitalization } from "~/helper/format";
 
-const categories = [
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-  { id: 1, name: "Điện thoại" },
-];
-
 const Styled = styled(Box)(() => ({
+  backgroundColor: "var(--color-main)",
+
   ".slick-slider": {
     width: "100%",
   },
@@ -73,7 +59,7 @@ const Nav = () => {
           }}
         >
           <Slider {...settings}>
-            {Array.isArray(nav) &&
+            {nav.length > 0 &&
               nav.map((item, index) => (
                 <Box
                   key={index}
@@ -87,8 +73,14 @@ const Nav = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Typography display="flex" flexWrap="nowrap">
-                      {formatCapitalization(item.name)}
+                    <Typography
+                      display="flex"
+                      flexWrap="nowrap"
+                      color="#fff"
+                      textTransform="uppercase"
+                      fontWeight={500}
+                    >
+                      {item.name}
                     </Typography>
                   </Link>
                 </Box>

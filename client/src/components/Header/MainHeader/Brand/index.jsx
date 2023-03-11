@@ -1,18 +1,21 @@
 import { Box, Typography } from "@mui/material";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Brand = () => {
   return (
     <Box>
-      <Typography
-        sx={{
-          fontSize: "2em",
-          color: "var(--color-main)",
-          cursor: "pointer",
-        }}
-      >
-        Tech
-      </Typography>
+      <Link to="/">
+        <Typography
+          sx={{
+            fontSize: "2em",
+            color: "var(--color-main)",
+            cursor: "pointer",
+          }}
+        >
+          Tech
+        </Typography>
+      </Link>
     </Box>
   );
 };

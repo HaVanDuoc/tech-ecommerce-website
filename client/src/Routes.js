@@ -17,6 +17,11 @@ import Banner from "./admin/pages/banner";
 import DisplayCategory from "./admin/pages/display/category";
 import NewCategory from "./admin/pages/display/category/NewCategory";
 import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
+import HeadPhone from "./pages/Headphone";
+import Sim from "./pages/Sim";
+import WashingMachine from "./pages/WashingMachine";
+import Tivi from "./pages/Tivi";
+import Fridge from "./pages/Frigde";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -26,6 +31,12 @@ export const publicRoutes = [
   { path: "/phu-kien", page: Accessory },
   { path: "/dong-ho", page: Watch },
   { path: "/pc", page: PC },
+  { path: "/tai-nghe", page: HeadPhone },
+  { path: "/dong-ho", page: Watch },
+  { path: "/sim", page: Sim },
+  { path: "/may-giat", page: WashingMachine },
+  { path: "/tivi", page: Tivi },
+  { path: "/tu-lanh", page: Fridge },
 ];
 
 export const privateRoutes = [

@@ -7,6 +7,7 @@ exports.getNav = () =>
                         id,
                         categoryId,
                         name,
+                        illustration,
                         link,
                         accessTime
                     from

@@ -20,7 +20,12 @@ export const Wrap = ({ children }) => {
 };
 
 export const AdminTitle = ({ children }) => (
-  <Typography variant="h4" marginBottom={4}>
+  <Typography
+    fontSize={28}
+    textTransform="uppercase"
+    marginBottom={2}
+    marginTop={2}
+  >
     {children}
   </Typography>
 );
@@ -75,9 +80,10 @@ export const StackButtons = ({ children }) => {
   );
 };
 
-export const ButtonCreate = ({ children, href }) => {
+export const ButtonCreate = ({ children, href, onClick }) => {
   return (
     <Button
+      onClick={onClick}
       variant="contained"
       sx={{
         backgroundColor: "teal",

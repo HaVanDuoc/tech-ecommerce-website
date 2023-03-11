@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import ListProduct from "~/components/ListProduct";
 import Nav from "~/components/Nav";
 
-const Laptop = () => {
+const Fridge = () => {
   return (
     <Fragment>
       <Nav />
@@ -11,4 +11,4 @@ const Laptop = () => {
   );
 };
 
-export default Laptop;
+export default Fridge;

@@ -41,6 +41,7 @@ export const formatDiscount = (discount) => {
 };
 
 export const getPrice = (cost, discount) => {
+  if (!discount) discount = 0;
   return cost - cost * (discount / 100);
 };
 

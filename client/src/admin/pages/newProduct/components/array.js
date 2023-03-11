@@ -19,4 +19,10 @@ export const products = [
     type: "number",
     name: "stock",
   },
+  {
+    as: TextField,
+    label: "Khuyến mãi giảm giá",
+    type: "number",
+    name: "discount",
+  },
 ];

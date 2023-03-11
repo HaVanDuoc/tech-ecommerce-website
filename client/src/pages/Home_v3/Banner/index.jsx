@@ -37,7 +37,7 @@ const Banner = () => {
   ];
 
   return (
-    <Box sx={{ position: "relative", marginBottom: "100px" }}>
+    <Box sx={{ position: "relative", marginBottom: "120px" }}>
       <Box sx={bigBanner}>
         <img
           src={PF + "/assets/banner/Banner-Bighero---Desk---Nen-1920x450.jpg"}

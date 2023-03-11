@@ -1,7 +1,14 @@
-import React from "react";
+import React, { Fragment } from "react";
+import ListProduct from "~/components/ListProduct";
+import Nav from "~/components/Nav";
 
 const Tablet = () => {
-  return <div>Tablet</div>;
+  return (
+    <Fragment>
+      <Nav />
+      <ListProduct />;
+    </Fragment>
+  );
 };
 
 export default Tablet;

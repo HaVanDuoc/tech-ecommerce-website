@@ -6,6 +6,7 @@ const {
   padCategoryId,
   padStatusId,
 } = require("../../helper/padLeft");
+const db = require("../../models");
 const { sequelize } = require("../../models");
 
 // Create new product
@@ -15,8 +16,10 @@ exports.createNewProduct = (data) =>
       const { name, image, price, stock, category, brand } = data;
 
       // Create Product Id
-      const responseId = await db.Product.count({ distinct: true, col: "id" });
-      const productId = padProductId(responseId + 1);
+      const query = `select productId from products order by id desc limit 1;`;
+      const [lastId] = await sequelize.query(query, { raw: true }); // Get uid of user final e.g 'U00000006'
+      const sliceId = lastId[0].productId.slice(-8); // get 8 char final to result e.g '00000006'
+      const productId = padProductId(parseInt(sliceId) + 1); // parseInt is convert 00000006 to 6
 
       const response = await db.Product.findOrCreate({
         where: { name },
@@ -84,6 +87,8 @@ exports.getProduct = (productId) =>
                         products.name,
                         products.image,
                         products.price,
+                        products.discount,
+                        products.view,
                         products.rating,
                         products.stock,
                         products.isActive,
@@ -111,6 +116,43 @@ exports.getProduct = (productId) =>
       resolve({
         err: response ? 0 : 1,
         msg: response ? "Get data successfully" : "Get data failure",
+        data: response[0],
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+// Update product
+exports.updateProduct = (productId, data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      console.log("data", data);
+
+      // Check name Exists
+      if (data.name) {
+        const { count } = await db.Product.findAndCountAll({
+          where: { productId },
+          attributes: ["id", "name"],
+          raw: true,
+        });
+
+        if (count > 0)
+          resolve({
+            err: 1,
+            msg: "Tên này đã được sử dụng!",
+            data: null,
+          });
+      }
+
+      const response = await db.Product.update(data, {
+        where: { productId },
+        raw: true,
+      });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Cập nhật thành công" : "Cập nhật thất bại",
         data: response[0],
       });
     } catch (error) {
@@ -186,7 +228,7 @@ exports.createNewCategory = (data) =>
   });
 
 // Get list categories
-exports.getListCategory = (data) =>
+exports.getListCategory = () =>
   new Promise(async (resolve, reject) => {
     try {
       const response = await db.Category.findAll({

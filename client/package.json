@@ -5,7 +5,8 @@
   "proxy": "http://localhost:4000/api/v1",
   "dependencies": {
     "@mui/x-data-grid": "^5.17.23",
-    "@mui/x-date-pickers": "^5.0.19",
+    "@mui/x-date-pickers": "^5.0.20",
+    "@mui/x-date-pickers-pro": "^6.0.1",
     "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

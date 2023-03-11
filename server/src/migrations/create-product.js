@@ -29,6 +29,12 @@ module.exports = {
       rating: {
         type: Sequelize.STRING,
       },
+      view: {
+        type: Sequelize.STRING,
+      },
+      discount: {
+        type: Sequelize.STRING,
+      },
       isActive: {
         type: Sequelize.STRING,
       },

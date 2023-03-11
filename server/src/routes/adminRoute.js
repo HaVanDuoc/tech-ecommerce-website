@@ -24,7 +24,7 @@ router.get("/user/newUser/listRoles", userControllers.getListRole);
 router.post("/product/newProduct", productControllers.createNewProduct); // Create new products
 router.get("/products", productControllers.getListProduct); // List products
 router.get("/product/:productId", productControllers.getProduct); // Get a product
-
+router.put("/product/update/:productId", productControllers.updateProduct);
 router.delete("/product/:productId", productControllers.deleteProduct); // Delete a product
 router.get(
   "/product/newProduct/listCategory",
@@ -37,7 +37,10 @@ router.post(
 
 // ---- Display
 router.get("/display/category", displayControllers.listCategories);
-router.post("/display/category/newCategory", displayControllers.createNewCategory);
+router.post(
+  "/display/category/newCategory",
+  displayControllers.createNewCategory
+);
 router.get("/display/category/:categoryId", displayControllers.getCategory);
 router.put("/display/category/:categoryId", displayControllers.updateCategory);
 
