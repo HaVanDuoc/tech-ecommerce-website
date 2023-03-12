@@ -12,6 +12,8 @@ exports.getListProduct = (data) =>
                             products.image,
                             products.price,
                             products.rating,
+                            products.discount,
+                            products.view,
                             products.stock,
                             products.isActive,
                             categories.name as 'category',

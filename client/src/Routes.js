@@ -22,6 +22,7 @@ import Sim from "./pages/Sim";
 import WashingMachine from "./pages/WashingMachine";
 import Tivi from "./pages/Tivi";
 import Fridge from "./pages/Frigde";
+import Product from "./pages/Product";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -37,6 +38,7 @@ export const publicRoutes = [
   { path: "/may-giat", page: WashingMachine },
   { path: "/tivi", page: Tivi },
   { path: "/tu-lanh", page: Fridge },
+  { path: "/product/:productName", page: Product },
 ];
 
 export const privateRoutes = [

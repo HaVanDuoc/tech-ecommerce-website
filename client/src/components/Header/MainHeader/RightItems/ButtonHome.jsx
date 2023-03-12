@@ -1,25 +1,24 @@
 import { Button, Typography } from "@mui/material";
 import React from "react";
 import HomeIcon from "@mui/icons-material/Home";
+import { Link } from "react-router-dom";
 
 const ButtonHome = () => {
   return (
-    <Button
-    focusVisible
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "var(--color-main) !important",
-
-        // "& :hover": {
-        //   backgroundColor: "var(--background-color-hover)",
-        // },
-      }}
-    >
-      <HomeIcon />
-      <Typography sx={{textTransform: "none",}}>Trang chủ</Typography>
-    </Button>
+    <Link to="/">
+      <Button
+        focusVisible
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "var(--color-main) !important",
+        }}
+      >
+        <HomeIcon />
+        <Typography sx={{ textTransform: "none" }}>Trang chủ</Typography>
+      </Button>
+    </Link>
   );
 };
 

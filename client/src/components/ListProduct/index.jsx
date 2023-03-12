@@ -7,7 +7,6 @@ import {
   CardMedia,
   Container,
   Grid,
-  Link,
   Rating,
   Stack,
   styled,
@@ -15,14 +14,13 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   formatCost,
   formatDiscount,
   formatVND,
   getPrice,
 } from "~/helper/format";
-import { PF } from "~/__variables";
 
 const Styles = styled(Box)(() => ({
   ".card:hover": {
@@ -104,18 +102,29 @@ const ListProduct = () => {
           {Array.isArray(list) &&
             list.map((item, index) => (
               <Grid item xs={2.4} key={index}>
-                <Link>
-                  <Card className="card">
-                    <CardActionArea>
+                <Link to={`/product/${item.name}`}>
+                  <Card className="card" sx={{ height: "100%" }}>
+                    <CardActionArea
+                      sx={{
+                        height: "100%",
+                        alignItems: "none",
+                        display: "flex",
+                        justifyContent: "start",
+                        flexDirection: "column",
+                      }}
+                    >
                       <CardMedia
                         component="img"
-                        minheight="200"
                         image={item.image}
                         alt=""
                         className="imageCard"
+                        sx={{
+                          height: "230px",
+                          maxHeight: "230px",
+                        }}
                       />
 
-                      <CardContent>
+                      <CardContent sx={{ width: "100%" }}>
                         <Typography className="nameCard">
                           {item.name}
                         </Typography>
