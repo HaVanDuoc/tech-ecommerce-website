@@ -23,6 +23,9 @@ module.exports = {
       link: {
         type: Sequelize.STRING,
       },
+      view: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

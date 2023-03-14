@@ -55,7 +55,7 @@ const Styles = styled(Box)(() => ({
   },
 }));
 
-const ListProduct = () => {
+const ContentProductPage = () => {
   const [rating] = useState(4);
   const [list, setList] = useState([]);
   const page = window.location.href.substring(
@@ -78,6 +78,11 @@ const ListProduct = () => {
   return (
     <Styles className="sectionProduct">
       <Container maxWidth="lg" disableGutters>
+
+        {/* Brand */}
+        
+
+        
         <Stack
           display="flex"
           flexDirection="row"
@@ -178,4 +183,4 @@ const ListProduct = () => {
   );
 };
 
-export default ListProduct;
+export default ContentProductPage;

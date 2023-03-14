@@ -230,3 +230,14 @@ Content-Type: application/json
 
 ### 
 GET http://localhost:4000/api/v1/admin/display/category/updateCategory/C001/selectedBrands
+
+### 
+GET http://localhost:4000/api/v1/admin/display/brand/001
+
+### 
+PUT http://localhost:4000/api/v1/admin/display/brand/update/001
+Content-Type: application/json
+
+{
+    "name": "iPhone"
+}

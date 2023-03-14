@@ -56,9 +56,9 @@ export default function DisplayBrand() {
   const columns = [
     { field: "brandId", headerName: "ID", width: 100 },
     {
-      field: "name",
-      headerName: "Thương hiệu",
-      width: 300,
+      field: "logo",
+      headerName: "Logo",
+      width: 250,
       renderCell: (params) => {
         return (
           <Box
@@ -69,12 +69,25 @@ export default function DisplayBrand() {
             }}
           >
             {params.row.logo && (
-              <img
-                src={params.row.logo}
-                alt=""
-                style={{ width: "100px" }}
-              />
+              <img src={params.row.logo} alt="" style={{ width: "100px" }} />
             )}
+          </Box>
+        );
+      },
+    },
+    {
+      field: "name",
+      headerName: "Thương hiệu",
+      width: 250,
+      renderCell: (params) => {
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
             {params.row.name}
           </Box>
         );
@@ -87,7 +100,9 @@ export default function DisplayBrand() {
       renderCell: (params) => {
         return (
           <Link
-            href={process.env.REACT_APP_PUBLIC_FOLDER + params.row.link || "Trống"}
+            href={
+              process.env.REACT_APP_PUBLIC_FOLDER + params.row.link || "Trống"
+            }
           >
             {params.row.link
               ? process.env.REACT_APP_PUBLIC_FOLDER + params.row.link
@@ -103,12 +118,7 @@ export default function DisplayBrand() {
       renderCell: (params) => {
         return (
           <>
-            <Link
-              to={
-                "/admin/display/brand/updateBrand/" +
-                params.row.brandId
-              }
-            >
+            <Link to={"/admin/display/brand/update/" + params.row.brandId}>
               <button className="productListEdit">Edit</button>
             </Link>
             <DeleteOutlineIcon

@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import ListProduct from "~/components/ListProduct";
+import ListProduct from "~/components/ContentProductPage";
 import Nav from "~/components/Nav";
 
 const Watch = () => {

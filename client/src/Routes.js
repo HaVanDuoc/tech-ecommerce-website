@@ -25,6 +25,7 @@ import Tivi from "./pages/Tivi";
 import Fridge from "./pages/Frigde";
 import Product from "./pages/Product";
 import NewBrand from "./admin/pages/display/brand/NewBrand";
+import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -96,6 +97,11 @@ export const privateRoutes = [
   {
     path: "/admin/display/brand/newBrand",
     page: NewBrand,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/display/brand/update/:brandId",
+    page: UpdateBrand,
     layout: AdminLayout,
   },
 

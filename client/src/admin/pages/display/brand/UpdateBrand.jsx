@@ -24,18 +24,18 @@ import { FieldForm } from "~/admin/Styled";
 import removeEmpty from "~/helper/removeEmpty";
 import { refreshPage } from "~/utils";
 
-const UpdateCategory = () => {
+const UpdateBrand = () => {
   const [data, setData] = useState({});
-  const categoryId = useParams().categoryId;
+  const brandId = useParams().brandId;
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios(`/admin/display/category/${categoryId}`);
+      const response = await axios(`/admin/display/brand/${brandId}`);
       setData(response.data.data);
     };
 
     fetch();
-  }, [categoryId]);
+  }, [brandId]);
 
   // Form Update
   const UpdateForm = () => {
@@ -62,19 +62,19 @@ const UpdateCategory = () => {
     const initialValues = {
       name: "",
       link: "",
-      image: "",
+      logo: "",
     };
 
     const validationSchema = Yup.object({
       name: Yup.string(),
       link: Yup.string(),
-      image: Yup.mixed(),
+      logo: Yup.mixed(),
     });
 
     const categories = [
       {
         as: TextField,
-        label: "Tên danh mục",
+        label: "Tên thương hiệu",
         type: "text",
         name: "name",
       },
@@ -100,7 +100,7 @@ const UpdateCategory = () => {
           setTimeout(async () => {
             const response = await axios({
               method: "put",
-              url: `/admin/display/category/${categoryId}`,
+              url: `/admin/display/brand/update/${brandId}`,
               data: data,
             });
 
@@ -109,16 +109,13 @@ const UpdateCategory = () => {
             handleSnackBar(response);
 
             // Nếu tạo thành công thì reset form
-            if (response.data.err === 0) {
-              return refreshPage();
-            }
+            if (response.data.err === 0) return refreshPage();
           }, 2000);
         }}
       >
         {(props) => (
           <Form method="post" encType="multipart/form-data">
             <Box sx={{ flex: 4, paddingLeft: 4, paddingRight: 4 }}>
-              {/* <AdminTitle>Danh mục mới</AdminTitle> */}
               <Grid container spacing={2}>
                 <Grid item xs={5}>
                   {Array.isArray(categories) &&
@@ -138,7 +135,7 @@ const UpdateCategory = () => {
 
                   <FieldForm>
                     <TextField
-                      name="image"
+                      name="logo"
                       hidden
                       accept="image/*"
                       type="file"
@@ -153,14 +150,14 @@ const UpdateCategory = () => {
                               file: e.target.result,
                               imagePreviewUrl: e.target.result,
                             });
-                            props.setFieldValue("image", e.target.result); // return file name
+                            props.setFieldValue("logo", e.target.result); // return file name
                           };
                         }
                       }}
                     />
                     {image && <img src={image.imagePreviewUrl} alt="" />}
                     <FormHelperText>
-                      <ErrorMessage name="image" />
+                      <ErrorMessage name="logo" />
                     </FormHelperText>
                   </FieldForm>
 
@@ -187,7 +184,7 @@ const UpdateCategory = () => {
             paddingLeft: "40px",
           }}
         >
-          Thông tin danh mục
+          Thương hiệu {data.name}
         </Typography>
 
         <Box
@@ -199,8 +196,8 @@ const UpdateCategory = () => {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Ảnh minh họa</TableCell>
-                  <TableCell align="right">Danh mục</TableCell>
+                  <TableCell>Logo</TableCell>
+                  <TableCell align="right">Thương hiệu</TableCell>
                   <TableCell align="right">Liên kết tới</TableCell>
                   <TableCell align="right">Lượt truy cập</TableCell>
                 </TableRow>
@@ -210,7 +207,7 @@ const UpdateCategory = () => {
                   sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                 >
                   <TableCell component="th" scope="row">
-                    <img src={data.illustration} alt="" width="100px" />
+                    <img src={data.logo} alt="" width="100px" />
                   </TableCell>
                   <TableCell align="right">{data.name}</TableCell>
                   <TableCell align="right">
@@ -240,4 +237,4 @@ const UpdateCategory = () => {
   );
 };
 
-export default UpdateCategory;
+export default UpdateBrand;

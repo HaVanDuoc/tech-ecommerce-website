@@ -48,7 +48,7 @@ export default function ListBrand({ props }) {
     };
 
     fetch();
-  }, []);
+  }, [categoryId]);
 
   // Fetch list brand
   React.useEffect(() => {

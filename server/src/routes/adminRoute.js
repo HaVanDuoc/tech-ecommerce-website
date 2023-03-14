@@ -28,27 +28,20 @@ router.get("/products", productControllers.getListProduct); // List products
 router.get("/product/:productId", productControllers.getProduct); // Get a product
 router.put("/product/update/:productId", productControllers.updateProduct);
 router.delete("/product/:productId", productControllers.deleteProduct); // Delete a product
-router.get(
-  "/product/newProduct/listCategory",
-  productControllers.getListCategory
-); // List category
-router.post(
-  "/product/newProduct/listSelectBrand",
-  productControllers.getListSelectBrand
-); // List brand
+router.get("/product/newProduct/listCategory", productControllers.getListCategory); // List category
+router.post("/product/newProduct/listSelectBrand", productControllers.getListSelectBrand); // List brand
 
 // ---- Display
 router.get("/display/category", displayControllers.listCategories);
-router.post(
-  "/display/category/newCategory",
-  displayControllers.createNewCategory
-);
+router.post("/display/category/newCategory", displayControllers.createNewCategory);
 router.get("/display/category/:categoryId", displayControllers.getCategory);
 router.put("/display/category/:categoryId", displayControllers.updateCategory);
 router.get("/display/brand", displayControllers.listBrand);
 router.post("/display/brand/newBrand", displayControllers.createNewBrand);
 router.post("/display/updateCategory/:categoryId/setBrandForCategories", displayControllers.setBrandForCategories)
 router.get("/display/category/updateCategory/:categoryId/selectedBrands", displayControllers.selectedBrands)
+router.get("/display/brand/:brandId", displayControllers.getBrand);
+router.put("/display/brand/update/:brandId", displayControllers.updateBrand)
 
 // Database
 router.post("/database/newCategory", databaseControllers.createNewCategory); // Create new category
