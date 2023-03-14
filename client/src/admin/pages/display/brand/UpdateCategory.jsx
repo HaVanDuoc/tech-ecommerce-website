@@ -23,7 +23,6 @@ import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import { FieldForm } from "~/admin/Styled";
 import removeEmpty from "~/helper/removeEmpty";
 import { refreshPage } from "~/utils";
-import ListBrand from "./ListBrand";
 
 const UpdateCategory = () => {
   const [data, setData] = useState({});
@@ -64,7 +63,6 @@ const UpdateCategory = () => {
       name: "",
       link: "",
       image: "",
-      brands: "",
     };
 
     const validationSchema = Yup.object({
@@ -120,6 +118,7 @@ const UpdateCategory = () => {
         {(props) => (
           <Form method="post" encType="multipart/form-data">
             <Box sx={{ flex: 4, paddingLeft: 4, paddingRight: 4 }}>
+              {/* <AdminTitle>Danh mục mới</AdminTitle> */}
               <Grid container spacing={2}>
                 <Grid item xs={5}>
                   {Array.isArray(categories) &&
@@ -169,9 +168,6 @@ const UpdateCategory = () => {
                     <ButtonSubmit disabled={isSubmitting}>Update</ButtonSubmit>
                   </FieldForm>
                 </Grid>
-                <Grid item xs={7}>
-                  <ListBrand props={props} />
-                </Grid>
               </Grid>
             </Box>
           </Form>
@@ -185,13 +181,13 @@ const UpdateCategory = () => {
       <Box>
         <Typography
           sx={{
-            fontSize: 22,
+            fontSize: "18px",
             fontWeight: 500,
             textTransform: "uppercase",
             paddingLeft: "40px",
           }}
         >
-          Danh mục {data.name}
+          Thông tin danh mục
         </Typography>
 
         <Box

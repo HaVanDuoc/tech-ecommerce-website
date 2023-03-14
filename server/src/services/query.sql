@@ -115,3 +115,19 @@ FROM
     LEFT JOIN brands on products.brandId = brands.brandId
 WHERE
     categories.name = "Điện thoại";
+
+-- 
+-- 
+-- 
+select
+    categorybrands.id,
+    categorybrands.categoryId,
+    categorybrands.brandId,
+    categories.name as 'nameCategory',
+    brands.name as 'nameBrand'
+from
+    categorybrands
+    left join categories on categorybrands.categoryId = categories.id
+    left join brands on categorybrands.brandId = brands.id
+where
+    categorybrands.categoryId = "9";

@@ -58,11 +58,13 @@ exports.updateCategory = async (req, res) => {
     name = Joi.string();
     link = Joi.string();
     image = Joi.string();
+    brands = Joi.array();
 
     const { error } = Joi.object({
       name,
       link,
       image,
+      brands,
     }).validate(req.body);
 
     if (error) return badRequest(error.details[0]?.message, res);
@@ -73,11 +75,68 @@ exports.updateCategory = async (req, res) => {
       name: req.body.name,
       link: req.body.link,
       illustration: req.body.image,
+      brands: req.body.brands,
     };
 
-    console.log("data", data);
-
     const response = await displayServices.updateCategory(categoryId, data);
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+// Create new product
+exports.createNewBrand = async (req, res) => {
+  try {
+    name = Joi.string().min(1).required();
+    link = Joi.string().min(1);
+    logo = Joi.string().min(1);
+
+    const { error } = Joi.object({
+      name,
+      logo,
+      link,
+    }).validate(req.body);
+
+    if (error) return badRequest(error.details[0]?.message, res);
+
+    const response = await displayServices.createNewBrand(req.body); // service
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+exports.listBrand = async (req, res) => {
+  try {
+    const response = await displayServices.listBrand();
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+exports.setBrandForCategories = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+    const response = await displayServices.setBrandForCategories(
+      categoryId,
+      req.body
+    );
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+exports.selectedBrands = async (req, res) => {
+  try {
+    const categoryId = req.params.categoryId;
+    const response = await displayServices.selectedBrands(categoryId);
 
     res.status(200).json(response);
   } catch (error) {

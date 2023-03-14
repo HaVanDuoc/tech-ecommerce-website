@@ -7,9 +7,8 @@ import { Box } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
-export default function DisplayCategory() {
+export default function DisplayBrand() {
   const [data, setData] = useState([]);
-  const [brand, setBrand] = useState([])
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -29,10 +28,10 @@ export default function DisplayCategory() {
     }
   };
 
-  // Fetch list category
+  // Fetch list product
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/display/category");
+      const response = await axios("/admin/display/brand");
       setData(response.data.data);
     };
 
@@ -40,25 +39,25 @@ export default function DisplayCategory() {
   }, []);
   //
 
-  const handleDelete = (productId) => {
+  const handleDelete = (brandId) => {
     setTimeout(async () => {
       const response = await axios({
         method: "delete",
-        url: `/admin/product/${productId}`,
+        url: `/admin/product/${brandId}`,
       });
 
       if (response.data.err === 0) {
         handleSnackBar(response);
-        setData(data.filter((item) => item.productId !== productId));
+        setData(data.filter((item) => item.brandId !== brandId));
       }
     });
   };
 
   const columns = [
-    { field: "categoryId", headerName: "ID", width: 100 },
+    { field: "brandId", headerName: "ID", width: 100 },
     {
       field: "name",
-      headerName: "Category",
+      headerName: "Thương hiệu",
       width: 300,
       renderCell: (params) => {
         return (
@@ -69,9 +68,9 @@ export default function DisplayCategory() {
               alignItems: "center",
             }}
           >
-            {params.row.illustration && (
+            {params.row.logo && (
               <img
-                src={params.row.illustration}
+                src={params.row.logo}
                 alt=""
                 style={{ width: "100px" }}
               />
@@ -88,23 +87,13 @@ export default function DisplayCategory() {
       renderCell: (params) => {
         return (
           <Link
-            href={
-              process.env.REACT_APP_PUBLIC_FOLDER + params.row.link || "Trống"
-            }
+            href={process.env.REACT_APP_PUBLIC_FOLDER + params.row.link || "Trống"}
           >
             {params.row.link
               ? process.env.REACT_APP_PUBLIC_FOLDER + params.row.link
               : "Trống"}
           </Link>
         );
-      },
-    },
-    {
-      field: "accessTime",
-      headerName: "Access Time",
-      width: 150,
-      renderCell: (params) => {
-        return params.row.accessTime || 0;
       },
     },
     {
@@ -116,15 +105,15 @@ export default function DisplayCategory() {
           <>
             <Link
               to={
-                "/admin/display/category/updateCategory/" +
-                params.row.categoryId
+                "/admin/display/brand/updateBrand/" +
+                params.row.brandId
               }
             >
               <button className="productListEdit">Edit</button>
             </Link>
             <DeleteOutlineIcon
               className="productListDelete"
-              onClick={() => handleDelete(params.row.productId)}
+              onClick={() => handleDelete(params.row.brandId)}
             />
           </>
         );
@@ -135,17 +124,17 @@ export default function DisplayCategory() {
   return (
     <Box flex={4}>
       <StackButtons>
-        <ButtonCreate href="/admin/display/category/newCategory" />
+        <ButtonCreate href="/admin/display/brand/newBrand" />
       </StackButtons>
       <DataGrid
         rows={data}
         disableSelectionOnClick
         columns={columns}
-        pageSize={5}
+        pageSize={10}
         checkboxSelection
         autoHeight
         autoPageSize
-        rowHeight={100}
+        rowHeight={50}
       />
     </Box>
   );

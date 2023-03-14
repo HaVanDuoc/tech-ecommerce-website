@@ -4,6 +4,7 @@ const userControllers = require("../controllers/adminControllers/userControllers
 const productControllers = require("../controllers/adminControllers/productControllers");
 const databaseControllers = require("../controllers/adminControllers/databaseControllers");
 const displayControllers = require("../controllers/adminControllers/display");
+const { listBrand } = require("../controllers/adminControllers/admin");
 const router = require("express").Router();
 
 // router.use(verifyToken);
@@ -11,6 +12,7 @@ const router = require("express").Router();
 // router.use(verifyRole.isAdmin);
 
 router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }));
+router.get("/listBrand", listBrand);
 
 // User
 router.post("/user/newUser", userControllers.createNewUser); // Create new user
@@ -43,6 +45,10 @@ router.post(
 );
 router.get("/display/category/:categoryId", displayControllers.getCategory);
 router.put("/display/category/:categoryId", displayControllers.updateCategory);
+router.get("/display/brand", displayControllers.listBrand);
+router.post("/display/brand/newBrand", displayControllers.createNewBrand);
+router.post("/display/updateCategory/:categoryId/setBrandForCategories", displayControllers.setBrandForCategories)
+router.get("/display/category/updateCategory/:categoryId/selectedBrands", displayControllers.selectedBrands)
 
 // Database
 router.post("/database/newCategory", databaseControllers.createNewCategory); // Create new category

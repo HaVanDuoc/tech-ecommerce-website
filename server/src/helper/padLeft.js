@@ -36,3 +36,8 @@ exports.padStatusId = (x) => {
 exports.padUserId = (x) => {
   return "U" + Array(8 - String(x).length + 1).join("0") + x;
 };
+
+// Brand ID
+exports.padBrandId = (x) => {
+  return Array(3 - String(x).length + 1).join("0") + x;
+};

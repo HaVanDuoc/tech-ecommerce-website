@@ -1,4 +1,5 @@
-const { padCategoryId } = require("../../helper/padLeft");
+const { padCategoryId, padBrandId } = require("../../helper/padLeft");
+const { sequelize } = require("../../models");
 const db = require("../../models");
 
 // Get list categories
@@ -89,8 +90,48 @@ exports.getCategory = (categoryId) =>
 exports.updateCategory = (categoryId, data) =>
   new Promise(async (resolve, reject) => {
     try {
-      // Check name is exists
-      if (data.name) {
+      const { brands, name } = data;
+
+      // return console.log("data", data.brands);
+
+      // Update brands
+      if (Array.isArray(brands) && brands.length > 0) {
+        // get id to categoryId
+        const [responseIdCategory] = await sequelize.query(
+          `select id from categories where categoryId = "${categoryId}"`
+        );
+        const idCategory = responseIdCategory[0].id;
+
+        // Remove all brands
+        const remove = async () => {
+          await db.categorybrand.destroy({
+            where: {
+              categoryId: idCategory,
+            },
+          });
+        };
+
+        remove();
+
+        // Update new brands
+        brands.map(async (name) => {
+          const [responseIdBrand] = await sequelize.query(
+            `select id from brands where name = "${name}"`
+          );
+          const idBrand = responseIdBrand[0].id;
+
+          await db.categorybrand.findOrCreate({
+            where: { categoryId: idCategory, brandId: idBrand },
+            defaults: {
+              categoryId: idCategory,
+              brandId: idBrand,
+            },
+          });
+        });
+      }
+
+      if (name) {
+        // Check name is exists
         const { count } = await db.Category.findAndCountAll({
           where: { name: data.name },
           attributes: ["id", "name"],
@@ -120,3 +161,149 @@ exports.updateCategory = (categoryId, data) =>
       reject(error);
     }
   });
+
+exports.createNewBrand = (data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const { name, logo, link } = data;
+
+      // Create Category Id
+      const query = `select brandId from brands order by id desc limit 1;`;
+      const [idFinal] = await db.sequelize.query(query);
+      if (idFinal.length === 0) {
+        var sliceId = 0;
+      } else {
+        sliceId = idFinal[0].brandId.slice(-3);
+      }
+
+      const brandId = padBrandId(parseInt(sliceId) + 1);
+
+      const response = await db.Brand.findOrCreate({
+        where: { name },
+        defaults: {
+          brandId,
+          name,
+          logo,
+          link,
+        },
+        raw: true,
+      });
+
+      resolve({
+        err: response[1] ? 0 : 1,
+        msg: response[1]
+          ? "Đã thêm thương hiệu mới!"
+          : `Thương hiệu ${name} đã tồn tại!`,
+        data: response[1] ? response[0] : null,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.listBrand = () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Brand.findAll({
+        attributes: {
+          exclude: ["createdAt", "updatedAt"],
+        },
+        raw: true,
+      });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failed",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.setBrandForCategories = (categoryId, data) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const [responseIdCategory] = await sequelize.query(
+        `select id from categories where categoryId = "${categoryId}"`
+      );
+      const idCategory = responseIdCategory[0].id; //
+
+      const [responseIdBrand] = await sequelize.query(
+        `select id from brands where name = "${data.name}"`
+      );
+      const idBrand = responseIdBrand[0].id; //
+
+      const response = await db.categorybrand.findOrCreate({
+        where: {
+          categoryId: idCategory,
+          brandId: idBrand,
+        },
+        defaults: {
+          categoryId: idCategory,
+          brandId: idBrand,
+        },
+      });
+
+      resolve({
+        err: response[1] ? 0 : 1,
+        msg: response[1]
+          ? "Thành công!"
+          : "Thương hiệu này đã có trong danh mục!",
+        data: response[1] ? response[0] : null,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+exports.selectedBrands = (categoryId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const [responseIdCategory] = await sequelize.query(
+        `select id from categories where categoryId = "${categoryId}"`
+      );
+      const idCategory = responseIdCategory[0].id;
+
+      const query = `select
+                        brands.name as 'brands'
+                      from
+                          categorybrands
+                          left join categories on categorybrands.categoryId = categories.id
+                          left join brands on categorybrands.brandId = brands.id
+                      where
+                          categorybrands.categoryId = "${idCategory}";`;
+
+      const [response] = await db.sequelize.query(query);
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failure",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+// exports.selectedBrands = (categoryId) =>
+//   new Promise(async (resolve, reject) => {
+//     try {
+//       const [responseIdCategory] = await sequelize.query(
+//         `select id from categories where categoryId = "${categoryId}"`
+//       );
+//       const idCategory = responseIdCategory[0].id;
+
+//       const response = await db.categorybrand.findAll({
+//         where: { categoryId: idCategory },
+//       });
+
+//       resolve({
+//         err: response ? 0 : 1,
+//         msg: response ? "Get data successfully" : "Get data failure",
+//         data: response,
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });

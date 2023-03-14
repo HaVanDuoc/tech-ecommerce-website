@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import StorageIcon from "@mui/icons-material/Storage";
 import { FetchListTables } from "~/helper/fetch";
 import SubdirectoryArrowRightIcon from "@mui/icons-material/SubdirectoryArrowRight";
+import SdStorageOutlinedIcon from "@mui/icons-material/SdStorageOutlined";
 
 const DbManagement = () => {
   const [tables, setTables] = useState(null);
@@ -27,7 +28,7 @@ const DbManagement = () => {
       <List className="sidebarList">
         <Link to="/admin/database" className="link">
           <li onClick={handleClick} className="sidebarListItem">
-            <StorageIcon />
+            <SdStorageOutlinedIcon fontSize="small" />
             <ListItemText primary="Tech" />
             {open ? <ExpandLess /> : <ExpandMore />}
           </li>

@@ -127,8 +127,6 @@ exports.getProduct = (productId) =>
 exports.updateProduct = (productId, data) =>
   new Promise(async (resolve, reject) => {
     try {
-      console.log("data", data);
-
       // Check name Exists
       if (data.name) {
         const { count } = await db.Product.findAndCountAll({

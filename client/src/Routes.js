@@ -15,6 +15,7 @@ import UpdateProduct from "./admin/pages/UpdateProduct";
 import Home from "./pages/Home_v3";
 import Banner from "./admin/pages/banner";
 import DisplayCategory from "./admin/pages/display/category";
+import DisplayBrand from "./admin/pages/display/brand";
 import NewCategory from "./admin/pages/display/category/NewCategory";
 import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
 import HeadPhone from "./pages/Headphone";
@@ -23,6 +24,7 @@ import WashingMachine from "./pages/WashingMachine";
 import Tivi from "./pages/Tivi";
 import Fridge from "./pages/Frigde";
 import Product from "./pages/Product";
+import NewBrand from "./admin/pages/display/brand/NewBrand";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -84,6 +86,16 @@ export const privateRoutes = [
   {
     path: "/admin/display/category/updateCategory/:categoryId",
     page: UpdateCategory,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/display/brand",
+    page: DisplayBrand,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/display/brand/newBrand",
+    page: NewBrand,
     layout: AdminLayout,
   },
 

@@ -194,14 +194,39 @@ Content-Type: application/json
 GET http://localhost:4000/api/v1/admin/display/category/C001
 
 ### [PUT] update category
-PUT http://localhost:4000/api/v1/admin/display/category/C009
+PUT http://localhost:4000/api/v1/admin/display/category/C001
 Content-Type: application/json
 
 {
-    "name": "Ti vi"
+    "brands": ["Samsung", "Oppo"]
 }
 
 ### Section Product
 
 ### List product
 POST http://localhost:4000/api/v1/sectionProduct/getListProduct/laptop
+
+### List product
+GET http://localhost:4000/api/v1/admin/display/brand
+
+### 
+POST http://localhost:4000/api/v1/admin/display/brand/newBrand
+Content-Type: application/json
+
+{
+    "name": "iPhone"
+}
+
+### 
+GET http://localhost:4000/api/v1/admin/listBrand
+
+### 
+POST http://localhost:4000/api/v1/admin/display/updateCategory/C001/setBrandForCategories
+Content-Type: application/json
+
+{
+    "name": "iPhone"
+}
+
+### 
+GET http://localhost:4000/api/v1/admin/display/category/updateCategory/C001/selectedBrands
