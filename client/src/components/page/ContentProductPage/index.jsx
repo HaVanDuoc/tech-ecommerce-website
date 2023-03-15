@@ -78,11 +78,6 @@ const ContentProductPage = () => {
   return (
     <Styles className="sectionProduct">
       <Container maxWidth="lg" disableGutters>
-
-        {/* Brand */}
-        
-
-        
         <Stack
           display="flex"
           flexDirection="row"

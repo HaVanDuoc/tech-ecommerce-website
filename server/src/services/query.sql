@@ -131,3 +131,17 @@ from
     left join brands on categorybrands.brandId = brands.id
 where
     categorybrands.categoryId = "9";
+
+-- 
+-- 
+-- 
+select
+    brands.name,
+    brands.logo,
+    brands.link
+from
+    categorybrands
+    left join brands on brands.id = categorybrands.brandId
+    left join categories on categories.id = categorybrands.categoryId
+where
+    categories.name = "Điện thoại";

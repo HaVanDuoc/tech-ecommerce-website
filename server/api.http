@@ -241,3 +241,11 @@ Content-Type: application/json
 {
     "name": "iPhone"
 }
+
+### 
+POST  http://localhost:4000/api/v1/client/showBrand
+Content-Type: application/json
+
+{
+    "currentPage": "Điện thoại"
+}
