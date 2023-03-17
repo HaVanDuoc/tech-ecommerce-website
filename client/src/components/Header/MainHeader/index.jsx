@@ -1,5 +1,6 @@
 import { Box, Container, Stack, styled } from "@mui/material";
 import React from "react";
+import Nav from "~/components/Nav";
 import Brand from "./Brand";
 import RightItems from "./RightItems";
 import Search from "./Search";
@@ -17,6 +18,9 @@ const MainHeader = () => {
           <Search />
           <RightItems />
         </Stack>
+      </Container>
+      <Container maxWidth="xl" disableGutters>
+        <Nav />
       </Container>
     </HeaderWrapper>
   );

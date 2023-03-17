@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 4000;
 
 // Middleware
 app.use(bodyParser.urlencoded({extended: true}))
-app.use(express.json({ limit: "25mb" }));
+app.use(express.json({ limit: "250mb" }));
 dotenv.config();
 app.use(cors());
 app.use(morgan("common"));

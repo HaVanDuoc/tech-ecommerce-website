@@ -145,3 +145,18 @@ from
     left join categories on categories.id = categorybrands.categoryId
 where
     categories.name = "Điện thoại";
+
+-- 
+-- 
+-- 
+select
+    brands.id,
+    brands.brandId,
+    brands.name
+from
+    categorybrands
+    left join categories on categorybrands.categoryId = categories.id
+    left join brands on categorybrands.brandId = brands.id
+where
+    categorybrands.categoryId = "9";
+

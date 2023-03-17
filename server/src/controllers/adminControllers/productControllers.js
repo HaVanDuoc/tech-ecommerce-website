@@ -66,7 +66,7 @@ exports.updateProduct = async (req, res) => {
       isActive: Joi.string(),
       category: Joi.string(),
       brand: Joi.string(),
-      image: Joi.string(),
+      images: Joi.array(),
     }).validate(req.body);
 
     if (error) return badRequest(error.details[0]?.message, res);

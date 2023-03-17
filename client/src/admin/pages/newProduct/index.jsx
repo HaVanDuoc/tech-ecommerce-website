@@ -8,7 +8,7 @@ import removeEmpty from "~/helper/removeEmpty";
 import Categories from "./components/Category";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import axios from "axios";
-import UploadFile from "~/components/UploadFile";
+import UploadFile from "~/components/UploadMultipleFiles";
 import { useSnackbar } from "notistack";
 
 const initialValues = {

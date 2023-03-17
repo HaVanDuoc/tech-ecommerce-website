@@ -14,18 +14,13 @@ import {
   IconButton,
   Radio,
   RadioGroup,
-  Stack,
   styled,
-  TextField,
-  Typography,
 } from "@mui/material";
-import { AdminTitle, FieldForm } from "~/admin/Styled";
+import { FieldForm } from "~/admin/Styled";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import removeEmpty from "~/helper/removeEmpty";
-import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import axios from "axios";
-import UploadFile from "~/components/UploadFile";
 import { useSnackbar } from "notistack";
 import Categories from "../newProduct/components/Category";
 import { products } from "../newProduct/components/array";
@@ -33,14 +28,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { selectorOpen } from "~/redux/ButtonEditPageUpdateProductInAdmin/reducers";
 import { useDispatch, useSelector } from "react-redux";
 import { close as closeForm } from "~/redux/ButtonEditPageUpdateProductInAdmin/actions";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import {
-  MultiInputDateTimeRangeField,
-  SingleInputDateTimeRangeField,
-} from "@mui/x-date-pickers-pro";
-import DateTimeRangeField from "./DateTimeRangeField";
 import { refreshPage } from "~/utils";
+import UploadMultipleFiles from "~/components/UploadMultipleFiles";
+import UploadFile from "~/components/UploadFile";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -237,7 +227,8 @@ const FormUpdate = () => {
 
                   <Grid item xs={12}>
                     <FormLabel>Chọn hình ảnh minh họa</FormLabel>
-                    <UploadFile props={props} name="image" />
+                    <UploadMultipleFiles props={props} name="images" />
+                    {/* <UploadFile props={props} name="image" /> */}
                   </Grid>
                 </Grid>
               </Box>

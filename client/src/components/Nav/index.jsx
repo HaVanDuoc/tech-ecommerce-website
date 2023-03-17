@@ -2,10 +2,10 @@ import { Box, Container, Link, styled, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
-import { formatCapitalization } from "~/helper/format";
 
 const Styled = styled(Box)(() => ({
   backgroundColor: "var(--color-main)",
+  boxShadow: "0 1px 6px 0 rgba(32,33,36,.28)",
 
   ".slick-slider": {
     width: "100%",

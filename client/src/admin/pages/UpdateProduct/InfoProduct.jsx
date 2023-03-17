@@ -40,7 +40,7 @@ const InfoProduct = ({ data }) => {
   const {
     productId,
     name,
-    image,
+    images,
     price,
     discount,
     rating,
@@ -48,6 +48,10 @@ const InfoProduct = ({ data }) => {
     isActive,
     category,
   } = data;
+
+  if (images) {
+    var arrImages = images.split("=,");
+  }
 
   function createData(name, value) {
     return { name, value };
@@ -86,7 +90,7 @@ const InfoProduct = ({ data }) => {
           }}
         >
           <img
-            src={image}
+            src={Array.isArray(arrImages) && arrImages[4]}
             alt="Ảnh minh họa sản phẩm"
             style={{ minWidth: 350, minHeight: 350, width: 350 }}
           />

@@ -82,26 +82,26 @@ exports.getProduct = (productId) =>
   new Promise(async (resolve, reject) => {
     try {
       const query = `SELECT
-                        products.id,
-                        products.productId,
-                        products.name,
-                        products.image,
-                        products.price,
-                        products.discount,
-                        products.view,
-                        products.rating,
-                        products.stock,
-                        products.isActive,
-                        categories.name as 'category',
-                        brands.name as 'brand'
-                    FROM
-                        products
-                        LEFT JOIN categories on products.categoryId = categories.categoryId
-                        LEFT JOIN brands on products.brandId = brands.brandId
-                    Where
-                        products.productId = "${productId}"
-                    LIMIT
-                        1;`;
+                          products.id,
+                          products.productId,
+                          products.name,
+                          convert(products.images using utf8) as 'images',
+                          products.price,
+                          products.discount,
+                          products.view,
+                          products.rating,
+                          products.stock,
+                          products.isActive,
+                          categories.name as 'category',
+                          brands.name as 'brand'
+                      FROM
+                          products
+                          LEFT JOIN categories on products.categoryId = categories.categoryId
+                          LEFT JOIN brands on products.brandId = brands.brandId
+                      Where
+                          products.productId = 'P00000007'
+                      LIMIT
+                          1;`;
 
       const [response] = await sequelize.query(query, { raw: true });
 
@@ -143,9 +143,26 @@ exports.updateProduct = (productId, data) =>
           });
       }
 
-      const response = await db.Product.update(data, {
+      // Chia làm 2 lần update
+      // nếu có hình ảnh được gán trong `images` và update bằng query
+
+      const { images, ...other } = data;
+
+      if (images) {
+        let query = `update
+                        products
+                    set
+                        images = '${images}'
+                    where
+                        productId = '${productId}'`;
+
+        await db.sequelize.query(query);
+        console.log("up duoc hinh anh");
+      }
+
+      // các thuộc tính còn lại sẽ được update dưới đây và update bằng sequelize
+      let response = await db.Product.update(other, {
         where: { productId },
-        raw: true,
       });
 
       resolve({
@@ -272,11 +289,20 @@ exports.createNewStatus = (data) =>
 exports.getListSelectBrand = (data) =>
   new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Brand.findAll({
-        where: { categoryId: data.categoryId },
-        attributes: ["id", "brandId", "name"],
-        raw: true,
-      });
+      const { categoryId } = data;
+
+      let query = `select
+                      brands.id,
+                      brands.brandId,
+                      brands.name
+                  from
+                      categorybrands
+                      left join categories on categorybrands.categoryId = categories.id
+                      left join brands on categorybrands.brandId = brands.id
+                  where
+                      categories.categoryId = "${categoryId}";`;
+
+      const [response] = await db.sequelize.query(query);
 
       resolve({
         err: response ? 0 : 1,

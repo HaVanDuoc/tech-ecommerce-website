@@ -28,6 +28,7 @@ const Brands = ({ props, name, categoryId }) => {
     setValue(event.target.value);
     props.setFieldValue(name, event.target.value);
   };
+  
   return (
     <Box>
       <FormControl>

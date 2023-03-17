@@ -23,9 +23,9 @@ import Sim from "./pages/Sim";
 import WashingMachine from "./pages/WashingMachine";
 import Tivi from "./pages/Tivi";
 import Fridge from "./pages/Frigde";
-import Product from "./pages/Product";
 import NewBrand from "./admin/pages/display/brand/NewBrand";
 import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
+import Product from "./pages/Product_v2";
 
 export const publicRoutes = [
   { path: "/", page: Home },

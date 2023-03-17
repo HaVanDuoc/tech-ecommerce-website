@@ -147,7 +147,7 @@ GET http://localhost:4000/api/v1/db/statusAccount
 GET http://localhost:4000/api/v1/admin/products
 
 ### [GET] Product
-GET http://localhost:4000/api/v1/admin/product/P00000001
+GET http://localhost:4000/api/v1/admin/product/P00000007
 
 ### [DELETE] Product
 DELETE http://localhost:4000/api/v1/admin/product/P00000001
@@ -248,4 +248,14 @@ Content-Type: application/json
 
 {
     "currentPage": "Điện thoại"
+}
+
+### 
+PUT  http://localhost:4000/api/v1/admin/product/update/P00000007
+Content-Type: application/json
+
+{
+    "images": [
+        "sldkfjsk", "sdklfjsdk"
+    ]
 }
