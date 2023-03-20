@@ -31,6 +31,11 @@ router.delete("/product/:productId", productControllers.deleteProduct); // Delet
 router.get("/product/newProduct/listCategory", productControllers.getListCategory); // List category
 router.post("/product/newProduct/listSelectBrand", productControllers.getListSelectBrand); // List brand
 
+// http://localhost:9000/admin/product/update/P00000007
+router.get("/product/update/:productId/getImageList", productControllers.getImageList);
+router.put("/product/update/:productId/updateImageList", productControllers.updateImageList);
+
+
 // ---- Display
 router.get("/display/category", displayControllers.listCategories);
 router.post("/display/category/newCategory", displayControllers.createNewCategory);

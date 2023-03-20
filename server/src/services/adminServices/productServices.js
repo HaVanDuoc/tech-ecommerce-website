@@ -99,7 +99,7 @@ exports.getProduct = (productId) =>
                           LEFT JOIN categories on products.categoryId = categories.categoryId
                           LEFT JOIN brands on products.brandId = brands.brandId
                       Where
-                          products.productId = 'P00000007'
+                          products.productId = '${productId}'
                       LIMIT
                           1;`;
 
@@ -308,6 +308,87 @@ exports.getListSelectBrand = (data) =>
         err: response ? 0 : 1,
         msg: response ? "Get data successfully" : "Get data failed",
         data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+// Get list brand
+// exports.getImageList = (productId) =>
+//   new Promise(async (resolve, reject) => {
+//     try {
+//       const query = `SELECT
+//                           convert(products.images using utf8) as 'images'
+//                       FROM
+//                           products
+//                           LEFT JOIN categories on products.categoryId = categories.categoryId
+//                           LEFT JOIN brands on products.brandId = brands.brandId
+//                       Where
+//                           products.productId = '${productId}'
+//                       LIMIT
+//                           1;`;
+
+//       const [response] = await sequelize.query(query, { raw: true });
+
+//       // check object is exists
+//       if (Array.isArray(response) && !response.length)
+//         return resolve({
+//           err: 1,
+//           msg: "Not find object",
+//           data: response[0],
+//         });
+
+//       resolve({
+//         err: response ? 0 : 1,
+//         msg: response ? "Get data successfully" : "Get data failure",
+//         data: response[0],
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
+
+// Get list brand
+exports.getImageList = (productId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = await db.Product.findOne({
+        where: { productId },
+        attributes: ["image"],
+      });
+
+      // check object is exists
+      if (Array.isArray(response) && !response.length)
+        return resolve({
+          err: 1,
+          msg: "Not find object",
+          data: response,
+        });
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failure",
+        data: response,
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+
+//
+exports.updateImageList = (data, productId) =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const response = db.Product.update(
+        { image: data.image },
+        { where: { productId } }
+      );
+
+      resolve({
+        err: response ? 0 : 1,
+        msg: response ? "Get data successfully" : "Get data failure",
+        data: response[0],
       });
     } catch (error) {
       reject(error);

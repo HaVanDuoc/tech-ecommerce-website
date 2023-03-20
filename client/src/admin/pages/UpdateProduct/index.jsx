@@ -1,31 +1,16 @@
 import React, { useState } from "react";
-import Chart from "~/admin/components/chart/Chart";
-import { productData } from "~/admin/dummyData";
-import { AdminTitle, ButtonCreate, Container, Wrap } from "~/admin/Styled";
-import {
-  Box,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  Grid,
-  IconButton,
-  Stack,
-  styled,
-  Typography,
-} from "@mui/material";
+import { AdminTitle, ButtonCreate, Container } from "~/admin/Styled";
+import { Box, Divider, Grid, Stack, styled } from "@mui/material";
 import InfoProduct from "./InfoProduct";
 import { useParams } from "react-router-dom";
 import { FetchProduct } from "~/helper/fetch";
 import FormUpdate from "./FormUpdate";
 import { useDispatch } from "react-redux";
 import { open as openForm } from "~/redux/ButtonEditPageUpdateProductInAdmin/actions";
+import Chart_v1 from "./Chart";
 
 const UpdateProduct = () => {
   const [data, setData] = React.useState({});
-  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
   // Lấy ID từ url hiện tại
@@ -39,43 +24,25 @@ const UpdateProduct = () => {
 
   return (
     <Container>
-      <Stack
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-      >
+      <Title>
         <AdminTitle>Thông tin sản phẩm</AdminTitle>
-      </Stack>
+      </Title>
 
       <Divider sx={{ marginBottom: 5 }} />
 
       <InfoProduct data={data} />
 
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "end",
-          marginTop: 2,
-          marginBottom: 2,
-        }}
-      >
+      <ButtonEdit>
         <ButtonCreate onClick={() => dispatch(openForm())}>Edit</ButtonCreate>
+
         <FormUpdate />
-      </Box>
+      </ButtonEdit>
 
       <Divider />
 
       <Grid container spacing={2}>
-        <Grid item xs={12}></Grid>
-        <Divider />
         <Grid item xs={12}>
-          <Box>
-            <Chart
-              data={productData}
-              dataKey="Sales"
-              title="Sales Performance"
-            />
-          </Box>
+          <Chart_v1 />
         </Grid>
       </Grid>
     </Container>
@@ -83,3 +50,22 @@ const UpdateProduct = () => {
 };
 
 export default UpdateProduct;
+
+const Title = ({ children }) => {
+  return (
+    <Stack
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      {children}
+    </Stack>
+  );
+};
+
+const ButtonEdit = styled(Box)(() => ({
+  display: "flex",
+  justifyContent: "end",
+  marginTop: "20px",
+  marginBottom: "20px",
+}));

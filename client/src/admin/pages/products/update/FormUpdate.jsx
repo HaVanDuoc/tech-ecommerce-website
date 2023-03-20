@@ -22,8 +22,6 @@ import * as Yup from "yup";
 import removeEmpty from "~/helper/removeEmpty";
 import axios from "axios";
 import { useSnackbar } from "notistack";
-import Categories from "../newProduct/components/Category";
-import { products } from "../newProduct/components/array";
 import CloseIcon from "@mui/icons-material/Close";
 import { selectorOpen } from "~/redux/ButtonEditPageUpdateProductInAdmin/reducers";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,6 +29,7 @@ import { close as closeForm } from "~/redux/ButtonEditPageUpdateProductInAdmin/a
 import { refreshPage } from "~/utils";
 import UploadFile from "./UploadFile";
 import SelectCategory from "~/admin/components/SelectCategory";
+import { products } from "../../newProduct/components/array";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {

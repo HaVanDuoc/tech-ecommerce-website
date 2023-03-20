@@ -26,6 +26,7 @@ import Fridge from "./pages/Frigde";
 import NewBrand from "./admin/pages/display/brand/NewBrand";
 import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
 import Product from "./pages/Product_v2";
+import Update from "./admin/pages/products/update";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -64,7 +65,7 @@ export const privateRoutes = [
   }, // Create new product
   {
     path: "/admin/product/update/:productId",
-    page: UpdateProduct,
+    page: Update,
     layout: AdminLayout,
   }, // Update product
 

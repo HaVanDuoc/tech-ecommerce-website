@@ -1,4 +1,3 @@
-import "./productList.css";
 import { DataGrid } from "@mui/x-data-grid";
 import { productRows } from "../../dummyData";
 import { Link } from "react-router-dom";
@@ -7,7 +6,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { FetchProductList } from "~/helper/fetch";
 import { formatStatusProduct, formatVND } from "~/helper/format";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 
@@ -101,12 +100,14 @@ export default function ProductList() {
         return (
           <>
             <Link to={"/admin/product/update/" + params.row.productId}>
-              <button className="productListEdit">Edit</button>
+              <ButtonEdit>Edit</ButtonEdit>
             </Link>
-            <DeleteOutlineIcon
-              className="productListDelete"
+            <IconButton
+              sx={{ color: "red" }}
               onClick={() => handleDelete(params.row.productId)}
-            />
+            >
+              <DeleteOutlineIcon />
+            </IconButton>
           </>
         );
       },
@@ -131,3 +132,26 @@ export default function ProductList() {
     </Box>
   );
 }
+
+const ButtonEdit = ({ children, ...props }) => {
+  return (
+    <Box
+      {...props}
+      sx={{
+        border: "none",
+        borderRadius: "10px",
+        padding: "5px 20px",
+        backgroundColor: "#3bb077",
+        color: "#fff",
+        cursor: "pointer",
+        marginRight: "20px",
+
+        "&:hover": {
+          backgroundColor: "#2c8157",
+        },
+      }}
+    >
+      {children}
+    </Box>
+  );
+};

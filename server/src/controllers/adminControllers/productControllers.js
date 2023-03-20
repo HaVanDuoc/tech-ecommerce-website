@@ -115,3 +115,27 @@ exports.getListSelectBrand = async (req, res) => {
     return intervalServerError(res);
   }
 };
+
+// List brand
+exports.getImageList = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const response = await productServices.getImageList(productId);
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
+
+// List brand
+exports.updateImageList = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const response = await productServices.updateImageList(req.body, productId);
+
+    res.status(200).json(response);
+  } catch (error) {
+    return intervalServerError(res);
+  }
+};
