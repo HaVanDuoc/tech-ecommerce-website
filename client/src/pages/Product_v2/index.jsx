@@ -1,63 +1,38 @@
 import "./style.css";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+import ResponseRating from "./ResponseRating";
+import React, { useEffect, useState } from "react";
+import { formatDiscount, formatVND, getPrice } from "~/helper/format";
 import { Box, Button, Grid, Rating, styled, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { PF } from "~/__variables";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
-const Section = styled(Box)(() => ({
-  backgroundColor: "#fff",
-
-  ".left": {
-    width: "100%",
-    height: "500px",
-    display: "flex",
-    justifyContent: "start",
-    alignItems: "center",
-  },
-
-  ".right": {
-    width: "100%",
-    height: "500px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    flexDirection: "column",
-  },
-
-  ".mainImage": {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    overflow: "hidden",
-  },
-
-  img: {
-    // width: "100%",
-    height: "100%",
-  },
-
-  ".optionImage": {
-    width: "100%",
-    height: "100px",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-}));
-
-const dummyImage = [
-  { src: "1.webp", alt: "1" },
-  { src: "2.webp", alt: "2" },
-  { src: "3.webp", alt: "3" },
-  { src: "4.webp", alt: "4" },
-  { src: "5.webp", alt: "5" },
-];
-
 export default function Product() {
-  const [images, setImages] = useState(dummyImage);
-  const [selected, setSelected] = useState(dummyImage[0]);
+  const [fetch, setFetch] = useState(null);
+  const [images, setImages] = useState([]);
+  const [selected, setSelected] = useState([]); // Image is selected to show
+  const nameProduct = useParams().productName;
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios({
+        method: "post",
+        url: "/client/pageProduct/product",
+        data: { nameProduct },
+      });
+
+      setFetch(response.data.data);
+
+      // set data image list to state `images`
+      // because the original data is form string
+      // so that use JSON.parse convert data back to array
+      setImages(JSON.parse(response.data.data.image));
+
+      setSelected(JSON.parse(response.data.data.image)[0]);
+    };
+
+    fetch();
+  }, [nameProduct]);
 
   const handleClick = (index) => {
     setSelected(images[index]);
@@ -65,14 +40,16 @@ export default function Product() {
 
   return (
     <Section>
+      {/* Information Product */}
       <Grid container>
         {/* left */}
         <Grid item xs={6}>
           <Box className="left">
             <Box className="mainImage">
               <img
-                src={PF + "/assets/products/" + selected.src}
-                alt={selected.alt}
+                // src={PF + "/assets/products/" + selected.src}
+                src={selected?.base64}
+                alt={selected?.alt}
                 className="slide"
               />
             </Box>
@@ -89,7 +66,7 @@ export default function Product() {
                 fontSize: 25,
               }}
             >
-              Laptop
+              {fetch?.category}
             </Typography>
             <Typography
               sx={{
@@ -99,7 +76,7 @@ export default function Product() {
                 marginBottom: 3,
               }}
             >
-              Gigabyte AERO 16 XE5 73VN938AH
+              {fetch?.name}
             </Typography>
 
             <Box
@@ -123,7 +100,7 @@ export default function Product() {
                   textDecorationLine: "line-through",
                 }}
               >
-                3.000.000
+                {formatVND(fetch?.price)}
               </Typography>
               <Typography
                 sx={{
@@ -133,7 +110,7 @@ export default function Product() {
                   color: "crimson",
                 }}
               >
-                5.000.000
+                {formatVND(getPrice(fetch?.price, fetch?.discount))}
               </Typography>
               <Typography
                 sx={{
@@ -143,7 +120,7 @@ export default function Product() {
                   color: "crimson",
                 }}
               >
-                -24%
+                {formatDiscount(fetch?.discount)}
               </Typography>
             </Box>
 
@@ -218,32 +195,81 @@ export default function Product() {
           </Box>
         </Grid>
 
-        {/* bottom */}
+        {/* Option Image */}
         <Grid item xs={12}>
           <Grid className="optionImage">
             {images.length > 0 &&
-              images.map((image, index) => (
-                <img
-                  src={PF + "/assets/products/" + image.src}
-                  alt={image.alt}
-                  key={index}
-                  style={
-                    image.src === selected.src
-                      ? {
-                          border: "3px solid dodgerblue",
-                          opacity: 1,
-                        }
-                      : {
-                          border: "3px solid transparent",
-                          opacity: 0.5,
-                        }
-                  }
-                  onClick={() => handleClick(index)}
-                />
-              ))}
+              images.map((image, index) => {
+                return (
+                  <img
+                    src={image.base64}
+                    alt={image.fileName}
+                    key={index}
+                    style={
+                      image.fileName === selected.fileName
+                        ? {
+                            border: "3px solid dodgerblue",
+                            opacity: 1,
+                          }
+                        : {
+                            border: "3px solid transparent",
+                            opacity: 0.5,
+                          }
+                    }
+                    onClick={() => handleClick(index)}
+                  />
+                );
+              })}
           </Grid>
         </Grid>
       </Grid>
+
+      {/* Section Rating */}
+      <ResponseRating />
     </Section>
   );
 }
+
+const Section = styled(Box)(() => ({
+  backgroundColor: "#fff",
+  paddingBottom: "50px",
+
+  ".left": {
+    width: "100%",
+    height: "500px",
+    display: "flex",
+    justifyContent: "start",
+    alignItems: "center",
+  },
+
+  ".right": {
+    width: "100%",
+    height: "500px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+  },
+
+  ".mainImage": {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+
+  img: {
+    // width: "100%",
+    height: "100%",
+  },
+
+  ".optionImage": {
+    width: "100%",
+    height: "100px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+}));

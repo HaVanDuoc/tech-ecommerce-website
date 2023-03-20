@@ -259,3 +259,11 @@ Content-Type: application/json
         "sldkfjsk", "sdklfjsdk"
     ]
 }
+
+### 
+POST  http://localhost:4000/api/v1/client/pageProduct/product
+Content-Type: application/json
+
+{
+    "nameProduct": "OPPO A17"
+}

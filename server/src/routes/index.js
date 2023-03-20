@@ -7,6 +7,7 @@ const adminRoute = require("./adminRoute");
 const dbRoute = require("./dbRoute");
 const clientRoute = require("./client");
 const sectionProduct = require("./sectionProduct");
+const pageProduct = require("./pageProduct");
 
 const initRoute = (app) => {
   // Routes
@@ -16,6 +17,9 @@ const initRoute = (app) => {
   app.use("/api/v1/db", dbRoute);
   app.use("/api/v1/client", clientRoute);
   app.use("/api/v1/sectionProduct", sectionProduct); // Section list Product
+
+  // Client routes
+  app.use("/api/v1/client/pageProduct/", pageProduct);
 
   // Route không xác định được response error not found
   return app.use(notFound);
