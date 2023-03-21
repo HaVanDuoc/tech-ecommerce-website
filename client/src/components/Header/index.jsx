@@ -10,20 +10,18 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import React from "react";
+import axios from "axios";
+import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import HomeIcon from "@mui/icons-material/Home";
+import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import ModalContainer from "~/containers/ModalContainer";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-
-const Wrapper = styled(Box)(() => ({
-  backgroundColor: "#fff",
-}));
 
 const Header = () => {
   return (
@@ -94,11 +92,110 @@ const Header = () => {
           </Stack>
         </Box>
       </Container>
+
+      <Nav />
     </Wrapper>
   );
 };
 
 export default Header;
+
+const Wrapper = styled(Box)(() => ({
+  backgroundColor: "#fff",
+}));
+
+export const Nav = () => {
+  const [nav, setNav] = useState(null);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios("/client/header/nav");
+      setNav(response.data.data);
+    };
+
+    fetch();
+  }, []);
+
+  const Styled = styled(Box)(() => ({
+    backgroundColor: "var(--color-main)",
+    boxShadow: "0 1px 6px 0 rgba(32,33,36,.28)",
+
+    ".slick-slider": {
+      width: "100%",
+    },
+
+    ".slick-slider button": {
+      width: "20px",
+      height: "20px",
+    },
+
+    "button.slick-prev:before, button.slick-next:before": {
+      fontSize: "20px",
+      color: "var(--color-main)",
+    },
+
+    ".slick-prev.slick-disabled:before, .slick-next.slick-disabled:before": {
+      opacity: 0,
+    },
+  }));
+
+  var settings = {
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 10,
+    slidesToScroll: 10,
+  };
+
+  return (
+    <Styled>
+      <Container maxWidth="lg" disableGutters>
+        <Box
+          sx={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "50px",
+          }}
+        >
+          <Slider {...settings}>
+            {Array.isArray(nav) &&
+              nav.length > 0 &&
+              nav.map((item, index) => {
+                return (
+                  <Box
+                    key={index}
+                    sx={{ paddingLeft: "10px", paddingRight: "10px" }}
+                  >
+                    <Link
+                      to={item?.link}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography
+                        display="flex"
+                        flexWrap="nowrap"
+                        color="#fff"
+                        textTransform="uppercase"
+                        fontWeight={500}
+                        justifyContent="center"
+                      >
+                        {item?.name}
+                      </Typography>
+                    </Link>
+                  </Box>
+                );
+              })}
+          </Slider>
+        </Box>
+      </Container>
+    </Styled>
+  );
+};
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   "& .MuiBadge-badge": {
