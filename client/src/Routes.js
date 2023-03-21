@@ -27,6 +27,8 @@ import NewBrand from "./admin/pages/display/brand/NewBrand";
 import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
 import Product from "./pages/Product_v2";
 import Update from "./admin/pages/products/update";
+import Cart from "./pages/cart";
+import CartLayout from "./layouts/CartLayout";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -43,6 +45,7 @@ export const publicRoutes = [
   { path: "/tivi", page: Tivi },
   { path: "/tu-lanh", page: Fridge },
   { path: "/product/:productName", page: Product },
+  { path: "/cart", page: Cart, layout: CartLayout },
 ];
 
 export const privateRoutes = [

@@ -30,14 +30,21 @@ export const formatVND = (price) => {
 
 export const formatCost = (cost) => {
   return (
-    <Typography sx={{ textDecorationLine: "line-through" }}>
+    <Typography
+      sx={{ textDecorationLine: "line-through", opacity: 0.6, fontSize: "90%" }}
+    >
       {cost}
     </Typography>
   );
 };
 
 export const formatDiscount = (discount) => {
-  return "-" + discount + "%";
+  // return "-" + discount + "%";
+  return (
+    <Typography variant="span" sx={{ fontSize: "90%", color: "crimson" }}>
+      {"-" + discount + "%"}
+    </Typography>
+  );
 };
 
 export const getPrice = (cost, discount) => {

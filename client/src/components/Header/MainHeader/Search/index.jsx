@@ -5,17 +5,18 @@ import SearchIcon from "@mui/icons-material/Search";
 
 const SearchRoot = styled(Box)(({ theme }) => ({
   position: "relative",
-  border: "1px solid var(--background-color-hover)",
+  border: "1px solid #ccc",
   borderRadius: "var(--border-radius)",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   flexGrow: 1,
   margin: "0 20px",
+  boxShadow: "0 0 2px 0 rgba(0, 0, 0, 0.25)",
 
   "& hr": {
     marginRight: "0 !important",
-    color: "var(--background-color-hover)",
+    color: "#ccc",
   },
 }));
 
