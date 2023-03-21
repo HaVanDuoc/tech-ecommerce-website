@@ -59,6 +59,7 @@ export default function Product() {
         {/* Right */}
         <Grid item xs={6}>
           <Box className="right">
+            {/* Category product */}
             <Typography
               sx={{
                 fontFamily: "'Saira Condensed', sans-serif",
@@ -68,6 +69,8 @@ export default function Product() {
             >
               {fetch?.category}
             </Typography>
+
+            {/* Name product */}
             <Typography
               sx={{
                 fontFamily: "'Michroma', sans-serif",
@@ -79,6 +82,7 @@ export default function Product() {
               {fetch?.name}
             </Typography>
 
+            {/* Price */}
             <Box
               display="flex"
               flexDirection="row"
@@ -124,6 +128,7 @@ export default function Product() {
               </Typography>
             </Box>
 
+            {/* Rating */}
             <Box
               sx={{
                 display: "flex",
@@ -148,6 +153,7 @@ export default function Product() {
               </Typography>
             </Box>
 
+            {/* 2 Button */}
             <Box
               marginTop={6}
               sx={{
@@ -157,6 +163,7 @@ export default function Product() {
                 },
               }}
             >
+              {/* Button Add Cart */}
               <Button
                 sx={{
                   padding: "15px 20px",
@@ -173,8 +180,12 @@ export default function Product() {
               >
                 <ShoppingCartOutlinedIcon />
                 <Typography>Thêm vào giỏ hàng</Typography>
+
+                {/* <AssignmentTurnedInOutlinedIcon/>
+                <Typography>Đã có trong giỏ hàng</Typography> */}
               </Button>
 
+              {/* Button Order */}
               <Button
                 sx={{
                   padding: "15px 20px",

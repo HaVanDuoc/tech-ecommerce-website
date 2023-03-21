@@ -8,26 +8,23 @@ import {
   Avatar,
   Badge,
   Box,
-  Button,
   Checkbox,
   Container,
   Divider,
   Grid,
   Popover,
-  Stack,
   styled,
   Typography,
 } from "@mui/material";
 import { PF } from "~/__variables";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import Brand from "~/components/Header/MainHeader/Brand";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import Search from "~/components/Header/MainHeader/Search";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
+import { Brand, Search } from "~/components/Header";
 
 const Cart = () => {
   let [count, setCount] = useState(1);
@@ -353,14 +350,6 @@ export default Cart;
 
 const User = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);

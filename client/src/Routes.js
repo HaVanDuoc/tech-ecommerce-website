@@ -1,5 +1,3 @@
-import { Accessory, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
-import AdminLayout from "./admin/layouts";
 import {
   DatabaseAdmin,
   HomeAdmin,
@@ -10,25 +8,26 @@ import {
   UserAdmin,
   UserListAdmin,
 } from "./admin/pages";
-import categories from "./admin/pages/database/categories";
-import UpdateProduct from "./admin/pages/UpdateProduct";
-import Home from "./pages/Home_v3";
-import Banner from "./admin/pages/banner";
-import DisplayCategory from "./admin/pages/display/category";
-import DisplayBrand from "./admin/pages/display/brand";
-import NewCategory from "./admin/pages/display/category/NewCategory";
-import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
-import HeadPhone from "./pages/Headphone";
 import Sim from "./pages/Sim";
-import WashingMachine from "./pages/WashingMachine";
 import Tivi from "./pages/Tivi";
-import Fridge from "./pages/Frigde";
-import NewBrand from "./admin/pages/display/brand/NewBrand";
-import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
-import Product from "./pages/Product_v2";
-import Update from "./admin/pages/products/update";
 import Cart from "./pages/cart";
+import Home from "./pages/Home_v3";
+import Fridge from "./pages/Frigde";
+import Product from "./pages/Product_v2";
+import AdminLayout from "./admin/layouts";
+import Banner from "./admin/pages/banner";
+import HeadPhone from "./pages/Headphone";
 import CartLayout from "./layouts/CartLayout";
+import Update from "./admin/pages/products/update";
+import WashingMachine from "./pages/WashingMachine";
+import DisplayBrand from "./admin/pages/display/brand";
+import categories from "./admin/pages/database/categories";
+import NewBrand from "./admin/pages/display/brand/NewBrand";
+import DisplayCategory from "./admin/pages/display/category";
+import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
+import NewCategory from "./admin/pages/display/category/NewCategory";
+import { Accessory, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
+import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
 
 export const publicRoutes = [
   { path: "/", page: Home },
