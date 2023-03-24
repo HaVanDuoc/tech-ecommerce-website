@@ -267,3 +267,11 @@ Content-Type: application/json
 {
     "nameProduct": "OPPO A17"
 }
+
+### 
+PUT  http://localhost:4000/api/v1/client/categories/view
+Content-Type: application/json
+
+{
+    "id": "21"
+}

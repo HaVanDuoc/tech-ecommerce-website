@@ -5,16 +5,6 @@ import { Link } from "react-router-dom";
 import Slick from "~/components/Slick";
 import { Section } from "../StyledHome";
 
-const settings = {
-  dot: false,
-  infinite: false,
-  speed: 500,
-  slidesToScroll: 1,
-  slidesToShow: 1,
-  rows: 2,
-  slidesPerRow: 10,
-};
-
 const Categories = () => {
   const [category, setCategory] = useState([]);
 
@@ -27,6 +17,16 @@ const Categories = () => {
 
     fetch();
   }, []);
+
+  const settings = {
+    dot: false,
+    infinite: false,
+    speed: 500,
+    slidesToScroll: 1,
+    slidesToShow: 1,
+    rows: 2,
+    slidesPerRow: 10,
+  };
 
   return (
     <Section>

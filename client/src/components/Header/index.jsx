@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Divider,
+  Grid,
   InputBase,
   Popover,
   Stack,
@@ -22,12 +23,94 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
+import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import YouTubeIcon from "@mui/icons-material/YouTube";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import { formatVND } from "~/helper/format";
+import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
+import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
+import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 
 const Header = () => {
   return (
     <Wrapper>
+      {/* Top Bar */}
+      {/* <Container
+        maxWidth="xl"
+        sx={{ boxShadow: "1px 0 4px 2px rgba(0, 0, 0, 0.05)" }}
+      >
+        <TopBar>
+          <Grid container>
+            <Grid item xs>
+              <Stack
+                flexDirection="row"
+                justifyContent="start"
+                alignItems="center"
+                className="left"
+              >
+                <Box className="media">
+                  <FacebookOutlinedIcon className="fb" />
+                </Box>
+                <Box className="media">
+                  <TwitterIcon className="tw" />
+                </Box>
+                <Box className="media">
+                  <YouTubeIcon className="yt" />
+                </Box>
+                <Box className="media">
+                  <InstagramIcon className="in" />
+                </Box>
+              </Stack>
+            </Grid>
+
+            <Grid item xs={5}>
+              <Stack
+                flexDirection="row"
+                justifyContent="center"
+                alignItems="center"
+                className="center"
+              >
+                <Typography
+                  textTransform="uppercase"
+                  color="#888888"
+                  fontSize="14px"
+                  fontWeight={500}
+                >
+                  Miễn phí giao hàng với đơn hàng trên {formatVND(500000)}
+                </Typography>
+              </Stack>
+            </Grid>
+
+            <Grid item xs>
+              <Stack
+                height="100%"
+                flexDirection="row"
+                justifyContent="end"
+                alignItems="center"
+                className="right"
+              >
+                <Box className="item">
+                  <LocationOnOutlinedIcon />
+                  <Typography>TP. Hồ Chí Minh</Typography>
+                </Box>
+                <Box className="item">
+                  <SupportAgentOutlinedIcon />
+                  <Typography>Hỗ trợ</Typography>
+                </Box>
+                <Box className="item">
+                  <LanguageOutlinedIcon />
+                  <Typography>Tiếng Việt</Typography>
+                </Box>
+              </Stack>
+            </Grid>
+          </Grid>
+        </TopBar>
+      </Container> */}
+
+      {/* Middle Header */}
       <Container maxWidth="xl">
-        <Box sx={{ padding: "8px 0" }}>
+        <Box sx={{ padding: "24px 0" }}>
           <Stack flexDirection="row" alignItems="center" padding={0.5}>
             <Box>
               <Brand />
@@ -93,6 +176,7 @@ const Header = () => {
         </Box>
       </Container>
 
+      {/* Bottom Header */}
       <Nav />
     </Wrapper>
   );
@@ -102,6 +186,7 @@ export default Header;
 
 const Wrapper = styled(Box)(() => ({
   backgroundColor: "#fff",
+  boxShadow: "1px 1px 5px 2px rgba(0, 0, 0, 0.25)",
 }));
 
 export const Nav = () => {
@@ -118,34 +203,34 @@ export const Nav = () => {
 
   const Styled = styled(Box)(() => ({
     backgroundColor: "var(--color-main)",
-    boxShadow: "0 1px 6px 0 rgba(32,33,36,.28)",
+    boxShadow: "2px 0 5px 5px rgba(0, 0, 0, 0.05)",
 
     ".slick-slider": {
       width: "100%",
+
+      ":hover": {
+        button: {
+          opacity: 1,
+        },
+      },
     },
 
     ".slick-slider button": {
       width: "20px",
       height: "20px",
+      color: "#fff",
+      opacity: 0,
+      transition: "all .3s ease-in-out",
     },
 
     "button.slick-prev:before, button.slick-next:before": {
       fontSize: "20px",
-      color: "var(--color-main)",
     },
 
     ".slick-prev.slick-disabled:before, .slick-next.slick-disabled:before": {
       opacity: 0,
     },
   }));
-
-  var settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 10,
-    slidesToScroll: 10,
-  };
 
   return (
     <Styled>
@@ -159,7 +244,13 @@ export const Nav = () => {
             minHeight: "50px",
           }}
         >
-          <Slider {...settings}>
+          <Slider
+            dots={false}
+            infinite={false}
+            speed={500}
+            slidesToShow={8}
+            slidesToScroll={8}
+          >
             {Array.isArray(nav) &&
               nav.length > 0 &&
               nav.map((item, index) => {
@@ -178,7 +269,7 @@ export const Nav = () => {
                     >
                       <Typography
                         display="flex"
-                        flexWrap="nowrap"
+                        flexWrap="wrap"
                         color="#fff"
                         textTransform="uppercase"
                         fontWeight={500}
@@ -319,7 +410,7 @@ export const Search = () => {
     alignItems: "center",
     flexGrow: 1,
     margin: "0 20px",
-    boxShadow: "0 0 2px 0 rgba(0, 0, 0, 0.25)",
+    boxShadow: "0 0 1px 0 rgba(0, 0, 0, 0.25)",
 
     "& hr": {
       marginRight: "0 !important",
@@ -350,3 +441,68 @@ export const Search = () => {
     </SearchWrap>
   );
 };
+
+const TopBar = styled(Box)(() => ({
+  padding: "5px",
+  color: "#666666",
+
+  p: {
+    fontSize: "14px",
+  },
+
+  svg: {
+    fontSize: "18px",
+  },
+
+  ".left": {
+    ".media": {
+      backgroundColor: "#eee",
+      margin: "5px",
+      padding: "5px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      borderRadius: "5px",
+      cursor: "pointer",
+
+      svg: {
+        color: "#666666",
+        fontSize: "18px",
+        transition: "all .3s ease-in-out",
+      },
+
+      ":hover": {
+        ".fb": {
+          color: "#4867AA",
+        },
+
+        ".tw": {
+          color: "#1DA1F2",
+        },
+
+        ".yt": {
+          color: "#ED352D",
+        },
+
+        ".in": {
+          color: "#8D49C0",
+        },
+      },
+    },
+  },
+
+  ".center": {
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  ".right": {
+    ".item": {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      marginLeft: "16px",
+    },
+  },
+}));

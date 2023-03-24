@@ -1,9 +1,4 @@
-import {
-  formatCost,
-  formatDiscount,
-  formatVND,
-  getPrice,
-} from "~/helper/format";
+import { formatCost, formatDiscount, formatPrice, formatVND } from "~/helper/format";
 import {
   Avatar,
   Badge,
@@ -225,7 +220,7 @@ const Cart = () => {
                           {formatDiscount(24)}
                         </Typography>
                         <Typography>
-                          {formatVND(getPrice(item?.price, item?.discount))}
+                          {formatVND(formatPrice(item?.price, item?.discount))}
                         </Typography>
                       </Box>
 
@@ -246,7 +241,7 @@ const Cart = () => {
                       <Box className="col-4">
                         <Typography sx={{ color: "crimson" }}>
                           {formatVND(
-                            getPrice(item?.price, item.discount) * item.count
+                            formatPrice(item?.price, item.discount) * item.count
                           )}
                         </Typography>
                       </Box>

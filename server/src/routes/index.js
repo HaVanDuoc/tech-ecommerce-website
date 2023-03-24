@@ -9,6 +9,7 @@ const clientRoute = require("./client");
 const sectionProduct = require("./sectionProduct");
 const pageProduct = require("./pageProduct");
 const header = require("./client/header");
+const categories = require("./client/categories");
 
 const initRoute = (app) => {
   // Routes
@@ -19,6 +20,7 @@ const initRoute = (app) => {
   app.use("/api/v1/client", clientRoute);
   app.use("/api/v1/sectionProduct", sectionProduct); // Section list Product
   app.use("/api/v1/client/header", header); // Section list Product
+  app.use("/api/v1/client/categories", categories); // 
 
   // Client routes
   app.use("/api/v1/client/pageProduct/", pageProduct);

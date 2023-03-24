@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import ResponseRating from "./ResponseRating";
 import React, { useEffect, useState } from "react";
-import { formatDiscount, formatVND, getPrice } from "~/helper/format";
+import { formatDiscount, formatPrice, formatVND } from "~/helper/format";
 import { Box, Button, Grid, Rating, styled, Typography } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 
@@ -114,7 +114,7 @@ export default function Product() {
                   color: "crimson",
                 }}
               >
-                {formatVND(getPrice(fetch?.price, fetch?.discount))}
+                {formatVND(formatPrice(fetch?.price, fetch?.discount))}
               </Typography>
               <Typography
                 sx={{

@@ -1,7 +1,7 @@
-import { Box, Container, Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ShowBrand = ({ currentPage }) => {
   const [brands, setBrands] = useState([]);

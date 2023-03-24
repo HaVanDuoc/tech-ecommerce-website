@@ -18,8 +18,8 @@ import { Link } from "react-router-dom";
 import {
   formatCost,
   formatDiscount,
+  formatPrice,
   formatVND,
-  getPrice,
 } from "~/helper/format";
 
 const Styles = styled(Box)(() => ({
@@ -148,7 +148,7 @@ const ContentProductPage = () => {
                         </Stack>
 
                         <Typography className="priceCard">
-                          {formatVND(getPrice(item.price, item.discount))}
+                          {formatVND(formatPrice(item.price, item.discount))}
                         </Typography>
 
                         <Stack

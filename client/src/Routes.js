@@ -11,7 +11,6 @@ import {
 import Sim from "./pages/Sim";
 import Tivi from "./pages/Tivi";
 import Cart from "./pages/cart";
-import Home from "./pages/Home_v3";
 import Fridge from "./pages/Frigde";
 import Product from "./pages/Product_v2";
 import AdminLayout from "./admin/layouts";
@@ -26,7 +25,7 @@ import NewBrand from "./admin/pages/display/brand/NewBrand";
 import DisplayCategory from "./admin/pages/display/category";
 import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
 import NewCategory from "./admin/pages/display/category/NewCategory";
-import { Accessory, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
+import { Accessory, Home, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
 import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
 
 export const publicRoutes = [
