@@ -35,148 +35,10 @@ import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 const Header = () => {
   return (
     <Wrapper>
-      {/* Top Bar */}
-      {/* <Container
-        maxWidth="xl"
-        sx={{ boxShadow: "1px 0 4px 2px rgba(0, 0, 0, 0.05)" }}
-      >
-        <TopBar>
-          <Grid container>
-            <Grid item xs>
-              <Stack
-                flexDirection="row"
-                justifyContent="start"
-                alignItems="center"
-                className="left"
-              >
-                <Box className="media">
-                  <FacebookOutlinedIcon className="fb" />
-                </Box>
-                <Box className="media">
-                  <TwitterIcon className="tw" />
-                </Box>
-                <Box className="media">
-                  <YouTubeIcon className="yt" />
-                </Box>
-                <Box className="media">
-                  <InstagramIcon className="in" />
-                </Box>
-              </Stack>
-            </Grid>
+      {/* <TopBar /> */}
 
-            <Grid item xs={5}>
-              <Stack
-                flexDirection="row"
-                justifyContent="center"
-                alignItems="center"
-                className="center"
-              >
-                <Typography
-                  textTransform="uppercase"
-                  color="#888888"
-                  fontSize="14px"
-                  fontWeight={500}
-                >
-                  Miễn phí giao hàng với đơn hàng trên {formatVND(500000)}
-                </Typography>
-              </Stack>
-            </Grid>
+      <AppBar />
 
-            <Grid item xs>
-              <Stack
-                height="100%"
-                flexDirection="row"
-                justifyContent="end"
-                alignItems="center"
-                className="right"
-              >
-                <Box className="item">
-                  <LocationOnOutlinedIcon />
-                  <Typography>TP. Hồ Chí Minh</Typography>
-                </Box>
-                <Box className="item">
-                  <SupportAgentOutlinedIcon />
-                  <Typography>Hỗ trợ</Typography>
-                </Box>
-                <Box className="item">
-                  <LanguageOutlinedIcon />
-                  <Typography>Tiếng Việt</Typography>
-                </Box>
-              </Stack>
-            </Grid>
-          </Grid>
-        </TopBar>
-      </Container> */}
-
-      {/* Middle Header */}
-      <Container maxWidth="xl">
-        <Box sx={{ padding: "24px 0" }}>
-          <Stack flexDirection="row" alignItems="center" padding={0.5}>
-            <Box>
-              <Brand />
-            </Box>
-
-            <Box flex={1}>
-              <Search />
-            </Box>
-
-            <Box>
-              <Stack
-                flexDirection="row"
-                alignItems="center"
-                justifyContent="center"
-              >
-                {/* Button Home */}
-                <Link to="/">
-                  <Button
-                    focusVisible
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "var(--color-main) !important",
-                    }}
-                  >
-                    <HomeIcon />
-                    <Typography sx={{ textTransform: "none" }}>
-                      Trang chủ
-                    </Typography>
-                  </Button>
-                </Link>
-
-                {/* Alert */}
-                <Box>
-                  <Alert />
-                </Box>
-
-                {/* User */}
-                <Box>
-                  <User />
-                </Box>
-
-                <Divider
-                  orientation="vertical"
-                  variant="middle"
-                  flexItem
-                  sx={{ mx: 1, borderWidth: "1px", borderColor: "#ccc" }}
-                />
-
-                {/* Cart */}
-                <Link to="/cart">
-                  <Button sx={{ color: "var(--color-main)" }}>
-                    <StyledBadge badgeContent={1} color="error">
-                      <ShoppingCartIcon />
-                    </StyledBadge>
-                  </Button>
-                </Link>
-                {/*  */}
-              </Stack>
-            </Box>
-          </Stack>
-        </Box>
-      </Container>
-
-      {/* Bottom Header */}
       <Nav />
     </Wrapper>
   );
@@ -188,6 +50,77 @@ const Wrapper = styled(Box)(() => ({
   backgroundColor: "#fff",
   boxShadow: "1px 1px 5px 2px rgba(0, 0, 0, 0.25)",
 }));
+
+export const AppBar = () => {
+  return (
+    <Container maxWidth="xl">
+      <Box sx={{ padding: "24px 0" }}>
+        <Stack flexDirection="row" alignItems="center" padding={0.5}>
+          <Box>
+            <Brand />
+          </Box>
+
+          <Box flex={1}>
+            <Search />
+          </Box>
+
+          <Box>
+            <Stack
+              flexDirection="row"
+              alignItems="center"
+              justifyContent="center"
+            >
+              {/* Button Home */}
+              <Link to="/">
+                <Button
+                  focusVisible
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--color-main) !important",
+                  }}
+                >
+                  <HomeIcon />
+                  <Typography sx={{ textTransform: "none" }}>
+                    Trang chủ
+                  </Typography>
+                </Button>
+              </Link>
+
+              {/* Alert */}
+              <Box>
+                <Alert />
+              </Box>
+
+              {/* User */}
+              <Box>
+                <User />
+              </Box>
+
+              <Divider
+                orientation="vertical"
+                variant="middle"
+                flexItem
+                sx={{ mx: 1, borderWidth: "1px", borderColor: "#ccc" }}
+              />
+
+              {/* Cart */}
+              <Link to="/cart">
+                <Button sx={{ color: "var(--color-main)" }}>
+                  <StyledBadge badgeContent={1} color="error">
+                    <ShoppingCartIcon />
+                  </StyledBadge>
+                </Button>
+              </Link>
+              {/*  */}
+            </Stack>
+          </Box>
+        </Stack>
+      </Box>
+    </Container>
+  );
+};
 
 export const Nav = () => {
   const [nav, setNav] = useState(null);
@@ -442,67 +375,142 @@ export const Search = () => {
   );
 };
 
-const TopBar = styled(Box)(() => ({
-  padding: "5px",
-  color: "#666666",
+export const TopBar = () => {
+  const Wrapper = styled(Box)(() => ({
+    padding: "5px",
+    color: "#666666",
 
-  p: {
-    fontSize: "14px",
-  },
+    p: {
+      fontSize: "14px",
+    },
 
-  svg: {
-    fontSize: "18px",
-  },
+    svg: {
+      fontSize: "18px",
+    },
 
-  ".left": {
-    ".media": {
-      backgroundColor: "#eee",
-      margin: "5px",
-      padding: "5px",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      borderRadius: "5px",
-      cursor: "pointer",
+    ".left": {
+      ".media": {
+        backgroundColor: "#eee",
+        margin: "5px",
+        padding: "5px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: "5px",
+        cursor: "pointer",
 
-      svg: {
-        color: "#666666",
-        fontSize: "18px",
-        transition: "all .3s ease-in-out",
-      },
-
-      ":hover": {
-        ".fb": {
-          color: "#4867AA",
+        svg: {
+          color: "#666666",
+          fontSize: "18px",
+          transition: "all .3s ease-in-out",
         },
 
-        ".tw": {
-          color: "#1DA1F2",
-        },
+        ":hover": {
+          ".fb": {
+            color: "#4867AA",
+          },
 
-        ".yt": {
-          color: "#ED352D",
-        },
+          ".tw": {
+            color: "#1DA1F2",
+          },
 
-        ".in": {
-          color: "#8D49C0",
+          ".yt": {
+            color: "#ED352D",
+          },
+
+          ".in": {
+            color: "#8D49C0",
+          },
         },
       },
     },
-  },
 
-  ".center": {
-    height: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  ".right": {
-    ".item": {
-      display: "flex",
+    ".center": {
+      height: "100%",
       justifyContent: "center",
       alignItems: "center",
-      marginLeft: "16px",
     },
-  },
-}));
+
+    ".right": {
+      ".item": {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        marginLeft: "16px",
+      },
+    },
+  }));
+  return (
+    <Container
+      maxWidth="xl"
+      sx={{ boxShadow: "1px 0 4px 2px rgba(0, 0, 0, 0.05)" }}
+    >
+      <Wrapper>
+        <Grid container>
+          <Grid item xs>
+            <Stack
+              flexDirection="row"
+              justifyContent="start"
+              alignItems="center"
+              className="left"
+            >
+              <Box className="media">
+                <FacebookOutlinedIcon className="fb" />
+              </Box>
+              <Box className="media">
+                <TwitterIcon className="tw" />
+              </Box>
+              <Box className="media">
+                <YouTubeIcon className="yt" />
+              </Box>
+              <Box className="media">
+                <InstagramIcon className="in" />
+              </Box>
+            </Stack>
+          </Grid>
+
+          <Grid item xs={5}>
+            <Stack
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
+              className="center"
+            >
+              <Typography
+                textTransform="uppercase"
+                color="#888888"
+                fontSize="14px"
+                fontWeight={500}
+              >
+                Miễn phí giao hàng với đơn hàng trên {formatVND(500000)}
+              </Typography>
+            </Stack>
+          </Grid>
+
+          <Grid item xs>
+            <Stack
+              height="100%"
+              flexDirection="row"
+              justifyContent="end"
+              alignItems="center"
+              className="right"
+            >
+              <Box className="item">
+                <LocationOnOutlinedIcon />
+                <Typography>TP. Hồ Chí Minh</Typography>
+              </Box>
+              <Box className="item">
+                <SupportAgentOutlinedIcon />
+                <Typography>Hỗ trợ</Typography>
+              </Box>
+              <Box className="item">
+                <LanguageOutlinedIcon />
+                <Typography>Tiếng Việt</Typography>
+              </Box>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Wrapper>
+    </Container>
+  );
+};

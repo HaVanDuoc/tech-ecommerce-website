@@ -1,10 +1,9 @@
-const db = require("../../models");
+const db = require("../../../models");
 
-exports.showBrand = (data) =>
+exports.sectionBrands = (data) =>
   new Promise(async (resolve, reject) => {
     try {
       const query = `select
-                            brands.name,
                             brands.logo,
                             brands.link
                         from
@@ -12,7 +11,7 @@ exports.showBrand = (data) =>
                             left join brands on brands.id = categorybrands.brandId
                             left join categories on categories.id = categorybrands.categoryId
                         where
-                            categories.name = "Điện thoại";`;
+                            categories.name = "${data}";`;
 
       const [response] = await db.sequelize.query(query);
 

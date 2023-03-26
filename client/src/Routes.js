@@ -8,42 +8,26 @@ import {
   UserAdmin,
   UserListAdmin,
 } from "./admin/pages";
-import Sim from "./pages/Sim";
-import Tivi from "./pages/Tivi";
-import Cart from "./pages/cart";
-import Fridge from "./pages/Frigde";
-import Product from "./pages/Product_v2";
 import AdminLayout from "./admin/layouts";
 import Banner from "./admin/pages/banner";
-import HeadPhone from "./pages/Headphone";
-import CartLayout from "./layouts/CartLayout";
 import Update from "./admin/pages/products/update";
-import WashingMachine from "./pages/WashingMachine";
 import DisplayBrand from "./admin/pages/display/brand";
 import categories from "./admin/pages/database/categories";
 import NewBrand from "./admin/pages/display/brand/NewBrand";
 import DisplayCategory from "./admin/pages/display/category";
 import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
 import NewCategory from "./admin/pages/display/category/NewCategory";
-import { Accessory, Home, Laptop, Mobile, PC, Tablet, Watch } from "./pages";
 import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
+import ProductDetails from "./pages/ProductDetails";
+import Home from "./pages/Home";
+import Cart from "./pages/cart";
+import ProductDetail from "./layouts/ProductDetail";
+import CartLayout from "./layouts/CartLayout";
 
 export const publicRoutes = [
   { path: "/", page: Home },
-  { path: "/dien-thoai", page: Mobile },
-  { path: "/tablet", page: Tablet },
-  { path: "/laptop", page: Laptop },
-  { path: "/phu-kien", page: Accessory },
-  { path: "/dong-ho", page: Watch },
-  { path: "/pc", page: PC },
-  { path: "/tai-nghe", page: HeadPhone },
-  { path: "/dong-ho", page: Watch },
-  { path: "/sim", page: Sim },
-  { path: "/may-giat", page: WashingMachine },
-  { path: "/tivi", page: Tivi },
-  { path: "/tu-lanh", page: Fridge },
-  { path: "/product/:productName", page: Product },
   { path: "/cart", page: Cart, layout: CartLayout },
+  { path: "/:category", page: ProductDetails, layout: ProductDetail },
 ];
 
 export const privateRoutes = [

@@ -635,6 +635,7 @@ export const Card = () => {
     <Box
       sx={{
         width: "100%",
+        maxWidth: "350px",
         borderRadius: "5px",
         boxShadow: "0 0 3px 1px rgba(0, 0, 0, 0.2)",
         overflow: "hidden",

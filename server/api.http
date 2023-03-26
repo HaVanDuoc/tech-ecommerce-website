@@ -275,3 +275,14 @@ Content-Type: application/json
 {
     "id": "21"
 }
+
+### 
+GET  http://localhost:4000/api/v1/client/productDetails/sectionCategories
+
+### 
+POST   http://localhost:4000/api/v1/client/productDetails/sectionBrands
+Content-Type: application/json
+
+{
+    "category": "Điện thoại"
+}
