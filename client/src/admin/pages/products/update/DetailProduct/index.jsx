@@ -1,8 +1,12 @@
 import {
   Box,
   Button,
+  Dialog,
+  FormHelperText,
   Paper,
   Rating,
+  Slide,
+  Stack,
   styled,
   Table,
   TableBody,
@@ -11,12 +15,25 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
-import React from "react";
-import { formatDiscount, formatVND } from "~/helper/format";
+import * as Yup from "yup";
+
+import axios from "axios";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useSnackbar } from "notistack";
+import React, { useState } from "react";
+import { formatVND } from "~/helper/format";
+import { refreshPage } from "~/utils";
+import { FieldForm } from "~/admin/Styled";
+import ButtonSubmit from "~/admin/components/ButtonSubmit";
+import removeEmpty from "~/helper/removeEmpty";
 
 const DetailProduct = ({ fetch }) => {
+  const [open, setOpen] = React.useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
+
   const {
     productId,
     name,
@@ -34,7 +51,7 @@ const DetailProduct = ({ fetch }) => {
     createData("Giá", formatVND(price)),
     createData(
       "Giảm giá",
-      discount ? formatDiscount(discount) : "Không có chương trình giảm giá"
+      discount ? `${discount}%` : "Không có chương trình giảm giá"
     ),
     createData("Số lượng", stock !== 0 ? stock : "Hết hàng"),
     createData("Tình trạng", isActive ? "Đang kinh doanh" : "Không kinh doanh"),
@@ -47,6 +64,59 @@ const DetailProduct = ({ fetch }) => {
       )
     ),
   ];
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClick = () => {
+    setOpen(true); // Open form
+  };
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleSnackBar = (res) => {
+    if (res.data.err === 0) {
+      enqueueSnackbar(res.data.msg, {
+        variant: "success",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    } else {
+      enqueueSnackbar(res.data.msg, {
+        variant: "error",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    }
+  };
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   setSubmitting(true);
+
+  //   setTimeout(async () => {
+  //     // Dữ liệu tải về là `array` nên phải chuyển về lại `string`
+  //     // const arrayToString = JSON.stringify(selected);
+
+  //     const response = await axios({
+  //       method: "put",
+  //       url: `/admin/product/update/${productId}/updateImageList`,
+  //       // data: { image: arrayToString },
+  //     });
+
+  //     setSubmitting(false);
+
+  //     handleSnackBar(response); // response result
+
+  //     // if don't have error is refresh page
+  //     if (response.data.err === 0) {
+  //       handleClose();
+  //       refreshPage();
+  //     }
+  //   }, 2500);
+  // };
 
   return (
     <Styled>
@@ -83,16 +153,116 @@ const DetailProduct = ({ fetch }) => {
         </Table>
       </TableContainer>
 
-      <ButtonUpdateDetail>Cập nhật thông tin chi tiết</ButtonUpdateDetail>
+      <Button variant="contained" onClick={handleClick}>
+        Cập nhật thông tin chi tiết
+      </Button>
+
+      <Dialog
+        open={open}
+        TransitionComponent={Transition}
+        keepMounted
+        onClose={handleClose}
+        aria-describedby="alert-dialog-slide-description"
+      >
+        <Box
+          sx={{
+            width: "500px",
+            background: "#fff",
+            borderRadius: "5px",
+            padding: "30px",
+            boxShadow: "7px 7px 12px rgba(0,0,0,0.05)",
+          }}
+        >
+          <Box
+            sx={{
+              color: "#6990F2",
+              fontSize: "27px",
+              fontWeight: "600",
+              textAlign: "center",
+              marginBottom: "20px",
+            }}
+          >
+            Cập nhật thông tin
+          </Box>
+
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values, props) => {
+              var data = removeEmpty(values); // Exclude filed data blank
+
+              data.productId = productId; // Gửi thêm cái productId để server update biết thằng nào
+
+              // return alert(JSON.stringify(data, null, 2)); // Test submit
+
+              setSubmitting(true);
+
+              setTimeout(async () => {
+                // get data from DB
+                const response = await axios({
+                  method: "put",
+                  url: "/admin/products/updateDetails",
+                  data: data,
+                });
+
+                handleSnackBar(response);
+
+                setSubmitting(false);
+
+                // Nếu tạo thành công thì reset page
+                if (response.data.err === 0) {
+                  refreshPage();
+                }
+              }, 2000);
+            }}
+          >
+            {(props) => (
+              <Form>
+                <Stack alignItems="center" justifyContent="center">
+                  {Array.isArray(fields) &&
+                    fields.map((item, index) => (
+                      <FieldForm key={index}>
+                        <Field
+                          as={item.as}
+                          label={item.label}
+                          name={item.name}
+                          type={item.type}
+                        />
+                        <FormHelperText>
+                          <ErrorMessage name={item.name} />
+                        </FormHelperText>
+                      </FieldForm>
+                    ))}
+
+                  {/* Button Submit */}
+                  <FieldForm>
+                    <Stack alignItems="center" justifyContent="center">
+                      <ButtonSubmit disabled={isSubmitting}>
+                        Update
+                      </ButtonSubmit>
+                    </Stack>
+                  </FieldForm>
+                </Stack>
+              </Form>
+            )}
+          </Formik>
+
+          {/* <form
+            method="post"
+            encType="multipart/form-data"
+            onSubmit={handleSubmit}
+          >
+            <ButtonUpdate type="submit">
+              {isSubmitting ? <CircularProgressCustomize /> : "Update"}
+            </ButtonUpdate>
+          </form> */}
+        </Box>
+      </Dialog>
     </Styled>
   );
 };
 
 export default DetailProduct;
-
-const ButtonUpdateDetail = ({ children }) => {
-  return <Button variant="contained">{children}</Button>;
-};
 
 const Styled = styled(Box)(() => ({}));
 
@@ -119,3 +289,50 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="down" ref={ref} {...props} />;
+});
+
+const initialValues = {
+  name: "",
+  image: "",
+  price: "",
+  stock: "",
+  category: "",
+  brand: "",
+};
+
+const validationSchema = Yup.object({
+  name: Yup.string(),
+  price: Yup.number(),
+  stock: Yup.number(),
+  discount: Yup.number(),
+});
+
+const fields = [
+  {
+    as: TextField,
+    label: "Tên sản phẩm",
+    type: "text",
+    name: "name",
+  },
+  {
+    as: TextField,
+    label: "Giá",
+    type: "number",
+    name: "price",
+  },
+  {
+    as: TextField,
+    label: "Số lượng nhập kho",
+    type: "number",
+    name: "stock",
+  },
+  {
+    as: TextField,
+    label: "Khuyến mãi giảm giá",
+    type: "number",
+    name: "discount",
+  },
+];

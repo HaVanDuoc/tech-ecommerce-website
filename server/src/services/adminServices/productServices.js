@@ -26,7 +26,7 @@ exports.createNewProduct = (data) =>
         defaults: {
           productId,
           name,
-          image,
+          image: JSON.stringify(image), // Dữ liệu hiện tại là array phải chuyển sang string trước khi lưu vào database
           price,
           stock,
           categoryId: category,

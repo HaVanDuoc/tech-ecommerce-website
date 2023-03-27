@@ -24,7 +24,7 @@ router.get("/user/newUser/listRoles", userControllers.getListRole);
 
 // Product
 router.post("/product/newProduct", productControllers.createNewProduct); // Create new products
-router.get("/products", productControllers.getListProduct); // List products
+// router.get("/products", productControllers.getListProduct); // List products
 router.get("/product/:productId", productControllers.getProduct); // Get a product
 router.put("/product/update/:productId", productControllers.updateProduct); // update product
 router.delete("/product/:productId", productControllers.deleteProduct); // Delete a product

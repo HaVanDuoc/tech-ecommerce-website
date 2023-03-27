@@ -19,13 +19,16 @@ import CircularProgressCustomize from "~/components/progress/CircularProgressCus
 import { useSnackbar } from "notistack";
 import { refreshPage } from "~/utils";
 
-const ButtonUpload = () => {
-  const [open, setOpen] = React.useState(false);
-  const [imageList, setImageList] = useState([]);
-  const [selected, setSelected] = useState([]);
-  const [isSubmitting, setSubmitting] = useState(false);
+const FormUpload = ({ imageList }) => {
   const productId = useParams().productId;
+  const [open, setOpen] = React.useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const [selected, setSelected] = useState([]);
+
+  useEffect(() => {
+    setSelected(imageList);
+  }, [imageList]);
 
   const handleSnackBar = (res) => {
     if (res.data.err === 0) {
@@ -70,19 +73,17 @@ const ButtonUpload = () => {
           base64: e.target.result,
         };
         selected.push(data);
+
+        setSelected([...selected]);
       };
     }
-
-    setImageList([...imageList, selected]); // set vào list
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-
     setSubmitting(true);
 
     setTimeout(async () => {
-      // Dữ liệu tải về là `string` nên phải chuyển về lại `array`
+      // Dữ liệu tải về là `array` nên phải chuyển về lại `string`
       const arrayToString = JSON.stringify(selected);
 
       const response = await axios({
@@ -91,20 +92,18 @@ const ButtonUpload = () => {
         data: { image: arrayToString },
       });
 
-      setSubmitting(false);
-
       handleSnackBar(response); // response result
+      setSubmitting(false);
 
       // if don't have error is refresh page
       if (response.data.err === 0) {
-        handleClose();
         refreshPage();
       }
     }, 2500);
   };
 
-  const handleDeletePreview = (index) => {
-    // console.log("index", index);
+  const handleDeletePreview = (image) => {
+    setSelected(() => selected.filter((item) => item !== image));
   };
 
   return (
@@ -180,7 +179,7 @@ const ButtonUpload = () => {
                         opacity: 0,
                       }}
                     >
-                      <DeleteIcon onClick={handleDeletePreview(index)} />
+                      <DeleteIcon onClick={() => handleDeletePreview(item)} />
                     </IconButton>
                     <img
                       className="image"
@@ -203,7 +202,7 @@ const ButtonUpload = () => {
   );
 };
 
-export default ButtonUpload;
+export default FormUpload;
 
 const ButtonUpdate = ({ children, ...props }) => {
   return (

@@ -55,5 +55,5 @@ exports.createProduct = {
   stock: Joi.number().min(1),
   category: Joi.string().min(1).required(),
   brand: Joi.string().min(1).required(),
-  image: Joi.string(),
+  image: Joi.array(),
 };

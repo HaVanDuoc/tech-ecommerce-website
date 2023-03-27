@@ -23,15 +23,21 @@ const Update = () => {
   return (
     <Container>
       <Grid container spacing={2}>
+        {/* Title */}
         <Grid item xs={12}>
           <Title>
             <AdminTitle>Thông tin sản phẩm</AdminTitle>
           </Title>
+
           <Divider sx={{ marginBottom: 4, color: "#555" }} />
         </Grid>
+
+        {/* left upload image */}
         <Grid item xs={6}>
           <ImageProduct images={fetch?.images} />
         </Grid>
+
+        {/* right edit detail */}
         <Grid item xs={6}>
           <DetailProduct fetch={fetch} />
         </Grid>

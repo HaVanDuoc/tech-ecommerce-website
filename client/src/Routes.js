@@ -23,6 +23,7 @@ import Home from "./pages/Home";
 import Cart from "./pages/cart";
 import ProductDetail from "./layouts/ProductDetail";
 import CartLayout from "./layouts/CartLayout";
+import CreateNewProduct from "./admin/pages/products/create";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -45,7 +46,8 @@ export const privateRoutes = [
   { path: "/admin/products", page: ProductListAdmin, layout: AdminLayout }, // Products
   {
     path: "/admin/product/newProduct",
-    page: NewProductAdmin,
+    // page: NewProductAdmin,
+    page: CreateNewProduct,
     layout: AdminLayout,
   }, // Create new product
   {

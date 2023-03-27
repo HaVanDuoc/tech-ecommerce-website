@@ -286,3 +286,30 @@ Content-Type: application/json
 {
     "category": "Điện thoại"
 }
+
+### 
+GET   http://localhost:4000/api/v1/admin/products/
+
+
+### 
+POST   http://localhost:4000/api/v1/admin/products
+Content-Type: application/json
+
+{
+    "name": "slkfjsdfj",
+    "price": "1231",
+    "stock": "12",
+    "category": "C001",
+    "brand": "010",
+    "discount": "131",
+    "image": [{"base": "sdkjfkdsjf"}]
+}
+
+### 
+PUT   http://localhost:4000/api/v1/admin/products/updateDetails
+Content-Type: application/json
+
+{
+    "productId": "P00000013",
+    "stock": "3"
+}

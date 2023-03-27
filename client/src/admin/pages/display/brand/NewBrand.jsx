@@ -7,6 +7,7 @@ import removeEmpty from "~/helper/removeEmpty";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import axios from "axios";
 import { useSnackbar } from "notistack";
+import { refreshPage } from "~/utils";
 
 const categories = [
   {
@@ -61,7 +62,7 @@ const NewBrand = () => {
       initialValues={initialValues}
       validationSchema={validationSchema}
       onSubmit={(values, props) => {
-        var data = removeEmpty(values)
+        var data = removeEmpty(values);
 
         // return alert(JSON.stringify(data, null, 2)); // Test submit
 
@@ -80,7 +81,7 @@ const NewBrand = () => {
           handleSnackBar(response);
 
           // Nếu tạo thành công thì reset form
-          if (response.data.err === 0) return props.resetForm();
+          if (response.data.err === 0) return refreshPage();
         }, 2000);
       }}
     >

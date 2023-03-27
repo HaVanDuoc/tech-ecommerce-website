@@ -19,6 +19,7 @@ exports.createNewProduct = async (req, res) => {
       stock: createProduct.stock,
       category: createProduct.category,
       brand: createProduct.brand,
+      discount: Joi.number(),
     }).validate(req.body);
 
     if (error) return badRequest(error.details[0]?.message, res);

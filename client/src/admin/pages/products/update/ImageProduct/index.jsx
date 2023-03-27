@@ -1,13 +1,12 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, styled } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import ButtonUpload from "./ButtonUpload";
+import FormUpload from "./FormUpload";
 
 const ImageProduct = () => {
-  const [images, setImages] = useState([{ base64: "" }]);
-  const [selected, setSelected] = useState([{ base64: null }]);
-
+  const [images, setImages] = useState([]);
+  const [selected, setSelected] = useState([]);
   const productId = useParams().productId;
 
   useEffect(() => {
@@ -17,8 +16,8 @@ const ImageProduct = () => {
       );
 
       const convertStringToArray = JSON.parse(response.data.data.image);
-
       setImages(convertStringToArray);
+      setSelected(convertStringToArray[0]);
     };
 
     fetch();
@@ -32,14 +31,15 @@ const ImageProduct = () => {
     <Styled>
       <Container disableGutters>
         <Box className="changeImage">
-          <ButtonUpload />
+          <ButtonUpload>
+            <FormUpload imageList={images} />
+          </ButtonUpload>
         </Box>
 
         <Box className="mainImage">
           <img
-            src={selected.base64 ? selected.base64 : images[0].base64}
+            src={selected?.base64}
             alt="Ảnh minh họa sản phẩm"
-            style={{ minWidth: 350, minHeight: 350, width: 350 }}
             className="slide"
           />
         </Box>
@@ -51,7 +51,7 @@ const ImageProduct = () => {
               return (
                 <img
                   height={"100%"}
-                  src={image.base64}
+                  src={image?.base64}
                   alt=""
                   key={index}
                   style={
@@ -98,34 +98,34 @@ const Styled = ({ children, ...props }) => {
         },
 
         ".changeImage": {
-          position: "absolute",
-          top: 0,
           width: "100%",
           height: "0",
           overflow: "hidden",
           transition: "all .4s ease-in-out",
+          boxShadow: "0 0 1px 1px rgba(0,0,0,0.1)",
         },
 
         ".mainImage": {
           width: "100%",
-          // height: "100%",
+          height: "350px",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           overflow: "hidden",
-        },
 
-        img: {
-          // width: "100%",
-          // height: "100%",
+          "& img": {
+            width: "auto",
+            height: "100%",
+          },
         },
 
         ".optionImage": {
+          display: "flex",
+          justifyContent: "start",
+          alignItems: "center",
           width: "100%",
           height: "100px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          overflowY: "scroll",
         },
       }}
     >
@@ -133,3 +133,5 @@ const Styled = ({ children, ...props }) => {
     </Box>
   );
 };
+
+const ButtonUpload = styled(Box)(() => ({}));

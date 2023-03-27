@@ -11,6 +11,7 @@ const pageProduct = require("./pageProduct");
 const header = require("./client/header");
 const categories = require("./client/categories");
 const productDetails = require("./client/productDetails");
+const products = require("./admin/products");
 
 const initRoute = (app) => {
   // Routes
@@ -21,11 +22,14 @@ const initRoute = (app) => {
   app.use("/api/v1/client", clientRoute);
   app.use("/api/v1/sectionProduct", sectionProduct); // Section list Product
   app.use("/api/v1/client/header", header); // Section list Product
-  app.use("/api/v1/client/categories", categories); // 
-  app.use("/api/v1/client/productDetails", productDetails); // 
+  app.use("/api/v1/client/categories", categories); //
+  app.use("/api/v1/client/productDetails", productDetails); //
 
   // Client routes
   app.use("/api/v1/client/pageProduct/", pageProduct);
+
+  // Admin routes
+  app.use("/api/v1/admin/products", products);
 
   // Route không xác định được response error not found
   return app.use(notFound);

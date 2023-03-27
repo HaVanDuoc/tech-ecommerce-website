@@ -1,9 +1,7 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { productRows } from "../../dummyData";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { FetchProductList } from "~/helper/fetch";
 import { formatStatusProduct, formatVND } from "~/helper/format";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { Box, IconButton } from "@mui/material";
@@ -11,7 +9,17 @@ import axios from "axios";
 import { useSnackbar } from "notistack";
 
 export default function ProductList() {
-  const [data, setData] = useState(productRows);
+  const [data, setData] = useState([]);
+
+  // Fetch list product
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios("/admin/products/");
+      setData(response.data.data);
+    };
+
+    fetch();
+  }, []);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -30,13 +38,6 @@ export default function ProductList() {
       });
     }
   };
-
-  // Fetch list product
-  const response = FetchProductList();
-  React.useEffect(() => {
-    setData(response);
-  }, [response]);
-  //
 
   const handleDelete = (productId) => {
     setTimeout(async () => {
@@ -68,7 +69,11 @@ export default function ProductList() {
             }}
           >
             {params.row.image && (
-              <img src={params.row.image} alt="" style={{ width: "100px" }} />
+              <img
+                src={JSON.parse(params.row.image)[0].base64}
+                alt=""
+                style={{ width: "100px" }}
+              />
             )}
             {params.row.name}
           </Box>
