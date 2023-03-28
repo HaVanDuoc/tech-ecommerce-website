@@ -9,6 +9,14 @@ POST http://localhost:4000/api/v1/notFound
 
 # ---------------- Auth ------------------
 
+###
+POST http://localhost:4000/api/v1/client/auth/
+Content-Type: application/json
+
+{
+    "Authorization": "djsklfjs"
+}
+
 ### Register
 POST http://localhost:4000/api/v1/auth/register
 Content-Type: application/json

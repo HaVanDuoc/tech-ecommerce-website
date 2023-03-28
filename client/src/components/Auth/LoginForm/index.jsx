@@ -10,87 +10,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import GoogleIcon from "@mui/icons-material/Google";
 import React from "react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
-import { showSignUpForm } from "~/redux/ModalContainer/ModalContainerAction";
 import axios from "axios";
 import { refreshPage } from "~/utils";
-
-const Styled = styled(Box)(() => ({
-  width: 400,
-
-  "& .MuiFormHelperText-root": {
-    color: "red",
-  },
-}));
-
-const Title = styled(Box)(() => ({
-  fontSize: "1.3rem",
-  fontWeight: "500",
-  textAlign: "center",
-  marginBottom: "20px",
-}));
-
-const LinkForgotPassword = ({ children }) => {
-  return (
-    <Box textAlign="right">
-      <Link>{children}</Link>
-    </Box>
-  );
-};
-
-const LinkSignUp = ({ children }) => {
-  const dispatch = useDispatch();
-
-  return (
-    <Box textAlign="center">
-      Bạn chưa có tài khoản?{" "}
-      <Link onClick={() => dispatch(showSignUpForm())}>{children}</Link>
-    </Box>
-  );
-};
-
-const MethodLoginOther = () => {
-  return (
-    <Grid container>
-      <Grid item xs={12}>
-        <Divider textAlign="center">
-          <Chip
-            label="Hoặc"
-            sx={{
-              fontSize: "0.9rem",
-              fontStyle: "italic",
-              color: "var(--color-text)",
-              margin: "10px 0",
-            }}
-          />
-        </Divider>
-      </Grid>
-      <Grid item xs={12} display="flex" justifyContent="center">
-        <Button
-          size="large"
-          variant="outlined"
-          fullWidth
-          sx={{ height: "50px", margin: "10px 0" }}
-        >
-          <GoogleIcon color="red" />
-          <Typography
-            sx={{
-              textTransform: "none",
-              marginLeft: "10px",
-              color: "var(--color-text)",
-            }}
-          >
-            Đăng nhập với Google
-          </Typography>
-        </Button>
-      </Grid>
-    </Grid>
-  );
-};
+import { useDispatch } from "react-redux";
+import GoogleIcon from "@mui/icons-material/Google";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { showSignUpForm } from "~/redux/ModalContainer/ModalContainerAction";
 
 const LoginForm = () => {
   const [error, setError] = React.useState(null);
@@ -107,7 +34,9 @@ const LoginForm = () => {
           email: Yup.string()
             .email("*Định dạng email không chính xác")
             .required("*Bắt buộc"),
-          password: Yup.string().min(6).required("*Bắt buộc"),
+          password: Yup.string()
+            .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
+            .required("*Bắt buộc"),
         })}
         onSubmit={(values, props) => {
           setSubmitting(true); // click submit khóa liền
@@ -116,7 +45,7 @@ const LoginForm = () => {
             // get data from DB
             const response = await axios({
               method: "post",
-              url: "/auth/login",
+              url: "/client/auth/login",
               data: values,
             });
 
@@ -195,3 +124,76 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
+const Styled = styled(Box)(() => ({
+  width: 400,
+
+  "& .MuiFormHelperText-root": {
+    color: "red",
+  },
+}));
+
+const Title = styled(Box)(() => ({
+  fontSize: "1.3rem",
+  fontWeight: "500",
+  textAlign: "center",
+  marginBottom: "20px",
+}));
+
+const LinkForgotPassword = ({ children }) => {
+  return (
+    <Box textAlign="right">
+      <Link>{children}</Link>
+    </Box>
+  );
+};
+
+const LinkSignUp = ({ children }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <Box textAlign="center">
+      Bạn chưa có tài khoản?{" "}
+      <Link onClick={() => dispatch(showSignUpForm())}>{children}</Link>
+    </Box>
+  );
+};
+
+const MethodLoginOther = () => {
+  return (
+    <Grid container>
+      <Grid item xs={12}>
+        <Divider textAlign="center">
+          <Chip
+            label="Hoặc"
+            sx={{
+              fontSize: "0.9rem",
+              fontStyle: "italic",
+              color: "var(--color-text)",
+              margin: "10px 0",
+            }}
+          />
+        </Divider>
+      </Grid>
+      <Grid item xs={12} display="flex" justifyContent="center">
+        <Button
+          size="large"
+          variant="outlined"
+          fullWidth
+          sx={{ height: "50px", margin: "10px 0" }}
+        >
+          <GoogleIcon color="red" />
+          <Typography
+            sx={{
+              textTransform: "none",
+              marginLeft: "10px",
+              color: "var(--color-text)",
+            }}
+          >
+            Đăng nhập với Google
+          </Typography>
+        </Button>
+      </Grid>
+    </Grid>
+  );
+};

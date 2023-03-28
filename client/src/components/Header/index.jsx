@@ -14,13 +14,10 @@ import {
 import axios from "axios";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import HomeIcon from "@mui/icons-material/Home";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import ModalContainer from "~/containers/ModalContainer";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
@@ -31,6 +28,7 @@ import { formatVND } from "~/helper/format";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
+import AccountMenu from "./AccountMenu";
 
 const Header = () => {
   return (
@@ -93,10 +91,17 @@ export const AppBar = () => {
                 <Alert />
               </Box>
 
-              {/* User */}
-              <Box>
-                <User />
-              </Box>
+              {/* Cart */}
+              <Stack justifyContent="center" alignItems="center">
+                <Link to="/cart">
+                  <Button sx={{ color: "var(--color-main)" }}>
+                    <StyledBadge badgeContent={1} color="error">
+                      <ShoppingCartIcon />
+                    </StyledBadge>
+                  </Button>
+                </Link>
+              </Stack>
+              {/*  */}
 
               <Divider
                 orientation="vertical"
@@ -105,14 +110,9 @@ export const AppBar = () => {
                 sx={{ mx: 1, borderWidth: "1px", borderColor: "#ccc" }}
               />
 
-              {/* Cart */}
-              <Link to="/cart">
-                <Button sx={{ color: "var(--color-main)" }}>
-                  <StyledBadge badgeContent={1} color="error">
-                    <ShoppingCartIcon />
-                  </StyledBadge>
-                </Button>
-              </Link>
+              {/* User */}
+              <AccountMenu />
+
               {/*  */}
             </Stack>
           </Box>
@@ -229,24 +229,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: "0 4px",
   },
 }));
-
-export const User = () => {
-  const dispatch = useDispatch();
-
-  return (
-    <ModalContainer>
-      <Button
-        onClick={() => dispatch(showLoginForm())}
-        sx={{
-          color: "var(--color-secondary)",
-        }}
-      >
-        <Typography textTransform="none">Đăng nhập</Typography>
-        <SentimentSatisfiedAltIcon sx={{ marginLeft: 1 }} />
-      </Button>
-    </ModalContainer>
-  );
-};
 
 export const Alert = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);

@@ -1,10 +1,41 @@
-import React from "react";
+import axios from "axios";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AdminLayout from "./admin/layouts";
 import { DefaultLayout } from "./layouts";
+import { CURRENT_USER } from "./redux/AuthCurrentUser/constant";
 import { privateRoutes, publicRoutes } from "./Routes";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  const checkCurrentUser = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+
+      const response = await axios({
+        method: "post",
+        url: "/client/auth",
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      if (response?.data?.err === 0) {
+        const user = response.data;
+
+        dispatch({ type: CURRENT_USER, payload: user }); // Lưu user vào redux
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    checkCurrentUser();
+  }, [checkCurrentUser]);
+
   return (
     <BrowserRouter>
       <Routes>

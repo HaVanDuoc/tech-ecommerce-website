@@ -88,11 +88,13 @@ const SignUpForm = () => {
           // destructuring - loại property 'confirmPassword'
           const { firstName, middleName, lastName, email, password } = values;
 
+          // return console.log('values', values)
+
           setTimeout(async () => {
             // get data from DB
             const response = await axios({
               method: "post",
-              url: "/auth/register",
+              url: "/client/auth/register",
               data: { firstName, middleName, lastName, email, password },
             });
 
@@ -118,7 +120,6 @@ const SignUpForm = () => {
                 as={TextField}
                 label="Họ"
                 variant="outlined"
-                // fullWidth
                 sx={{ marginBottom: "15px", width: "30%" }}
                 id="firstName"
                 name="firstName"
@@ -130,7 +131,6 @@ const SignUpForm = () => {
                 as={TextField}
                 label="Tên đệm"
                 variant="outlined"
-                // fullWidth
                 sx={{ marginBottom: "15px", width: "30%" }}
                 id="middleName"
                 name="middleName"
@@ -142,7 +142,6 @@ const SignUpForm = () => {
                 as={TextField}
                 label="Tên"
                 variant="outlined"
-                // fullWidth
                 sx={{ marginBottom: "15px", width: "30%" }}
                 id="lastName"
                 name="lastName"

@@ -19,7 +19,7 @@ FROM
     users
     left join statuses on users.statusId = statuses.statusId
     left join roles on users.roleId = roles.roleId;
-    
+
 -- GET USER
 SELECT
     users.id,
@@ -47,7 +47,7 @@ WhERE
     userId = "U00000001"
 LIMIT
     1;
-    
+
 -- Get List Product
 SELECT
     products.id,
@@ -69,3 +69,26 @@ Where
 LIMIT
     1;
 
+-- 
+-- Select current user
+-- 
+select
+    users.userId,
+    users.firstName,
+    users.middleName,
+    users.lastName,
+    users.userName,
+    users.email,
+    genders.name as 'gender',
+    users.avatar,
+    users.phoneNumber,
+    users.address,
+    users.transactionVolume,
+    users.dateOfBirth
+from
+    users
+    left join genders on genders.code = users.genderCode
+where
+    users.userId = 'U00000001'
+limit
+    1;

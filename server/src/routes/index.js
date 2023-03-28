@@ -1,7 +1,7 @@
 // routes/index.jsx
 
 const { notFound } = require("../middleware/handleError");
-const authRoute = require("./authRoute");
+const authRoute = require("./client/auth/authRoute");
 const userRoute = require("./userRoute");
 const adminRoute = require("./adminRoute");
 const dbRoute = require("./dbRoute");
@@ -15,7 +15,6 @@ const products = require("./admin/products");
 
 const initRoute = (app) => {
   // Routes
-  app.use("/api/v1/auth", authRoute);
   app.use("/api/v1/user", userRoute);
   app.use("/api/v1/admin", adminRoute);
   app.use("/api/v1/db", dbRoute);
@@ -26,6 +25,7 @@ const initRoute = (app) => {
   app.use("/api/v1/client/productDetails", productDetails); //
 
   // Client routes
+  app.use("/api/v1/client/auth", authRoute);
   app.use("/api/v1/client/pageProduct/", pageProduct);
 
   // Admin routes
