@@ -12,6 +12,7 @@ const header = require("./client/header");
 const categories = require("./client/categories");
 const productDetails = require("./client/productDetails");
 const products = require("./admin/products");
+const home = require("./client/home");
 
 const initRoute = (app) => {
   // Routes
@@ -27,6 +28,7 @@ const initRoute = (app) => {
   // Client routes
   app.use("/api/v1/client/auth", authRoute);
   app.use("/api/v1/client/pageProduct/", pageProduct);
+  app.use("/api/v1/client/home", home);
 
   // Admin routes
   app.use("/api/v1/admin/products", products);

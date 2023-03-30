@@ -321,3 +321,7 @@ Content-Type: application/json
     "productId": "P00000013",
     "stock": "3"
 }
+
+### 
+GET    http://localhost:4000/api/v1/client/home
+

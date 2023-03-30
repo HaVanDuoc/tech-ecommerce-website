@@ -15,9 +15,6 @@ import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import { PF } from "~/__variables";
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
-import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
@@ -28,6 +25,7 @@ import CardGiftcardOutlinedIcon from "@mui/icons-material/CardGiftcardOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import PercentOutlinedIcon from "@mui/icons-material/PercentOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
+import Card from "~/components/card";
 
 const Wrapper = styled(Box)(() => ({
   "--home-bg-second": "#f0f2f5",
@@ -35,11 +33,24 @@ const Wrapper = styled(Box)(() => ({
 }));
 
 const Home = () => {
+  const [countProducts, setCountProducts] = useState(null);
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios("/client/home");
+      setProducts(response.data.data);
+      setCountProducts(response.data.count);
+    };
+
+    fetch();
+  }, []);
+
   return (
     <Wrapper>
       <Banner />
 
-      <NewProduct />
+      <NewProduct products={products} />
 
       <Categories />
 
@@ -52,56 +63,18 @@ const Home = () => {
 
       <News />
 
-      <SuggestProduct />
+      <SuggestProduct products={products} countProducts={countProducts} />
     </Wrapper>
   );
 };
 
 export default Home;
 
-const dummyProducts = [
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-];
-
-const SuggestProduct = () => {
-  const [products, setProducts] = useState(null);
-  const [display, setDisplay] = useState(20);
-
-  useEffect(() => {
-    const fetch = async () => {
-      setProducts(dummyProducts);
-    };
-
-    fetch();
-  }, []);
-
+const SuggestProduct = ({ products, countProducts }) => {
   const handleSeeMore = () => {
-    if (display < products.length) {
-      setDisplay(display + 10);
-    }
+    // if (display < products.length) {
+    //   setDisplay(display + 10);
+    // }
   };
 
   return (
@@ -115,10 +88,10 @@ const SuggestProduct = () => {
           <Box>
             <Grid container spacing={2}>
               {Array.isArray(products) &&
-                products.slice(0, display).map((item, index) => {
+                products.map((item, index) => {
                   return (
-                    <Grid item xs={2.4}>
-                      <Card />
+                    <Grid item xs={2.4} key={index}>
+                      <Card product={item} />
                     </Grid>
                   );
                 })}
@@ -134,7 +107,7 @@ const SuggestProduct = () => {
                 marginTop: "32px",
               }}
             >
-              {display < products?.length ? (
+              {countProducts - products.length > 0 ? (
                 <Box
                   onClick={handleSeeMore}
                   sx={{
@@ -152,7 +125,7 @@ const SuggestProduct = () => {
 
                     ":hover": {
                       borderColor: "var(--color-main)",
-                      boxShadow: "0 0 3px 1px rgba(0, 0, 0, 0.25)",
+                      boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
 
                       "& p": {
                         color: "var(--color-main)",
@@ -163,11 +136,11 @@ const SuggestProduct = () => {
                   <Typography
                     sx={{
                       color: "var(--color-text)",
-                      textTransform: "uppercase",
+                      textTransform: "capitalize",
                       fontWeight: 500,
                     }}
                   >
-                    Xem thêm
+                    {`Xem thêm ${countProducts - products.length} sản phẩm`}
                   </Typography>
                 </Box>
               ) : (
@@ -589,203 +562,192 @@ export const PaymentOnline = () => {
   );
 };
 
-export const Card = () => {
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        maxWidth: "350px",
-        borderRadius: "5px",
-        boxShadow: "0 0 3px 1px rgba(0, 0, 0, 0.2)",
-        overflow: "hidden",
-        padding: 3,
-        backgroundColor: "#fff",
-        cursor: "pointer",
-        transition: "all .4s ease-in-out",
-        position: "relative",
+// export const Card = () => {
+//   return (
+//     <Box
+//       sx={{
+//         width: "100%",
+//         maxWidth: "350px",
+//         borderRadius: "5px",
+//         boxShadow: "0 0 3px 1px rgba(0, 0, 0, 0.2)",
+//         overflow: "hidden",
+//         padding: 3,
+//         backgroundColor: "#fff",
+//         cursor: "pointer",
+//         transition: "all .4s ease-in-out",
+//         position: "relative",
 
-        ":hover": {
-          boxShadow: "0 0 5px 2px rgba(0, 0, 0, 0.2)",
+//         ":hover": {
+//           boxShadow: "0 0 5px 2px rgba(0, 0, 0, 0.2)",
 
-          ".select": {
-            transform: "none",
-          },
+//           ".select": {
+//             transform: "none",
+//           },
 
-          ".image": {
-            transform: "scale(1.1)",
-          },
-        },
+//           ".image": {
+//             transform: "scale(1.1)",
+//           },
+//         },
 
-        ".image": {
-          transform: "none",
-          transition: "transform .4s ease-in-out",
-        },
-      }}
-    >
-      <Stack flexDirection="column">
-        {/* Image */}
-        <Box>
-          <img
-            src={PF + "/assets/products/2.webp"}
-            alt=""
-            width="100%"
-            className="image"
-          />
-        </Box>
+//         ".image": {
+//           transform: "none",
+//           transition: "transform .4s ease-in-out",
+//         },
+//       }}
+//     >
+//       <Stack flexDirection="column">
+//         {/* Image */}
+//         <Box>
+//           <img
+//             src={PF + "/assets/products/2.webp"}
+//             alt=""
+//             width="100%"
+//             className="image"
+//           />
+//         </Box>
 
-        <Stack flexDirection="column">
-          <Typography
-            sx={{
-              color: "#d51919",
-              fontWeight: 500,
-              textTransform: "uppercase",
-              fontFamily: "'Chakra Petch', sans-serif",
-              paddingBottom: 1,
-            }}
-          >
-            Laptop
-          </Typography>
+//         <Stack flexDirection="column">
+//           <Typography
+//             sx={{
+//               color: "#d51919",
+//               fontWeight: 500,
+//               textTransform: "uppercase",
+//               fontFamily: "'Chakra Petch', sans-serif",
+//               paddingBottom: 1,
+//             }}
+//           >
+//             Laptop
+//           </Typography>
 
-          <Typography
-            sx={{
-              fontFamily: "'Montserrat', sans-serif",
-              fontWeight: 500,
-              paddingBottom: 1,
-              fontSize: "17px",
-            }}
-          >
-            Gigabyte AERO 16 XE5 73VN938AH
-          </Typography>
+//           <Typography
+//             sx={{
+//               fontFamily: "'Montserrat', sans-serif",
+//               fontWeight: 500,
+//               paddingBottom: 1,
+//               fontSize: "17px",
+//             }}
+//           >
+//             Gigabyte AERO 16 XE5 73VN938AH
+//           </Typography>
 
-          <Stack
-            flexDirection="row"
-            alignItems="center"
-            paddingBottom={1}
-            height={35}
-          >
-            <Rating value={4} readOnly size="small" />
-            <Typography
-              fontSize={13}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: 1,
-                color: "#666",
-              }}
-            >
-              (32)
-            </Typography>
-          </Stack>
+//           <Stack
+//             flexDirection="row"
+//             alignItems="center"
+//             paddingBottom={1}
+//             height={35}
+//           >
+//             <Rating value={4} readOnly size="small" />
+//             <Typography
+//               fontSize={13}
+//               sx={{
+//                 display: "flex",
+//                 justifyContent: "center",
+//                 alignItems: "center",
+//                 marginLeft: 1,
+//                 color: "#666",
+//               }}
+//             >
+//               (32)
+//             </Typography>
+//           </Stack>
 
-          {/* price */}
+//           {/* price */}
 
-          <Stack flexDirection="row" alignItems="center">
-            {/* Giá sau trừ giảm giá */}
+//           <Stack flexDirection="row" alignItems="center">
+//             {/* Giá sau trừ giảm giá */}
 
-            <Typography
-              sx={{
-                fontWeight: 500,
-                fontSize: "17px",
-                marginRight: 1,
-                color: "crimson",
-              }}
-            >
-              {formatPrice(10000000, 24)}
-            </Typography>
+//             <Typography
+//               sx={{
+//                 fontWeight: 500,
+//                 fontSize: "17px",
+//                 marginRight: 1,
+//                 color: "crimson",
+//               }}
+//             >
+//               {formatPrice(10000000, 24)}
+//             </Typography>
 
-            {/* Giá gốc cost */}
-            <Typography
-              sx={{
-                fontWeight: 500,
-                fontSize: "18px",
-              }}
-            >
-              {formatCost(10000000)}
-            </Typography>
-          </Stack>
-        </Stack>
-      </Stack>
+//             {/* Giá gốc cost */}
+//             <Typography
+//               sx={{
+//                 fontWeight: 500,
+//                 fontSize: "18px",
+//               }}
+//             >
+//               {formatCost(10000000)}
+//             </Typography>
+//           </Stack>
+//         </Stack>
+//       </Stack>
 
-      {/* Box select when hover  */}
-      <Box
-        className="select"
-        sx={{
-          position: "absolute",
-          top: "30px",
-          right: 0,
-          transform: "translateX(100%)",
-          transition: "all .4s ease-in-out",
+//       {/* Box select when hover  */}
+//       <Box
+//         className="select"
+//         sx={{
+//           position: "absolute",
+//           top: "30px",
+//           right: 0,
+//           transform: "translateX(100%)",
+//           transition: "all .4s ease-in-out",
 
-          ".item": {
-            borderRadius: "5px 0 0 5px",
-            borderTop: "1px solid #ddd",
-            borderLeft: "1px solid #ddd",
-            borderBottom: "1px solid #ddd",
-            padding: 1,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "#fff",
-            boxShadow: "0 0 5px 1px rgba(0, 0, 0, 0,1)",
+//           ".item": {
+//             borderRadius: "5px 0 0 5px",
+//             borderTop: "1px solid #ddd",
+//             borderLeft: "1px solid #ddd",
+//             borderBottom: "1px solid #ddd",
+//             padding: 1,
+//             display: "flex",
+//             alignItems: "center",
+//             justifyContent: "center",
+//             backgroundColor: "#fff",
+//             boxShadow: "0 0 5px 1px rgba(0, 0, 0, 0,1)",
 
-            svg: {
-              color: "#555",
-            },
+//             svg: {
+//               color: "#555",
+//             },
 
-            ":hover": {
-              svg: {
-                color: "dodgerblue",
-              },
-            },
-          },
-        }}
-      >
-        <Stack flexDirection="column" spacing={1}>
-          <Box className="item">
-            <FavoriteBorderOutlinedIcon />
-          </Box>
-          <Box className="item">
-            <RemoveRedEyeOutlinedIcon />
-          </Box>
-          <Box className="item">
-            <LocalMallOutlinedIcon />
-          </Box>
-        </Stack>
-      </Box>
+//             ":hover": {
+//               svg: {
+//                 color: "dodgerblue",
+//               },
+//             },
+//           },
+//         }}
+//       >
+//         <Stack flexDirection="column" spacing={1}>
+//           <Box className="item">
+//             <FavoriteBorderOutlinedIcon />
+//           </Box>
+//           <Box className="item">
+//             <RemoveRedEyeOutlinedIcon />
+//           </Box>
+//           <Box className="item">
+//             <LocalMallOutlinedIcon />
+//           </Box>
+//         </Stack>
+//       </Box>
 
-      {/* Box discount */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: "20px",
-          left: "20px",
-          backgroundColor: "#ffc300",
-          color: "#000",
-          padding: "3px 10px",
-          borderRadius: "15px",
-        }}
-      >
-        <Typography fontSize={12} fontWeight={600}>
-          {formatDiscount(24)}
-        </Typography>
-      </Box>
-    </Box>
-  );
-};
+//       {/* Box discount */}
+//       <Box
+//         sx={{
+//           position: "absolute",
+//           top: "20px",
+//           left: "20px",
+//           backgroundColor: "#ffc300",
+//           color: "#000",
+//           padding: "3px 10px",
+//           borderRadius: "15px",
+//         }}
+//       >
+//         <Typography fontSize={12} fontWeight={600}>
+//           {formatDiscount(24)}
+//         </Typography>
+//       </Box>
+//     </Box>
+//   );
+// };
 
-export const NewProduct = () => {
-  const dummyNewProduct = [
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-  ];
-
+export const NewProduct = ({ products }) => {
   return (
     <Box sx={{ backgroundColor: "#fff", padding: "40px 0" }}>
       <Container maxWidth="lg" disableGutters>
@@ -803,11 +765,12 @@ export const NewProduct = () => {
             nextArrow={<NextArrow />}
             prevArrow={<PrevArrow />}
             className="custom-slider"
+            sx={{}}
           >
-            {dummyNewProduct.map((item, index) => {
+            {products.slice(0, 8).map((item, index) => {
               return (
                 <Box key={index}>
-                  <Card />
+                  <Card product={item} />
                 </Box>
               );
             })}

@@ -29,9 +29,9 @@ import Watch from "./Watch";
 import { PF } from "~/__variables";
 import { AppBar } from "~/components/Header";
 import axios from "axios";
-import { Card } from "../Home";
 import { formatVND } from "~/helper/format";
 import { default as SliderMaterial } from "@mui/material/Slider";
+import Card from "~/components/card";
 
 const Products = () => {
   const current = useParams().category; // get category of current page
@@ -102,118 +102,6 @@ const Products = () => {
     default:
       break;
   }
-
-  const Wrapper = styled(Box)(() => ({
-    minHeight: "500px",
-
-    ".box": {
-      backgroundColor: "#fff",
-      borderRadius: "8px",
-      boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
-      marginBottom: "16px",
-      paddingBottom: "16px",
-
-      ".list": {
-        maxHeight: "300px",
-        overflowY: "scroll",
-      },
-
-      ".title": {
-        padding: "16px 24px",
-        fontSize: "18px",
-        fontWeight: 500,
-      },
-
-      ".item": {
-        margin: "0 8px",
-        padding: "0 16px",
-        color: "#666",
-        lineHeight: "35px",
-        cursor: "pointer",
-        transition: "all .3s ease",
-        backgroundColor: "#fff",
-        borderRadius: "5px",
-
-        ":hover": {
-          color: "var(--color-main)",
-          backgroundColor: "#eee",
-        },
-      },
-    },
-
-    ".categories": {},
-
-    ".filter": {},
-  }));
-
-  const ListProduct = styled(Box)(() => ({
-    padding: "15px 0",
-  }));
-
-  const SortBy = styled(Box)(() => ({
-    ".wrapper": {
-      backgroundColor: "#fff",
-      boxShadow: "0 0 1px 1px rgba(0,0,0,0.1)",
-      borderRadius: "5px",
-      padding: "10px 16px",
-
-      "& button": {
-        margin: "0 5px",
-      },
-    },
-  }));
-
-  const dummyData = [
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-    { id: 1 },
-  ];
-
-  const SliderPrice = () => {
-    const [value, setValue] = React.useState([500000, 50000000]);
-
-    const handleChange = (event, newValue) => {
-      if (typeof newValue === "number") {
-        setValue(newValue);
-      }
-    };
-
-    const valueLabelFormat = (value) => {
-      return formatVND(value);
-    };
-
-    return (
-      <SliderMaterial
-        value={value}
-        min={500000}
-        max={50000000}
-        step={100000}
-        getAriaValueText={valueLabelFormat}
-        valueLabelFormat={valueLabelFormat}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-      />
-    );
-  };
 
   return (
     <Wrapper>
@@ -301,6 +189,118 @@ const Products = () => {
 };
 
 export default Products;
+
+const Wrapper = styled(Box)(() => ({
+  minHeight: "500px",
+
+  ".box": {
+    backgroundColor: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+    marginBottom: "16px",
+    paddingBottom: "16px",
+
+    ".list": {
+      maxHeight: "300px",
+      overflowY: "scroll",
+    },
+
+    ".title": {
+      padding: "16px 24px",
+      fontSize: "18px",
+      fontWeight: 500,
+    },
+
+    ".item": {
+      margin: "0 8px",
+      padding: "0 16px",
+      color: "#666",
+      lineHeight: "35px",
+      cursor: "pointer",
+      transition: "all .3s ease",
+      backgroundColor: "#fff",
+      borderRadius: "5px",
+
+      ":hover": {
+        color: "var(--color-main)",
+        backgroundColor: "#eee",
+      },
+    },
+  },
+
+  ".categories": {},
+
+  ".filter": {},
+}));
+
+const ListProduct = styled(Box)(() => ({
+  padding: "15px 0",
+}));
+
+const SortBy = styled(Box)(() => ({
+  ".wrapper": {
+    backgroundColor: "#fff",
+    boxShadow: "0 0 1px 1px rgba(0,0,0,0.1)",
+    borderRadius: "5px",
+    padding: "10px 16px",
+
+    "& button": {
+      margin: "0 5px",
+    },
+  },
+}));
+
+const dummyData = [
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+  { id: 1 },
+];
+
+const SliderPrice = () => {
+  const [value, setValue] = React.useState([500000, 50000000]);
+
+  const handleChange = (event, newValue) => {
+    if (typeof newValue === "number") {
+      setValue(newValue);
+    }
+  };
+
+  const valueLabelFormat = (value) => {
+    return formatVND(value);
+  };
+
+  return (
+    <SliderMaterial
+      value={value}
+      min={500000}
+      max={50000000}
+      step={100000}
+      getAriaValueText={valueLabelFormat}
+      valueLabelFormat={valueLabelFormat}
+      onChange={handleChange}
+      valueLabelDisplay="auto"
+    />
+  );
+};
 
 export const ListBrands = ({ category }) => {
   const [brands, setBrands] = useState(null);

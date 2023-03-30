@@ -92,3 +92,22 @@ where
     users.userId = 'U00000001'
 limit
     1;
+
+-- get latest products
+select
+    products.id,
+    products.name,
+    products.image,
+    products.price,
+    products.rating,
+    products.stock,
+    products.discount,
+    products.isActive,
+    categories.name as "category"
+from
+    products
+    left join categories on categories.categoryId = products.categoryId
+order by
+    products.createdAt desc
+limit
+    20;

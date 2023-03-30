@@ -36,8 +36,6 @@ const AccountMenu = () => {
     setAnchorEl(null);
   };
 
-  console.log("currentUser", currentUser);
-
   return (
     <Box className="account-menu">
       {currentUser.isLogged ? (
