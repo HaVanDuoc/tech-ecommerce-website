@@ -1,7 +1,7 @@
 import React from "react";
 
-const ProductDetail = ({ children }) => {
+const Products = ({ children }) => {
   return <section className="product-details-layout">{children}</section>;
 };
 
-export default ProductDetail;
+export default Products;

@@ -1,7 +1,6 @@
 import {
   DatabaseAdmin,
   HomeAdmin,
-  NewProductAdmin,
   NewUserAdmin,
   ProductAdmin,
   ProductListAdmin,
@@ -20,15 +19,15 @@ import NewCategory from "./admin/pages/display/category/NewCategory";
 import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
 import Home from "./pages/Home";
 import Cart from "./pages/cart";
-import ProductDetail from "./layouts/ProductDetail";
 import CartLayout from "./layouts/CartLayout";
 import CreateNewProduct from "./admin/pages/products/create";
-import ProductDetails from "./pages/productDetails";
+import Products from "./pages/products";
+import ProductsLayout from "./layouts/products";
 
 export const publicRoutes = [
   { path: "/", page: Home },
   { path: "/cart", page: Cart, layout: CartLayout },
-  { path: "/:category", page: ProductDetails, layout: ProductDetail },
+  { path: "/:category", page: Products, layout: ProductsLayout },
 ];
 
 export const privateRoutes = [
