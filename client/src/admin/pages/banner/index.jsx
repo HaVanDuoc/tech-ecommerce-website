@@ -1,7 +1,7 @@
 import "./styles.scss";
-import { Box, styled, Typography } from "@mui/material";
-import React, { Fragment } from "react";
-import { default as BannerHome } from "~/pages/Home_v3/Banner";
+import { Box, Typography } from "@mui/material";
+import React from "react";
+import { default as BannerHome } from "~/trash/Home_v3/Banner";
 
 const Preview = ({ children }) => {
   return (
