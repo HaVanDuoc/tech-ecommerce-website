@@ -1,6 +1,15 @@
 import React from "react";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { Box, IconButton, Menu, MenuItem, Stack, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import { news } from "~/pages/Home";
 
 const Notification = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -59,12 +68,74 @@ const Notification = () => {
               zIndex: 0,
             },
           },
+
+          "& li:nth-child": {
+            borderBottom: "1px solid #ddd !important",
+          },
         }}
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
-        </MenuItem>
+        {news.slice(0, 3).map((item, index) => {
+          return (
+            <MenuItem onClick={handleClose}>
+              <Box
+                sx={{
+                  width: 320,
+                  display: "flex",
+                  justifyContent: "start",
+                  alignItems: "start",
+                  flexDirection: "column",
+                  overflow: "hidden",
+                  padding: "15px 0",
+                }}
+              >
+                <Typography
+                  sx={{
+                    width: "100%",
+                    fontWeight: 500,
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    marginBottom: 1,
+                  }}
+                >
+                  {item.title}
+                </Typography>
+                <Typography
+                  variant="span"
+                  sx={{
+                    width: "100%",
+                    fontSize: "13px",
+                    color: "#666",
+                    display: "-webkit-box",
+                    "-webkit-line-clamp": "2",
+                    "-webkit-box-orient": "vertical",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                  }}
+                >
+                  {item.content}
+                </Typography>
+              </Box>
+            </MenuItem>
+          );
+        })}
+
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Typography
+            fontSize="14px"
+            color="dodgerblue"
+            sx={{ cursor: "pointer" }}
+          >
+            Tất cả
+          </Typography>
+        </Box>
       </Menu>
     </React.Fragment>
   );

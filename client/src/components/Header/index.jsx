@@ -29,6 +29,7 @@ import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import AccountMenu from "./AccountMenu";
+import Notification from "./Notification";
 
 const Header = () => {
   return (
@@ -87,9 +88,7 @@ export const AppBar = () => {
               </Link>
 
               {/* Alert */}
-              <Box>
-                <Alert />
-              </Box>
+              <Notification />
 
               {/* Cart */}
               <Stack justifyContent="center" alignItems="center">
