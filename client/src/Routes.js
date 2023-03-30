@@ -18,12 +18,12 @@ import DisplayCategory from "./admin/pages/display/category";
 import UpdateBrand from "./admin/pages/display/brand/UpdateBrand";
 import NewCategory from "./admin/pages/display/category/NewCategory";
 import UpdateCategory from "./admin/pages/display/category/UpdateCategory";
-import ProductDetails from "./pages/ProductDetails";
 import Home from "./pages/Home";
 import Cart from "./pages/cart";
 import ProductDetail from "./layouts/ProductDetail";
 import CartLayout from "./layouts/CartLayout";
 import CreateNewProduct from "./admin/pages/products/create";
+import ProductDetails from "./pages/productDetails";
 
 export const publicRoutes = [
   { path: "/", page: Home },
