@@ -3,8 +3,14 @@ import {
   Badge,
   Box,
   Button,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  Menu,
+  MenuItem,
   Stack,
   styled,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import React from "react";
@@ -13,10 +19,24 @@ import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import ModalContainer from "~/containers/ModalContainer";
+import { Logout, PersonAdd, Settings } from "@mui/icons-material";
+import { FormatFullName } from "~/helper/format";
+import { refreshPage } from "~/utils";
 
 const AccountMenu = () => {
   const currentUser = useSelector(selectorCurrentUser);
   const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  console.log("currentUser", currentUser);
 
   return (
     <Box className="account-menu">
@@ -24,22 +44,105 @@ const AccountMenu = () => {
         //
         //   Đã đăng nhập
         //
-        <Stack
-          flexDirection="row"
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            cursor: "pointer",
-          }}
-        >
-          <StyledBadge
-            overlap="circular"
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            variant="dot"
+        <React.Fragment>
+          <Box
+            sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
           >
-            <Avatar alt="Remy Sharp" src={currentUser.user.data.avatar} />
-          </StyledBadge>
-        </Stack>
+            <Tooltip
+              title={FormatFullName(
+                currentUser.user.data.firstName,
+                currentUser.user.data.middleName,
+                currentUser.user.data.lastName
+              )}
+            >
+              <IconButton
+                onClick={handleClick}
+                size="small"
+                sx={{ ml: 2 }}
+                aria-controls={open ? "account-menu" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+              >
+                <StyledBadge
+                  overlap="circular"
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  variant="dot"
+                >
+                  <Avatar alt="Remy Sharp" src={currentUser.user.data.avatar} />
+                </StyledBadge>
+              </IconButton>
+            </Tooltip>
+          </Box>
+          <Menu
+            anchorEl={anchorEl}
+            id="account-menu"
+            open={open}
+            onClose={handleClose}
+            onClick={handleClose}
+            PaperProps={{
+              elevation: 0,
+              sx: {
+                overflow: "visible",
+                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                mt: 1.5,
+                "& .MuiAvatar-root": {
+                  width: 32,
+                  height: 32,
+                  ml: -0.5,
+                  mr: 1,
+                },
+                "&:before": {
+                  content: '""',
+                  display: "block",
+                  position: "absolute",
+                  top: 0,
+                  right: 14,
+                  width: 10,
+                  height: 10,
+                  bgcolor: "background.paper",
+                  transform: "translateY(-50%) rotate(45deg)",
+                  zIndex: 0,
+                },
+              },
+            }}
+            transformOrigin={{ horizontal: "right", vertical: "top" }}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <MenuItem onClick={handleClose}>
+              <Avatar src={currentUser.user.data.avatar} />{" "}
+              {FormatFullName(
+                currentUser.user.data.firstName,
+                currentUser.user.data.middleName,
+                currentUser.user.data.lastName
+              )}
+            </MenuItem>
+
+            <Divider />
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <PersonAdd fontSize="small" />
+              </ListItemIcon>
+              Thêm một tài khoản khác
+            </MenuItem>
+            <MenuItem onClick={handleClose}>
+              <ListItemIcon>
+                <Settings fontSize="small" />
+              </ListItemIcon>
+              Cài đặt
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                localStorage.setItem("access_token", "");
+                refreshPage();
+              }}
+            >
+              <ListItemIcon>
+                <Logout fontSize="small" />
+              </ListItemIcon>
+              Đăng xuất
+            </MenuItem>
+          </Menu>
+        </React.Fragment>
       ) : (
         //
         // chưa đăng nhập
