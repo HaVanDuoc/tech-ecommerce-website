@@ -6,12 +6,11 @@ import React, { useEffect, useState } from "react";
 import { formatDiscount, formatPrice, formatVND } from "~/helper/format";
 import { Box, Button, Grid, Rating, styled, Typography } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import Slider from "react-slick";
 
 export default function ProductDetails() {
   const [fetch, setFetch] = useState(null);
-  const [images, setImages] = useState([]);
-  const [selected, setSelected] = useState([]); // Image is selected to show
-  const nameProduct = useParams().productName;
+  const nameProduct = useParams().nameProduct;
 
   useEffect(() => {
     const fetch = async () => {
@@ -21,21 +20,112 @@ export default function ProductDetails() {
         data: { nameProduct },
       });
 
-      setFetch(response.data.data);
-
-      // set data image list to state `images`
-      // because the original data is form string
-      // so that use JSON.parse convert data back to array
-      setImages(JSON.parse(response.data.data.image));
-
-      setSelected(JSON.parse(response.data.data.image)[0]);
+      setFetch(response.data);
     };
 
     fetch();
   }, [nameProduct]);
 
-  const handleClick = (index) => {
-    setSelected(images[index]);
+  const MainImage = () => {
+    const [nav1, setNav1] = useState();
+    const [nav2, setNav2] = useState();
+
+    return (
+      <Box
+        position="relative"
+        // height="700px"
+        sx={{
+          ".main-slider": {
+            ".slick-slide > div": {
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+            },
+          },
+
+          ".option-slider": {
+            ".slick-slide": {
+              padding: "8px",
+            },
+
+            ".slick-slide > div": {
+              display: "flex",
+              justifyContent: "center",
+              alignContent: "center",
+            },
+
+            ".slick-current": {
+              border: "3px solid dodgerblue",
+            },
+
+            "& img": {
+              display: "flex !important",
+              // width: "auto !important",
+              height: "80px",
+            },
+          },
+        }}
+      >
+        <Box
+          sx={{
+            // position: "relative",
+            height: "480px",
+            maxHeight: "480px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              // height: "100%",
+            }}
+          >
+            <Slider
+              asNavFor={nav2}
+              ref={(slider1) => setNav1(slider1)}
+              arrows={false}
+              infinite={true}
+              className="main-slider"
+            >
+              {fetch?.data &&
+                JSON.parse(fetch?.data?.image).map((item, index) => {
+                  return (
+                    <img src={item?.base64} alt={item?.fileName} key={index} />
+                  );
+                })}
+            </Slider>
+          </Box>
+        </Box>
+
+        <Box
+          sx={{
+            transform: "translate(50%, 0)",
+          }}
+        >
+          <Slider
+            arrows={false}
+            asNavFor={nav1}
+            ref={(slider2) => setNav2(slider2)}
+            slidesToShow={5}
+            swipeToSlide={true}
+            focusOnSelect={true}
+            infinite={true}
+            autoplay={true}
+            autoplaySpeed={3000}
+            className="option-slider"
+          >
+            {fetch?.data &&
+              JSON.parse(fetch?.data?.image).map((item, index) => {
+                return (
+                  <img src={item?.base64} alt={item?.fileName} key={index} />
+                );
+              })}
+          </Slider>
+        </Box>
+      </Box>
+    );
   };
 
   return (
@@ -44,16 +134,7 @@ export default function ProductDetails() {
       <Grid container>
         {/* left */}
         <Grid item xs={6}>
-          <Box className="left">
-            <Box className="mainImage">
-              <img
-                // src={PF + "/assets/products/" + selected.src}
-                src={selected?.base64}
-                alt={selected?.alt}
-                className="slide"
-              />
-            </Box>
-          </Box>
+          <MainImage />
         </Grid>
 
         {/* Right */}
@@ -67,7 +148,7 @@ export default function ProductDetails() {
                 fontSize: 25,
               }}
             >
-              {fetch?.category}
+              {fetch?.data?.category}
             </Typography>
 
             {/* Name product */}
@@ -79,7 +160,7 @@ export default function ProductDetails() {
                 marginBottom: 3,
               }}
             >
-              {fetch?.name}
+              {fetch?.data?.name}
             </Typography>
 
             {/* Price */}
@@ -95,17 +176,20 @@ export default function ProductDetails() {
                 },
               }}
             >
-              <Typography
-                sx={{
-                  fontFamily: "'Antic Slab', serif",
-                  fontSize: 23,
-                  fontWeight: 400,
-                  color: "#000",
-                  textDecorationLine: "line-through",
-                }}
-              >
-                {formatVND(fetch?.price)}
-              </Typography>
+              {fetch?.data?.discount > 0 && (
+                <Typography
+                  sx={{
+                    fontFamily: "'Antic Slab', serif",
+                    fontSize: 23,
+                    fontWeight: 400,
+                    color: "#000",
+                    textDecorationLine: "line-through",
+                  }}
+                >
+                  {formatVND(fetch?.data?.price)}
+                </Typography>
+              )}
+
               <Typography
                 sx={{
                   fontFamily: "'Antic Slab', serif",
@@ -114,18 +198,21 @@ export default function ProductDetails() {
                   color: "crimson",
                 }}
               >
-                {formatVND(formatPrice(fetch?.price, fetch?.discount))}
+                {formatPrice(fetch?.data?.price, fetch?.data?.discount)}
               </Typography>
-              <Typography
-                sx={{
-                  fontFamily: "'Antic Slab', serif",
-                  fontSize: 23,
-                  fontWeight: 500,
-                  color: "crimson",
-                }}
-              >
-                {formatDiscount(fetch?.discount)}
-              </Typography>
+
+              {fetch?.data?.discount && (
+                <Typography
+                  sx={{
+                    fontFamily: "'Antic Slab', serif",
+                    fontSize: 23,
+                    fontWeight: 500,
+                    color: "crimson",
+                  }}
+                >
+                  {formatDiscount(fetch.data?.discount)}
+                </Typography>
+              )}
             </Box>
 
             {/* Rating */}
@@ -205,34 +292,6 @@ export default function ProductDetails() {
             </Box>
           </Box>
         </Grid>
-
-        {/* Option Image */}
-        <Grid item xs={12}>
-          <Grid className="optionImage">
-            {images.length > 0 &&
-              images.map((image, index) => {
-                return (
-                  <img
-                    src={image.base64}
-                    alt={image.fileName}
-                    key={index}
-                    style={
-                      image.fileName === selected.fileName
-                        ? {
-                            border: "3px solid dodgerblue",
-                            opacity: 1,
-                          }
-                        : {
-                            border: "3px solid transparent",
-                            opacity: 0.5,
-                          }
-                    }
-                    onClick={() => handleClick(index)}
-                  />
-                );
-              })}
-          </Grid>
-        </Grid>
       </Grid>
 
       {/* Section Rating */}
@@ -272,8 +331,7 @@ const Section = styled(Box)(() => ({
   },
 
   img: {
-    // width: "100%",
-    height: "100%",
+    maxWidth: "500px",
   },
 
   ".optionImage": {
@@ -282,5 +340,9 @@ const Section = styled(Box)(() => ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+
+    "& img": {
+      height: "100%",
+    },
   },
 }));

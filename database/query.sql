@@ -111,3 +111,12 @@ order by
     products.createdAt desc
 limit
     20;
+
+-- Count all products điện thoại
+select
+    count(*) as 'count'
+from
+    products
+    left join categories on categories.categoryId = products.categoryId
+where
+    categories.name = "Điện thoại";

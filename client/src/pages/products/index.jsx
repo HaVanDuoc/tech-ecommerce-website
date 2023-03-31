@@ -34,6 +34,7 @@ import { default as SliderMaterial } from "@mui/material/Slider";
 import Card from "~/components/card";
 
 const Products = () => {
+  const [fetch, setFetch] = useState([]);
   const current = useParams().category; // get category of current page
   let page = null;
   let category = null;
@@ -103,6 +104,20 @@ const Products = () => {
       break;
   }
 
+  useEffect(() => {
+    const fetch = async () => {
+      const response = await axios({
+        method: "post",
+        url: "/client/products",
+        data: { category },
+      });
+
+      setFetch(response.data);
+    };
+
+    fetch();
+  }, [category]);
+
   return (
     <Wrapper>
       {/* AppBar */}
@@ -119,13 +134,18 @@ const Products = () => {
 
       <Body>
         <Container maxWidth="lg" disableGutters>
+          {/* Brands */}
           <Box sx={{ marginBottom: 2 }}>
             <ListBrands category={category} />
           </Box>
+
+          {/*  */}
           <Grid container spacing={2}>
             <Grid item xs={2.5}>
+              {/* Danh muc */}
               <SectionCategories />
 
+              {/* Bộ lọc */}
               <Box className="box filter">
                 <Typography className="title">Bộ lọc</Typography>
 
@@ -137,6 +157,7 @@ const Products = () => {
             </Grid>
 
             <Grid item xs>
+              {/* Xếp theo */}
               <SortBy>
                 <Box className="wrapper">
                   <Stack
@@ -155,23 +176,31 @@ const Products = () => {
                     </Box>
 
                     <Box>
-                      <Typography sx={{ fontWeight: 500 }}>
-                        31 Điện thoại
-                      </Typography>
+                      {fetch?.countAll > 0 ? (
+                        <Typography sx={{ fontWeight: 500 }}>
+                          {`${fetch?.countAll} ${fetch.data[0]?.category}`}
+                        </Typography>
+                      ) : (
+                        <Typography sx={{ fontWeight: 500 }}>
+                          Chưa có sản phẩm nào!
+                        </Typography>
+                      )}
                     </Box>
                   </Stack>
                 </Box>
               </SortBy>
 
+              {/* sản phẩm */}
               <ListProduct>
                 <Grid container spacing={1}>
-                  {dummyData.slice(0, 16).map((item, index) => {
-                    return (
-                      <Grid item xs={3}>
-                        <Card />
-                      </Grid>
-                    );
-                  })}
+                  {fetch?.data?.length &&
+                    fetch?.data.map((item, index) => {
+                      return (
+                        <Grid item xs={3} key={index}>
+                          <Card product={item} />
+                        </Grid>
+                      );
+                    })}
                 </Grid>
               </ListProduct>
 
@@ -250,33 +279,8 @@ const SortBy = styled(Box)(() => ({
   },
 }));
 
-const dummyData = [
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-  { id: 1 },
-];
-
 const SliderPrice = () => {
-  const [value, setValue] = React.useState([500000, 50000000]);
+  const [value, setValue] = React.useState();
 
   const handleChange = (event, newValue) => {
     if (typeof newValue === "number") {
@@ -485,6 +489,20 @@ const Banner = ({ page }) => {
 
         ".banner": {
           minHeight: "250px",
+
+          ".prev-arrow": {
+            opacity: 1,
+            borderRadius: "50%",
+            padding: "10px",
+            transform: "translateX(-50%) !important",
+          },
+
+          ".next-arrow": {
+            opacity: 1,
+            borderRadius: "50%",
+            padding: "10px",
+            transform: "translateX(50%) !important",
+          },
         },
       }}
     >

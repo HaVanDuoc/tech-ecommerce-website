@@ -23,11 +23,14 @@ import CartLayout from "./layouts/CartLayout";
 import CreateNewProduct from "./admin/pages/products/create";
 import Products from "./pages/products";
 import ProductsLayout from "./layouts/products";
+import ProductDetails from "./pages/productDetails";
+import ProductDetailsLayout from "./layouts/productDetails";
 
 export const publicRoutes = [
   { path: "/", page: Home },
   { path: "/cart", page: Cart, layout: CartLayout },
   { path: "/:category", page: Products, layout: ProductsLayout },
+  { path: "/:category/:nameProduct", page: ProductDetails, layout: ProductDetailsLayout},
 ];
 
 export const privateRoutes = [

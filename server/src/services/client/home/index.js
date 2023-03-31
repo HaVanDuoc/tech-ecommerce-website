@@ -13,7 +13,8 @@ exports.homeService = () =>
                         products.stock,
                         products.discount,
                         products.isActive,
-                        categories.name as "category"
+                        categories.name as "category",
+                        categories.link as "linkCategory"
                     from
                         products
                         left join categories on categories.categoryId = products.categoryId
