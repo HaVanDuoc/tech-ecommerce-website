@@ -1,11 +1,15 @@
 import React, { Fragment } from "react";
-import { Header } from "~/components";
+import { Footer, Header } from "~/components";
 
 const ProductDetails = ({ children }) => {
   return (
-    <section className="product-details-layout">
+    <section
+      className="product-details-layout"
+      style={{ backgroundColor: "#fff" }}
+    >
       <Header />
       <Fragment>{children}</Fragment>
+      <Footer />
     </section>
   );
 };
