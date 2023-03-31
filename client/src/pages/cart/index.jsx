@@ -24,6 +24,7 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import NotificationsOutlinedIcon from "@mui/icons-material/NotificationsOutlined";
 import { Brand, Search } from "~/components/Header";
 import AccountMenu from "~/components/Header/AccountMenu";
+import { Footer } from "~/components";
 
 const Cart = () => {
   let [count, setCount] = useState(1);
@@ -144,7 +145,7 @@ const Cart = () => {
 
               <Search />
 
-              <User />
+              <AccountMenu />
             </Box>
           </Container>
         </Bottom>
@@ -341,61 +342,13 @@ const Cart = () => {
           </Box>
         </Container>
       </ContentCart>
+
+      <Footer />
     </Root>
   );
 };
 
 export default Cart;
-
-const User = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "mouse-over-popover" : undefined;
-
-  return (
-    <Box
-      aria-owns={id}
-      aria-haspopup="true"
-      onMouseEnter={handlePopoverOpen}
-      onMouseLeave={handlePopoverClose}
-    >
-      <AccountMenu />
-
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-        disableRestoreFocus
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-        // onClose={handlePopoverClose}
-        sx={{
-          pointerEvents: "none",
-          // top: "-20px",
-        }}
-      >
-        <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-      </Popover>
-    </Box>
-  );
-};
 
 const dummyItem = [
   { image: "", name: "", price: "12000000", discount: "24", count: "2" },
@@ -456,7 +409,7 @@ const Option = styled(Box)(() => ({
     zIndex: 3,
 
     p: {
-      opacity: "0.7",
+      color: "#666",
     },
   },
 

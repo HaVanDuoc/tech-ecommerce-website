@@ -16,6 +16,10 @@ npx sequelize-cli db:migrate --name create-feature.js
 npx sequelize-cli db:migrate --name create-specification.js
 npx sequelize-cli db:migrate --name create-product.js
 
+<!-- cart run after model users -->
+npx sequelize-cli db:migrate --name create-cart_session.js
+npx sequelize-cli db:migrate --name create-cart_item.js
+
 > Undoing Migrations
 
 npx sequelize-cli db:migrate:undo --name create-user.js

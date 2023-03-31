@@ -10,6 +10,7 @@ exports.getCurrentUser = (userId) =>
   new Promise(async (resolve, reject) => {
     try {
       const query = `select
+                        users.id,
                         users.userId,
                         users.firstName,
                         users.middleName,
@@ -26,7 +27,7 @@ exports.getCurrentUser = (userId) =>
                         users
                         left join genders on genders.code = users.genderCode
                     where
-                        users.userId = 'U00000001'
+                        users.userId = '${userId}'
                     limit
                         1;`;
 
@@ -51,7 +52,8 @@ exports.register = (data) =>
       // Create User Id
       const query = `select userId from users order by id desc limit 1;`;
       const [lastId] = await db.sequelize.query(query, { raw: true }); // Get uid of user final e.g 'U00000006'
-      const sliceId = lastId[0].userId.slice(-8); // get 8 char final to result e.g '00000006'
+      const sliceId = lastId.length ? lastId[0].userId.slice(-8) : 0; // get 8 char final to result e.g '00000006'
+      console.log("sliceId", sliceId);
       const userId = padUserId(parseInt(sliceId) + 1); // parseInt is convert 00000006 to 6
 
       const roleId = "R001"; // Role default is "R001" - "khách hàng"
@@ -72,6 +74,23 @@ exports.register = (data) =>
         raw: true, // chuyển instants thành object json
       });
 
+      // if create new user then it will be executed
+      if (response[1]) {
+        // Đồng thời khởi tạo 1 giỏ hàng trong model `cart_session` bên cart dùng tới
+        // First, find id from userId
+        const [user_id] = await db.sequelize.query(
+          `select id from users where userId = '${userId}'`
+        );
+        // second, add this id in the table cart_sessions
+        const cart = await db.Cart_Session.findOrCreate({
+          where: { user_id: user_id[0].id },
+          defaults: {
+            user_id: user_id[0].id,
+          },
+          raw: true,
+        });
+      }
+
       // Nếu đăng ký thành công xem như đã đăng nhập nên tạo token luôn
       // jwt.sign(payload, secretOrPrivateKey, [options, callback])
       const token = response[1]
@@ -81,10 +100,7 @@ exports.register = (data) =>
               firstName: response[0].firstName,
               middleName: response[0].middleName,
               lastName: response[0].lastName,
-              userName: response[0].userName,
               email: response[0].email,
-              avatar: response[0].avatar,
-              roleId: response[0].roleId,
             },
             process.env.JWT_SECRET,
             {

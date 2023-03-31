@@ -18,7 +18,6 @@ const { getCurrentUser } = require("../../../services");
 exports.getCurrentUser = async (req, res) => {
   try {
     // req.user contain userId of current user
-
     // if req.user === null response require login
     if (req.user === null) {
       return res.status(200).json({

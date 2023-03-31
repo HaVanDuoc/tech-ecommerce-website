@@ -5,9 +5,7 @@ const {
 
 exports.getProduct = async (req, res) => {
   try {
-    const { nameProduct } = req.body;
-
-    const response = await getProduct(nameProduct);
+    const response = await getProduct(req.body.nameProduct, req.body.user_id);
 
     res.status(200).json(response);
   } catch (error) {

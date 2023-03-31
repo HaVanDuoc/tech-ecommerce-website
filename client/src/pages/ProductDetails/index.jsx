@@ -7,24 +7,53 @@ import { formatDiscount, formatPrice, formatVND } from "~/helper/format";
 import { Box, Button, Grid, Rating, styled, Typography } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Slider from "react-slick";
+import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined";
+import { useSelector } from "react-redux";
+import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 
 export default function ProductDetails() {
   const [fetch, setFetch] = useState(null);
+  const [isAddCart, setAddCart] = useState(false);
   const nameProduct = useParams().nameProduct;
+  const currentUser = useSelector(selectorCurrentUser);
 
   useEffect(() => {
     const fetch = async () => {
       const response = await axios({
         method: "post",
         url: "/client/pageProduct/product",
-        data: { nameProduct },
+        data: {
+          nameProduct,
+          user_id: currentUser.isLogged ? currentUser?.user?.data?.id : null,
+        },
       });
 
+      setAddCart(response.data.isAddCart);
       setFetch(response.data);
     };
 
     fetch();
-  }, [nameProduct]);
+  }, [nameProduct, currentUser]);
+
+  console.log("fetch", fetch);
+
+  const handleAddCart = (product_id) => {
+    const user_id = currentUser.user.data.id;
+    const fetch = async () => {
+      await axios({
+        method: "post",
+        url: "/client/productDetails/addCart",
+        data: {
+          user_id,
+          product_id,
+        },
+      });
+
+      setAddCart(!isAddCart);
+    };
+
+    fetch();
+  };
 
   const MainImage = () => {
     const [nav1, setNav1] = useState();
@@ -251,44 +280,65 @@ export default function ProductDetails() {
               }}
             >
               {/* Button Add Cart */}
-              <Button
-                sx={{
-                  padding: "15px 20px",
-                  backgroundColor: "#1976d2",
-                  color: "#fff",
-                  border: "2px solid transparent",
+              {isAddCart ? (
+                <Button
+                  sx={{
+                    padding: "15px 20px",
+                    backgroundColor: "#4dd024",
+                    color: "#fff",
+                    border: "2px solid transparent",
 
-                  "&:hover": {
-                    color: "#1976d2 !important",
-                    borderColor: "#1976d2 !important",
-                    backgroundColor: "#fff !important",
-                  },
-                }}
-              >
-                <ShoppingCartOutlinedIcon />
-                <Typography>Thêm vào giỏ hàng</Typography>
+                    "&:hover": {
+                      color: "#4dd024 !important",
+                      borderColor: "#4dd024 !important",
+                      backgroundColor: "#fff !important",
+                    },
+                  }}
+                  onClick={() => handleAddCart(fetch?.data?.id)}
+                >
+                  <AddShoppingCartOutlinedIcon />
+                  <Typography>Đã có trong giỏ hàng</Typography>
+                </Button>
+              ) : (
+                <Button
+                  sx={{
+                    padding: "15px 20px",
+                    backgroundColor: "#1976d2",
+                    color: "#fff",
+                    border: "2px solid transparent",
 
-                {/* <AssignmentTurnedInOutlinedIcon/>
-                <Typography>Đã có trong giỏ hàng</Typography> */}
-              </Button>
+                    "&:hover": {
+                      color: "#1976d2 !important",
+                      borderColor: "#1976d2 !important",
+                      backgroundColor: "#fff !important",
+                    },
+                  }}
+                  onClick={() => handleAddCart(fetch?.data?.id)}
+                >
+                  <ShoppingCartOutlinedIcon />
+                  <Typography>Thêm vào giỏ hàng</Typography>
+                </Button>
+              )}
 
               {/* Button Order */}
-              <Button
-                sx={{
-                  padding: "15px 20px",
-                  backgroundColor: "crimson",
-                  color: "#fff",
-                  border: "2px solid transparent",
+              {!isAddCart && (
+                <Button
+                  sx={{
+                    padding: "15px 20px",
+                    backgroundColor: "crimson",
+                    color: "#fff",
+                    border: "2px solid transparent",
 
-                  "&:hover": {
-                    color: "crimson !important",
-                    borderColor: "crimson !important",
-                    backgroundColor: "#fff !important",
-                  },
-                }}
-              >
-                <Typography>Đặt hàng</Typography>
-              </Button>
+                    "&:hover": {
+                      color: "crimson !important",
+                      borderColor: "crimson !important",
+                      backgroundColor: "#fff !important",
+                    },
+                  }}
+                >
+                  <Typography>Đặt hàng</Typography>
+                </Button>
+              )}
             </Box>
           </Box>
         </Grid>

@@ -7,8 +7,6 @@ import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { Link } from "react-router-dom";
 
 const Card = ({ product }) => {
-  console.log("product", product);
-
   return (
     <Link to={`${product?.linkCategory}/${product?.name}`}>
       <Box
