@@ -2,19 +2,24 @@
 // Create new product service
 //
 const db = require("../../../models");
-const { padProductId } = require("../../../helper/padLeft");
+const removeEmpty = require("../../../helper/removeEmpty");
 
 exports.updateDetails = (data) =>
   new Promise(async (resolve, reject) => {
     try {
-      // console.log("data", data);
-
       const { name, stock, price, discount, productId } = data;
+
+      let newData = {
+        name,
+        stock,
+        price,
+        discount,
+      };
 
       // Kiểm tra tên đã sủ dụng hay chưa
       if (name) {
         const [response] = await db.sequelize.query(
-          `select * from products where name = '${data?.name}' limit 1`
+          `select * from products where name = '${name}' limit 1`
         );
 
         if (response.length > 0)
@@ -23,6 +28,8 @@ exports.updateDetails = (data) =>
             msg: "Tên sản phẩm này đã được sử dụng!",
             data: null,
           });
+
+        return;
       }
 
       // Lấy cái stock cũ cộng với stock được thêm vào
@@ -31,18 +38,12 @@ exports.updateDetails = (data) =>
           `select stock from products where productId = '${productId}' limit 1`
         );
 
-        newStock = Number(response[0]?.stock) + Number(stock);
+        newData.stock = Number(response[0]?.stock) + Number(stock);
       }
 
-      const response = await db.Product.update(
-        {
-          name,
-          price,
-          stock: newStock,
-          discount,
-        },
-        { where: { productId } }
-      );
+      const response = await db.Product.update(newData, {
+        where: { productId },
+      });
 
       resolve({
         err: response ? 0 : 1,
