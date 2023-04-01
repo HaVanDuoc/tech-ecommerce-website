@@ -29,6 +29,8 @@ import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 
 const Cart = () => {
   const [fetch, setFetch] = useState([]);
+  const [payment, setPayment] = useState(0);
+  const [paymentProductNumber, setPaymentProductNumber] = useState(0);
   const currentUser = useSelector(selectorCurrentUser);
 
   useEffect(() => {
@@ -47,7 +49,9 @@ const Cart = () => {
     fetch();
   }, [currentUser]);
 
-  console.log("fetch", fetch);
+  // console.log("fetch", fetch);
+
+  console.log("payment", payment);
 
   const handleIncrease = (
     index,
@@ -84,6 +88,21 @@ const Cart = () => {
     };
 
     fetch();
+
+    // update payment
+    // cũng giống dưới handleSelect
+    // cart item này phải check rồi mới thực thi setPayment
+    // còn không kệ mẹ
+    if (
+      document
+        .querySelector(`.box-select-${index}`)
+        .classList.contains("Mui-checked")
+    ) {
+      setPayment(
+        Number(payment) +
+          Number(price - price * ((discount ? discount : 0) / 100))
+      );
+    }
   };
 
   const handleDecrease = (
@@ -124,6 +143,21 @@ const Cart = () => {
     };
 
     fetch();
+
+    // update payment
+    // cũng giống dưới handleSelect
+    // cart item này phải check rồi mới thực thi setPayment
+    // còn không kệ mẹ
+    if (
+      document
+        .querySelector(`.box-select-${index}`)
+        .classList.contains("Mui-checked")
+    ) {
+      setPayment(
+        Number(payment) -
+          Number(price - price * ((discount ? discount : 0) / 100))
+      );
+    }
   };
 
   const handleDelete = (index, product_id, cart_session_id) => {
@@ -142,6 +176,35 @@ const Cart = () => {
     };
 
     fetch();
+  };
+
+  const handleSelect = (index, price, discount) => {
+    // vì trước đó là thay đổi value của element thôi
+    // ko thay đổi gì về fetch hay setState
+    // nên phải dùng querySelector để xác định giá trị
+    const quantity = document.querySelector(`.get-quantity-${index}`).innerHTML;
+
+    // Lấy số tiền hiện có
+    const money =
+      (price - price * ((discount ? discount : 0) / 100)) * quantity;
+
+    // Nếu có chứa class `Mui-checked` thì đã chọn từ trước
+    // chưa chọn thì ko có
+    // nên đây là bỏ select
+    // trừ tiền đi
+    if (
+      document
+        .querySelector(`.box-select-${index}`)
+        .classList.contains("Mui-checked")
+    ) {
+      setPayment(payment - money);
+      setPaymentProductNumber(paymentProductNumber - 1);
+      return;
+    }
+
+    // Đây là chọn đây nên phải tăng payment lên
+    setPayment(payment + money);
+    setPaymentProductNumber(paymentProductNumber + 1);
   };
 
   return (
@@ -301,7 +364,12 @@ const Cart = () => {
                       >
                         {/* CheckBox */}
                         <Box className="col-0">
-                          <Checkbox />
+                          <Checkbox
+                            className={`box-select-${index}`}
+                            onClick={() =>
+                              handleSelect(index, item.price, item.discount)
+                            }
+                          />
                         </Box>
 
                         {/* Sản phẩm */}
@@ -387,7 +455,9 @@ const Cart = () => {
                             >
                               -
                             </Box>
-                            <Box className="count">{item.quantity}</Box>
+                            <Box className={`count get-quantity-${index}`}>
+                              {item.quantity}
+                            </Box>
                             <Box
                               className="btn"
                               onClick={() =>
@@ -459,7 +529,7 @@ const Cart = () => {
                   >
                     <Checkbox />
                     <Typography sx={{ textTransform: "capitalize" }}>
-                      Chọn tất cả (1)
+                      Chọn tất cả ({paymentProductNumber})
                     </Typography>
                   </Box>
 
@@ -472,7 +542,7 @@ const Cart = () => {
                     }}
                   >
                     <Typography>
-                      Tổng thanh toán (0 sản phẩm):{" "}
+                      Tổng thanh toán ({paymentProductNumber} sản phẩm):{" "}
                       <Typography
                         variant="span"
                         sx={{
@@ -481,7 +551,7 @@ const Cart = () => {
                           fontSize: "1.2rem",
                         }}
                       >
-                        {formatVND(30000000)}
+                        {formatVND(payment)}
                       </Typography>
                     </Typography>
 
