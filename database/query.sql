@@ -120,3 +120,16 @@ from
     left join categories on categories.categoryId = products.categoryId
 where
     categories.name = "Điện thoại";
+
+-- get cart
+select
+    products.id,
+    products.name,
+    products.image,
+    products.price,
+    products.discount
+from
+    cart_items
+    left join products on products.id = cart_items.product_id
+where
+    cart_items.cart_session_id = 3;

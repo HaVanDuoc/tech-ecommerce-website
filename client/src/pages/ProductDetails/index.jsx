@@ -8,14 +8,17 @@ import { Box, Button, Grid, Rating, styled, Typography } from "@mui/material";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Slider from "react-slick";
 import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
+import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
+import ModalContainer from "~/containers/ModalContainer";
 
 export default function ProductDetails() {
   const [fetch, setFetch] = useState(null);
   const [isAddCart, setAddCart] = useState(false);
   const nameProduct = useParams().nameProduct;
   const currentUser = useSelector(selectorCurrentUser);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetch = async () => {
@@ -38,7 +41,11 @@ export default function ProductDetails() {
   console.log("fetch", fetch);
 
   const handleAddCart = (product_id) => {
-    const user_id = currentUser.user.data.id;
+    if (currentUser.isLogged === false) {
+      dispatch(showLoginForm());
+    }
+
+    const user_id = currentUser && currentUser?.user?.data?.id;
     const fetch = async () => {
       await axios({
         method: "post",
@@ -52,7 +59,7 @@ export default function ProductDetails() {
       setAddCart(!isAddCart);
     };
 
-    fetch();
+    if (currentUser.isLogged) return fetch();
   };
 
   const MainImage = () => {
@@ -273,6 +280,8 @@ export default function ProductDetails() {
             <Box
               marginTop={6}
               sx={{
+                display: "flex",
+                
                 "& :nth-child(n)": {
                   marginLeft: 1,
                   marginRight: 1,
@@ -300,24 +309,26 @@ export default function ProductDetails() {
                   <Typography>Đã có trong giỏ hàng</Typography>
                 </Button>
               ) : (
-                <Button
-                  sx={{
-                    padding: "15px 20px",
-                    backgroundColor: "#1976d2",
-                    color: "#fff",
-                    border: "2px solid transparent",
+                <ModalContainer>
+                  <Button
+                    sx={{
+                      padding: "15px 20px",
+                      backgroundColor: "#1976d2",
+                      color: "#fff",
+                      border: "2px solid transparent",
 
-                    "&:hover": {
-                      color: "#1976d2 !important",
-                      borderColor: "#1976d2 !important",
-                      backgroundColor: "#fff !important",
-                    },
-                  }}
-                  onClick={() => handleAddCart(fetch?.data?.id)}
-                >
-                  <ShoppingCartOutlinedIcon />
-                  <Typography>Thêm vào giỏ hàng</Typography>
-                </Button>
+                      "&:hover": {
+                        color: "#1976d2 !important",
+                        borderColor: "#1976d2 !important",
+                        backgroundColor: "#fff !important",
+                      },
+                    }}
+                    onClick={() => handleAddCart(fetch?.data?.id)}
+                  >
+                    <ShoppingCartOutlinedIcon />
+                    <Typography>Thêm vào giỏ hàng</Typography>
+                  </Button>
+                </ModalContainer>
               )}
 
               {/* Button Order */}

@@ -33,7 +33,25 @@ exports.getCurrentUser = (userId) =>
 
       const [response] = await db.sequelize.query(query, { raw: true });
 
+      // Get count products in the cart to display at button cart on app bar
+      const checkCountProductInCart = async () => {
+        const cart_session_id = await db.Cart_Session.findOne({
+          where: { user_id: response[0].id },
+          attributes: ["id"],
+          raw: true,
+        });
+
+        const [count] = await db.sequelize.query(
+          `select count(*) as 'count' from cart_items where cart_session_id = '${cart_session_id.id}'`
+        );
+
+        countProductInCart = count[0].count;
+      };
+
+      checkCountProductInCart();
+
       resolve({
+        countProductInCart: countProductInCart ? countProductInCart : 0,
         err: response ? 0 : 1,
         msg: response ? "Get successfully" : "Get failure",
         data: response ? response[0] : null,

@@ -14,6 +14,7 @@ const productDetails = require("./client/productDetails");
 const products = require("./admin/products");
 const home = require("./client/home");
 const productsClient = require("./client/products");
+const cart = require("./client/cart");
 
 const initRoute = (app) => {
   // Routes
@@ -31,6 +32,7 @@ const initRoute = (app) => {
   app.use("/api/v1/client/pageProduct/", pageProduct);
   app.use("/api/v1/client/home", home);
   app.use("/api/v1/client/products", productsClient);
+  app.use("/api/v1/client/cart", cart);
 
   // Admin routes
   app.use("/api/v1/admin/products", products);

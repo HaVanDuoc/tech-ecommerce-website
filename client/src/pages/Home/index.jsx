@@ -4,7 +4,6 @@ import {
   Box,
   Container,
   Grid,
-  Rating,
   Stack,
   styled,
   Typography,
@@ -14,7 +13,6 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import { PF } from "~/__variables";
-import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
 import PhoneIphoneIcon from "@mui/icons-material/PhoneIphone";
 import FlashOnIcon from "@mui/icons-material/FlashOn";
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports";

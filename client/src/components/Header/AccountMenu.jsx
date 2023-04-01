@@ -8,7 +8,6 @@ import {
   ListItemIcon,
   Menu,
   MenuItem,
-  Stack,
   styled,
   Tooltip,
   Typography,

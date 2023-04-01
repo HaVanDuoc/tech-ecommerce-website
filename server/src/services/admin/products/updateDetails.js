@@ -2,7 +2,6 @@
 // Create new product service
 //
 const db = require("../../../models");
-const removeEmpty = require("../../../helper/removeEmpty");
 
 exports.updateDetails = (data) =>
   new Promise(async (resolve, reject) => {

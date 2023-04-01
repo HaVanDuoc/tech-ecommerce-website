@@ -17,7 +17,6 @@ import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
@@ -30,6 +29,7 @@ import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import AccountMenu from "./AccountMenu";
 import Notification from "./Notification";
+import Cart from "./Cart";
 
 const Header = () => {
   return (
@@ -47,7 +47,9 @@ export default Header;
 
 const Wrapper = styled(Box)(() => ({
   backgroundColor: "#fff",
-  boxShadow: "1px 1px 5px 2px rgba(0, 0, 0, 0.25)",
+  boxShadow: "1px 1px 3px 1px rgba(0, 0, 0, 0.25)",
+  position: "relative",
+  zIndex: 99,
 }));
 
 export const AppBar = () => {
@@ -87,20 +89,9 @@ export const AppBar = () => {
                 </Button>
               </Link>
 
-              {/* Alert */}
               <Notification />
 
-              {/* Cart */}
-              <Stack justifyContent="center" alignItems="center">
-                <Link to="/cart">
-                  <Button sx={{ color: "var(--color-main)" }}>
-                    <StyledBadge badgeContent={1} color="error">
-                      <ShoppingCartIcon />
-                    </StyledBadge>
-                  </Button>
-                </Link>
-              </Stack>
-              {/*  */}
+              <Cart />
 
               <Divider
                 orientation="vertical"
@@ -220,15 +211,6 @@ export const Nav = () => {
   );
 };
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    right: -3,
-    top: 13,
-    border: `2px solid ${theme.palette.background.paper}`,
-    padding: "0 4px",
-  },
-}));
-
 export const Alert = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -259,6 +241,15 @@ export const Alert = () => {
       </Typography>
     </Box>
   );
+
+  const StyledBadge = styled(Badge)(({ theme }) => ({
+    "& .MuiBadge-badge": {
+      right: -3,
+      top: 13,
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: "0 4px",
+    },
+  }));
 
   return (
     <Box sx={{ color: "var(--color-main)" }}>
