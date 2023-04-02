@@ -21,7 +21,9 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.1.0",
     "nodemon": "^2.0.20",
-    "sequelize": "^6.28.0"
+    "sequelize": "^6.28.0",
+    "uuid": "^9.0.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "sequelize-cli": "^6.6.0"

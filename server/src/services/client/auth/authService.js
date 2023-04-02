@@ -10,26 +10,28 @@ exports.getCurrentUser = (userId) =>
   new Promise(async (resolve, reject) => {
     try {
       const query = `select
-                        users.id,
-                        users.userId,
-                        users.firstName,
-                        users.middleName,
-                        users.lastName,
-                        users.userName,
-                        users.email,
-                        genders.name as 'gender',
-                        users.avatar,
-                        users.phoneNumber,
-                        users.address,
-                        users.transactionVolume,
-                        users.dateOfBirth
-                    from
-                        users
-                        left join genders on genders.code = users.genderCode
-                    where
-                        users.userId = '${userId}'
-                    limit
-                        1;`;
+                          users.id,
+                          users.userId,
+                          users.firstName,
+                          users.middleName,
+                          users.lastName,
+                          users.userName,
+                          users.email,
+                          genders.name as 'gender',
+                          users.avatar,
+                          users.phoneNumber,
+                          users.address,
+                          users.transactionVolume,
+                          users.dateOfBirth,
+                          cart_sessions.id as 'cart_sessions_id'
+                      from
+                          users
+                          left join genders on genders.code = users.genderCode
+                          left join cart_sessions on cart_sessions.user_id = users.id
+                      where
+                          users.userId = '${userId}'
+                      limit
+                          1;`;
 
       const [response] = await db.sequelize.query(query, { raw: true });
 

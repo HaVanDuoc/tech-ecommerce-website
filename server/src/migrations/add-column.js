@@ -6,10 +6,11 @@ module.exports = {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.addColumn(
-          "Brands",
-          "view",
+          "order_details",
+          "code",
           {
-            type: Sequelize.DataTypes.STRING,
+            type: Sequelize.UUID,
+            defaultValue: Sequelize.UUIDV4,
           },
           { transaction: t }
         ),
@@ -19,7 +20,7 @@ module.exports = {
   down: (queryInterface, Sequelize) => {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
-        queryInterface.removeColumn("Brands", "view", {
+        queryInterface.removeColumn("order_details", "code", {
           transaction: t,
         }),
       ]);

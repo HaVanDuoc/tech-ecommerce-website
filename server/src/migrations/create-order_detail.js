@@ -9,6 +9,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      code: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
+      },
       total: {
         type: Sequelize.INTEGER,
       },

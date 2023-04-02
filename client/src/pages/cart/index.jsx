@@ -29,8 +29,10 @@ import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 
 const Cart = () => {
   const [fetch, setFetch] = useState([]);
-  const [payment, setPayment] = useState(0);
-  const [paymentProductNumber, setPaymentProductNumber] = useState(0);
+  const [payment, setPayment] = useState(0); // số tiền thanh toán
+  const [paymentProductNumber, setPaymentProductNumber] = useState(0); // số sản phẩm đã chọn
+  const [selectedProduct, setSelectedProduct] = useState([]);
+  const [responseOrder, setResponseOrder] = useState(null);
   const currentUser = useSelector(selectorCurrentUser);
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const Cart = () => {
 
   // console.log("fetch", fetch);
 
-  console.log("payment", payment);
+  // console.log("payment", payment);
 
   const handleIncrease = (
     index,
@@ -188,6 +190,7 @@ const Cart = () => {
     const money =
       (price - price * ((discount ? discount : 0) / 100)) * quantity;
 
+    // checked === false
     // Nếu có chứa class `Mui-checked` thì đã chọn từ trước
     // chưa chọn thì ko có
     // nên đây là bỏ select
@@ -199,12 +202,60 @@ const Cart = () => {
     ) {
       setPayment(payment - money);
       setPaymentProductNumber(paymentProductNumber - 1);
+      setSelectedProduct(selectedProduct.filter((item) => item !== index)); // Loại index của cart_item đã chọn
+
       return;
     }
 
+    // checked === true
     // Đây là chọn đây nên phải tăng payment lên
     setPayment(payment + money);
     setPaymentProductNumber(paymentProductNumber + 1);
+    selectedProduct.push(index); // thêm index cart_item vào selectedProduct để check order
+  };
+
+  const handleOrder = () => {
+    let order = [];
+
+    selectedProduct.map((item) => {
+      const user_id = currentUser.user.data.id;
+
+      const product_id = document.querySelector(
+        `.cart-item-${item} .box-product-id-${item}`
+      ).innerHTML;
+
+      const quantity = document.querySelector(
+        `.cart-item-${item} .get-quantity-${item}`
+      ).innerHTML;
+
+      const totalPayment = payment;
+
+      const cart_sessions_id = currentUser.user.data.cart_sessions_id;
+
+      order.push({
+        user_id,
+        product_id,
+        quantity,
+        totalPayment,
+        cart_sessions_id,
+      });
+
+      return order;
+    });
+
+    const fetch = async () => {
+      const response = await axios({
+        method: "post",
+        url: "/client/cart/order",
+        data: order,
+      });
+
+      setResponseOrder(response.data);
+    };
+
+    fetch();
+
+    console.log("order", order);
   };
 
   return (
@@ -370,6 +421,13 @@ const Cart = () => {
                               handleSelect(index, item.price, item.discount)
                             }
                           />
+
+                          <Box
+                            sx={{ display: "none" }}
+                            className={`box-product-id-${index}`}
+                          >
+                            {item.id}
+                          </Box>
                         </Box>
 
                         {/* Sản phẩm */}
@@ -574,8 +632,9 @@ const Cart = () => {
                           boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
                         },
                       }}
+                      onClick={handleOrder}
                     >
-                      Mua ngay
+                      Đặt hàng
                     </Box>
                   </Box>
                 </Box>
