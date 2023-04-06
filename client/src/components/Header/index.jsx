@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Divider,
-  Grid,
   InputBase,
   Popover,
   Stack,
@@ -19,14 +18,6 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import { formatVND } from "~/helper/format";
-import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
-import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
-import LanguageOutlinedIcon from "@mui/icons-material/LanguageOutlined";
 import AccountMenu from "./AccountMenu";
 import Notification from "./Notification";
 import Cart from "./Cart";
@@ -34,10 +25,7 @@ import Cart from "./Cart";
 const Header = () => {
   return (
     <Wrapper>
-      {/* <TopBar /> */}
-
       <AppBar />
-
       <Nav />
     </Wrapper>
   );
@@ -339,150 +327,10 @@ export const Search = () => {
       </Box>
 
       <Box sx={{ flexGrow: 1 }}>
-        <InputBase placeholder="Bạn đang tìm gì?" />
+        <InputBase placeholder="Bạn đang tìm gì?" fullWidth />
       </Box>
 
       <Button sx={{ textTransform: "none" }}>Tìm kiếm</Button>
     </SearchWrap>
-  );
-};
-
-export const TopBar = () => {
-  const Wrapper = styled(Box)(() => ({
-    padding: "5px",
-    color: "#666666",
-
-    p: {
-      fontSize: "14px",
-    },
-
-    svg: {
-      fontSize: "18px",
-    },
-
-    ".left": {
-      ".media": {
-        backgroundColor: "#eee",
-        margin: "5px",
-        padding: "5px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: "5px",
-        cursor: "pointer",
-
-        svg: {
-          color: "#666666",
-          fontSize: "18px",
-          transition: "all .3s ease-in-out",
-        },
-
-        ":hover": {
-          ".fb": {
-            color: "#4867AA",
-          },
-
-          ".tw": {
-            color: "#1DA1F2",
-          },
-
-          ".yt": {
-            color: "#ED352D",
-          },
-
-          ".in": {
-            color: "#8D49C0",
-          },
-        },
-      },
-    },
-
-    ".center": {
-      height: "100%",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-
-    ".right": {
-      ".item": {
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        marginLeft: "16px",
-      },
-    },
-  }));
-  return (
-    <Container
-      maxWidth="xl"
-      sx={{ boxShadow: "1px 0 4px 2px rgba(0, 0, 0, 0.05)" }}
-    >
-      <Wrapper>
-        <Grid container>
-          <Grid item xs>
-            <Stack
-              flexDirection="row"
-              justifyContent="start"
-              alignItems="center"
-              className="left"
-            >
-              <Box className="media">
-                <FacebookOutlinedIcon className="fb" />
-              </Box>
-              <Box className="media">
-                <TwitterIcon className="tw" />
-              </Box>
-              <Box className="media">
-                <YouTubeIcon className="yt" />
-              </Box>
-              <Box className="media">
-                <InstagramIcon className="in" />
-              </Box>
-            </Stack>
-          </Grid>
-
-          <Grid item xs={5}>
-            <Stack
-              flexDirection="row"
-              justifyContent="center"
-              alignItems="center"
-              className="center"
-            >
-              <Typography
-                textTransform="uppercase"
-                color="#888888"
-                fontSize="14px"
-                fontWeight={500}
-              >
-                Miễn phí giao hàng với đơn hàng trên {formatVND(500000)}
-              </Typography>
-            </Stack>
-          </Grid>
-
-          <Grid item xs>
-            <Stack
-              height="100%"
-              flexDirection="row"
-              justifyContent="end"
-              alignItems="center"
-              className="right"
-            >
-              <Box className="item">
-                <LocationOnOutlinedIcon />
-                <Typography>TP. Hồ Chí Minh</Typography>
-              </Box>
-              <Box className="item">
-                <SupportAgentOutlinedIcon />
-                <Typography>Hỗ trợ</Typography>
-              </Box>
-              <Box className="item">
-                <LanguageOutlinedIcon />
-                <Typography>Tiếng Việt</Typography>
-              </Box>
-            </Stack>
-          </Grid>
-        </Grid>
-      </Wrapper>
-    </Container>
   );
 };

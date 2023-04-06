@@ -1,13 +1,6 @@
 import "./styles/fonts.css";
 import "./styles/slider-banner.scss";
-import {
-  Box,
-  Container,
-  Grid,
-  Stack,
-  styled,
-  Typography,
-} from "@mui/material";
+import { Box, Container, Grid, Stack, styled, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -559,8 +552,6 @@ export const PaymentOnline = () => {
     </Box>
   );
 };
-
-// export const Card = () => {
 //   return (
 //     <Box
 //       sx={{

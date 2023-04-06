@@ -5,26 +5,50 @@ exports.getOrder = (data) =>
     try {
       console.log("data", data);
 
-      let numbers = [1, 4, 9];
-
       var response = new Array();
 
-      const [orderList] = await db.sequelize.query(`
-              select
-                  order_details.id,
-                  order_details.code,
-                  order_details.total,
-                  order_statuses.status,
-                  order_details.createdAt
-              from
-                  order_details
-                  left join order_statuses on order_statuses.id = order_details.status_id
-                  left join order_items on order_items.order_detail_id = order_details.id
-              where
-                  order_details.user_id = ${data.user_id}
-              group by
-                  order_details.id;
-      `);
+      let orderList;
+
+      if (data.tab === null || data.tab === "Tất cả") {
+        [orderList] = await db.sequelize.query(`
+        select
+            order_details.id,
+            order_details.code,
+            order_details.total,
+            order_statuses.status,
+            order_details.createdAt
+        from
+            order_details
+            left join order_statuses on order_statuses.id = order_details.status_id
+            left join order_items on order_items.order_detail_id = order_details.id
+        where
+            order_details.user_id = ${data.user_id}
+        group by
+            order_details.id 
+        order by
+            order_details.createdAt asc;
+        `);
+      } else {
+        [orderList] = await db.sequelize.query(`
+                    select
+                        order_details.id,
+                        order_details.code,
+                        order_details.total,
+                        order_statuses.status,
+                        order_details.createdAt
+                    from
+                        order_details
+                        left join order_statuses on order_statuses.id = order_details.status_id
+                        left join order_items on order_items.order_detail_id = order_details.id
+                    where
+                        order_details.user_id = ${data.user_id}
+                        and order_statuses.status = "${data.tab}"
+                    group by
+                        order_details.id 
+                    order by
+                        order_details.createdAt asc;
+        `);
+      }
 
       await Promise.all(
         orderList.map(async (item) => {

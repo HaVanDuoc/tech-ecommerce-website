@@ -25,12 +25,19 @@ import Products from "./pages/products";
 import ProductsLayout from "./layouts/products";
 import ProductDetails from "./pages/productDetails";
 import ProductDetailsLayout from "./layouts/productDetails";
+import Profile from "./pages/profile";
+import ProfileLayout from "./layouts/profile";
 
 export const publicRoutes = [
   { path: "/", page: Home },
   { path: "/cart", page: Cart, layout: CartLayout },
+  { path: "/profile", page: Profile, layout: ProfileLayout },
   { path: "/:category", page: Products, layout: ProductsLayout },
-  { path: "/:category/:nameProduct", page: ProductDetails, layout: ProductDetailsLayout},
+  {
+    path: "/:category/:nameProduct",
+    page: ProductDetails,
+    layout: ProductDetailsLayout,
+  },
 ];
 
 export const privateRoutes = [

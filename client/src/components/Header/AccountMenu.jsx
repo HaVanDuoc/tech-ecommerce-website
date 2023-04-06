@@ -21,6 +21,7 @@ import ModalContainer from "~/containers/ModalContainer";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { FormatFullName } from "~/helper/format";
 import { refreshPage } from "~/utils";
+import { Link } from "react-router-dom";
 
 const AccountMenu = () => {
   const currentUser = useSelector(selectorCurrentUser);
@@ -65,7 +66,7 @@ const AccountMenu = () => {
                   anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                   variant="dot"
                 >
-                  <Avatar alt="Remy Sharp" src={currentUser.user.data.avatar} />
+                  <Avatar alt="avatar" src={currentUser.user.data.avatar} />
                 </StyledBadge>
               </IconButton>
             </Tooltip>
@@ -105,14 +106,16 @@ const AccountMenu = () => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <MenuItem onClick={handleClose}>
-              <Avatar src={currentUser.user.data.avatar} />{" "}
-              {FormatFullName(
-                currentUser.user.data.firstName,
-                currentUser.user.data.middleName,
-                currentUser.user.data.lastName
-              )}
-            </MenuItem>
+            <Link to="/profile" className="link">
+              <MenuItem onClick={handleClose}>
+                <Avatar src={currentUser.user.data.avatar} />{" "}
+                {FormatFullName(
+                  currentUser.user.data.firstName,
+                  currentUser.user.data.middleName,
+                  currentUser.user.data.lastName
+                )}
+              </MenuItem>
+            </Link>
 
             <Divider />
             <MenuItem onClick={handleClose}>

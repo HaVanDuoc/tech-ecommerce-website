@@ -281,7 +281,7 @@ export default function ProductDetails() {
               marginTop={6}
               sx={{
                 display: "flex",
-                
+
                 "& :nth-child(n)": {
                   marginLeft: 1,
                   marginRight: 1,

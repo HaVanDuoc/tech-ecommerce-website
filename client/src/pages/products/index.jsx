@@ -143,7 +143,7 @@ const Products = () => {
           <Grid container spacing={2}>
             <Grid item xs={2.5}>
               {/* Danh muc */}
-              <SectionCategories />
+              <SectionCategories category={category} />
 
               {/* Bộ lọc */}
               <Box className="box filter">
@@ -178,7 +178,7 @@ const Products = () => {
                     <Box>
                       {fetch?.countAll > 0 ? (
                         <Typography sx={{ fontWeight: 500 }}>
-                          {`${fetch?.countAll} ${fetch.data[0]?.category}`}
+                          {`${fetch?.data?.length} ${fetch.data[0]?.category}`}
                         </Typography>
                       ) : (
                         <Typography sx={{ fontWeight: 500 }}>
@@ -257,7 +257,12 @@ const Wrapper = styled(Box)(() => ({
     },
   },
 
-  ".categories": {},
+  ".categories": {
+    ".item.selected": {
+      color: "var(--color-main)",
+      backgroundColor: "#eee",
+    },
+  },
 
   ".filter": {},
 }));
@@ -360,7 +365,7 @@ export const ListBrands = ({ category }) => {
   );
 };
 
-const SectionCategories = () => {
+const SectionCategories = ({ category }) => {
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
@@ -381,7 +386,11 @@ const SectionCategories = () => {
           categories.map((item, index) => {
             return (
               <Link to={item?.link} key={index}>
-                <Box className="item">{item?.name}</Box>
+                <Box
+                  className={`item ${category === item?.name && "selected"}`}
+                >
+                  {item?.name}
+                </Box>
               </Link>
             );
           })}

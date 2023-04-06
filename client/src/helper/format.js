@@ -31,7 +31,11 @@ export const formatVND = (price) => {
 export const formatCost = (cost) => {
   return (
     <Typography
-      sx={{ textDecorationLine: "line-through", opacity: 0.6, fontSize: "90%" }}
+      sx={{
+        textDecorationLine: "line-through",
+        color: "#666",
+        fontSize: "14px",
+      }}
     >
       {formatVND(cost)}
     </Typography>
