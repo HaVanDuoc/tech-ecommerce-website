@@ -417,6 +417,8 @@ const Banner = ({ page }) => {
   ];
 
   const tablet = [
+    { img: "-1.png", right: true },
+    { img: "0.png", right: true },
     { img: "1.png" },
     { img: "2.png" },
     { img: "3.png" },
@@ -426,6 +428,8 @@ const Banner = ({ page }) => {
   ];
 
   const laptop = [
+    { img: "-1.png", right: true },
+    { img: "0.png", right: true },
     { img: "1.png" },
     { img: "2.png" },
     { img: "3.png" },
@@ -436,6 +440,19 @@ const Banner = ({ page }) => {
     { img: "8.png" },
     { img: "9.png" },
     { img: "10.png" },
+  ];
+
+  const taiNghe = [
+    { img: "-1.png", right: true },
+    { img: "0.png", right: true },
+    { img: "1.png" },
+    { img: "2.png" },
+    { img: "3.png" },
+    { img: "4.png" },
+    { img: "5.png" },
+    { img: "6.png" },
+    { img: "7.png" },
+    { img: "8.png" },
   ];
 
   switch (page) {
@@ -452,39 +469,47 @@ const Banner = ({ page }) => {
       break;
 
     case "tai-nghe":
-      page = <HeadPhone />;
+      array = taiNghe;
       break;
 
     case "dong-ho":
-      page = <Watch />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     case "pc":
-      page = <PC />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     case "sim":
-      page = <Sim />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     case "may-giat":
-      page = <WashingMachine />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     case "tivi":
-      page = <Tivi />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     case "tu-lanh":
-      page = <Fridge />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     case "loa":
-      page = <Loa />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     case "quat-dieu-hoa":
-      page = <QuatDieuHoa />;
+      array = dienThoai;
+      category = "dien-thoai";
       break;
 
     default:

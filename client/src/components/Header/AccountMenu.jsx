@@ -5,6 +5,7 @@ import {
   Button,
   Divider,
   IconButton,
+  Link,
   ListItemIcon,
   Menu,
   MenuItem,
@@ -21,7 +22,6 @@ import ModalContainer from "~/containers/ModalContainer";
 import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { FormatFullName } from "~/helper/format";
 import { refreshPage } from "~/utils";
-import { Link } from "react-router-dom";
 
 const AccountMenu = () => {
   const currentUser = useSelector(selectorCurrentUser);
@@ -106,14 +106,20 @@ const AccountMenu = () => {
             transformOrigin={{ horizontal: "right", vertical: "top" }}
             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
           >
-            <Link to="/profile" className="link">
+            <Link href="/profile" className="link">
               <MenuItem onClick={handleClose}>
                 <Avatar src={currentUser.user.data.avatar} />{" "}
-                {FormatFullName(
-                  currentUser.user.data.firstName,
-                  currentUser.user.data.middleName,
-                  currentUser.user.data.lastName
-                )}
+                <Typography
+                  variant="span"
+                  color="var(--color-text) !important"
+                  fontWeight={500}
+                >
+                  {FormatFullName(
+                    currentUser.user.data.firstName,
+                    currentUser.user.data.middleName,
+                    currentUser.user.data.lastName
+                  )}
+                </Typography>
               </MenuItem>
             </Link>
 
