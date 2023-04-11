@@ -1,6 +1,7 @@
 import {
   Avatar,
   Box,
+  CircularProgress,
   Container,
   Stack,
   Typography,
@@ -44,9 +45,12 @@ const Feed = ({ currentUser }) => {
   const [fetch, setFetch] = useState([]);
   const [reFetch, setReFetch] = useState(false);
   const [tab, setTab] = useState(null);
+  const [isPending, setPending] = useState(false);
 
   useEffect(() => {
     const fetch = async () => {
+      setPending(true);
+
       const response = await axios({
         method: "post",
         url: "/client/profile/order",
@@ -57,12 +61,14 @@ const Feed = ({ currentUser }) => {
       });
 
       setFetch(response.data);
+
+      setPending(false);
     };
 
     fetch();
   }, [currentUser, tab, reFetch]);
 
-  console.log("fetch", fetch);
+  console.log("isPending", isPending);
 
   const OrderList = styled(Box)(() => ({
     marginTop: 16,
@@ -162,7 +168,9 @@ const Feed = ({ currentUser }) => {
             <Fragment />
           )}
 
-          {fetch.data && fetch.data.length ? (
+          {isPending ? (
+            <Loading />
+          ) : fetch.data && fetch.data.length ? (
             <OrderList>
               {fetch &&
                 fetch.data &&
@@ -194,18 +202,18 @@ const Feed = ({ currentUser }) => {
                             {item?.code}
                           </Typography>{" "}
                           {/* <Typography
-                            variant="span"
-                            fontSize={13}
-                            sx={{
-                              color: "#666",
-                              backgroundColor: "#e1e7ff",
-                              padding: "3px 10px",
-                              borderRadius: "15px",
-                              cursor: "pointer",
-                            }}
-                          >
-                            Sao chép
-                          </Typography> */}
+                              variant="span"
+                              fontSize={13}
+                              sx={{
+                                color: "#666",
+                                backgroundColor: "#e1e7ff",
+                                padding: "3px 10px",
+                                borderRadius: "15px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              Sao chép
+                            </Typography> */}
                         </Box>
 
                         <Box
@@ -365,27 +373,7 @@ const Feed = ({ currentUser }) => {
                 ))}
             </OrderList>
           ) : (
-            //  chưa có đơn hàng
-            <Box
-              sx={{
-                minHeight: 500,
-                backgroundColor: "#fff",
-                marginTop: 2,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-
-                "& img": {
-                  width: "150px",
-                },
-              }}
-            >
-              <img src={PF + "/assets/profile/icon-no-order.png"} alt="" />
-              <Typography fontSize={18} fontWeight={500} color="#666">
-                Chưa có đơn hàng
-              </Typography>
-            </Box>
+            <NoOrders />
           )}
         </Box>
       </Container>
@@ -824,6 +812,56 @@ const HeaderProfile = ({ currentUser }) => {
           </Box>
         </Stack>
       </Container>
+    </Box>
+  );
+};
+
+const Loading = () => {
+  return (
+    <Box
+      sx={{
+        minHeight: 500,
+        backgroundColor: "#fff",
+        marginTop: 2,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+
+        "& img": {
+          width: "150px",
+        },
+      }}
+    >
+      <CircularProgress />
+      <Typography fontSize={18} fontWeight={500} color="#666">
+        Đang xử lý...
+      </Typography>
+    </Box>
+  );
+};
+
+const NoOrders = () => {
+  return (
+    <Box
+      sx={{
+        minHeight: 500,
+        backgroundColor: "#fff",
+        marginTop: 2,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "column",
+
+        "& img": {
+          width: "150px",
+        },
+      }}
+    >
+      <img src={PF + "/assets/profile/icon-no-order.png"} alt="" />
+      <Typography fontSize={18} fontWeight={500} color="#666">
+        Chưa có đơn hàng
+      </Typography>
     </Box>
   );
 };

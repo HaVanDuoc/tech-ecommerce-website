@@ -1,8 +1,12 @@
 const db = require("../../../models");
 
-exports.homeService = () =>
+exports.homeService = (offset, limit) =>
   new Promise(async (resolve, reject) => {
     try {
+      console.log("offset", offset);
+
+      console.log("limit", limit);
+
       // get latest product
       const query = `select
                         products.id,
@@ -21,7 +25,7 @@ exports.homeService = () =>
                     order by
                         products.createdAt desc
                     limit
-                        20;`;
+                        ${offset, limit};`;
 
       const [response] = await db.sequelize.query(query);
 

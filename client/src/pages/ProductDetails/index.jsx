@@ -2,16 +2,12 @@ import "./style.css";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import ResponseRating from "./ResponseRating";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { formatDiscount, formatPrice, formatVND } from "~/helper/format";
 import {
   Box,
   Button,
   Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Divider,
   Grid,
   Rating,
@@ -31,6 +27,7 @@ import { useSnackbar } from "notistack";
 
 export default function ProductDetails() {
   const [fetch, setFetch] = useState(null);
+  const [refetch, setRefetch] = useState(true);
   const [isAddCart, setAddCart] = useState(false);
   const nameProduct = useParams().nameProduct;
   const currentUser = useSelector(selectorCurrentUser);
@@ -88,6 +85,8 @@ export default function ProductDetails() {
     };
 
     if (currentUser.isLogged) return fetch();
+
+    setRefetch(!refetch);
   };
 
   const MainImage = () => {

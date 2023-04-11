@@ -17,6 +17,10 @@ import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined";
 import PercentOutlinedIcon from "@mui/icons-material/PercentOutlined";
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined";
 import Card from "~/components/card";
+import { useDispatch, useSelector } from "react-redux";
+import { FetchProducts } from "~/redux/home/fetchProducts/action";
+import { selectorFetchProducts } from "~/redux/home/fetchProducts/reducer";
+import SkeletonCard from "~/components/skeleton";
 
 const Wrapper = styled(Box)(() => ({
   "--home-bg-second": "#f0f2f5",
@@ -24,24 +28,34 @@ const Wrapper = styled(Box)(() => ({
 }));
 
 const Home = () => {
-  const [countProducts, setCountProducts] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(20);
+  const fetchProducts = useSelector(selectorFetchProducts);
+  const dispatch = useDispatch();
 
   useEffect(() => {
+    if (fetchProducts.isFetch) return;
+
     const fetch = async () => {
-      const response = await axios("/client/home");
-      setProducts(response.data.data);
-      setCountProducts(response.data.count);
+      const response = await axios({
+        method: "post",
+        url: "/client/home",
+        data: { offset, limit },
+      });
+
+      dispatch(FetchProducts(response.data));
     };
 
     fetch();
-  }, []);
+  }, [dispatch, offset, limit]);
+
+  console.log("fetchProducts", fetchProducts);
 
   return (
     <Wrapper>
       <Banner />
 
-      <NewProduct products={products} />
+      <NewProduct products={fetchProducts.isFetch && fetchProducts} />
 
       <Categories />
 
@@ -54,18 +68,36 @@ const Home = () => {
 
       <News />
 
-      <SuggestProduct products={products} countProducts={countProducts} />
+      <SuggestProduct
+        products={fetchProducts.isFetch && fetchProducts}
+        countProducts={fetchProducts.isFetch && fetchProducts.products.count}
+        offset={offset}
+        setOffset={setOffset}
+        limit={limit}
+        setLimit={setLimit}
+      />
     </Wrapper>
   );
 };
 
 export default Home;
 
-const SuggestProduct = ({ products, countProducts }) => {
+const SuggestProduct = ({
+  products,
+  countProducts,
+  offset,
+  setOffset,
+  limit,
+  setLimit,
+}) => {
   const handleSeeMore = () => {
-    // if (display < products.length) {
-    //   setDisplay(display + 10);
+    // if (offset === 0) {
+    //   setOffset(limit);
+    //   setLimit(10);
+    //   return;
     // }
+    // setOffset(offset + 10);
+    // setLimit(10);
   };
 
   return (
@@ -77,16 +109,80 @@ const SuggestProduct = ({ products, countProducts }) => {
           </Box>
 
           <Box>
-            <Grid container spacing={2}>
-              {Array.isArray(products) &&
-                products.map((item, index) => {
+            {products.isFetch ? (
+              <Grid container spacing={2}>
+                {products.products.data.map((item, index) => {
                   return (
                     <Grid item xs={2.4} key={index}>
                       <Card product={item} />
                     </Grid>
                   );
                 })}
-            </Grid>
+              </Grid>
+            ) : (
+              <Grid container spacing={2}>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+                <Grid item xs={2.4}>
+                  <SkeletonCard />
+                </Grid>
+              </Grid>
+            )}
 
             {/* Button Xem thêm */}
             <Box
@@ -98,7 +194,7 @@ const SuggestProduct = ({ products, countProducts }) => {
                 marginTop: "32px",
               }}
             >
-              {countProducts - products.length > 0 ? (
+              {countProducts - products.products?.data.length > 0 ? (
                 <Box
                   onClick={handleSeeMore}
                   sx={{
@@ -131,7 +227,9 @@ const SuggestProduct = ({ products, countProducts }) => {
                       fontWeight: 500,
                     }}
                   >
-                    {`Xem thêm ${countProducts - products.length} sản phẩm`}
+                    {`Xem thêm ${
+                      countProducts - products.products?.data.length
+                    } sản phẩm`}
                   </Typography>
                 </Box>
               ) : (
@@ -552,189 +650,6 @@ export const PaymentOnline = () => {
     </Box>
   );
 };
-//   return (
-//     <Box
-//       sx={{
-//         width: "100%",
-//         maxWidth: "350px",
-//         borderRadius: "5px",
-//         boxShadow: "0 0 3px 1px rgba(0, 0, 0, 0.2)",
-//         overflow: "hidden",
-//         padding: 3,
-//         backgroundColor: "#fff",
-//         cursor: "pointer",
-//         transition: "all .4s ease-in-out",
-//         position: "relative",
-
-//         ":hover": {
-//           boxShadow: "0 0 5px 2px rgba(0, 0, 0, 0.2)",
-
-//           ".select": {
-//             transform: "none",
-//           },
-
-//           ".image": {
-//             transform: "scale(1.1)",
-//           },
-//         },
-
-//         ".image": {
-//           transform: "none",
-//           transition: "transform .4s ease-in-out",
-//         },
-//       }}
-//     >
-//       <Stack flexDirection="column">
-//         {/* Image */}
-//         <Box>
-//           <img
-//             src={PF + "/assets/products/2.webp"}
-//             alt=""
-//             width="100%"
-//             className="image"
-//           />
-//         </Box>
-
-//         <Stack flexDirection="column">
-//           <Typography
-//             sx={{
-//               color: "#d51919",
-//               fontWeight: 500,
-//               textTransform: "uppercase",
-//               fontFamily: "'Chakra Petch', sans-serif",
-//               paddingBottom: 1,
-//             }}
-//           >
-//             Laptop
-//           </Typography>
-
-//           <Typography
-//             sx={{
-//               fontFamily: "'Montserrat', sans-serif",
-//               fontWeight: 500,
-//               paddingBottom: 1,
-//               fontSize: "17px",
-//             }}
-//           >
-//             Gigabyte AERO 16 XE5 73VN938AH
-//           </Typography>
-
-//           <Stack
-//             flexDirection="row"
-//             alignItems="center"
-//             paddingBottom={1}
-//             height={35}
-//           >
-//             <Rating value={4} readOnly size="small" />
-//             <Typography
-//               fontSize={13}
-//               sx={{
-//                 display: "flex",
-//                 justifyContent: "center",
-//                 alignItems: "center",
-//                 marginLeft: 1,
-//                 color: "#666",
-//               }}
-//             >
-//               (32)
-//             </Typography>
-//           </Stack>
-
-//           {/* price */}
-
-//           <Stack flexDirection="row" alignItems="center">
-//             {/* Giá sau trừ giảm giá */}
-
-//             <Typography
-//               sx={{
-//                 fontWeight: 500,
-//                 fontSize: "17px",
-//                 marginRight: 1,
-//                 color: "crimson",
-//               }}
-//             >
-//               {formatPrice(10000000, 24)}
-//             </Typography>
-
-//             {/* Giá gốc cost */}
-//             <Typography
-//               sx={{
-//                 fontWeight: 500,
-//                 fontSize: "18px",
-//               }}
-//             >
-//               {formatCost(10000000)}
-//             </Typography>
-//           </Stack>
-//         </Stack>
-//       </Stack>
-
-//       {/* Box select when hover  */}
-//       <Box
-//         className="select"
-//         sx={{
-//           position: "absolute",
-//           top: "30px",
-//           right: 0,
-//           transform: "translateX(100%)",
-//           transition: "all .4s ease-in-out",
-
-//           ".item": {
-//             borderRadius: "5px 0 0 5px",
-//             borderTop: "1px solid #ddd",
-//             borderLeft: "1px solid #ddd",
-//             borderBottom: "1px solid #ddd",
-//             padding: 1,
-//             display: "flex",
-//             alignItems: "center",
-//             justifyContent: "center",
-//             backgroundColor: "#fff",
-//             boxShadow: "0 0 5px 1px rgba(0, 0, 0, 0,1)",
-
-//             svg: {
-//               color: "#555",
-//             },
-
-//             ":hover": {
-//               svg: {
-//                 color: "dodgerblue",
-//               },
-//             },
-//           },
-//         }}
-//       >
-//         <Stack flexDirection="column" spacing={1}>
-//           <Box className="item">
-//             <FavoriteBorderOutlinedIcon />
-//           </Box>
-//           <Box className="item">
-//             <RemoveRedEyeOutlinedIcon />
-//           </Box>
-//           <Box className="item">
-//             <LocalMallOutlinedIcon />
-//           </Box>
-//         </Stack>
-//       </Box>
-
-//       {/* Box discount */}
-//       <Box
-//         sx={{
-//           position: "absolute",
-//           top: "20px",
-//           left: "20px",
-//           backgroundColor: "#ffc300",
-//           color: "#000",
-//           padding: "3px 10px",
-//           borderRadius: "15px",
-//         }}
-//       >
-//         <Typography fontSize={12} fontWeight={600}>
-//           {formatDiscount(24)}
-//         </Typography>
-//       </Box>
-//     </Box>
-//   );
-// };
 
 export const NewProduct = ({ products }) => {
   return (
@@ -744,27 +659,44 @@ export const NewProduct = ({ products }) => {
           <Title>Sản phẩm mới</Title>
         </Stack>
 
-        <Box sx={{ padding: "16px 0" }}>
-          <Slider
-            dots={false}
-            infinite={true}
-            speed="500"
-            slidesToShow={4}
-            slidesToScroll={4}
-            nextArrow={<NextArrow />}
-            prevArrow={<PrevArrow />}
-            className="custom-slider"
-            sx={{}}
+        {products.isFetch ? (
+          <Box sx={{ padding: "16px 0" }}>
+            <Slider
+              dots={false}
+              infinite={true}
+              speed="500"
+              slidesToShow={4}
+              slidesToScroll={4}
+              nextArrow={<NextArrow />}
+              prevArrow={<PrevArrow />}
+              className="custom-slider"
+            >
+              {products.products.data.slice(0, 8).map((item, index) => {
+                return (
+                  <Box key={index}>
+                    <Card product={item} />
+                  </Box>
+                );
+              })}
+            </Slider>
+          </Box>
+        ) : (
+          <Stack
+            flexDirection="row"
+            sx={{
+              padding: "16px 0",
+              "& > div": { marginRight: 2 },
+              "& > div:last-child": {
+                marginRight: 0,
+              },
+            }}
           >
-            {products.slice(0, 8).map((item, index) => {
-              return (
-                <Box key={index}>
-                  <Card product={item} />
-                </Box>
-              );
-            })}
-          </Slider>
-        </Box>
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+            <SkeletonCard />
+          </Stack>
+        )}
       </Container>
     </Box>
   );

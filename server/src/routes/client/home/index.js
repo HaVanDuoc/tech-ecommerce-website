@@ -2,6 +2,6 @@ const { homeController } = require("../../../controllers/client/home");
 
 const router = require("express").Router();
 
-router.get("/", homeController);
+router.post("/", homeController);
 
 module.exports = router;

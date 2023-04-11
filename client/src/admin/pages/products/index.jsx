@@ -10,18 +10,32 @@ import { useSnackbar } from "notistack";
 
 export default function ProductList() {
   const [data, setData] = useState([]);
+  const [offset, setOffset] = useState(0);
+  const { enqueueSnackbar } = useSnackbar();
 
   // Fetch list product
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/products/");
+      const response = await axios({
+        method: "post",
+        url: "/admin/products/getProducts",
+        data: { offset },
+      });
       setData(response.data.data);
     };
 
     fetch();
-  }, []);
+  }, [offset]);
 
-  const { enqueueSnackbar } = useSnackbar();
+  // useEffect(() => {
+  //   document
+  //     .querySelector(`button[aria-label="Go to next page"]`)
+  //     .addEventListener("click", () => {
+  //       setOffset(offset + 5);
+  //     });
+  // }, []);
+
+  console.log("offset", offset);
 
   const handleSnackBar = (res) => {
     if (res.data.err === 0) {

@@ -10,7 +10,7 @@ const {
 
 const router = require("express").Router();
 
-router.get("/", getListProducts);
+router.post("/getProducts", getListProducts);
 router.post("/", createNewProduct);
 router.put("/updateDetails", updateDetails);
 
