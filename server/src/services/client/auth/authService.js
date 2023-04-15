@@ -171,7 +171,7 @@ exports.login = (data) =>
           ? "Đăng nhập thành công"
           : response
           ? "Sai mật khẩu"
-          : "Tài khoản chưa được đăng ký",
+          : "Email chưa được đăng ký",
         access_token: token ? `Bearer ${token}` : null,
       });
     } catch (error) {

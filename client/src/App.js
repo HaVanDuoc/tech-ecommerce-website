@@ -15,7 +15,7 @@ const App = () => {
       const token = localStorage.getItem("access_token");
 
       const response = await axios({
-        method: "post",
+        method: "get",
         url: "/client/auth",
         headers: {
           Authorization: token,

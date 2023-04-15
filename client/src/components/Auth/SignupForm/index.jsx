@@ -2,6 +2,8 @@ import {
   Alert,
   Box,
   Button,
+  Checkbox,
+  CircularProgress,
   Link,
   styled,
   TextField,
@@ -25,7 +27,7 @@ const Styled = styled(Box)(() => ({
 }));
 
 const Title = styled(Box)(() => ({
-  fontSize: "1.3rem",
+  fontSize: "1.6rem",
   fontWeight: "500",
   textAlign: "center",
   marginBottom: "20px",
@@ -41,10 +43,11 @@ const LinkBackToLogin = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          marginTop: 3,
         }}
         onClick={() => dispatch(showLoginForm())}
       >
-        <ArrowBackIcon />
+        <ArrowBackIcon fontSize="small" />
         <Typography>Trở về đăng nhập</Typography>
       </Link>
     </Box>
@@ -85,6 +88,7 @@ const SignUpForm = () => {
             .required("*Bắt buộc"),
         })}
         onSubmit={(values, props) => {
+          setSubmitting(true);
           // destructuring - loại property 'confirmPassword'
           const { firstName, middleName, lastName, email, password } = values;
 
@@ -98,11 +102,13 @@ const SignUpForm = () => {
               data: { firstName, middleName, lastName, email, password },
             });
 
+            setSubmitting(false);
+
             if (response.data.err !== 0) {
               // Đăng ký thất bại
               setError(response.data.msg);
 
-              setSubmitting(false); // submit xong mở khóa
+              // setSubmitting(false); // submit xong mở khóa
             } else {
               // Đăng ký thành công, lưu token vào LocalStorage
               localStorage.setItem("access_token", response.data.access_token);
@@ -192,6 +198,25 @@ const SignUpForm = () => {
               </Alert>
             )}
 
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                margin: "10px 0",
+                fontSize: 13,
+                color: "#666",
+                "& .MuiSvgIcon-root": { fontSize: 17 },
+                "& .MuiLink-root": { textDecoration: "none" },
+              }}
+            >
+              <Checkbox name="eula" defaultChecked />
+              <Box component="span">
+                Đã đọc và đồng ý <Link href="#">Điều khoản dịch vụ</Link> &{" "}
+                <Link href="#">Chính Sách Về Quyền Riêng Tư</Link>
+              </Box>
+            </Box>
+
             <Button
               variant="contained"
               fullWidth
@@ -199,11 +224,9 @@ const SignUpForm = () => {
               sx={{
                 margin: "15px 0",
                 height: "50px",
-                borderRadius: "var(--border-radius)",
               }}
-              disabled={isSubmitting}
             >
-              Đăng ký
+              {isSubmitting ? <CircularProgress color="inherit" /> : "Đăng ký"}
             </Button>
 
             <LinkBackToLogin />

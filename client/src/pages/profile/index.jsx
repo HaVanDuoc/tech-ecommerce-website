@@ -11,6 +11,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { PF } from "~/__variables";
 import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import AccountMenu from "~/components/Header/AccountMenu";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link } from "react-router-dom";
@@ -67,8 +68,6 @@ const Feed = ({ currentUser }) => {
 
     fetch();
   }, [currentUser, tab, reFetch]);
-
-  console.log("isPending", isPending);
 
   const OrderList = styled(Box)(() => ({
     marginTop: 16,
@@ -534,18 +533,80 @@ const InfoBar = ({ currentUser }) => {
             </Stack>
           </Stack>
 
-          <Box sx={{ position: "absolute", right: 0, top: -40 }}>
+          <Box
+            sx={{
+              position: "absolute",
+              right: 0,
+              top: -40,
+              display: "flex",
+              justifyContent: "end",
+              alignItems: "end",
+              flexDirection: "column",
+              transition: "all .3s ease",
+
+              ":hover": {
+                ".edit": {
+                  backgroundColor: "#6d86ea",
+                  color: "#fff",
+                },
+                ".option": {
+                  display: "block",
+                },
+              },
+            }}
+          >
             <Box
+              className="edit"
               sx={{
+                width: 130,
                 backgroundColor: "#e1e7ff",
                 padding: "3px 20px",
                 borderRadius: "15px",
                 cursor: "pointer",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
               }}
             >
               <Typography fontSize={14} textTransform="capitalize">
                 Chỉnh sửa
               </Typography>
+              <ArrowDropDownIcon />
+            </Box>
+
+            <Box
+              className="option"
+              sx={{
+                display: "none",
+                backgroundColor: "#fff",
+                padding: "15px 8px",
+                marginTop: 1,
+                borderRadius: 1,
+                boxShadow: "0 0 1px 1px rgba(0,0,0,0.25)",
+              }}
+            >
+              <Link to="/profile/edit">
+                <Box
+                  sx={{
+                    padding: "3px 10px",
+                    ":hover": {
+                      backgroundColor: "#eee",
+                      borderRadius: 1,
+                      cursor: "pointer",
+                      transition: "all .3s ease",
+
+                      "& p": {
+                        color: "#6d89fa",
+                      },
+                    },
+                  }}
+                >
+                  <Typography fontSize={14} color="#333">
+                    Hoàn thiện thông tin cá nhân
+                  </Typography>
+                </Box>
+              </Link>
             </Box>
           </Box>
         </Box>
@@ -554,7 +615,7 @@ const InfoBar = ({ currentUser }) => {
   );
 };
 
-const Background = () => {
+export const Background = () => {
   return (
     <Box
       sx={{
@@ -592,7 +653,7 @@ const Background = () => {
   );
 };
 
-const HeaderProfile = ({ currentUser }) => {
+export const HeaderProfile = ({ currentUser }) => {
   const [nav, setNav] = useState(false);
 
   const Search = ({ nav }) => {

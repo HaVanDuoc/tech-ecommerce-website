@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   Chip,
+  CircularProgress,
   Divider,
   Grid,
   Link,
@@ -49,11 +50,13 @@ const LoginForm = () => {
               data: values,
             });
 
+            setSubmitting(false);
+
             if (response.data.err !== 0) {
               // Đăng nhập thất bại
               setError(response.data.msg);
 
-              setSubmitting(false); // submit xong mở khóa
+              // setSubmitting(false); // submit xong mở khóa
             } else {
               // Đăng nhập thành công, lưu token vào LocalStorage
               localStorage.setItem("access_token", response.data.access_token);
@@ -106,11 +109,9 @@ const LoginForm = () => {
               sx={{
                 margin: "15px 0",
                 height: "50px",
-                borderRadius: "var(--border-radius)",
               }}
-              disabled={isSubmitting}
             >
-              Đăng nhập
+              {isSubmitting ? <CircularProgress color="inherit" /> : "Đăng nhập"}
             </Button>
 
             <LinkSignUp>Đăng ký ngay</LinkSignUp>
@@ -134,7 +135,7 @@ const Styled = styled(Box)(() => ({
 }));
 
 const Title = styled(Box)(() => ({
-  fontSize: "1.3rem",
+  fontSize: "1.6rem",
   fontWeight: "500",
   textAlign: "center",
   marginBottom: "20px",

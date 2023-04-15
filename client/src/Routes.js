@@ -27,11 +27,13 @@ import ProductDetails from "./pages/productDetails";
 import ProductDetailsLayout from "./layouts/productDetails";
 import Profile from "./pages/profile";
 import ProfileLayout from "./layouts/profile";
+import Edit from "./pages/profile/Edit";
 
 export const publicRoutes = [
   { path: "/", page: Home },
   { path: "/cart", page: Cart, layout: CartLayout },
   { path: "/profile", page: Profile, layout: ProfileLayout },
+  { path: "/profile/edit", page: Edit, layout: ProfileLayout },
   { path: "/:category", page: Products, layout: ProductsLayout },
   {
     path: "/:category/:nameProduct",

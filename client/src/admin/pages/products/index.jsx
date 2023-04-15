@@ -35,7 +35,7 @@ export default function ProductList() {
   //     });
   // }, []);
 
-  console.log("offset", offset);
+  // console.log("offset", offset);
 
   const handleSnackBar = (res) => {
     if (res.data.err === 0) {

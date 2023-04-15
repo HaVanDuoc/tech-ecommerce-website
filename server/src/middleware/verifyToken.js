@@ -2,9 +2,11 @@ const jwt = require("jsonwebtoken");
 const { badRequest, unauthorized } = require("./handleError");
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
+  const auth = req.header("Authorization");
 
-  if (!token) return badRequest("Yêu cầu đăng nhập", res);
+  console.log('auth', auth)
+
+  if (!auth) return badRequest("Yêu cầu đăng nhập", res);
 
   // split: tách chuỗi thành mảng
   // access_token = Bearer token -> split access_token = ["Bearer", "token"]

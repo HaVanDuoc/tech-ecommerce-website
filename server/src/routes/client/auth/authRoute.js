@@ -8,7 +8,7 @@ const { checkCurrentUser } = require("../../../middleware/checkCurrentUser");
 
 const router = express.Router();
 
-router.post("/", checkCurrentUser, getCurrentUser);
+router.get("/", checkCurrentUser, getCurrentUser);
 
 router.post("/register", register);
 
