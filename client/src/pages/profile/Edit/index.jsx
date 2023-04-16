@@ -1,8 +1,13 @@
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -15,6 +20,9 @@ import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 import { PF } from "~/__variables";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
 
 const Edit = () => {
   const currentUser = useSelector(selectorCurrentUser);
@@ -137,6 +145,9 @@ const SectionEdit = ({ currentUser }) => {
 };
 
 const FormEdit = () => {
+  const [gender, setGender] = React.useState("");
+  const [value, setValue] = React.useState(); // Date of birth
+
   const initialValues = {
     firstName: "",
     middleName: "",
@@ -160,10 +171,16 @@ const FormEdit = () => {
   const onSubmit = (values, props) => {};
 
   const Styled = styled(Box)(() => ({
+    paddingBottom: 50,
+
     ".field": {
       margin: 1,
     },
   }));
+
+  const handleChange = (event) => {
+    setGender(event.target.value);
+  };
 
   return (
     <Styled>
@@ -178,33 +195,127 @@ const FormEdit = () => {
               <Field
                 as={TextField}
                 label="Họ"
-                variant="outlined"
+                variant="standard"
                 name="firstName"
                 type="text"
                 fullWidth
                 helperText={<ErrorMessage name="firstName" />}
                 style={{ margin: "10px" }}
               />
+
               <Field
                 as={TextField}
                 label="Tên lót"
-                variant="outlined"
+                variant="standard"
                 name="middleName"
                 type="text"
                 fullWidth
                 helperText={<ErrorMessage name="middleName" />}
                 style={{ margin: "10px" }}
               />
+
               <Field
                 as={TextField}
                 label="Tên"
-                variant="outlined"
+                variant="standard"
                 name="lastName"
                 type="text"
                 fullWidth
                 helperText={<ErrorMessage name="lastName" />}
                 style={{ margin: "10px" }}
               />
+            </Stack>
+
+            <Stack
+              sx={{
+                marginTop: 2,
+                marginBottom: 2,
+                marginLeft: 1,
+                marginRight: 1,
+              }}
+            >
+              <FormControl fullWidth variant="standard" size="small">
+                <InputLabel id="demo-simple-select-label">Giới tính</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={gender}
+                  label="Age"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={10}>Nam</MenuItem>
+                  <MenuItem value={20}>Nữ</MenuItem>
+                  <MenuItem value={30}>Khác</MenuItem>
+                </Select>
+              </FormControl>
+            </Stack>
+
+            <Stack
+              sx={{
+                marginTop: 6,
+                marginBottom: 6,
+                marginLeft: 1,
+                marginRight: 1,
+              }}
+            >
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Ngày sinh"
+                  inputFormat="DD/MM/YYYY"
+                  value={value}
+                  onChange={(newValue) => {
+                    setValue(newValue);
+                    props.setFieldValue("dateOfBirth", newValue);
+                  }}
+                  renderInput={(params) => {
+                    return (
+                      <Field as={TextField} name="dateOfBirth" {...params} />
+                    );
+                  }}
+                />
+              </LocalizationProvider>
+            </Stack>
+
+            <Stack
+              sx={{
+                marginTop: 6,
+                marginBottom: 6,
+                marginLeft: 1,
+                marginRight: 1,
+              }}
+            >
+              <TextField
+                label="Địa chỉ"
+                multiline
+                rows={4}
+                placeholder="Hãy nhập địa chỉ của bạn..."
+              />
+            </Stack>
+
+            <Stack justifyContent="center" alignItems="center">
+              <Stack
+                sx={{
+                  width: 250,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "var(--color-main)",
+                  borderColor: "var(--color-main)",
+                  borderRadius: 2,
+                  color: "#fff",
+                  fontSize: 20,
+                  fontWeight: 500,
+                  boxShadow: "0 0 3px 1px rgba(0,0,0,0.25)",
+                  cursor: "pointer",
+
+                  ":hover": {
+                    backgroundColor: "#096bd4",
+                    transition: "all .3s ease",
+                  },
+                }}
+              >
+                Lưu
+              </Stack>
             </Stack>
           </Form>
         )}
