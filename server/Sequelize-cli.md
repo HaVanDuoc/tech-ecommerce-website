@@ -28,6 +28,9 @@ npx sequelize-cli db:seed --seed order_status.js
 npx sequelize-cli db:migrate --name create-order_detail.js
 npx sequelize-cli db:migrate --name create-order_item.js
 
+<!-- search -->
+npx sequelize-cli db:migrate --name create-search.js
+
 > Undoing Migrations
 
 npx sequelize-cli db:migrate:undo --name create-user.js
