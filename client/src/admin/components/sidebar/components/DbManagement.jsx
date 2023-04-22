@@ -24,7 +24,7 @@ const DbManagement = () => {
 
   return (
     <Fragment>
-      <h3 className="sidebarTitle">Database</h3>
+      <h3 className="sidebarTitle">Cơ sở dữ liệu</h3>
       <List className="sidebarList">
         <Link to="/admin/database" className="link">
           <li onClick={handleClick} className="sidebarListItem">

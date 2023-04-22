@@ -124,7 +124,7 @@ export default function CreateNewProduct() {
 
                 {/* Button Submit */}
                 <FieldForm>
-                  <ButtonSubmit disabled={isSubmitting}>Create</ButtonSubmit>
+                  <ButtonSubmit disabled={isSubmitting}>Tạo</ButtonSubmit>
                 </FieldForm>
               </Grid>
 

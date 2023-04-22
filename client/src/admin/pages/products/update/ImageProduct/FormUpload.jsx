@@ -110,7 +110,7 @@ const FormUpload = ({ imageList }) => {
     <Styled>
       <Box onClick={handleClick} sx={stylesButtonOpenFormUpload}>
         <FileUploadOutlinedIcon />
-        <Typography sx={{ marginLeft: 1 }}>Upload hình ảnh</Typography>
+        <Typography sx={{ marginLeft: 1 }}>Tải hình ảnh</Typography>
       </Box>
 
       <Dialog
@@ -193,7 +193,7 @@ const FormUpload = ({ imageList }) => {
             </ImageList>
 
             <ButtonUpdate type="submit">
-              {isSubmitting ? <CircularProgressCustomize /> : "Update"}
+              {isSubmitting ? <CircularProgressCustomize /> : "Cập nhật"}
             </ButtonUpdate>
           </form>
         </Wrapper>

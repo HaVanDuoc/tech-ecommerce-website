@@ -114,7 +114,7 @@ export default function NewUser() {
             </FieldForm>
 
             <FieldForm>
-              <ButtonSubmit disabled={isSubmitting}>Create</ButtonSubmit>
+              <ButtonSubmit disabled={isSubmitting}>Tạo</ButtonSubmit>
             </FieldForm>
           </Form>
         </Box>

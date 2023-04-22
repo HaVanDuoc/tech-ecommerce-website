@@ -71,8 +71,8 @@ export default function ProductList() {
     { field: "productId", headerName: "ID", width: 100 },
     {
       field: "name",
-      headerName: "Product",
-      width: 300,
+      headerName: "Sản phẩm",
+      width: 350,
       renderCell: (params) => {
         return (
           <Box
@@ -96,16 +96,16 @@ export default function ProductList() {
     },
     {
       field: "price",
-      headerName: "Price",
+      headerName: "Giá",
       width: 160,
       renderCell: (params) => {
         return formatVND(params.row.price);
       },
     },
-    { field: "stock", headerName: "Stock", width: 200 },
+    { field: "stock", headerName: "Số lượng", width: 150 },
     {
       field: "isActive",
-      headerName: "Status",
+      headerName: "Trạng thái",
       width: 150,
       renderCell: (params) => {
         return formatStatusProduct(params.row.isActive, params.row.stock);
@@ -113,13 +113,13 @@ export default function ProductList() {
     },
     {
       field: "action",
-      headerName: "Action",
-      width: 150,
+      headerName: "Thao tác",
+      width: 200,
       renderCell: (params) => {
         return (
           <>
             <Link to={"/admin/product/update/" + params.row.productId}>
-              <ButtonEdit>Edit</ButtonEdit>
+              <ButtonEdit>Chỉnh sửa</ButtonEdit>
             </Link>
             <IconButton
               sx={{ color: "red" }}

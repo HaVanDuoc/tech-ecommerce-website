@@ -60,7 +60,7 @@ export default function UserList() {
     { field: "userId", headerName: "ID", width: 110 },
     {
       field: "user",
-      headerName: "Name",
+      headerName: "Họ tên",
       width: 250,
       renderCell: (params) => {
         const firstName = params.row.firstName ? params.row.firstName : "";
@@ -78,26 +78,41 @@ export default function UserList() {
         );
       },
     },
-    { field: "email", headerName: "Email", width: 180 },
+    { field: "email", headerName: "Email", width: 200 },
     {
       field: "status",
-      headerName: "Status",
-      width: 120,
+      headerName: "Trạng thái",
+      width: 150,
+      renderCell: (params) => {
+        switch (params.row.status) {
+          case "active":
+            return "Đang hoạt động";
+
+          case "block":
+            return "Tạm khóa";
+
+          case "disable":
+            return "Khóa vĩnh viễn";
+
+          default:
+            return;
+        }
+      },
     },
     {
       field: "transactionVolume",
-      headerName: "Transaction Volume",
+      headerName: "Tổng thanh toán",
       width: 200,
     },
     {
       field: "action",
-      headerName: "Action",
+      headerName: "Thao tác",
       width: 150,
       renderCell: (params) => {
         return (
           <>
             <Link to={"/admin/user/update/" + params.row.userId}>
-              <button className="userListEdit">Edit</button>
+              <button className="userListEdit">Chỉnh sửa</button>
             </Link>
             <DeleteOutlineIcon
               className="userListDelete"

@@ -91,12 +91,12 @@ const UserShow = ({ fetch }) => {
 
         <div className="userShowTopTitle">
           <span className="userShowUsername">{fullName}</span>
-          <span className="userShowUserTitle">Software Engineer</span>
+          <span className="userShowUserTitle">{role}</span>
         </div>
       </div>
       <div className="userShowBottom">
         {/* Account Details */}
-        <span className="userShowTitle">Account Details</span>
+        <span className="userShowTitle">Thông tin cá nhân</span>
         {AccountDetails.map((item, index) => {
           return (
             item.value && (
@@ -111,7 +111,7 @@ const UserShow = ({ fetch }) => {
         })}
 
         {/* Contact Details */}
-        <span className="userShowTitle">Contact Details</span>
+        <span className="userShowTitle">Liên hệ</span>
         {ContactDetails.map((item, index) => {
           return (
             item.value && (

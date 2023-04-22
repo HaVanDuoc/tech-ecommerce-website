@@ -21,7 +21,7 @@ const StatusAccount = () => {
 
   return (
     <FormControl>
-      <FormLabel id="demo-row-radio-buttons-group-label">Status</FormLabel>
+      <FormLabel id="demo-row-radio-buttons-group-label">Trạng thái</FormLabel>
       <RadioGroup
         row
         aria-labelledby="demo-row-radio-buttons-group-label"

@@ -46,7 +46,7 @@ const UserUpdate = ({ fetch }) => {
 
   return (
     <div className="userUpdate">
-      <span className="userUpdateTitle">Edit</span>
+      <span className="userUpdateTitle">Chỉnh sửa</span>
 
       <Notification data={data} />
 
@@ -128,7 +128,7 @@ const UserUpdate = ({ fetch }) => {
                   disabled={isSubmitting}
                   sx={styleButtonSubmit}
                 >
-                  Update
+                  Cập nhật
                 </Button>
               </Grid>
             </Grid>

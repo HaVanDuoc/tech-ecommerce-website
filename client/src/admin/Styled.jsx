@@ -99,7 +99,7 @@ export const ButtonCreate = ({ children, href, onClick }) => {
       }}
     >
       <Link to={href} className="link">
-        {children || "Create new"}
+        {children || "Tạo mới"}
       </Link>
     </Button>
   );

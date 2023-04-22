@@ -20,53 +20,53 @@ export default function Sidebar() {
     <div className="sidebar">
       <div className="sidebarWrapper">
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Dashboard</h3>
+          <h3 className="sidebarTitle">Bảng điều khiển</h3>
           <ul className="sidebarList">
             <Link to="/admin" className="link">
               <li className="sidebarListItem active">
                 <LineStyleIcon className="sidebarIcon" />
-                Home
+                Trang chủ
               </li>
             </Link>
             <li className="sidebarListItem">
               <TimelineIcon className="sidebarIcon" />
-              Analytics
+              Phân tích
             </li>
             <li className="sidebarListItem">
               <TrendingUpIcon className="sidebarIcon" />
-              Sales
+              Doanh thu
             </li>
           </ul>
         </div>
 
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Quick Menu</h3>
+          <h3 className="sidebarTitle">Quản lý</h3>
           <ul className="sidebarList">
             <Link to="/admin/users" className="link">
               <li className="sidebarListItem">
                 <PermIdentityIcon className="sidebarIcon" />
-                Users
+                Khách hàng
               </li>
             </Link>
             <Link to="/admin/products" className="link">
               <li className="sidebarListItem">
                 <StorefrontIcon className="sidebarIcon" />
-                Products
+                Sản phẩm
               </li>
             </Link>
             <li className="sidebarListItem">
               <AttachMoneyIcon className="sidebarIcon" />
-              Transactions
+              Giao dịch
             </li>
             <li className="sidebarListItem">
               <BarChartIcon className="sidebarIcon" />
-              Reports
+              Báo cáo
             </li>
           </ul>
         </div>
 
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Notifications</h3>
+          <h3 className="sidebarTitle">Thông báo</h3>
           <ul className="sidebarList">
             <li className="sidebarListItem">
               <MailOutlineIcon className="sidebarIcon" />
@@ -74,11 +74,11 @@ export default function Sidebar() {
             </li>
             <li className="sidebarListItem">
               <DynamicFeedIcon className="sidebarIcon" />
-              Feedback
+              Phản hồi
             </li>
             <li className="sidebarListItem">
               <ChatBubbleOutlineIcon className="sidebarIcon" />
-              Messages
+              Tin nhắn
             </li>
           </ul>
         </div>
@@ -92,19 +92,19 @@ export default function Sidebar() {
         </div>
 
         <div className="sidebarMenu">
-          <h3 className="sidebarTitle">Staff</h3>
+          <h3 className="sidebarTitle">Nhân sự</h3>
           <ul className="sidebarList">
             <li className="sidebarListItem">
               <WorkOutlineIcon className="sidebarIcon" />
-              Manage
+              Nhân viên
             </li>
             <li className="sidebarListItem">
               <TimelineIcon className="sidebarIcon" />
-              Analytics
+              PHân tích
             </li>
             <li className="sidebarListItem">
               <ReportIcon className="sidebarIcon" />
-              Reports
+              Báo cáo
             </li>
           </ul>
         </div>

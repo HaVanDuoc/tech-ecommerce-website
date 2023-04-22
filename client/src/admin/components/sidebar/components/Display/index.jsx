@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const Display = () => {
   return (
     <Box>
-      <h3 className="sidebarTitle">Display</h3>
+      <h3 className="sidebarTitle">Hiển thị</h3>
       <ul className="sidebarList">
         <Link to="/admin/display/banner" className="link">
           <li className="sidebarListItem">
@@ -19,13 +19,13 @@ const Display = () => {
         <Link to="/admin/display/category" className="link">
           <li className="sidebarListItem">
             <CategoryOutlinedIcon className="sidebarIcon" />
-            Category
+            Danh mục
           </li>
         </Link>
         <Link to="/admin/display/brand" className="link">
           <li className="sidebarListItem">
             <AssistantPhotoOutlinedIcon className="sidebarIcon" />
-            Brand
+            Thương hiệu
           </li>
         </Link>
       </ul>

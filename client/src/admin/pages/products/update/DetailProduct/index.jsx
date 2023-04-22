@@ -153,9 +153,11 @@ const DetailProduct = ({ fetch }) => {
         </Table>
       </TableContainer>
 
-      <Button variant="contained" onClick={handleClick}>
-        Cập nhật thông tin chi tiết
-      </Button>
+      <Stack justifyContent="center" alignItems="end">
+        <Button variant="contained" onClick={handleClick} sx={{ marginTop: 1 }}>
+          Cập nhật thông tin chi tiết
+        </Button>
+      </Stack>
 
       <Dialog
         open={open}
@@ -238,7 +240,7 @@ const DetailProduct = ({ fetch }) => {
                   <FieldForm>
                     <Stack alignItems="center" justifyContent="center">
                       <ButtonSubmit disabled={isSubmitting}>
-                        Update
+                        Cập nhật
                       </ButtonSubmit>
                     </Stack>
                   </FieldForm>
