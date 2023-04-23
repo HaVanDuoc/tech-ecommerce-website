@@ -54,10 +54,12 @@ export default function Sidebar() {
                 Sản phẩm
               </li>
             </Link>
-            <li className="sidebarListItem">
-              <AttachMoneyIcon className="sidebarIcon" />
-              Giao dịch
-            </li>
+            <Link to="/admin/orders" className="link">
+              <li className="sidebarListItem">
+                <AttachMoneyIcon className="sidebarIcon" />
+                Đơn hàng
+              </li>
+            </Link>
             <li className="sidebarListItem">
               <BarChartIcon className="sidebarIcon" />
               Báo cáo

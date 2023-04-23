@@ -1,8 +1,11 @@
 const db = require("../../../models");
 
-exports.productsService = (data) =>
+exports.productsService = (category, pagination) =>
   new Promise(async (resolve, reject) => {
     try {
+      const limit = 12;
+      const offset = limit * (pagination - 1);
+
       // Get products
       const query = `select
                         products.productId,
@@ -18,9 +21,11 @@ exports.productsService = (data) =>
                         products
                         left join categories on categories.categoryId = products.categoryId
                     where
-                        categories.name = "${data.category}"
+                        categories.name = "${category}"
                     limit
-                        16;`;
+                        ${limit}
+                    offset
+                        ${offset};`;
 
       const [products] = await db.sequelize.query(query);
 
@@ -32,13 +37,17 @@ exports.productsService = (data) =>
             products
             left join categories on categories.categoryId = products.categoryId
         where
-            categories.name = "Điện thoại";`
+            categories.name = "${category}";`
       );
+
+      console.log("countAll", countAll);
 
       resolve({
         err: products ? 0 : 1,
         msg: products ? "Get data successfully" : "Get data failure",
         data: products ? products : null,
+        totalPagination: Math.floor(countAll[0].count / limit) + 1,
+        currentPagination: pagination ? pagination : null,
         countAll: countAll ? countAll[0].count : null,
       });
     } catch (error) {

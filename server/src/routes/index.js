@@ -17,6 +17,7 @@ const productsClient = require("./client/products");
 const cart = require("./client/cart");
 const profile = require("./client/profile");
 const search = require("./client/search");
+const orders = require("./admin/orders");
 
 const initRoute = (app) => {
   // Routes
@@ -40,6 +41,7 @@ const initRoute = (app) => {
 
   // Admin routes
   app.use("/api/v1/admin/products", products);
+  app.use("/api/v1/admin/orders", orders);
 
   // Route không xác định được response error not found
   return app.use(notFound);

@@ -28,6 +28,7 @@ import ProductDetailsLayout from "./layouts/productDetails";
 import Profile from "./pages/profile";
 import ProfileLayout from "./layouts/profile";
 import Edit from "./pages/profile/Edit";
+import Orders from "./admin/pages/orders";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -44,6 +45,8 @@ export const publicRoutes = [
 
 export const privateRoutes = [
   //#region ADMIN ROUTES
+
+  { path: "/admin/orders", page: Orders, layout: AdminLayout }, // Orders
 
   // Home routes
   { path: "/admin", page: HomeAdmin, layout: AdminLayout }, // Home

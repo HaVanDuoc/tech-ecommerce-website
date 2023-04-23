@@ -1,12 +1,12 @@
 const {
   createNewProduct,
-} = require("../../../controllers/admin/products/createNewProduct");
+} = require("../../controllers/admin/products/createNewProduct");
 const {
   getListProducts,
-} = require("../../../controllers/admin/products/getListProducts");
+} = require("../../controllers/admin/products/getListProducts");
 const {
   updateDetails,
-} = require("../../../controllers/admin/products/updateDetails");
+} = require("../../controllers/admin/products/updateDetails");
 
 const router = require("express").Router();
 

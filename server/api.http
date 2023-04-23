@@ -334,3 +334,11 @@ Content-Type: application/json
     "user_id": "26"
 }
 
+### 
+POST  http://localhost:4000/api/v1/admin/orders/getOrders
+Content-Type: application/json
+
+{
+    "pagination": "2"
+}
+

@@ -199,20 +199,7 @@ const Feed = ({ currentUser }) => {
                             sx={{ color: "dodgerblue", cursor: "pointer" }}
                           >
                             {item?.code}
-                          </Typography>{" "}
-                          {/* <Typography
-                              variant="span"
-                              fontSize={13}
-                              sx={{
-                                color: "#666",
-                                backgroundColor: "#e1e7ff",
-                                padding: "3px 10px",
-                                borderRadius: "15px",
-                                cursor: "pointer",
-                              }}
-                            >
-                              Sao chép
-                            </Typography> */}
+                          </Typography>
                         </Box>
 
                         <Box
@@ -306,7 +293,14 @@ const Feed = ({ currentUser }) => {
                         alignItems="center"
                         sx={{
                           borderTop: "1px solid #ddd",
-                          borderBottom: "1px solid #ddd",
+                          borderBottom: "1px solid",
+                          borderBottomColor: `${
+                            item.status === "Chờ xác nhận" ||
+                            item.status === "Đã hủy" ||
+                            item.status === "Đã giao"
+                              ? "#ddd"
+                              : "#fff"
+                          }`,
                           color: "#666",
                           fontSize: "14px",
                           lineHeight: "40px",
@@ -334,39 +328,70 @@ const Feed = ({ currentUser }) => {
                         </Box>
                       </Stack>
 
-                      <Stack justifyContent="center" alignItems="center">
-                        <Box
-                          onClick={() => handleDestroyOrder(item.id)}
-                          sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            border: "1px solid",
-                            borderColor: `${
-                              item.status !== "Đã hủy" ? "#ccc" : "red"
-                            }`,
-                            backgroundColor: `${
-                              item.status !== "Đã hủy" ? "#ccc" : "red"
-                            }`,
-                            color: "#fff",
-                            margin: 1,
-                            padding: "5px 50px",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            transition: "all .3s ease",
-
-                            ":hover": {
-                              backgroundColor: `${
-                                item.status !== "Đã hủy" ? "#aaa" : "#d40a0a"
+                      {item.status === "Chờ xác nhận" ||
+                      item.status === "Đã hủy" ? (
+                        <Stack justifyContent="center" alignItems="center">
+                          <Box
+                            onClick={() => handleDestroyOrder(item.id)}
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              border: "1px solid",
+                              borderColor: `${
+                                item.status !== "Đã hủy" ? "#ccc" : "red"
                               }`,
-                            },
-                          }}
-                        >
-                          {item.status !== "Đã hủy"
-                            ? "Xác nhận hủy"
-                            : "Mua lại"}
-                        </Box>
-                      </Stack>
+                              backgroundColor: `${
+                                item.status !== "Đã hủy" ? "#ccc" : "red"
+                              }`,
+                              color: "#fff",
+                              margin: 1,
+                              padding: "5px 50px",
+                              borderRadius: "5px",
+                              cursor: "pointer",
+                              transition: "all .3s ease",
+
+                              ":hover": {
+                                backgroundColor: `${
+                                  item.status !== "Đã hủy" ? "#aaa" : "#d40a0a"
+                                }`,
+                              },
+                            }}
+                          >
+                            {item.status !== "Đã hủy"
+                              ? "Xác nhận hủy"
+                              : "Mua lại"}
+                          </Box>
+                        </Stack>
+                      ) : (
+                        // Tab Đã giao sẽ có button đánh giá
+                        item.status === "Đã giao" && (
+                          <Stack justifyContent="center" alignItems="center">
+                            <Box
+                              sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                border: "1px solid",
+                                borderColor: "dodgerblue",
+                                backgroundColor: "dodgerblue",
+                                color: "#fff",
+                                margin: 1,
+                                padding: "5px 50px",
+                                borderRadius: "5px",
+                                cursor: "pointer",
+                                transition: "all .3s ease",
+
+                                ":hover": {
+                                  backgroundColor: "#0e71d2",
+                                },
+                              }}
+                            >
+                              Đánh giá
+                            </Box>
+                          </Stack>
+                        )
+                      )}
                     </Box>
                   </OrderItem>
                 ))}

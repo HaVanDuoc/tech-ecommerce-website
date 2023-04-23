@@ -1,12 +1,11 @@
 const { intervalServerError } = require("../../../middleware/handleError");
-const { productsService } = require("../../../services/client/products");
+const { getOrders } = require("../../../services/admin/orders/getOrders");
 
-exports.productsController = async (req, res) => {
+exports.getOrders = async (req, res) => {
   try {
-    const category = req.body.category;
     const pagination = req.body.pagination;
 
-    const response = await productsService(category, pagination);
+    const response = await getOrders(pagination);
 
     res.status(200).json(response);
   } catch (error) {

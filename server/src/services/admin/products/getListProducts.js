@@ -3,8 +3,6 @@ const db = require("../../../models");
 exports.getListProducts = (offset) =>
   new Promise(async (resolve, reject) => {
     try {
-      console.log("offset", offset);
-
       const [amount] = await db.sequelize.query(
         `select count(*) as 'count' from products`
       );

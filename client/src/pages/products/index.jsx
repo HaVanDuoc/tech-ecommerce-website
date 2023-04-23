@@ -3,6 +3,7 @@ import { NextArrow, PrevArrow } from "~/styles/slider";
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Grid,
   Pagination,
@@ -10,113 +11,186 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Slider from "react-slick";
 import { Footer } from "~/components";
-import Fridge from "./Frigde";
-import HeadPhone from "./HeadPhone";
-import Laptop from "./Laptop";
-import Loa from "./Loa";
-import Mobile from "./Mobile";
-import PC from "./PC";
-import QuatDieuHoa from "./QuatDieuHoa";
-import Sim from "./Sim";
-import Tablet from "./Tablet";
-import Tivi from "./Tivi";
-import WashingMachine from "./WashingMachine";
-import Watch from "./Watch";
 import { PF } from "~/__variables";
 import { AppBar } from "~/components/Header";
 import axios from "axios";
 import { formatVND } from "~/helper/format";
 import { default as SliderMaterial } from "@mui/material/Slider";
 import Card from "~/components/card";
+import { useDispatch, useSelector } from "react-redux";
+import { selectorProducts } from "~/redux/products/reducer";
+import { ProductsAction } from "~/redux/products/actions";
 
 const Products = () => {
   const [fetch, setFetch] = useState([]);
+  const [pagination, setPagination] = useState(1);
+  const [isPending, setPending] = useState(false);
   const current = useParams().category; // get category of current page
-  let page = null;
   let category = null;
+  const dispatch = useDispatch();
 
-  switch (current) {
-    case "dien-thoai":
-      page = <Mobile />;
-      category = "Điện thoại";
-      break;
+  const productsRedux = useSelector(selectorProducts);
 
-    case "tablet":
-      page = <Tablet />;
-      category = "Tablet";
-      break;
+  const fetchProducts = async (category) => {
+    setPending(true);
 
-    case "laptop":
-      page = <Laptop />;
-      category = "Laptop";
-      break;
+    const response = await axios({
+      method: "post",
+      url: "/client/products",
+      data: { category, pagination },
+    });
 
-    case "tai-nghe":
-      page = <HeadPhone />;
-      category = "Tai nghe";
-      break;
+    dispatch(ProductsAction(category, response.data));
 
-    case "dong-ho":
-      page = <Watch />;
-      category = "Đồng hồ";
-      break;
+    setFetch(response.data);
 
-    case "pc":
-      page = <PC />;
-      category = "Pc";
-      break;
-
-    case "sim":
-      page = <Sim />;
-      category = "Sim";
-      break;
-
-    case "may-giat":
-      page = <WashingMachine />;
-      category = "Máy giặt";
-      break;
-
-    case "tivi":
-      page = <Tivi />;
-      category = "Tivi";
-      break;
-
-    case "tu-lanh":
-      page = <Fridge />;
-      category = "Tủ lạnh";
-      break;
-
-    case "loa":
-      page = <Loa />;
-      category = "Loa";
-      break;
-
-    case "quat-dieu-hoa":
-      page = <QuatDieuHoa />;
-      category = "Quạt điều hòa";
-      break;
-
-    default:
-      break;
-  }
+    setPending(false);
+  };
 
   useEffect(() => {
-    const fetch = async () => {
-      const response = await axios({
-        method: "post",
-        url: "/client/products",
-        data: { category },
-      });
+    switch (current) {
+      case "dien-thoai":
+        category = "Điện thoại";
 
-      setFetch(response.data);
-    };
+        // Nếu trong redux chưa có fetch dữ liệu -> fetch()
+        // Đã có rồi thì lấy set lại
+        if (!productsRedux.dienthoai.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.dienthoai.products);
+        }
 
-    fetch();
-  }, [category]);
+        break;
+
+      case "tablet":
+        category = "Tablet";
+
+        if (!productsRedux.tablet.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.tablet.products);
+        }
+
+        break;
+
+      case "laptop":
+        category = "Laptop";
+
+        if (!productsRedux.laptop.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.laptop.products);
+        }
+
+        break;
+
+      case "tai-nghe":
+        category = "Tai nghe";
+
+        if (!productsRedux.tainghe.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.tainghe.products);
+        }
+
+        break;
+
+      case "dong-ho":
+        category = "Đồng hồ";
+
+        if (!productsRedux.dongho.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.dongho.products);
+        }
+
+        break;
+
+      case "pc":
+        category = "Pc";
+
+        if (!productsRedux.pc.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.pc.products);
+        }
+
+        break;
+
+      case "sim":
+        category = "Sim";
+
+        if (!productsRedux.sim.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.sim.products);
+        }
+
+        break;
+
+      case "may-giat":
+        category = "Máy giặt";
+
+        if (!productsRedux.maygiat.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.maygiat.products);
+        }
+
+        break;
+
+      case "tivi":
+        category = "Tivi";
+
+        if (!productsRedux.tivi.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.tivi.products);
+        }
+
+        break;
+
+      case "tu-lanh":
+        category = "Tủ lạnh";
+
+        if (!productsRedux.tulanh.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.tulanh.products);
+        }
+
+        break;
+
+      case "loa":
+        category = "Loa";
+
+        if (!productsRedux.loa.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.loa.products);
+        }
+
+        break;
+
+      case "quat-dieu-hoa":
+        category = "Quạt điều hòa";
+
+        if (!productsRedux.quatdieuhoa.isFetch) {
+          fetchProducts(category);
+        } else {
+          setFetch(productsRedux.quatdieuhoa.products);
+        }
+
+        break;
+
+      default:
+        break;
+    }
+  }, [current, category, pagination, dispatch]);
 
   return (
     <Wrapper>
@@ -176,9 +250,11 @@ const Products = () => {
                     </Box>
 
                     <Box>
-                      {fetch?.countAll > 0 ? (
+                      {isPending ? (
+                        <Fragment />
+                      ) : fetch?.countAll > 0 ? (
                         <Typography sx={{ fontWeight: 500 }}>
-                          {`${fetch?.data?.length} ${fetch.data[0]?.category}`}
+                          {`${fetch.countAll} ${fetch.data[0]?.category}`}
                         </Typography>
                       ) : (
                         <Typography sx={{ fontWeight: 500 }}>
@@ -191,22 +267,46 @@ const Products = () => {
               </SortBy>
 
               {/* sản phẩm */}
-              <ListProduct>
-                <Grid container spacing={1}>
-                  {fetch?.data?.length &&
-                    fetch?.data.map((item, index) => {
-                      return (
-                        <Grid item xs={3} key={index}>
-                          <Card product={item} />
-                        </Grid>
-                      );
-                    })}
-                </Grid>
-              </ListProduct>
+              {isPending ? (
+                <Stack
+                  flexDirection="column"
+                  justifyContent="center"
+                  alignItems="center"
+                  width="100%"
+                  height={460}
+                >
+                  <CircularProgress />
+                  <Typography marginTop={2}>Chờ chút xíu...</Typography>
+                </Stack>
+              ) : (
+                <ListProduct>
+                  <Grid container spacing={1}>
+                    {fetch?.data?.length &&
+                      fetch?.data.map((item, index) => {
+                        return (
+                          <Grid item xs={3} key={index}>
+                            <Card product={item} />
+                          </Grid>
+                        );
+                      })}
+                  </Grid>
 
-              <Stack alignItems="center" justifyContent="center" marginTop={5}>
-                <Pagination count={10} color="primary" size="large" />
-              </Stack>
+                  {fetch.totalPagination > 1 && (
+                    <Stack
+                      alignItems="center"
+                      justifyContent="center"
+                      marginTop={5}
+                    >
+                      <Pagination
+                        count={fetch.totalPagination}
+                        defaultPage={fetch.currentPagination}
+                        color="primary"
+                        size="large"
+                      />
+                    </Stack>
+                  )}
+                </ListProduct>
+              )}
             </Grid>
           </Grid>
         </Container>

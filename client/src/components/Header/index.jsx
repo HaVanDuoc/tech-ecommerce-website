@@ -322,7 +322,7 @@ export const Search = () => {
     recent();
   }, [dispatch, currentUser]);
 
-  console.log("search", search);
+  // console.log("search", search);
 
   const handleChange = (e) => {
     console.log("e.target.value", e.target.value);
@@ -331,9 +331,9 @@ export const Search = () => {
   const handleClick = () => {
     document.querySelector("#auto-complete").style.display = "block";
 
-    document.querySelector("#input-search").addEventListener("blur", () => {
-      document.querySelector("#auto-complete").style.display = "none";
-    });
+    // document.querySelector("#input-search").addEventListener("focus", () => {
+    //   document.querySelector("#auto-complete").style.display = "none";
+    // });
   };
 
   const SearchWrap = styled(Box)(() => ({
@@ -398,6 +398,13 @@ export const Search = () => {
 
       <ResultSearch
         id="auto-complete"
+        tabIndex={-1}
+        onFocus={() =>
+          (document.querySelector("#auto-complete").style.display = "block")
+        }
+        onBlur={() =>
+          (document.querySelector("#auto-complete").style.display = "none")
+        }
         sx={{
           width: "100%",
           maxHeight: 500,
