@@ -1,41 +1,55 @@
-import { DataGrid } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { formatStatusProduct, formatVND } from "~/helper/format";
-import { ButtonCreate, StackButtons } from "~/admin/Styled";
-import { Box, IconButton } from "@mui/material";
 import axios from "axios";
+import { refreshPage } from "~/utils";
+import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { DataGrid } from "@mui/x-data-grid";
+import { Box, IconButton } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { AdminAction } from "~/redux/Admin/actions";
+import { useDispatch, useSelector } from "react-redux";
+import PaginationCustomize from "~/components/Pagination";
+import { selectorKhachHang } from "~/redux/Admin/reducers";
+import { ButtonCreate, StackButtons } from "~/admin/Styled";
+import { formatStatusProduct, formatVND } from "~/helper/format";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 export default function ProductList() {
-  const [data, setData] = useState([]);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(
+    Number(new URLSearchParams(window.location.search).get("page")) || 1
+  );
+  const [isPending, setPending] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const fetchKhachHang = useSelector(selectorKhachHang);
+  const dispatch = useDispatch();
 
   // Fetch list product
   useEffect(() => {
+    // fetch data
     const fetch = async () => {
+      setPending(true);
+
       const response = await axios({
         method: "post",
         url: "/admin/products/getProducts",
-        data: { offset },
+        data: { page },
       });
-      setData(response.data.data);
+
+      dispatch(
+        AdminAction(
+          "Khách hàng",
+          response.data.all,
+          page,
+          response.data.limit,
+          response.data.data
+        )
+      );
+
+      setPending(false);
     };
 
-    fetch();
-  }, [offset]);
-
-  // useEffect(() => {
-  //   document
-  //     .querySelector(`button[aria-label="Go to next page"]`)
-  //     .addEventListener("click", () => {
-  //       setOffset(offset + 5);
-  //     });
-  // }, []);
-
-  // console.log("offset", offset);
+    (fetchKhachHang.isFetch && fetchKhachHang.payload[`page-${page}`]) ||
+      fetch();
+  }, [page, dispatch, fetchKhachHang]);
 
   const handleSnackBar = (res) => {
     if (res.data.err === 0) {
@@ -62,7 +76,7 @@ export default function ProductList() {
 
       if (response.data.err === 0) {
         handleSnackBar(response);
-        setData(data.filter((item) => item.productId !== productId));
+        refreshPage();
       }
     });
   };
@@ -139,7 +153,11 @@ export default function ProductList() {
         <ButtonCreate href="/admin/product/newProduct" />
       </StackButtons>
       <DataGrid
-        rows={data}
+        rows={
+          fetchKhachHang.isFetch && fetchKhachHang?.payload[`page-${page}`]
+            ? fetchKhachHang?.payload[`page-${page}`]
+            : []
+        }
         disableSelectionOnClick
         columns={columns}
         pageSize={3}
@@ -147,6 +165,15 @@ export default function ProductList() {
         autoHeight
         autoPageSize
         rowHeight={150}
+        loading={isPending}
+        hideFooter
+      />
+
+      <PaginationCustomize
+        page={page}
+        setPage={setPage}
+        count={fetchKhachHang.countPage}
+        limit={fetchKhachHang.limit}
       />
     </Box>
   );

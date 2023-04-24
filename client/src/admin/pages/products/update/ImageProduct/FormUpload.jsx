@@ -79,12 +79,12 @@ const FormUpload = ({ imageList }) => {
     }
   };
 
-  const handleSubmit = (e) => {
-    setSubmitting(true);
-
-    setTimeout(async () => {
+  const handleSubmit = () => {
+    const update = async () => {
       // Dữ liệu tải về là `array` nên phải chuyển về lại `string`
       const arrayToString = JSON.stringify(selected);
+
+      setSubmitting(true);
 
       const response = await axios({
         method: "put",
@@ -92,14 +92,17 @@ const FormUpload = ({ imageList }) => {
         data: { image: arrayToString },
       });
 
-      handleSnackBar(response); // response result
       setSubmitting(false);
+
+      handleSnackBar(response); // response result
 
       // if don't have error is refresh page
       if (response.data.err === 0) {
         refreshPage();
       }
-    }, 2500);
+    };
+
+    update();
   };
 
   const handleDeletePreview = (image) => {

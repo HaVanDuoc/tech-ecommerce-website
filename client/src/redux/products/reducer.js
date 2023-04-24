@@ -118,17 +118,3 @@ export const ProductsReducer = (state = INIT, action) => {
 };
 
 export const selectorProducts = (state) => state.Products;
-
-// export const selectorProductsDienThoai = (state) => state.Products.dienthoai;
-// export const selectorProductsTablet = (state) => state.Products.tablet;
-// export const selectorProductsLaptop = (state) => state.Products.laptop;
-// export const selectorProductsTaiNghe = (state) => state.Products.tainghe;
-// export const selectorProductsDongHo = (state) => state.Products.dongho;
-// export const selectorProductsPc = (state) => state.Products.pc;
-// export const selectorProductsSim = (state) => state.Products.sim;
-// export const selectorProductsMayGiat = (state) => state.Products.maygiat;
-// export const selectorProductsTivi = (state) => state.Products.tivi;
-// export const selectorProductsTuLanh = (state) => state.Products.tulanh;
-// export const selectorProductsLoa = (state) => state.Products.loa;
-// export const selectorProductsQuatDieuHoa = (state) =>
-//   state.Products.quatdieuhoa;

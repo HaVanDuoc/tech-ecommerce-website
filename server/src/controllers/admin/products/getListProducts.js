@@ -5,9 +5,9 @@ const {
 
 exports.getListProducts = async (req, res) => {
   try {
-    const offset = req.body.offset;
+    const page = req.body.page;
 
-    const response = await getListProducts(offset);
+    const response = await getListProducts(page);
 
     res.status(200).json(response);
   } catch (error) {

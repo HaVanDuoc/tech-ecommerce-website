@@ -6,6 +6,7 @@ import { FetchProducts } from "../home/fetchProducts/reducer";
 import OrderReducer from "../profile/fetchOrders/reducer";
 import { Search } from "../Search/reducer";
 import { ProductsReducer } from "../products/reducer";
+import { AdminReducer } from "../Admin/reducers";
 
 const { combineReducers } = require("redux");
 
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   ProfileFetchOrders: OrderReducer,
   Search: Search,
   Products: ProductsReducer,
+  Admin: AdminReducer,
 });
 
 export default rootReducer;
