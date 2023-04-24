@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton } from "@mui/material";
+import { Box, Button, Divider, IconButton, Stack } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
@@ -7,25 +7,46 @@ import { formatVND } from "~/helper/format";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { DataGrid } from "@mui/x-data-grid";
+import PaginationCustomize from "~/components/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { selectorDonHang } from "~/redux/Admin/reducers";
+import { AdminAction } from "~/redux/Admin/actions";
 
 export default function Orders() {
   const [data, setData] = useState([]);
-  const [pagination, setPagination] = useState(1);
+  const [page, setPage] = useState(
+    Number(new URLSearchParams(window.location.search).get("page") || 1)
+  );
+  const [isPending, setPending] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
+  const reduxOrders = useSelector(selectorDonHang);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetch = async () => {
+      setPending(true);
+
       const response = await axios({
         method: "post",
         url: "/admin/orders/getOrders",
-        data: { pagination },
+        data: { page },
       });
 
-      setData(response.data.data);
+      dispatch(
+        AdminAction(
+          "Đơn hàng",
+          response.data.all,
+          page,
+          response.data.limit,
+          response.data.data
+        )
+      );
+
+      setPending(false);
     };
 
-    fetch();
-  }, [pagination]);
+    (reduxOrders.isFetch && reduxOrders.payload[`page-${page}`]) || fetch();
+  }, [page, dispatch, reduxOrders]);
 
   const handleSnackBar = (res) => {
     if (res.data.err === 0) {
@@ -120,7 +141,7 @@ export default function Orders() {
                 sx={{ marginLeft: "20px" }}
                 onClick={() => handleClick(params.row.id, params.row.status)}
               >
-                Xác nhận
+                Xác nhận đơn hàng
               </Button>
             ) : params.row.status === "Chờ lấy hàng" ? (
               <Button
@@ -130,21 +151,27 @@ export default function Orders() {
                 Đã lấy hàng
               </Button>
             ) : params.row.status === "Đang giao" ? (
-              <Fragment>
+              <Stack
+                flexDirection="row"
+                justifyContent="start"
+                alignItems="center"
+              >
                 <Button
                   sx={{ marginLeft: "20px" }}
                   onClick={() => handleClick(params.row.id, params.row.status)}
                 >
                   Đã giao
                 </Button>
-                <Divider orientation="vertical" variant="middle" flexItem />
-                <Button
-                  sx={{ marginLeft: "20px" }}
-                  onClick={() => handleClick(params.row.id, "Trả hàng")}
-                >
+                <Divider
+                  orientation="vertical"
+                  variant="middle"
+                  flexItem
+                  sx={{ mx: 1, borderColor: "dodgerblue", height: 30 }}
+                />
+                <Button onClick={() => handleClick(params.row.id, "Trả hàng")}>
                   Trả hàng
                 </Button>
-              </Fragment>
+              </Stack>
             ) : params.row.status === "Đã giao" ? (
               <Button sx={{ marginLeft: "20px" }}>Xem đánh giá</Button>
             ) : params.row.status === "Trả hàng" ? (
@@ -175,8 +202,13 @@ export default function Orders() {
       <StackButtons>
         <ButtonCreate href="/admin/product/newProduct" />
       </StackButtons>
+
       <DataGrid
-        rows={data}
+        rows={
+          reduxOrders.isFetch && reduxOrders?.payload[`page-${page}`]
+            ? reduxOrders?.payload[`page-${page}`]
+            : []
+        }
         disableSelectionOnClick
         columns={columns}
         pageSize={8}
@@ -184,6 +216,15 @@ export default function Orders() {
         autoHeight
         autoPageSize
         rowHeight={60}
+        hideFooter
+        loading={isPending}
+      />
+
+      <PaginationCustomize
+        page={page}
+        setPage={setPage}
+        count={reduxOrders.countPage}
+        limit={reduxOrders.limit}
       />
     </Box>
   );

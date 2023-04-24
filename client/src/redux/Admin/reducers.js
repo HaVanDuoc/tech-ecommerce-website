@@ -26,14 +26,14 @@ export const AdminReducer = (state = INTI_STATE, action) => {
       state.SanPham.isFetch = true;
       state.SanPham.countPage = action.countPage;
       state.SanPham.limit = action.limit;
-      state.SanPham.payload[`page-${action.page}`] = action.payload;
+      state.SanPham.payload[`page-${action.currentPage}`] = action.payload;
       return state;
 
     case "Đơn hàng":
       state.DonHang.isFetch = true;
       state.DonHang.countPage = action.countPage;
       state.DonHang.limit = action.limit;
-      state.DonHang.payload[`page-${action.page}`] = action.payload;
+      state.DonHang.payload[`page-${action.currentPage}`] = action.payload;
       return state;
 
     default:

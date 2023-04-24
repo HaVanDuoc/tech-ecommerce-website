@@ -1,10 +1,10 @@
 const db = require("../../../models");
 
-exports.getOrders = (pagination) =>
+exports.getOrders = (page) =>
   new Promise(async (resolve, reject) => {
     try {
       const limit = 8;
-      const offset = (pagination - 1) * limit;
+      const offset = (page - 1) * limit;
       var response = new Array();
       let orderList;
 
@@ -31,7 +31,6 @@ exports.getOrders = (pagination) =>
 
       await Promise.all(
         orderList.map(async (item) => {
-          console.log("item.id", item.id);
           const [orderItem] = await db.sequelize.query(`
                       select
                           order_items.id,
@@ -56,7 +55,14 @@ exports.getOrders = (pagination) =>
         })
       );
 
+      // count orders
+      const [amount] = await db.sequelize.query(
+        `select count(*) as 'count' from order_details`
+      );
+
       resolve({
+        limit: limit ? limit : null,
+        all: amount ? amount[0].count : null,
         err: response ? 0 : 1,
         msg: response ? "Get data successfully" : "Get data failure",
         data: response,

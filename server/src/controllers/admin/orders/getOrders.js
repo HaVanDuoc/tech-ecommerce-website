@@ -3,9 +3,9 @@ const { getOrders } = require("../../../services/admin/orders/getOrders");
 
 exports.getOrders = async (req, res) => {
   try {
-    const pagination = req.body.pagination;
+    const page = req.body.page;
 
-    const response = await getOrders(pagination);
+    const response = await getOrders(page);
 
     res.status(200).json(response);
   } catch (error) {
