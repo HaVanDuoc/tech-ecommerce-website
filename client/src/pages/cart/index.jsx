@@ -7,6 +7,7 @@ import {
 import {
   Box,
   Checkbox,
+  CircularProgress,
   Container,
   Divider,
   Grid,
@@ -14,25 +15,28 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Brand, Search } from "~/components/Header";
 import AccountMenu from "~/components/Header/AccountMenu";
 import { Footer } from "~/components";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 import { PF } from "~/__variables";
 import TopBar from "~/components/Header/TopBar";
 import { useSnackbar } from "notistack";
+import { selectorCart } from "~/redux/cart/reudcer";
+import { GetCart } from "~/redux/cart/action";
 
 const Cart = () => {
-  const [fetch, setFetch] = useState([]);
   const [reFetch, setReFetch] = useState(true); // Đơn giản là sử dụng để reset dữ liệu fetch về thôi
   const [payment, setPayment] = useState(0); // số tiền thanh toán
   const [paymentProductNumber, setPaymentProductNumber] = useState(0); // số sản phẩm đã chọn
   const [selectedProduct, setSelectedProduct] = useState([]);
   const currentUser = useSelector(selectorCurrentUser);
+  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const cart = useSelector(selectorCart);
 
   useEffect(() => {
     const fetch = async () => {
@@ -44,13 +48,11 @@ const Cart = () => {
         },
       });
 
-      setFetch(response.data);
+      dispatch(GetCart(response.data));
     };
 
     fetch();
-  }, [currentUser, reFetch]); // ở bất kỳ đâu chỉ cần setReFetch là có thể làm mới fetch này
-
-  console.log("fetch", fetch);
+  }, [currentUser, reFetch, dispatch]); // ở bất kỳ đâu chỉ cần setReFetch là có thể làm mới fetch này
 
   // console.log("payment", payment);
 
@@ -276,287 +278,339 @@ const Cart = () => {
     fetch();
   };
 
-  console.log("selectedProduct", selectedProduct);
-
   return (
     <Root>
       <HeaderCart />
 
       <ContentCart>
         <Container maxWidth="lg" disableGutters>
-          {fetch.data && fetch.data.length ? (
-            <Box
-              sx={{
-                borderRadius: "5px",
-                backgroundColor: "#fff",
-                margin: "30px 24px",
-              }}
-            >
-              <Option>
-                {/* title */}
-                <Box className="title col">
-                  <Box className="col-0">
-                    <Checkbox />
-                  </Box>
-                  <Box className="col-1">
-                    <Typography>Sản phẩm</Typography>
-                  </Box>
-                  <Box className="col-2">
-                    <Typography>Đơn giá</Typography>
-                  </Box>
-                  <Box className="col-3">
-                    <Typography>Số lượng</Typography>
-                  </Box>
-                  <Box className="col-4">
-                    <Typography>Số tiền</Typography>
-                  </Box>
-                  <Box className="col-5">
-                    <Typography>Thao tác</Typography>
-                  </Box>
-                </Box>
-
-                {/* Content */}
-                <Box className="content">
-                  {fetch.data &&
-                    fetch.data.map((item, index) => {
-                      return (
-                        <Box
-                          className={`item col cart-item-${index}`}
-                          key={index}
-                        >
-                          {/* CheckBox */}
-                          <Box className="col-0">
-                            <Checkbox
-                              className={`box-select-${index}`}
-                              onClick={() =>
-                                handleSelect(index, item.price, item.discount)
-                              }
-                            />
-
-                            <Box
-                              sx={{ display: "none" }}
-                              className={`box-product-id-${index}`}
-                            >
-                              {item.id}
-                            </Box>
-                          </Box>
-
-                          {/* Sản phẩm */}
-                          <Box className="col-1">
-                            <Grid container spacing={1} flexDirection="row">
-                              <Grid item xs={4}>
-                                <img
-                                  src={
-                                    item.image
-                                      ? JSON.parse(item.image)[0].base64
-                                      : ""
-                                  }
-                                  alt=""
-                                  width="100%"
-                                />
-                              </Grid>
-                              <Grid item xs>
-                                <Box
-                                  sx={{
-                                    display: "flex",
-                                    justifyContent: "start",
-                                    alignItems: "center",
-                                    height: "100%",
-                                  }}
-                                >
-                                  <Typography>{item.name}</Typography>
-                                </Box>
-                              </Grid>
-                            </Grid>
-                          </Box>
-
-                          {/* Đơn giá */}
-                          <Box className="col-2 field-bill">
-                            {item?.discount && (
-                              <Typography
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "row",
-                                  justifyContent: "center",
-                                  alignItems: "center",
-
-                                  "span:nth-child(n)": {
-                                    marginLeft: "5px",
-                                  },
-                                }}
-                              >
-                                <Typography
-                                  variant="span"
-                                  color="#666"
-                                  fontSize="14px"
-                                >
-                                  {formatCost(item.price)}
-                                </Typography>
-                                <Typography
-                                  variant="span"
-                                  color="crimson"
-                                  fontWeight={500}
-                                  fontSize="14px"
-                                >
-                                  {formatDiscount(item.discount)}
-                                </Typography>
-                              </Typography>
-                            )}
-                            <Typography>
-                              {formatPrice(item.price, item.discount)}
-                            </Typography>
-                          </Box>
-
-                          {/* Số lượng */}
-                          <Box className={`col-3 box-quantity-${index}`}>
-                            <Box sx={styles}>
-                              <Box
-                                className="btn"
-                                onClick={() =>
-                                  handleDecrease(
-                                    index,
-                                    item.price,
-                                    item.discount,
-                                    item.id,
-                                    item.cart_session_id
-                                  )
-                                }
-                              >
-                                -
-                              </Box>
-                              <Box className={`count get-quantity-${index}`}>
-                                {item.quantity}
-                              </Box>
-                              <Box
-                                className="btn"
-                                onClick={() =>
-                                  handleIncrease(
-                                    index,
-                                    item.price,
-                                    item.discount,
-                                    item.id,
-                                    item.cart_session_id
-                                  )
-                                }
-                              >
-                                +
-                              </Box>
-                            </Box>
-                          </Box>
-
-                          {/* Số tiền */}
-                          <Box className="col-4">
-                            <Typography
-                              className={`box-price-${index}`}
-                              sx={{ color: "crimson" }}
-                            >
-                              {formatVND(
-                                (item.price -
-                                  item.price *
-                                    ((item.discount ? item.discount : 0) /
-                                      100)) *
-                                  item.quantity
-                              )}
-                            </Typography>
-                          </Box>
-
-                          {/* Thao tác */}
-                          <Box className="col-5">
-                            <Typography
-                              sx={{
-                                color: "crimson",
-                                cursor: "pointer",
-                              }}
-                              onClick={() =>
-                                handleDelete(
-                                  index,
-                                  item.id,
-                                  item.cart_session_id
-                                )
-                              }
-                            >
-                              Xóa
-                            </Typography>
-                          </Box>
-                        </Box>
-                      );
-                    })}
-                </Box>
-
-                {/* Payment */}
-                <Payment>
-                  <Box
-                    sx={{
-                      padding: "10px 24px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <Checkbox />
-                      <Typography sx={{ textTransform: "capitalize" }}>
-                        Chọn tất cả ({paymentProductNumber})
-                      </Typography>
-                    </Box>
-
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flexDirection: "row",
-                      }}
-                    >
-                      <Typography>
-                        Tổng thanh toán ({paymentProductNumber} sản phẩm):{" "}
-                        <Typography
-                          variant="span"
-                          sx={{
-                            color: "crimson",
-                            fontWeight: 600,
-                            fontSize: "1.2rem",
-                          }}
-                        >
-                          {formatVND(payment)}
-                        </Typography>
-                      </Typography>
-
-                      <Box
-                        sx={{
-                          marginLeft: 3,
-                          backgroundColor: "crimson",
-                          border: "1px solid crimson",
-                          borderRadius: "5px",
-                          color: "#fff",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          padding: "10px 30px",
-                          cursor: "pointer",
-                          boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
-                          transition: "all .2s ease-in-out",
-
-                          ":hover": {
-                            boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
-                          },
-                        }}
-                        onClick={handleOrder}
-                      >
-                        Đặt hàng
+          {cart.isFetch ? (
+            cart.payload.data ? (
+              <Fragment>
+                <Box
+                  sx={{
+                    borderRadius: "5px",
+                    backgroundColor: "#fff",
+                    margin: "30px 24px",
+                  }}
+                >
+                  <Option>
+                    {/* title */}
+                    <Box className="title col">
+                      <Box className="col-0">
+                        <Checkbox />
+                      </Box>
+                      <Box className="col-1">
+                        <Typography>Sản phẩm</Typography>
+                      </Box>
+                      <Box className="col-2">
+                        <Typography>Đơn giá</Typography>
+                      </Box>
+                      <Box className="col-3">
+                        <Typography>Số lượng</Typography>
+                      </Box>
+                      <Box className="col-4">
+                        <Typography>Số tiền</Typography>
+                      </Box>
+                      <Box className="col-5">
+                        <Typography>Thao tác</Typography>
                       </Box>
                     </Box>
+
+                    {/* Content */}
+                    <Box className="content">
+                      {cart.payload.data &&
+                        cart.payload.data.map((item, index) => {
+                          return (
+                            <Box
+                              className={`item col cart-item-${index}`}
+                              key={index}
+                            >
+                              {/* CheckBox */}
+                              <Box className="col-0">
+                                <Checkbox
+                                  className={`box-select-${index}`}
+                                  onClick={() =>
+                                    handleSelect(
+                                      index,
+                                      item.price,
+                                      item.discount
+                                    )
+                                  }
+                                />
+
+                                <Box
+                                  sx={{ display: "none" }}
+                                  className={`box-product-id-${index}`}
+                                >
+                                  {item.id}
+                                </Box>
+                              </Box>
+
+                              {/* Sản phẩm */}
+                              <Box className="col-1">
+                                <Grid container spacing={1} flexDirection="row">
+                                  <Grid item xs={4}>
+                                    <img
+                                      src={
+                                        item.image
+                                          ? JSON.parse(item.image)[0].base64
+                                          : ""
+                                      }
+                                      alt=""
+                                      width="100%"
+                                    />
+                                  </Grid>
+                                  <Grid item xs>
+                                    <Box
+                                      sx={{
+                                        display: "flex",
+                                        justifyContent: "start",
+                                        alignItems: "center",
+                                        height: "100%",
+                                      }}
+                                    >
+                                      <Typography>{item.name}</Typography>
+                                    </Box>
+                                  </Grid>
+                                </Grid>
+                              </Box>
+
+                              {/* Đơn giá */}
+                              <Box className="col-2 field-bill">
+                                {item?.discount && (
+                                  <Typography
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "row",
+                                      justifyContent: "center",
+                                      alignItems: "center",
+
+                                      "span:nth-child(n)": {
+                                        marginLeft: "5px",
+                                      },
+                                    }}
+                                  >
+                                    <Typography
+                                      variant="span"
+                                      color="#666"
+                                      fontSize="14px"
+                                    >
+                                      {formatCost(item.price)}
+                                    </Typography>
+                                    <Typography
+                                      variant="span"
+                                      color="crimson"
+                                      fontWeight={500}
+                                      fontSize="14px"
+                                    >
+                                      {formatDiscount(item.discount)}
+                                    </Typography>
+                                  </Typography>
+                                )}
+                                <Typography>
+                                  {formatPrice(item.price, item.discount)}
+                                </Typography>
+                              </Box>
+
+                              {/* Số lượng */}
+                              <Box className={`col-3 box-quantity-${index}`}>
+                                <Box sx={styles}>
+                                  <Box
+                                    className="btn"
+                                    onClick={() =>
+                                      handleDecrease(
+                                        index,
+                                        item.price,
+                                        item.discount,
+                                        item.id,
+                                        item.cart_session_id
+                                      )
+                                    }
+                                  >
+                                    -
+                                  </Box>
+                                  <Box
+                                    className={`count get-quantity-${index}`}
+                                  >
+                                    {item.quantity}
+                                  </Box>
+                                  <Box
+                                    className="btn"
+                                    onClick={() =>
+                                      handleIncrease(
+                                        index,
+                                        item.price,
+                                        item.discount,
+                                        item.id,
+                                        item.cart_session_id
+                                      )
+                                    }
+                                  >
+                                    +
+                                  </Box>
+                                </Box>
+                              </Box>
+
+                              {/* Số tiền */}
+                              <Box className="col-4">
+                                <Typography
+                                  className={`box-price-${index}`}
+                                  sx={{ color: "crimson" }}
+                                >
+                                  {formatVND(
+                                    (item.price -
+                                      item.price *
+                                        ((item.discount ? item.discount : 0) /
+                                          100)) *
+                                      item.quantity
+                                  )}
+                                </Typography>
+                              </Box>
+
+                              {/* Thao tác */}
+                              <Box className="col-5">
+                                <Typography
+                                  sx={{
+                                    color: "crimson",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() =>
+                                    handleDelete(
+                                      index,
+                                      item.id,
+                                      item.cart_session_id
+                                    )
+                                  }
+                                >
+                                  Xóa
+                                </Typography>
+                              </Box>
+                            </Box>
+                          );
+                        })}
+                    </Box>
+
+                    {/* Payment */}
+                    <Payment>
+                      <Box
+                        sx={{
+                          padding: "10px 24px",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <Checkbox />
+                          <Typography sx={{ textTransform: "capitalize" }}>
+                            Chọn tất cả ({paymentProductNumber})
+                          </Typography>
+                        </Box>
+
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <Typography>
+                            Tổng thanh toán ({paymentProductNumber} sản phẩm):{" "}
+                            <Typography
+                              variant="span"
+                              sx={{
+                                color: "crimson",
+                                fontWeight: 600,
+                                fontSize: "1.2rem",
+                              }}
+                            >
+                              {formatVND(payment)}
+                            </Typography>
+                          </Typography>
+
+                          <Box
+                            sx={{
+                              marginLeft: 3,
+                              backgroundColor: "crimson",
+                              border: "1px solid crimson",
+                              borderRadius: "5px",
+                              color: "#fff",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              padding: "10px 30px",
+                              cursor: "pointer",
+                              boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
+                              transition: "all .2s ease-in-out",
+
+                              ":hover": {
+                                boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
+                              },
+                            }}
+                            onClick={handleOrder}
+                          >
+                            Đặt hàng
+                          </Box>
+                        </Box>
+                      </Box>
+                    </Payment>
+                  </Option>
+                </Box>
+              </Fragment>
+            ) : (
+              <Fragment>
+                <Box
+                  sx={{
+                    height: "400px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Box sx={{ pointerEvents: "none" }}>
+                    <img
+                      src={PF + "/assets/cart/empty-cart-removebg-preview.png"}
+                      alt=""
+                      width="270px"
+                    />
                   </Box>
-                </Payment>
-              </Option>
-            </Box>
+                  <Box
+                    sx={{
+                      pointerEvents: "none",
+                      margin: 2,
+                      fontSize: "16px",
+                      fontWeight: 500,
+                      color: "#666",
+                    }}
+                  >
+                    Giỏ hàng của bạn còn trống
+                  </Box>
+                  <Link to="/">
+                    <Box
+                      sx={{
+                        color: "#fff",
+                        backgroundColor: "dodgerblue",
+                        textTransform: "uppercase",
+                        padding: "10px 30px",
+                        borderRadius: "5px",
+                      }}
+                    >
+                      Mua ngay
+                    </Box>
+                  </Link>
+                </Box>
+              </Fragment>
+            )
           ) : (
             <Box
               sx={{
@@ -567,13 +621,7 @@ const Cart = () => {
                 flexDirection: "column",
               }}
             >
-              <Box sx={{ pointerEvents: "none" }}>
-                <img
-                  src={PF + "/assets/cart/empty-cart-removebg-preview.png"}
-                  alt=""
-                  width="270px"
-                />
-              </Box>
+              <CircularProgress />
               <Box
                 sx={{
                   pointerEvents: "none",
@@ -583,21 +631,8 @@ const Cart = () => {
                   color: "#666",
                 }}
               >
-                Giỏ hàng của bạn còn trống
+                Đang xử lý...
               </Box>
-              <Link to="/">
-                <Box
-                  sx={{
-                    color: "#fff",
-                    backgroundColor: "dodgerblue",
-                    textTransform: "uppercase",
-                    padding: "10px 30px",
-                    borderRadius: "5px",
-                  }}
-                >
-                  Mua ngay
-                </Box>
-              </Link>
             </Box>
           )}
         </Container>

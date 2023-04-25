@@ -29,11 +29,13 @@ const Products = () => {
   const [fetch, setFetch] = useState([]);
   const [pagination, setPagination] = useState(1);
   const [isPending, setPending] = useState(false);
+  const [category, setCategory] = useState(null);
   const current = useParams().category; // get category of current page
-  let category = null;
   const dispatch = useDispatch();
 
-  const productsRedux = useSelector(selectorProducts);
+  const products = useSelector(selectorProducts);
+
+  console.log('products', products)
 
   const fetchProducts = async (category) => {
     setPending(true);
@@ -54,135 +56,135 @@ const Products = () => {
   useEffect(() => {
     switch (current) {
       case "dien-thoai":
-        category = "Điện thoại";
+        setCategory("Điện thoại");
 
         // Nếu trong redux chưa có fetch dữ liệu -> fetch()
         // Đã có rồi thì lấy set lại
-        if (!productsRedux.dienthoai.isFetch) {
+        if (!products.dienthoai.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.dienthoai.products);
+          setFetch(products.dienthoai.products);
         }
 
         break;
 
       case "tablet":
-        category = "Tablet";
+        setCategory("Tablet");
 
-        if (!productsRedux.tablet.isFetch) {
+        if (!products.tablet.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.tablet.products);
+          setFetch(products.tablet.products);
         }
 
         break;
 
       case "laptop":
-        category = "Laptop";
+        setCategory("Laptop");
 
-        if (!productsRedux.laptop.isFetch) {
+        if (!products.laptop.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.laptop.products);
+          setFetch(products.laptop.products);
         }
 
         break;
 
       case "tai-nghe":
-        category = "Tai nghe";
+        setCategory("Tai nghe");
 
-        if (!productsRedux.tainghe.isFetch) {
+        if (!products.tainghe.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.tainghe.products);
+          setFetch(products.tainghe.products);
         }
 
         break;
 
       case "dong-ho":
-        category = "Đồng hồ";
+        setCategory("Đồng hồ");
 
-        if (!productsRedux.dongho.isFetch) {
+        if (!products.dongho.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.dongho.products);
+          setFetch(products.dongho.products);
         }
 
         break;
 
       case "pc":
-        category = "Pc";
+        setCategory("Pc");
 
-        if (!productsRedux.pc.isFetch) {
+        if (!products.pc.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.pc.products);
+          setFetch(products.pc.products);
         }
 
         break;
 
       case "sim":
-        category = "Sim";
+        setCategory("Sim");
 
-        if (!productsRedux.sim.isFetch) {
+        if (!products.sim.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.sim.products);
+          setFetch(products.sim.products);
         }
 
         break;
 
       case "may-giat":
-        category = "Máy giặt";
+        setCategory("Máy giặt");
 
-        if (!productsRedux.maygiat.isFetch) {
+        if (!products.maygiat.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.maygiat.products);
+          setFetch(products.maygiat.products);
         }
 
         break;
 
       case "tivi":
-        category = "Tivi";
+        setCategory("Tivi");
 
-        if (!productsRedux.tivi.isFetch) {
+        if (!products.tivi.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.tivi.products);
+          setFetch(products.tivi.products);
         }
 
         break;
 
       case "tu-lanh":
-        category = "Tủ lạnh";
+        setCategory("Tủ lạnh");
 
-        if (!productsRedux.tulanh.isFetch) {
+        if (!products.tulanh.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.tulanh.products);
+          setFetch(products.tulanh.products);
         }
 
         break;
 
       case "loa":
-        category = "Loa";
+        setCategory("Loa");
 
-        if (!productsRedux.loa.isFetch) {
+        if (!products.loa.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.loa.products);
+          setFetch(products.loa.products);
         }
 
         break;
 
       case "quat-dieu-hoa":
-        category = "Quạt điều hòa";
+        setCategory("Quạt điều hòa");
 
-        if (!productsRedux.quatdieuhoa.isFetch) {
+        if (!products.quatdieuhoa.isFetch) {
           fetchProducts(category);
         } else {
-          setFetch(productsRedux.quatdieuhoa.products);
+          setFetch(products.quatdieuhoa.products);
         }
 
         break;
@@ -281,7 +283,7 @@ const Products = () => {
               ) : (
                 <ListProduct>
                   <Grid container spacing={1}>
-                    {fetch?.data?.length &&
+                    {fetch?.data &&
                       fetch?.data.map((item, index) => {
                         return (
                           <Grid item xs={3} key={index}>

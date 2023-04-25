@@ -1,15 +1,16 @@
-import { Badge, Button, Link, Stack, styled } from "@mui/material";
+import { Badge, Button, Stack, styled } from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
 import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const currentUser = useSelector(selectorCurrentUser);
 
   return (
     <Stack justifyContent="center" alignItems="center">
-      <Link href="/cart">
+      <Link to="/cart">
         <Button sx={{ color: "var(--color-main)" }}>
           <StyledBadge
             badgeContent={
