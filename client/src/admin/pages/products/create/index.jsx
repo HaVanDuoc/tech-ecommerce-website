@@ -11,6 +11,7 @@ import {
   ImageListItem,
   Radio,
   RadioGroup,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -27,6 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { FetchBrand, FetchCategorySelect } from "~/helper/fetch";
 import { formatCapitalization } from "~/helper/format";
 import { refreshPage } from "~/utils";
+import CheckIcon from "@mui/icons-material/Check";
 
 const initialValues = {
   name: "",
@@ -66,6 +68,22 @@ export default function CreateNewProduct() {
     }
   };
 
+  const checkName = () => {
+    const input = document.querySelector("input#name").value;
+
+    const check = async () => {
+      const response = await axios({
+        method: "post",
+        url: "/admin/products/checkNameProduct",
+        data: { key: input },
+      });
+
+      handleSnackBar(response);
+    };
+
+    check();
+  };
+
   return (
     <Formik
       initialValues={initialValues}
@@ -75,9 +93,8 @@ export default function CreateNewProduct() {
 
         // return console.log(JSON.stringify(data, null, 2)); // Test submit
 
-        setSubmitting(true);
-
         setTimeout(async () => {
+          setSubmitting(true);
           // get data from DB
           const response = await axios({
             method: "post",
@@ -85,15 +102,15 @@ export default function CreateNewProduct() {
             data: data,
           });
 
-          handleSnackBar(response);
-
           setSubmitting(false);
+
+          handleSnackBar(response);
 
           // Nếu tạo thành công thì reset page
           if (response.data.err === 0) {
             refreshPage();
           }
-        }, 2000);
+        });
       }}
     >
       {(props) => (
@@ -101,13 +118,20 @@ export default function CreateNewProduct() {
           <Box sx={{ flex: 4, paddingLeft: 4, paddingRight: 4 }}>
             <AdminTitle>Sản phẩm mới</AdminTitle>
             <Grid container spacing={2}>
-              <Grid item xs={4.5}>
+              <Grid item xs={4.5} position="relative">
+                <Stack position="absolute" right={30} top={33} zIndex={2}>
+                  <IconButton onClick={checkName}>
+                    <CheckIcon />
+                  </IconButton>
+                </Stack>
+
                 {Array.isArray(dummyProducts) &&
                   dummyProducts.map((item, index) => (
                     <FieldForm key={index}>
                       <Field
                         as={item.as}
                         label={item.label}
+                        id={item.name}
                         name={item.name}
                         type={item.type}
                       />

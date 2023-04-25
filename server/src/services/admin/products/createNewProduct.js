@@ -32,7 +32,7 @@ exports.createNewProduct = (data) =>
 
       resolve({
         err: response[1] ? 0 : 1,
-        msg: response[1] ? "Create successfully" : `${name} đã tồn tại!`,
+        msg: response[1] ? "Đã tạo sản phẩm!" : `${name} đã tồn tại!`,
         data: response[1] ? response[0] : null,
       });
     } catch (error) {
