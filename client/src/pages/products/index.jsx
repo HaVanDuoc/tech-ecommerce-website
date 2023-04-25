@@ -1,198 +1,141 @@
-import "~/styles/slider";
-import { NextArrow, PrevArrow } from "~/styles/slider";
 import {
   Box,
   Button,
   CircularProgress,
   Container,
   Grid,
-  Pagination,
   Stack,
   styled,
   Typography,
 } from "@mui/material";
-import React, { Fragment, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import Slider from "react-slick";
-import { Footer } from "~/components";
-import { PF } from "~/__variables";
-import { AppBar } from "~/components/Header";
+import "~/styles/slider";
 import axios from "axios";
-import { formatVND } from "~/helper/format";
-import { default as SliderMaterial } from "@mui/material/Slider";
+import Slider from "react-slick";
+import { PF } from "~/__variables";
 import Card from "~/components/card";
+import { Footer } from "~/components";
+import { formatVND } from "~/helper/format";
+import { AppBar } from "~/components/Header";
+import { Link, useParams } from "react-router-dom";
+import { NextArrow, PrevArrow } from "~/styles/slider";
 import { useDispatch, useSelector } from "react-redux";
-import { selectorProducts } from "~/redux/products/reducer";
 import { ProductsAction } from "~/redux/products/actions";
+import PaginationCustomize from "~/components/Pagination";
+import { selectorProducts } from "~/redux/products/reducer";
+import React, { Fragment, useEffect, useState } from "react";
+import { default as SliderMaterial } from "@mui/material/Slider";
+import { convertURLParamsToCategory } from "./helpers/convertURLParamsToCategory";
 
 const Products = () => {
-  const [fetch, setFetch] = useState([]);
-  const [pagination, setPagination] = useState(1);
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState(
+    Number(new URLSearchParams(window.location.search).get("page")) || 1
+  );
   const [isPending, setPending] = useState(false);
-  const [category, setCategory] = useState(null);
   const current = useParams().category; // get category of current page
   const dispatch = useDispatch();
 
   const products = useSelector(selectorProducts);
 
-  console.log('products', products)
-
-  const fetchProducts = async (category) => {
-    setPending(true);
-
-    const response = await axios({
-      method: "post",
-      url: "/client/products",
-      data: { category, pagination },
-    });
-
-    dispatch(ProductsAction(category, response.data));
-
-    setFetch(response.data);
-
-    setPending(false);
-  };
+  const category = convertURLParamsToCategory(current);
 
   useEffect(() => {
+    const fetchProducts = async (category) => {
+      setPending(true);
+
+      const response = await axios({
+        method: "post",
+        url: "/client/products",
+        data: { category, page },
+      });
+
+      dispatch(
+        ProductsAction(
+          response.data.category,
+          response.data.countPage,
+          response.data.currentPage,
+          response.data.countProducts,
+          response.data.data,
+          response.data.limit
+        )
+      );
+
+      setPending(false);
+    };
+
     switch (current) {
       case "dien-thoai":
-        setCategory("Điện thoại");
-
         // Nếu trong redux chưa có fetch dữ liệu -> fetch()
+        if (!products.dienthoai.payload[`page-${page}`])
+          fetchProducts("Điện thoại");
+
         // Đã có rồi thì lấy set lại
-        if (!products.dienthoai.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.dienthoai.products);
-        }
+        setData(products.dienthoai);
 
         break;
 
       case "tablet":
-        setCategory("Tablet");
-
-        if (!products.tablet.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.tablet.products);
-        }
-
+        if (!products.tablet.payload[`page-${page}`]) fetchProducts("Tablet");
+        setData(products.tablet);
         break;
 
       case "laptop":
-        setCategory("Laptop");
-
-        if (!products.laptop.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.laptop.products);
-        }
-
+        if (!products.laptop.payload[`page-${page}`]) fetchProducts("Laptop");
+        setData(products.laptop);
         break;
 
       case "tai-nghe":
-        setCategory("Tai nghe");
-
-        if (!products.tainghe.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.tainghe.products);
-        }
-
+        if (!products.tainghe.payload[`page-${page}`])
+          fetchProducts("Tai nghe");
+        setData(products.tainghe);
         break;
 
       case "dong-ho":
-        setCategory("Đồng hồ");
-
-        if (!products.dongho.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.dongho.products);
-        }
-
+        if (!products.dongho.payload[`page-${page}`]) fetchProducts("Đồng hồ");
+        setData(products.dongho);
         break;
 
       case "pc":
-        setCategory("Pc");
-
-        if (!products.pc.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.pc.products);
-        }
-
+        if (!products.pc.payload[`page-${page}`]) fetchProducts("Pc");
+        setData(products.pc);
         break;
 
       case "sim":
-        setCategory("Sim");
-
-        if (!products.sim.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.sim.products);
-        }
-
+        if (!products.sim.payload[`page-${page}`]) fetchProducts("Sim");
+        setData(products.sim);
         break;
 
       case "may-giat":
-        setCategory("Máy giặt");
-
-        if (!products.maygiat.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.maygiat.products);
-        }
-
+        if (!products.maygiat.payload[`page-${page}`])
+          fetchProducts("Máy giặt");
+        setData(products.maygiat);
         break;
 
       case "tivi":
-        setCategory("Tivi");
-
-        if (!products.tivi.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.tivi.products);
-        }
-
+        if (!products.tivi.payload[`page-${page}`]) fetchProducts("Tivi");
+        setData(products.tivi);
         break;
 
       case "tu-lanh":
-        setCategory("Tủ lạnh");
-
-        if (!products.tulanh.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.tulanh.products);
-        }
-
+        if (!products.tulanh.payload[`page-${page}`]) fetchProducts("Tủ lạnh");
+        setData(products.tulanh);
         break;
 
       case "loa":
-        setCategory("Loa");
-
-        if (!products.loa.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.loa.products);
-        }
-
+        if (!products.loa.payload[`page-${page}`]) fetchProducts("Loa");
+        setData(products.loa);
         break;
 
       case "quat-dieu-hoa":
-        setCategory("Quạt điều hòa");
-
-        if (!products.quatdieuhoa.isFetch) {
-          fetchProducts(category);
-        } else {
-          setFetch(products.quatdieuhoa.products);
-        }
-
+        if (!products.quatdieuhoa.payload[`page-${page}`])
+          fetchProducts("Quạt điều hòa");
+        setData(products.quatdieuhoa);
         break;
 
       default:
         break;
     }
-  }, [current, category, pagination, dispatch]);
+  }, [page, products, current, dispatch]);
 
   return (
     <Wrapper>
@@ -254,9 +197,9 @@ const Products = () => {
                     <Box>
                       {isPending ? (
                         <Fragment />
-                      ) : fetch?.countAll > 0 ? (
+                      ) : data.countProducts > 0 ? (
                         <Typography sx={{ fontWeight: 500 }}>
-                          {`${fetch.countAll} ${fetch.data[0]?.category}`}
+                          {`${data.countProducts} ${data.category}`}
                         </Typography>
                       ) : (
                         <Typography sx={{ fontWeight: 500 }}>
@@ -283,8 +226,11 @@ const Products = () => {
               ) : (
                 <ListProduct>
                   <Grid container spacing={1}>
-                    {fetch?.data &&
-                      fetch?.data.map((item, index) => {
+                    {data &&
+                      data.isFetch &&
+                      data.payload &&
+                      data.payload[`page-${page}`] &&
+                      data.payload[`page-${page}`].map((item, index) => {
                         return (
                           <Grid item xs={3} key={index}>
                             <Card product={item} />
@@ -293,17 +239,17 @@ const Products = () => {
                       })}
                   </Grid>
 
-                  {fetch.totalPagination > 1 && (
+                  {data.countPage > 1 && (
                     <Stack
                       alignItems="center"
                       justifyContent="center"
                       marginTop={5}
                     >
-                      <Pagination
-                        count={fetch.totalPagination}
-                        defaultPage={fetch.currentPagination}
-                        color="primary"
-                        size="large"
+                      <PaginationCustomize
+                        page={page}
+                        setPage={setPage}
+                        countProducts={data.countProducts}
+                        limit={data.limit}
                       />
                     </Stack>
                   )}

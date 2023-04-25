@@ -223,7 +223,7 @@ export default function Orders() {
       <PaginationCustomize
         page={page}
         setPage={setPage}
-        count={reduxOrders.countPage}
+        countProducts={reduxOrders.countPage}
         limit={reduxOrders.limit}
       />
     </Box>

@@ -1,10 +1,10 @@
 const db = require("../../../models");
 
-exports.productsService = (category, pagination) =>
+exports.productsService = (category, page) =>
   new Promise(async (resolve, reject) => {
     try {
       const limit = 12;
-      const offset = limit * (pagination - 1);
+      const offset = limit * (page - 1);
 
       // Get products
       const query = `select
@@ -40,15 +40,15 @@ exports.productsService = (category, pagination) =>
             categories.name = "${category}";`
       );
 
-      console.log("countAll", countAll);
-
       resolve({
         err: products ? 0 : 1,
         msg: products ? "Get data successfully" : "Get data failure",
         data: products ? products : null,
-        totalPagination: Math.floor(countAll[0].count / limit) + 1,
-        currentPagination: pagination ? pagination : null,
-        countAll: countAll ? countAll[0].count : null,
+        category: category ? category : null,
+        countPage: Math.floor(countAll[0].count / limit) + 1,
+        currentPage: page ? page : null,
+        countProducts: countAll ? countAll[0].count : null,
+        limit: limit ? limit : null,
       });
     } catch (error) {
       reject(error);

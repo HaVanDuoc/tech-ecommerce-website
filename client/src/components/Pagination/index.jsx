@@ -1,7 +1,7 @@
 import { Pagination, Stack } from "@mui/material";
 import React from "react";
 
-const PaginationCustomize = ({ page, setPage, count, limit }) => {
+const PaginationCustomize = ({ page, setPage, countProducts, limit }) => {
   const handleChangePagination = (event, value) => {
     setPage(value);
 
@@ -20,7 +20,7 @@ const PaginationCustomize = ({ page, setPage, count, limit }) => {
   return (
     <Stack justifyContent="center" alignItems="center" marginTop={2}>
       <Pagination
-        count={Number(Math.floor(count / limit) + 1)}
+        count={Number(Math.floor(countProducts / limit) + 1)}
         page={page}
         color="primary"
         size="large"

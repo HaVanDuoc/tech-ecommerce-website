@@ -172,7 +172,7 @@ export default function ProductList() {
       <PaginationCustomize
         page={page}
         setPage={setPage}
-        count={fetchKhachHang.countPage}
+        countProducts={fetchKhachHang.countPage}
         limit={fetchKhachHang.limit}
       />
     </Box>
