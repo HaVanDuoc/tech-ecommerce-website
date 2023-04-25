@@ -78,12 +78,12 @@ export default function Orders() {
     });
   };
 
-  const handleClick = (order_id, order_status) => {
+  const handleClick = (confirm, order_id, order_totalPayment, user_id) => {
     const request = async () => {
       await axios({
         method: "post",
         url: "/admin/orders/handleOrderStatus",
-        data: { order_id, order_status },
+        data: { order_id, order_totalPayment, confirm, user_id },
       });
     };
 
@@ -139,14 +139,20 @@ export default function Orders() {
             {params.row?.status && params.row.status === "Chờ xác nhận" ? (
               <Button
                 sx={{ marginLeft: "20px" }}
-                onClick={() => handleClick(params.row.id, params.row.status)}
+                onClick={() =>
+                  handleClick(
+                    "Xác nhận đơn hàng",
+                    params.row.id
+                    // params.row.status,
+                  )
+                }
               >
                 Xác nhận đơn hàng
               </Button>
             ) : params.row.status === "Chờ lấy hàng" ? (
               <Button
                 sx={{ marginLeft: "20px" }}
-                onClick={() => handleClick(params.row.id, params.row.status)}
+                onClick={() => handleClick("Đã lấy hàng", params.row.id)}
               >
                 Đã lấy hàng
               </Button>
@@ -158,7 +164,14 @@ export default function Orders() {
               >
                 <Button
                   sx={{ marginLeft: "20px" }}
-                  onClick={() => handleClick(params.row.id, params.row.status)}
+                  onClick={() =>
+                    handleClick(
+                      "Đã giao",
+                      params.row.id,
+                      params.row.total,
+                      params.row.user_id
+                    )
+                  }
                 >
                   Đã giao
                 </Button>
@@ -168,7 +181,7 @@ export default function Orders() {
                   flexItem
                   sx={{ mx: 1, borderColor: "dodgerblue", height: 30 }}
                 />
-                <Button onClick={() => handleClick(params.row.id, "Trả hàng")}>
+                <Button onClick={() => handleClick("Trả hàng", params.row.id)}>
                   Trả hàng
                 </Button>
               </Stack>
@@ -177,14 +190,14 @@ export default function Orders() {
             ) : params.row.status === "Trả hàng" ? (
               <Button
                 sx={{ marginLeft: "20px" }}
-                onClick={() => handleClick(params.row.id, params.row.status)}
+                onClick={() => handleClick("Mua lại", params.row.id)}
               >
                 Mua lại
               </Button>
             ) : params.row.status === "Đã hủy" ? (
               <Button
                 sx={{ marginLeft: "20px" }}
-                onClick={() => handleClick(params.row.id, params.row.status)}
+                onClick={() => handleClick("Mua lại", params.row.id)}
               >
                 Mua lại
               </Button>

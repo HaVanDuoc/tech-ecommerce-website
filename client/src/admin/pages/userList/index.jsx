@@ -144,6 +144,7 @@ export default function UserList() {
         pageSize={10}
         checkboxSelection
         autoHeight
+        hideFooter
       />
 
       {/* Dialog Delete Box */}

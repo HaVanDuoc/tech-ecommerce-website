@@ -14,6 +14,7 @@ exports.getOrders = (page) =>
                   order_details.code,
                   order_details.total,
                   order_statuses.status,
+                  order_details.user_id,
                   order_details.createdAt
               from
                   order_details

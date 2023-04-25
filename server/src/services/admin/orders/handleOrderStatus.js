@@ -1,6 +1,6 @@
 const db = require("../../../models");
 
-exports.handleOrderStatus = (order_id, order_status) =>
+exports.handleOrderStatus = (order_id, order_totalPayment, confirm, user_id) =>
   new Promise(async (resolve, reject) => {
     try {
       let status_id;
@@ -13,28 +13,24 @@ exports.handleOrderStatus = (order_id, order_status) =>
       // Đã hủy - 5
       // Trả hàng - 6
 
-      switch (order_status) {
-        case "Chờ xác nhận":
+      switch (confirm) {
+        case "Xác nhận đơn hàng":
           status_id = 2;
           break;
 
-        case "Chờ lấy hàng":
+        case "Đã lấy hàng":
           status_id = 3;
           break;
 
-        case "Đang giao":
+        case "Đã giao":
           status_id = 4;
           break;
 
-        case "Đã giao":
-          status_id = 5;
+        case "Trả hàng":
+          status_id = 6;
           break;
 
-        case "Đã hủy":
-          status_id = 2; // Trường hợp đã hủy sẽ chuyển thành chờ xác nhận chính là mua lại
-          break;
-
-        case "Trả hàng": // Trường hợp đã trả hàng sau khi "xác nhận mua lại" chuyển sang "chờ lấy hàng" ko cần "chờ xác nhận" nữa
+        case "Mua lại": // Trường hợp đã trả hàng sau khi "xác nhận mua lại" chuyển sang "chờ lấy hàng" ko cần "chờ xác nhận" nữa
           status_id = 2;
           break;
 
@@ -46,6 +42,21 @@ exports.handleOrderStatus = (order_id, order_status) =>
         { status_id },
         { where: { id: order_id } }
       );
+
+      // Nếu là đã giao thì cập nhật Tổng thanh toán cho user
+      if (confirm === "Đã giao") {
+        const [transactionVolume] = await db.sequelize.query(
+          `select transactionVolume from users where id = ${user_id}`
+        );
+
+        const newTransactionVolume =
+          Number(transactionVolume[0].transactionVolume) +
+          Number(order_totalPayment);
+
+        await db.sequelize.query(
+          `update users set transactionVolume = ${newTransactionVolume} where id = ${user_id}`
+        );
+      }
 
       resolve({
         err: response ? 0 : 1,

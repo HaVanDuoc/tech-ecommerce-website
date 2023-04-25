@@ -34,7 +34,15 @@ const Profile = () => {
     <Fragment>
       <HeaderProfile currentUser={currentUser} />
       <Background />
-      <InfoBar currentUser={currentUser} />
+      <InfoBar
+        countPayment={
+          currentUser.isLogged && currentUser.user.data.transactionVolume
+        }
+        avatar={currentUser.isLogged && currentUser.user.data.avatar}
+        firstName={currentUser.isLogged && currentUser.user.data.firstName}
+        middleName={currentUser.isLogged && currentUser.user.data.middleName}
+        lastName={currentUser.isLogged && currentUser.user.data.lastName}
+      />
       <Feed currentUser={currentUser} />
     </Fragment>
   );
@@ -228,8 +236,9 @@ const Feed = ({ currentUser }) => {
 
                       <Box display="flex" flexWrap="wrap">
                         {fetch.data[index] &&
-                          fetch.data[index].orderItem.map((item) => (
+                          fetch.data[index].orderItem.map((item, index) => (
                             <Stack
+                              key={index}
                               flexDirection="row"
                               sx={{
                                 flex: 1,
@@ -405,7 +414,7 @@ const Feed = ({ currentUser }) => {
   );
 };
 
-const InfoBar = ({ currentUser }) => {
+const InfoBar = ({ countPayment, avatar, firstName, middleName, lastName }) => {
   return (
     <Box
       sx={{
@@ -426,10 +435,7 @@ const InfoBar = ({ currentUser }) => {
         >
           <Box sx={{ position: "relative", height: 60, marginRight: 1 }}>
             <Box sx={{ position: "relative", top: "-100px" }}>
-              <Avatar
-                src={currentUser.isLogged && currentUser.user.data.avatar}
-                sx={{ width: 120, height: 120 }}
-              />
+              <Avatar src={avatar} sx={{ width: 120, height: 120 }} />
               <Avatar
                 src={PF + "/assets/profile/cover-avatar.png"}
                 sx={{
@@ -446,11 +452,7 @@ const InfoBar = ({ currentUser }) => {
           <Stack sx={{ transform: "translateY(-60px)", marginLeft: 1 }}>
             <Box sx={{ height: 60, display: "flex", alignItems: "center" }}>
               <Typography fontSize={20} color="#fff">
-                {FormatFullName(
-                  currentUser.isLogged && currentUser.user.data.firstName,
-                  currentUser.isLogged && currentUser.user.data.middleName,
-                  currentUser.isLogged && currentUser.user.data.lastName
-                )}
+                {FormatFullName(firstName, middleName, lastName)}
               </Typography>
             </Box>
 
@@ -481,7 +483,7 @@ const InfoBar = ({ currentUser }) => {
               {/* Tổng thanh toán */}
               <Box className="item">
                 <Typography variant="span" className="value">
-                  5.000.000đ
+                  {formatVND(countPayment)}
                 </Typography>{" "}
                 <Typography
                   variant="span"
