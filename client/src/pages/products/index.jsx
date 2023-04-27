@@ -32,36 +32,41 @@ const Products = () => {
     Number(new URLSearchParams(window.location.search).get("page")) || 1
   );
   const [isPending, setPending] = useState(false);
-  const current = useParams().category; // get category of current page
+  const [brandParams, setBrandParams] = useState(
+    new URLSearchParams(window.location.search).get("brand")
+  );
   const dispatch = useDispatch();
+  const current = useParams().category; // get category of current page
 
   const products = useSelector(selectorProducts);
 
   const category = convertURLParamsToCategory(current);
 
+  const fetchProducts = async (category) => {
+    setPending(true);
+
+    const response = await axios({
+      method: "post",
+      url: "/client/products",
+      data: { category, page, brandParams },
+    });
+
+    dispatch(
+      ProductsAction(
+        response.data.category,
+        response.data.countPage,
+        response.data.currentPage,
+        response.data.countProducts,
+        response.data.data,
+        response.data.limit
+      )
+    );
+
+    setPending(false);
+  };
+
   useEffect(() => {
-    const fetchProducts = async (category) => {
-      setPending(true);
-
-      const response = await axios({
-        method: "post",
-        url: "/client/products",
-        data: { category, page },
-      });
-
-      dispatch(
-        ProductsAction(
-          response.data.category,
-          response.data.countPage,
-          response.data.currentPage,
-          response.data.countProducts,
-          response.data.data,
-          response.data.limit
-        )
-      );
-
-      setPending(false);
-    };
+    window.scrollTo(0, 357);
 
     switch (current) {
       case "dien-thoai":
@@ -135,7 +140,14 @@ const Products = () => {
       default:
         break;
     }
-  }, [page, products, current, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, products, current, brandParams]);
+
+  useEffect(() => {
+    window.scrollTo(0, 357);
+    fetchProducts(convertURLParamsToCategory(current));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [brandParams]);
 
   return (
     <Wrapper>
@@ -155,14 +167,19 @@ const Products = () => {
         <Container maxWidth="lg" disableGutters>
           {/* Brands */}
           <Box sx={{ marginBottom: 2 }}>
-            <ListBrands category={category} />
+            <ListBrands category={category} setBrandParams={setBrandParams} />
           </Box>
 
           {/*  */}
           <Grid container spacing={2}>
             <Grid item xs={2.5}>
               {/* Danh muc */}
-              <SectionCategories category={category} />
+              <SectionCategories
+                category={category}
+                setPage={setPage}
+                brandParams={brandParams}
+                setBrandParams={setBrandParams}
+              />
 
               {/* Bộ lọc */}
               <Box className="box filter">
@@ -359,7 +376,7 @@ const SliderPrice = () => {
   );
 };
 
-export const ListBrands = ({ category }) => {
+export const ListBrands = ({ category, setBrandParams }) => {
   const [brands, setBrands] = useState(null);
 
   useEffect(() => {
@@ -376,6 +393,35 @@ export const ListBrands = ({ category }) => {
     fetch();
   }, [category]);
 
+  const handleClick = (brand) => {
+    const addOrUpdateURLParams = (key, value) => {
+      const searchParams = new URLSearchParams(window.location.search);
+      searchParams.set(key, value);
+      const newRelativePathQuery =
+        window.location.pathname + "?" + searchParams.toString();
+      // eslint-disable-next-line no-restricted-globals
+      history.pushState(null, "", newRelativePathQuery);
+    };
+
+    addOrUpdateURLParams("brand", brand);
+
+    const setView = () => {
+      const view = async () => {
+        await axios({
+          method: "post",
+          url: "/client/products/setView",
+          data: { brand },
+        });
+      };
+
+      view();
+    };
+
+    setView();
+
+    setBrandParams(brand);
+  };
+
   return (
     <Box>
       {Array.isArray(brands) && brands.length > 0 && (
@@ -383,8 +429,8 @@ export const ListBrands = ({ category }) => {
           <Grid container spacing={2}>
             {brands.map((item, index) => (
               <Grid item xs={1.5} key={index}>
-                <Link
-                  to={item.link}
+                <Button
+                  onClick={() => handleClick(item.name)}
                   style={{
                     width: "100%",
                     minHeight: "40px",
@@ -403,7 +449,7 @@ export const ListBrands = ({ category }) => {
                   }}
                 >
                   <img src={item.logo} alt={item.name} width="100%" />
-                </Link>
+                </Button>
               </Grid>
             ))}
           </Grid>
@@ -413,7 +459,12 @@ export const ListBrands = ({ category }) => {
   );
 };
 
-const SectionCategories = ({ category }) => {
+const SectionCategories = ({
+  category,
+  setPage,
+  brandParams,
+  setBrandParams,
+}) => {
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
@@ -426,6 +477,11 @@ const SectionCategories = ({ category }) => {
     fetch();
   }, []);
 
+  const handleClick = () => {
+    setPage(1);
+    setBrandParams(null);
+  };
+
   return (
     <Box className="box categories">
       <Typography className="title">Danh mục</Typography>
@@ -433,7 +489,7 @@ const SectionCategories = ({ category }) => {
         {Array.isArray(categories) &&
           categories.map((item, index) => {
             return (
-              <Link to={item?.link} key={index}>
+              <Link to={item?.link} key={index} onClick={handleClick}>
                 <Box
                   className={`item ${category === item?.name && "selected"}`}
                 >

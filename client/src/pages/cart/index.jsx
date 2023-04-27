@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import React, { Fragment, useEffect, useState } from "react";
-import { Brand, Search } from "~/components/Header";
+import { Brand } from "~/components/Header";
 import AccountMenu from "~/components/Header/AccountMenu";
 import { Footer } from "~/components";
 import axios from "axios";
@@ -27,6 +27,7 @@ import TopBar from "~/components/Header/TopBar";
 import { useSnackbar } from "notistack";
 import { selectorCart } from "~/redux/cart/reudcer";
 import { GetCart } from "~/redux/cart/action";
+import { Search } from "~/components/Header/Search";
 
 const Cart = () => {
   const [reFetch, setReFetch] = useState(true); // Đơn giản là sử dụng để reset dữ liệu fetch về thôi

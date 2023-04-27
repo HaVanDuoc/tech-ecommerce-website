@@ -38,6 +38,8 @@ export default function ProductDetails() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Set position for scroll when access page
+
     const fetch = async () => {
       const response = await axios({
         method: "post",

@@ -1,13 +1,14 @@
-import { Box, Link, Rating, Stack, Typography } from "@mui/material";
+import { Box, Rating, Stack, Typography } from "@mui/material";
 import React, { Fragment } from "react";
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
+import { Link } from "react-router-dom";
 
 const Card = ({ product }) => {
   return (
-    <Link href={`${product?.linkCategory}/${product?.name}`}>
+    <Link to={`${product?.linkCategory}/${product?.name}`}>
       <Box
         className="card"
         sx={{
@@ -40,6 +41,7 @@ const Card = ({ product }) => {
           },
 
           ".image": {
+            maxHeight: 200,
             transform: "none",
             transition: "transform .4s ease-in-out",
           },
@@ -63,7 +65,7 @@ const Card = ({ product }) => {
             />
           </Box>
 
-          <Stack flexDirection="column" sx={{ height: 180 }}>
+          <Stack flexDirection="column" sx={{ height: 180, zIndex: 2 }}>
             <Typography
               sx={{
                 color: "#d51919",

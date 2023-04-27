@@ -4,14 +4,17 @@ exports.sectionBrands = (data) =>
   new Promise(async (resolve, reject) => {
     try {
       const query = `select
+                            brands.name,
                             brands.logo,
-                            brands.link
+                            brands.view
                         from
                             categorybrands
                             left join brands on brands.id = categorybrands.brandId
                             left join categories on categories.id = categorybrands.categoryId
                         where
-                            categories.name = "${data}";`;
+                            categories.name = "${data}" 
+                        order by 
+                            brands.view desc;`;
 
       const [response] = await db.sequelize.query(query);
 

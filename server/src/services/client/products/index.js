@@ -1,6 +1,6 @@
 const db = require("../../../models");
 
-exports.productsService = (category, page) =>
+exports.productsService = (category, page, brandParams) =>
   new Promise(async (resolve, reject) => {
     try {
       const limit = 12;
@@ -15,13 +15,20 @@ exports.productsService = (category, page) =>
                         products.discount,
                         products.rating,
                         products.stock,
+                        brands.name as 'brand',
                         categories.name as 'category',
                         categories.link as 'linkCategory'
                     from
                         products
                         left join categories on categories.categoryId = products.categoryId
+                        left join brands on brands.brandId = products.brandId
                     where
                         categories.name = "${category}"
+                        ${
+                          brandParams
+                            ? 'and brands.name = "' + brandParams + '"'
+                            : ""
+                        }
                     limit
                         ${limit}
                     offset
@@ -36,8 +43,10 @@ exports.productsService = (category, page) =>
         from
             products
             left join categories on categories.categoryId = products.categoryId
+            left join brands on brands.brandId = products.brandId
         where
-            categories.name = "${category}";`
+            categories.name = "${category}"
+            ${brandParams ? 'and brands.name = "' + brandParams + '"' : ""};`
       );
 
       resolve({
