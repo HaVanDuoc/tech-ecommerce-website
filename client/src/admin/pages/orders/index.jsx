@@ -115,7 +115,7 @@ export default function Orders() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/admin/product/update/" + params.row.id}>
+            <Link to={"/admin/orders/" + params.row.code}>
               <ButtonEdit>Chi tiết</ButtonEdit>
             </Link>
 

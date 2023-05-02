@@ -1,12 +1,12 @@
 const { intervalServerError } = require("../../../middleware/handleError");
-const { recent } = require("../../../services/client/search/recent");
+const { suggest } = require("../../../services/client/search/suggest");
 
-exports.recent = async (req, res) => {
+exports.suggest = async (req, res) => {
   try {
-    const user_id = req.body.user_id;
+    const key = req.body.key;
     const limit = req.body.limit;
 
-    const response = await recent(user_id, limit);
+    const response = await suggest(key, limit);
 
     res.status(200).json(response);
   } catch (error) {

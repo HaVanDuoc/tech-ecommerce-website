@@ -177,4 +177,38 @@ from
     order_details
     left join order_statuses on order_statuses.id = order_details.status_id
 where
-    order_details.id = 10
+    order_details.id = 10;
+
+-- 
+SELECT
+    products.id,
+    products.name,
+    products.price,
+    products.discount,
+    product.image
+FROM
+    products
+Where
+    name LIKE "${key}%";
+
+-- 
+select
+    *
+from
+    searches
+    left join (
+        select
+            products.id,
+            products.name,
+            products.price,
+            products.discount,
+            products.image,
+            categories.link as 'categoryLink'
+        from
+            products
+            left join categories on categories.categoryId = products.categoryId
+    ) as temp on temp.id = searches.product_id
+order by
+    searches.createdAt desc
+limit
+    6;

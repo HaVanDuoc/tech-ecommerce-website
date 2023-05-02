@@ -27,7 +27,7 @@ import TopBar from "~/components/Header/TopBar";
 import { useSnackbar } from "notistack";
 import { selectorCart } from "~/redux/cart/reudcer";
 import { GetCart } from "~/redux/cart/action";
-import { Search } from "~/components/Header/Search";
+import Search from "~/components/Search";
 
 const Cart = () => {
   const [reFetch, setReFetch] = useState(true); // Đơn giản là sử dụng để reset dữ liệu fetch về thôi

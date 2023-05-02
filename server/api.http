@@ -342,3 +342,12 @@ Content-Type: application/json
     "pagination": "2"
 }
 
+
+### 
+POST  http://localhost:4000/api/v1/client/search/saveRecent
+Content-Type: application/json
+
+{
+    "user_id": "26",
+    "product_id": "11"
+}

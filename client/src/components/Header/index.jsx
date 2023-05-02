@@ -19,7 +19,7 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import AccountMenu from "./AccountMenu";
 import Notification from "./Notification";
 import Cart from "./Cart";
-import { Search } from "./Search";
+import Search from "~/components/Search";
 
 const Header = () => {
   return (

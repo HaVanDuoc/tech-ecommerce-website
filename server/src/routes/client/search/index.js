@@ -1,10 +1,13 @@
 const { recent } = require("../../../controllers/client/search/recent");
-const { search } = require("../../../controllers/client/search/search");
+const { saveRecent } = require("../../../controllers/client/search/saveRecent");
+const { suggest } = require("../../../controllers/client/search/suggest");
 
 const router = require("express").Router();
 
+router.post("/suggest", suggest);
+
 router.post("/recent", recent);
 
-router.post("/", search)
+router.post("/saveRecent", saveRecent);
 
 module.exports = router;
