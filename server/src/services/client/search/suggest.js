@@ -9,6 +9,7 @@ exports.suggest = (key, limit) =>
                           products.price,
                           products.discount,
                           products.image,
+                          categories.name as 'category',
                           categories.link as 'categoryLink'
                       FROM
                           products

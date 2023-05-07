@@ -212,3 +212,119 @@ order by
     searches.createdAt desc
 limit
     6;
+
+-- 
+select
+    order_details.user_id as 'user_id',
+    users.userId,
+    users.firstName,
+    users.middleName,
+    users.lastName,
+    users.email,
+    users.phoneNumber,
+    users.address,
+    users.dateOfBirth,
+    users.genderCode,
+    order_details.id as 'order_id',
+    order_details.total,
+    order_statuses.status as 'order_status',
+    order_details.code as 'code_order',
+    order_details.createdAt
+from
+    order_details
+    left join users on order_details.user_id = users.id
+    left join order_statuses on order_details.status_id = order_statuses.id
+where
+    code = '1d6afae1-5794-488e-b9e0-657317ae89cb';
+
+--
+select
+    order_items.order_detail_id,
+    table_2.id as 'product_id',
+    table_2.name as 'name_product',
+    order_items.quantity,
+    order_items.createdAt as 'createdAt_order',
+    table_2.image,
+    table_2.price,
+    table_2.discount,
+    table_2.category
+from
+    order_items
+    left join (
+        select
+            products.id,
+            products.name,
+            products.image,
+            products.price,
+            products.discount,
+            categories.name as 'category'
+        from
+            products
+            left join categories on categories.categoryId = products.categoryId
+    ) table_2 on table_2.id = order_items.product_id
+where
+    order_detail_id = 8;
+
+-- 
+select
+    table_orders.id as 'order_id',
+    table_orders.code as 'order_code',
+    table_orders.total,
+    table_orders.order_status,
+    table_orders.order_status_id,
+    table_orders.user_id,
+    table_users.userId,
+    table_users.firstName,
+    table_users.middleName,
+    table_users.lastName,
+    table_users.email,
+    table_users.phoneNumber,
+    table_users.address,
+    table_users.dateOfBirth,
+    table_users.gender,
+    table_orders.createdAt
+from
+    (
+        SELECT
+            order_details.id,
+            order_details.code,
+            order_details.user_id as 'user_id',
+            order_details.total,
+            order_details.status_id as 'order_status_id',
+            order_statuses.status as 'order_status',
+            order_details.createdAt
+        FROM
+            order_details
+            left join order_statuses on order_statuses.id = order_details.status_id
+        where
+            code = '1d6afae1-5794-488e-b9e0-657317ae89cb'
+    ) as table_orders
+    left join (
+        SELECT
+            users.id,
+            users.userId,
+            users.firstName,
+            users.middleName,
+            users.lastName,
+            users.dateOfBirth,
+            genders.name as 'gender',
+            users.email,
+            users.phoneNumber,
+            users.address
+        FROM
+            users
+            left join genders on genders.code = users.genderCode
+    ) as table_users on table_orders.user_id = table_users.id;
+
+-- 
+select
+    order_items.id as 'order_items_id',
+    order_details.total as 'total_money',
+    products.price as 'price_product',
+    products.discount as 'discount_product'
+from
+    order_items
+    left join products on products.id = order_items.product_id
+    left join order_details on order_details.id = order_items.order_detail_id
+where
+    order_items.id = 13;

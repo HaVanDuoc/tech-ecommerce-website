@@ -351,3 +351,19 @@ Content-Type: application/json
     "user_id": "26",
     "product_id": "11"
 }
+
+### 
+POST  http://localhost:4000/api/v1/admin/orders/getOrderDetails
+Content-Type: application/json
+
+{
+    "codeOrder": "1d6afae1-5794-488e-b9e0-657317ae89cb"
+}
+
+### 
+POST  http://localhost:4000/api/v1/admin/orders/orderDetails/increase
+Content-Type: application/json
+
+{
+    "order_items_id": "13"
+}

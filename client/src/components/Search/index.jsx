@@ -135,8 +135,6 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
   const Suggestion = styled(Box)(() => ({}));
   const Recent = styled(Box)(() => ({}));
 
-  console.log("recent", recent);
-
   return (
     <Box
       id="auto-complete"
