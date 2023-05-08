@@ -1,9 +1,3 @@
-import React, { Fragment, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { AdminTitle } from "~/admin/Styled";
-import { PF } from "~/__variables";
-import axios from "axios";
-import dayjs from "dayjs";
 import {
   Avatar,
   Box,
@@ -23,8 +17,15 @@ import {
   formatPrice,
   formatVND,
 } from "~/helper/format";
-import ButtonAddProduct from "./components/ButtonAddProduct";
+import dayjs from "dayjs";
+import axios from "axios";
+import { PF } from "~/__variables";
 import { useSnackbar } from "notistack";
+import { useParams } from "react-router-dom";
+import { AdminTitle } from "~/admin/Styled";
+import ButtonAddProduct from "./components/ButtonAddProduct";
+import React, { Fragment, useEffect, useState } from "react";
+import { actionConfirm, handleButtonConfirm } from "./components/handleConfirm";
 
 const OrderDetails = () => {
   const [orders, setOrders] = useState([]);
@@ -185,6 +186,25 @@ const OrderDetails = () => {
 
     deleteProduct();
   };
+
+  const buttonConfirm = handleButtonConfirm(orders.order_status);
+
+  const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
+    const request = async () => {
+      const response = await axios({
+        method: "post",
+        url: "/admin/orders/handleOrderStatus",
+        data: { actionConfirm, actionConfirmed, codeOrder },
+      });
+
+      handleSnackBar(response);
+    };
+
+    request();
+
+    setReset(!reset);
+  };
+
 
   return (
     <Styled>
@@ -551,28 +571,40 @@ const OrderDetails = () => {
                         </Typography>
                       </Typography>
 
-                      <Box
-                        sx={{
-                          marginLeft: 3,
-                          backgroundColor: "crimson",
-                          border: "1px solid crimson",
-                          borderRadius: "5px",
-                          color: "#fff",
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          padding: "10px 30px",
-                          cursor: "pointer",
-                          boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
-                          transition: "all .2s ease-in-out",
+                      {buttonConfirm?.action.map((item, index) => {
+                        return (
+                          <Box
+                            key={index}
+                            sx={{
+                              marginLeft: 3,
+                              backgroundColor: "crimson",
+                              border: "1px solid crimson",
+                              borderRadius: "5px",
+                              color: "#fff",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              padding: "10px 30px",
+                              cursor: "pointer",
+                              boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
+                              transition: "all .2s ease-in-out",
 
-                          ":hover": {
-                            boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
-                          },
-                        }}
-                      >
-                        Đặt hàng
-                      </Box>
+                              ":hover": {
+                                boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
+                              },
+                            }}
+                            onClick={() =>
+                              handleClick(
+                                actionConfirm,
+                                item,
+                                orders.order_code
+                              )
+                            }
+                          >
+                            {item}
+                          </Box>
+                        );
+                      })}
                     </Box>
                   </Box>
                 </Payment>

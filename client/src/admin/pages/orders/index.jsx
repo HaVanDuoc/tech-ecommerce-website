@@ -1,4 +1,4 @@
-import { Box, Button, Divider, IconButton, Stack } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
 import axios from "axios";
 import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectorDonHang } from "~/redux/Admin/reducers";
 import { AdminAction } from "~/redux/Admin/actions";
 import { DataGrid } from "@mui/x-data-grid";
+import { actionConfirm, handleButtonConfirm } from "./components/handleConfirm";
+import { refreshPage } from "~/utils";
 
 export default function Orders() {
   const [data, setData] = useState([]);
@@ -18,8 +20,9 @@ export default function Orders() {
     Number(new URLSearchParams(window.location.search).get("page") || 1)
   );
   const [isPending, setPending] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
+  const [reset, setReset] = useState(true);
   const reduxOrders = useSelector(selectorDonHang);
+  const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,7 +49,7 @@ export default function Orders() {
     };
 
     (reduxOrders.isFetch && reduxOrders.payload[`page-${page}`]) || fetch();
-  }, [page, dispatch, reduxOrders]);
+  }, [page, dispatch, reduxOrders, reset]);
 
   const handleSnackBar = (res) => {
     if (res.data.err === 0) {
@@ -78,16 +81,22 @@ export default function Orders() {
     });
   };
 
-  const handleClick = (confirm, order_id, order_totalPayment, user_id) => {
+  const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
     const request = async () => {
-      await axios({
+      const response = await axios({
         method: "post",
         url: "/admin/orders/handleOrderStatus",
-        data: { order_id, order_totalPayment, confirm, user_id },
+        data: { actionConfirm, actionConfirmed, codeOrder },
       });
+
+      handleSnackBar(response);
     };
 
     request();
+
+    setReset(!reset);
+
+    refreshPage();
   };
 
   const columns = [
@@ -131,81 +140,89 @@ export default function Orders() {
     },
     {
       field: "confirm",
-      headerName: "Xác nhận",
+      headerName: "Xác nhận nhanh",
       width: 300,
       renderCell: (params) => {
-        return (
-          <Fragment>
-            {params.row?.status && params.row.status === "Chờ xác nhận" ? (
-              <Button
-                sx={{ marginLeft: "20px" }}
-                onClick={() =>
-                  handleClick(
-                    "Xác nhận đơn hàng",
-                    params.row.id
-                    // params.row.status,
-                  )
-                }
-              >
-                Xác nhận đơn hàng
-              </Button>
-            ) : params.row.status === "Chờ lấy hàng" ? (
-              <Button
-                sx={{ marginLeft: "20px" }}
-                onClick={() => handleClick("Đã lấy hàng", params.row.id)}
-              >
-                Đã lấy hàng
-              </Button>
-            ) : params.row.status === "Đang giao" ? (
-              <Stack
-                flexDirection="row"
-                justifyContent="start"
-                alignItems="center"
-              >
-                <Button
-                  sx={{ marginLeft: "20px" }}
-                  onClick={() =>
-                    handleClick(
-                      "Đã giao",
-                      params.row.id,
-                      params.row.total,
-                      params.row.user_id
-                    )
-                  }
-                >
-                  Đã giao
-                </Button>
-                <Divider
-                  orientation="vertical"
-                  variant="middle"
-                  flexItem
-                  sx={{ mx: 1, borderColor: "dodgerblue", height: 30 }}
-                />
-                <Button onClick={() => handleClick("Trả hàng", params.row.id)}>
-                  Trả hàng
-                </Button>
-              </Stack>
-            ) : params.row.status === "Đã giao" ? (
-              <Button sx={{ marginLeft: "20px" }}>Xem đánh giá</Button>
-            ) : params.row.status === "Trả hàng" ? (
-              <Button
-                sx={{ marginLeft: "20px" }}
-                onClick={() => handleClick("Mua lại", params.row.id)}
-              >
-                Mua lại
-              </Button>
-            ) : params.row.status === "Đã hủy" ? (
-              <Button
-                sx={{ marginLeft: "20px" }}
-                onClick={() => handleClick("Mua lại", params.row.id)}
-              >
-                Mua lại
-              </Button>
-            ) : (
-              <Fragment />
-            )}
-          </Fragment>
-        );
+        const buttonConfirm = handleButtonConfirm(params.row.status);
+
+        return buttonConfirm?.action.map((item, index) => {
+          return (
+            <Button
+              key={index}
+              sx={{ marginLeft: "20px" }}
+              onClick={() => handleClick(actionConfirm, item, params.row.code)}
+            >
+              {item}
+            </Button>
+          );
+        });
+
+        // return (
+        //   <Fragment>
+        //     {params.row?.status && params.row.status === "Chờ xác nhận" ? (
+        //       <Button
+        //         sx={{ marginLeft: "20px" }}
+        //         onClick={() => handleClick("Xác nhận đơn hàng", params.row.id)}
+        //       >
+        //         Xác nhận đơn hàng
+        //       </Button>
+        //     ) : params.row.status === "Chờ lấy hàng" ? (
+        //       <Button
+        //         sx={{ marginLeft: "20px" }}
+        //         onClick={() => handleClick("Đã lấy hàng", params.row.id)}
+        //       >
+        //         Đã lấy hàng
+        //       </Button>
+        //     ) : params.row.status === "Đang giao" ? (
+        //       <Stack
+        //         flexDirection="row"
+        //         justifyContent="start"
+        //         alignItems="center"
+        //       >
+        //         <Button
+        //           sx={{ marginLeft: "20px" }}
+        //           onClick={() =>
+        //             handleClick(
+        //               "Đã giao",
+        //               params.row.id,
+        //               params.row.total,
+        //               params.row.user_id
+        //             )
+        //           }
+        //         >
+        //           Đã giao
+        //         </Button>
+        //         <Divider
+        //           orientation="vertical"
+        //           variant="middle"
+        //           flexItem
+        //           sx={{ mx: 1, borderColor: "dodgerblue", height: 30 }}
+        //         />
+        //         <Button onClick={() => handleClick("Trả hàng", params.row.id)}>
+        //           Trả hàng
+        //         </Button>
+        //       </Stack>
+        //     ) : params.row.status === "Đã giao" ? (
+        //       <Button sx={{ marginLeft: "20px" }}>Xem đánh giá</Button>
+        //     ) : params.row.status === "Trả hàng" ? (
+        //       <Button
+        //         sx={{ marginLeft: "20px" }}
+        //         onClick={() => handleClick("Mua lại", params.row.id)}
+        //       >
+        //         Mua lại
+        //       </Button>
+        //     ) : params.row.status === "Đã hủy" ? (
+        //       <Button
+        //         sx={{ marginLeft: "20px" }}
+        //         onClick={() => handleClick("Mua lại", params.row.id)}
+        //       >
+        //         Mua lại
+        //       </Button>
+        //     ) : (
+        //       <Fragment />
+        //     )}
+        //   </Fragment>
+        // );
       },
     },
   ];

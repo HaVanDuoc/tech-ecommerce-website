@@ -1,4 +1,3 @@
-import React, { Fragment, useState } from "react";
 import {
   Box,
   IconButton,
@@ -8,15 +7,16 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import ControlPointDuplicateOutlinedIcon from "@mui/icons-material/ControlPointDuplicateOutlined";
-import { PF } from "~/__variables";
-import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import axios from "axios";
-import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
+import { PF } from "~/__variables";
 import { useSnackbar } from "notistack";
+import React, { Fragment } from "react";
+import SearchIcon from "@mui/icons-material/Search";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
+import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
+import ControlPointDuplicateOutlinedIcon from "@mui/icons-material/ControlPointDuplicateOutlined";
 
 const ButtonAddProduct = ({ order_detail_id, reset, setReset }) => {
   const [open, setOpen] = React.useState(false);
@@ -186,8 +186,6 @@ const Item = ({
 
     addProduct();
   };
-
-  
 
   return (
     <Stack

@@ -1,50 +1,53 @@
 const db = require("../../../models");
 
-exports.handleOrderStatus = (order_id, order_totalPayment, confirm, user_id) =>
+exports.handleOrderStatus = (actionConfirm, actionConfirmed, codeOrder) =>
   new Promise(async (resolve, reject) => {
     try {
       let status_id;
 
       // order_statuses
-      // Chờ xác nhận - 1
-      // Chờ lấy hàng - 2
-      // Đang giao - 3
-      // Đã giao - 4
-      // Đã hủy - 5
-      // Trả hàng - 6
-
-      switch (confirm) {
-        case "Xác nhận đơn hàng":
-          status_id = 2;
+      switch (actionConfirmed) {
+        case actionConfirm.XAC_NHAN_DON_HANG:
+          status_id = 2; // Chờ xác nhận
           break;
 
-        case "Đã lấy hàng":
-          status_id = 3;
+        case actionConfirm.DA_LAY_HANG:
+          status_id = 3; // Đang giao
           break;
 
-        case "Đã giao":
-          status_id = 4;
+        case actionConfirm.DA_GIAO:
+          status_id = 4; // Đã giao
           break;
 
-        case "Trả hàng":
-          status_id = 6;
+        case actionConfirm.TRA_HANG:
+          status_id = 6; // Trả hàng
           break;
 
-        case "Mua lại": // Trường hợp đã trả hàng sau khi "xác nhận mua lại" chuyển sang "chờ lấy hàng" ko cần "chờ xác nhận" nữa
-          status_id = 2;
+        case actionConfirm.MUA_LAI: // Trường hợp đã trả hàng sau khi "xác nhận mua lại" chuyển sang "chờ lấy hàng" ko cần "chờ xác nhận" nữa
+          status_id = 2; // Chờ xác nhận
           break;
 
         default:
-          break;
+          return;
       }
 
-      const response = await db.Order_Detail.update(
+      // Change new status for order
+      const updateStatus = await db.Order_Detail.update(
         { status_id },
-        { where: { id: order_id } }
+        { where: { code: codeOrder } }
       );
 
-      // Nếu là đã giao thì cập nhật Tổng thanh toán cho user
-      if (confirm === "Đã giao") {
+      const order_details_info = await db.Order_Detail.findOne({
+        where: { code: codeOrder },
+        attributes: ["user_id", "total"],
+        raw: true,
+      });
+
+      const user_id = order_details_info.user_id;
+      const order_totalPayment = order_details_info.total;
+
+      // Nếu giao hàng thành công (Đã giao) thì cập nhật Tổng thanh toán cho user
+      if (actionConfirmed === actionConfirm.DA_GIAO) {
         const [transactionVolume] = await db.sequelize.query(
           `select transactionVolume from users where id = ${user_id}`
         );
@@ -59,9 +62,9 @@ exports.handleOrderStatus = (order_id, order_totalPayment, confirm, user_id) =>
       }
 
       resolve({
-        err: response ? 0 : 1,
-        msg: response
-          ? "Update Order Status Successfully"
+        err: updateStatus ? 0 : 1,
+        msg: updateStatus
+          ? `${actionConfirmed}`
           : "Update Order Status Failure",
       });
     } catch (error) {

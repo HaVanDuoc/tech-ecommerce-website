@@ -5,16 +5,14 @@ const {
 
 exports.handleOrderStatus = async (req, res) => {
   try {
-    const order_id = req.body.order_id;
-    const order_totalPayment = req.body.order_totalPayment;
-    const confirm = req.body.confirm;
-    const user_id = req.body.user_id;
+    const actionConfirm = req.body.actionConfirm;
+    const actionConfirmed = req.body.actionConfirmed;
+    const codeOrder = req.body.codeOrder;
 
     const response = await handleOrderStatus(
-      order_id,
-      order_totalPayment,
-      confirm,
-      user_id
+      actionConfirm,
+      actionConfirmed,
+      codeOrder
     );
 
     res.status(200).json(response);
