@@ -74,7 +74,7 @@ export const ProductsReducer = (state = INIT_STATE_PRODUCTS, action) => {
 
     case "Máy giặt":
       state.maygiat.isFetch = true;
-      state.maygiat``.limit = action.limit;
+      state.maygiat.limit = action.limit;
       state.maygiat.category = action.category;
       state.maygiat.countPage = action.countPage;
       state.maygiat.currentPage = action.currentPage;

@@ -1,13 +1,7 @@
-const {
-  decreaseQuantity,
-} = require("../../../controllers/client/cart/decreaseQuantity");
-const {
-  deleteCartItem,
-} = require("../../../controllers/client/cart/deleteCartItem");
+const { decreaseQuantity } = require("../../../controllers/client/cart/decreaseQuantity");
+const { deleteCartItem } = require("../../../controllers/client/cart/deleteCartItem");
 const { getCart } = require("../../../controllers/client/cart/getCart");
-const {
-  increaseQuantity,
-} = require("../../../controllers/client/cart/increaseQuantity");
+const { increaseQuantity } = require("../../../controllers/client/cart/increaseQuantity");
 const { order } = require("../../../controllers/client/cart/order");
 
 const router = require("express").Router();

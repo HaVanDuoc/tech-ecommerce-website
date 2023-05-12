@@ -23,7 +23,7 @@ exports.getOrders = (page) =>
               group by
                   order_details.id 
               order by
-                  order_details.createdAt asc 
+                  order_details.createdAt desc 
               limit 
                     ${limit} 
               offset 

@@ -30,6 +30,7 @@ import ProfileLayout from "./layouts/profile";
 import Edit from "./pages/profile/Edit";
 import Orders from "./admin/pages/orders";
 import OrderDetails from "./admin/pages/orders/OrderDetails";
+import CreateOrder from "./admin/pages/orders/CreateOrder";
 
 export const publicRoutes = [
   { path: "/", page: Home },
@@ -49,6 +50,7 @@ export const privateRoutes = [
 
   { path: "/admin/orders", page: Orders, layout: AdminLayout }, // Orders
   { path: "/admin/orders/:codeOrder", page: OrderDetails, layout: AdminLayout }, // Orders
+  { path: "/admin/orders/createOrder/:user_id", page: CreateOrder, layout: AdminLayout }, // create order
 
   // Home routes
   { path: "/admin", page: HomeAdmin, layout: AdminLayout }, // Home

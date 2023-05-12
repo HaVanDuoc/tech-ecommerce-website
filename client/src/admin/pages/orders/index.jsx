@@ -13,6 +13,7 @@ import { AdminAction } from "~/redux/Admin/actions";
 import { DataGrid } from "@mui/x-data-grid";
 import { actionConfirm, handleButtonConfirm } from "./components/handleConfirm";
 import { refreshPage } from "~/utils";
+import ButtonCreateOrder from "./components/ButtonCreateOrder";
 
 export default function Orders() {
   const [data, setData] = useState([]);
@@ -156,82 +157,13 @@ export default function Orders() {
             </Button>
           );
         });
-
-        // return (
-        //   <Fragment>
-        //     {params.row?.status && params.row.status === "Chờ xác nhận" ? (
-        //       <Button
-        //         sx={{ marginLeft: "20px" }}
-        //         onClick={() => handleClick("Xác nhận đơn hàng", params.row.id)}
-        //       >
-        //         Xác nhận đơn hàng
-        //       </Button>
-        //     ) : params.row.status === "Chờ lấy hàng" ? (
-        //       <Button
-        //         sx={{ marginLeft: "20px" }}
-        //         onClick={() => handleClick("Đã lấy hàng", params.row.id)}
-        //       >
-        //         Đã lấy hàng
-        //       </Button>
-        //     ) : params.row.status === "Đang giao" ? (
-        //       <Stack
-        //         flexDirection="row"
-        //         justifyContent="start"
-        //         alignItems="center"
-        //       >
-        //         <Button
-        //           sx={{ marginLeft: "20px" }}
-        //           onClick={() =>
-        //             handleClick(
-        //               "Đã giao",
-        //               params.row.id,
-        //               params.row.total,
-        //               params.row.user_id
-        //             )
-        //           }
-        //         >
-        //           Đã giao
-        //         </Button>
-        //         <Divider
-        //           orientation="vertical"
-        //           variant="middle"
-        //           flexItem
-        //           sx={{ mx: 1, borderColor: "dodgerblue", height: 30 }}
-        //         />
-        //         <Button onClick={() => handleClick("Trả hàng", params.row.id)}>
-        //           Trả hàng
-        //         </Button>
-        //       </Stack>
-        //     ) : params.row.status === "Đã giao" ? (
-        //       <Button sx={{ marginLeft: "20px" }}>Xem đánh giá</Button>
-        //     ) : params.row.status === "Trả hàng" ? (
-        //       <Button
-        //         sx={{ marginLeft: "20px" }}
-        //         onClick={() => handleClick("Mua lại", params.row.id)}
-        //       >
-        //         Mua lại
-        //       </Button>
-        //     ) : params.row.status === "Đã hủy" ? (
-        //       <Button
-        //         sx={{ marginLeft: "20px" }}
-        //         onClick={() => handleClick("Mua lại", params.row.id)}
-        //       >
-        //         Mua lại
-        //       </Button>
-        //     ) : (
-        //       <Fragment />
-        //     )}
-        //   </Fragment>
-        // );
       },
     },
   ];
 
   return (
     <Box flex={4}>
-      <StackButtons>
-        <ButtonCreate href="/admin/product/newProduct" />
-      </StackButtons>
+      <ButtonCreateOrder />
 
       <DataGrid
         rows={

@@ -160,3 +160,63 @@ from
 where
     categorybrands.categoryId = "9";
 
+-- 
+select
+    *
+from
+    (
+        select
+            users.id as 'user_id',
+            users.avatar,
+            users.firstName,
+            users.middleName,
+            users.lastName,
+            rtrim(
+                ltrim(
+                    CONCAT(
+                        IFNULL(users.firstName, ''),
+                        ' ',
+                        IFNULL(users.middleName, ''),
+                        ' ',
+                        users.lastName
+                    )
+                )
+            ) as fullName,
+            users.phoneNumber,
+            users.address,
+            users.dateOfBirth,
+            genders.name as 'gender'
+        from
+            users
+            left join genders on genders.code = users.genderCode
+    ) as u
+where
+    u.phoneNumber like N'% %'
+    or u.fullName like N'%Văn%';
+
+-- 
+SELECT
+    users.id,
+    users.userId,
+    users.avatar,
+    rtrim(
+        ltrim(
+            concat(
+                ifnull(users.firstName, ''),
+                ' ',
+                ifnull(users.middleName, ''),
+                ' ',
+                users.lastName
+            )
+        )
+    ) as fullName,
+    users.dateOfBirth,
+    genders.name as 'gender',
+    users.email,
+    users.phoneNumber,
+    users.address
+FROM
+    users
+    left join genders on genders.code = users.genderCode
+where
+    users.id = 26

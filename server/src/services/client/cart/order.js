@@ -4,8 +4,6 @@ const { v4: uuidv4 } = require("uuid");
 exports.order = (data) =>
   new Promise(async (resolve, reject) => {
     try {
-      console.log("data", data);
-
       const uuid = uuidv4(); // code for order details
 
       const [createOrder, created] = await db.Order_Detail.findOrCreate({
