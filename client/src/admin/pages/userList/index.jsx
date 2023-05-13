@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { FetchUserList } from "~/helper/fetch";
 import axios from "axios";
-import { FormatFullName } from "~/helper/format";
+import { FormatFullName, formatVND } from "~/helper/format";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 
 export default function UserList() {
@@ -103,6 +103,9 @@ export default function UserList() {
       field: "transactionVolume",
       headerName: "Tổng thanh toán",
       width: 200,
+      renderCell: (params) => {
+        return formatVND(params.row.transactionVolume)
+      }
     },
     {
       field: "action",

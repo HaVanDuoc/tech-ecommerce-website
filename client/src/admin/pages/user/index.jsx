@@ -21,9 +21,6 @@ export default function User() {
     <div className="user">
       <div className="userTitleContainer">
         <h1 className="userTitle">Thông tin khách hàng</h1>
-        {/* <Link to="/admin/newUser">
-          <button className="userAddButton">Tạo mới</button>
-        </Link> */}
       </div>
       <div className="userContainer">
         <UserShow fetch={user} />

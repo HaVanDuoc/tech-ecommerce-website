@@ -10,7 +10,7 @@ import TransgenderOutlinedIcon from "@mui/icons-material/TransgenderOutlined";
 import { Avatar, Tooltip } from "@mui/material";
 import React from "react";
 import dayjs from "dayjs";
-import { FormatFullName, formatPhoneNumber } from "~/helper/format";
+import { FormatFullName, formatPhoneNumber, formatVND } from "~/helper/format";
 import { formatStatus } from "./formatStatus";
 
 const UserShow = ({ fetch }) => {
@@ -38,7 +38,7 @@ const UserShow = ({ fetch }) => {
     },
     {
       tooltip: "Tổng mua",
-      value: transactionVolume,
+      value: formatVND(transactionVolume),
       icon: <AttachMoneyIcon className="userShowIcon" />,
     },
     {
