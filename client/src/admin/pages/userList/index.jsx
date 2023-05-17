@@ -1,6 +1,6 @@
 import "./userList.css";
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { DataGrid } from "@mui/x-data-grid";
 import {
@@ -13,26 +13,54 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import { FetchUserList } from "~/helper/fetch";
 import axios from "axios";
 import { FormatFullName, formatVND } from "~/helper/format";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
+import { useSnackbar } from "notistack";
 
 export default function UserList() {
   const [data, setData] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [userDelete, setUserDelete] = useState(null);
 
+  // Fetch list user
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await axios({
+        method: "get",
+        url: "/admin/users/",
+        headers: {
+          Authorization: localStorage.getItem("access_token"),
+        },
+      });
+
+      setData(response.data.data);
+    };
+
+    fetchUsers();
+  }, []);
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleSnackBar = (res) => {
+    if (res.data.err === 0) {
+      enqueueSnackbar(res.data.msg, {
+        variant: "success",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    } else {
+      enqueueSnackbar(res.data.msg, {
+        variant: "error",
+        anchorOrigin: { vertical: "top", horizontal: "center" },
+        autoHideDuration: 4000,
+      });
+    }
+  };
+
   const handleClose = () => {
     setOpen(false);
   };
-
-  // Fetch list user
-  const response = FetchUserList();
-  React.useEffect(() => {
-    setData(response);
-  }, [response]);
-  //
 
   const handleDelete = (userId, firstName, middleName, lastName) => {
     setOpen(true);
@@ -46,12 +74,19 @@ export default function UserList() {
     setTimeout(async () => {
       const response = await axios({
         method: "delete",
-        url: `/admin/user/${userId}`,
+        url: `/admin/users/${userId}`,
+        headers: { Authorization: localStorage.getItem("access_token") },
       });
 
       if (response.data.err === 0) {
         setData(data.filter((item) => item.userId !== userId));
         handleClose(); // Close Delete Box
+        handleSnackBar(response);
+      }
+
+      if (response.data.err === 1) {
+        handleClose();
+        handleSnackBar(response);
       }
     }, 1500);
   };
@@ -104,8 +139,8 @@ export default function UserList() {
       headerName: "Tổng thanh toán",
       width: 200,
       renderCell: (params) => {
-        return formatVND(params.row.transactionVolume)
-      }
+        return formatVND(params.row.transactionVolume);
+      },
     },
     {
       field: "action",

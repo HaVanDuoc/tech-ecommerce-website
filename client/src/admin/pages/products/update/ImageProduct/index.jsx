@@ -7,13 +7,18 @@ import FormUpload from "./FormUpload";
 const ImageProduct = () => {
   const [images, setImages] = useState([]);
   const [selected, setSelected] = useState([]);
+  const [reset, setReset] = useState(true);
   const productId = useParams().productId;
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios(
-        `/admin/product/update/${productId}/getImageList`
-      );
+      const response = await axios({
+        method: "get",
+        url: `/admin/products/update/${productId}/getImageList`,
+        headers: {
+          Authorization: localStorage.getItem("access_token"),
+        },
+      });
 
       const convertStringToArray = JSON.parse(response.data.data.image);
       setImages(convertStringToArray);
@@ -21,7 +26,7 @@ const ImageProduct = () => {
     };
 
     fetch();
-  }, [productId]);
+  }, [productId, reset]);
 
   const handleClick = (index) => {
     setSelected(images[index]);
@@ -32,7 +37,7 @@ const ImageProduct = () => {
       <Container disableGutters>
         <Box className="changeImage">
           <ButtonUpload>
-            <FormUpload imageList={images} />
+            <FormUpload imageList={images} reset={reset} setReset={setReset} />
           </ButtonUpload>
         </Box>
 

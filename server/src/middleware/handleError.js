@@ -34,7 +34,7 @@ exports.badRequest = (err, res) => {
 exports.unauthorized = (err, res) => {
   const error = createError.Unauthorized(err);
 
-  return res.status(error.status).json({
+  return res.status(200).json({
     err: 1,
     msg: error.message,
   });

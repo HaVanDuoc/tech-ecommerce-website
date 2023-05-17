@@ -91,33 +91,6 @@ const DetailProduct = ({ fetch }) => {
     }
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   setSubmitting(true);
-
-  //   setTimeout(async () => {
-  //     // Dữ liệu tải về là `array` nên phải chuyển về lại `string`
-  //     // const arrayToString = JSON.stringify(selected);
-
-  //     const response = await axios({
-  //       method: "put",
-  //       url: `/admin/product/update/${productId}/updateImageList`,
-  //       // data: { image: arrayToString },
-  //     });
-
-  //     setSubmitting(false);
-
-  //     handleSnackBar(response); // response result
-
-  //     // if don't have error is refresh page
-  //     if (response.data.err === 0) {
-  //       handleClose();
-  //       refreshPage();
-  //     }
-  //   }, 2500);
-  // };
-
   return (
     <Styled>
       <TableContainer component={Paper}>
@@ -204,6 +177,9 @@ const DetailProduct = ({ fetch }) => {
                 const response = await axios({
                   method: "put",
                   url: "/admin/products/updateDetails",
+                  headers: {
+                    Authorization: localStorage.getItem("access_token"),
+                  },
                   data: data,
                 });
 

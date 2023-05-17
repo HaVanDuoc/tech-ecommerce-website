@@ -15,26 +15,20 @@ router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }));
 router.get("/listBrand", listBrand);
 
 // User
-router.post("/user/newUser", userControllers.createNewUser); // Create new user
-router.get("/users", userControllers.getAllUser); // List users
+// router.post("/user/newUser", userControllers.createNewUser); // Create new user
+// router.get("/users", userControllers.getAllUser); // List users
 router.get("/user/:userId", userControllers.getUser); // Get a user
-router.put("/user/:userId", userControllers.updateUser); // Update a user
-router.delete("/user/:userId", userControllers.deleteUser); // Delete a user
+// router.put("/user/:userId", userControllers.updateUser); // Update a user
+// router.delete("/user/:userId", userControllers.deleteUser); // Delete a user
 router.get("/user/newUser/listRoles", userControllers.getListRole);
 
 // Product
 router.post("/product/newProduct", productControllers.createNewProduct); // Create new products
-// router.get("/products", productControllers.getListProduct); // List products
 router.get("/product/:productId", productControllers.getProduct); // Get a product
 router.put("/product/update/:productId", productControllers.updateProduct); // update product
 router.delete("/product/:productId", productControllers.deleteProduct); // Delete a product
 router.get("/product/newProduct/listCategory", productControllers.getListCategory); // List category
 router.post("/product/newProduct/listSelectBrand", productControllers.getListSelectBrand); // List brand
-
-// http://localhost:9000/admin/product/update/P00000007
-router.get("/product/update/:productId/getImageList", productControllers.getImageList);
-router.put("/product/update/:productId/updateImageList", productControllers.updateImageList);
-
 
 // ---- Display
 router.get("/display/category", displayControllers.listCategories);

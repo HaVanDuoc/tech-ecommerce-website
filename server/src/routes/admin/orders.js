@@ -8,18 +8,24 @@ const { handleDecrease } = require("../../controllers/admin/orders/handleDecreas
 const { handleDelete } = require("../../controllers/admin/orders/handleDelete");
 const { handleIncrease } = require("../../controllers/admin/orders/handleIncrease");
 const { handleOrderStatus } = require("../../controllers/admin/orders/handleOrderStatus");
+const verifyToken = require("../../middleware/verifyToken");
+const verifyRole = require("../../middleware/verifyRole");
 
 const router = require("express").Router();
 
 router.post("/getOrders", getOrders);
-router.post("/handleOrderStatus", handleOrderStatus);
 router.post("/getOrderDetails", getOrderDetails);
+router.post("/createOrder/getUser", getUser)
+router.post("/findCustomer", findCustomer)
+
+router.use(verifyToken);
+router.use(verifyRole);
+
+router.post("/createOrder/create", createOrder)
+router.post("/handleOrderStatus", handleOrderStatus);
 router.post("/orderDetails/increase", handleIncrease);
 router.post("/orderDetails/decrease", handleDecrease);
 router.post("/orderDetails/addProduct", handleAddProduct);
 router.post("/orderDetails/delete", handleDelete);
-router.post("/findCustomer", findCustomer)
-router.post("/createOrder/getUser", getUser)
-router.post("/createOrder/create", createOrder)
 
 module.exports = router;

@@ -66,7 +66,10 @@ export default function NewUser() {
           // get data from DB
           const response = await axios({
             method: "post",
-            url: "/admin/user/newUser",
+            url: "/admin/users/newUser",
+            headers: {
+              Authorization: localStorage.getItem("access_token"),
+            },
             data: data,
           });
 

@@ -139,6 +139,10 @@ exports.getUser = (userId) =>
 exports.updateUser = (userId, data) =>
   new Promise(async (resolve, reject) => {
     try {
+      if (data.password) {
+        data.password = hashPassword(data.password);
+      }
+
       response = await db.User.update(data, {
         where: { userId },
         raw: true,

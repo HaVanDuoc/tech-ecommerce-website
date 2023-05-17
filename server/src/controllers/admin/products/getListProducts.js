@@ -1,7 +1,5 @@
 const { intervalServerError } = require("../../../middleware/handleError");
-const {
-  getListProducts,
-} = require("../../../services/admin/products/getListProducts");
+const { getListProducts } = require("../../../services/admin/products/getListProducts");
 
 exports.getListProducts = async (req, res) => {
   try {

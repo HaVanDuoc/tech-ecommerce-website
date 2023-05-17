@@ -2,11 +2,13 @@ const jwt = require("jsonwebtoken");
 const { badRequest, unauthorized } = require("./handleError");
 
 const verifyToken = (req, res, next) => {
-  const auth = req.header("Authorization");
+  const token = req.header("Authorization");
 
-  console.log('auth', auth)
-
-  if (!auth) return badRequest("Yêu cầu đăng nhập", res);
+  if (!token)
+    return badRequest(
+      "Phát hiện truy cập trái phép. Yêu cầu đăng nhập lại!",
+      res
+    );
 
   // split: tách chuỗi thành mảng
   // access_token = Bearer token -> split access_token = ["Bearer", "token"]
@@ -14,7 +16,10 @@ const verifyToken = (req, res, next) => {
 
   jwt.verify(accessToken, process.env.JWT_SECRET, (err, user) => {
     if (err)
-      return unauthorized("Phiên đăng nhập hết hạn. Yêu cầu đăng nhập lại", res);
+      return unauthorized(
+        "Phiên đăng nhập hết hạn. Yêu cầu đăng nhập lại",
+        res
+      );
 
     req.user = user;
   });
@@ -22,4 +27,4 @@ const verifyToken = (req, res, next) => {
   next();
 };
 
-module.exports = verifyToken
+module.exports = verifyToken;

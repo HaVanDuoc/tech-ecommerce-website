@@ -32,7 +32,8 @@ const UserUpdate = ({ fetch }) => {
     setTimeout(async () => {
       const response = await axios({
         method: "put",
-        url: `/admin/user/${userId}`,
+        url: `/admin/users/${userId}`,
+        headers: { Authorization: localStorage.getItem("access_token") },
         data: data,
       });
 

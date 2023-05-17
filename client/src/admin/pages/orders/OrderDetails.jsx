@@ -122,6 +122,7 @@ const OrderDetails = () => {
       await axios({
         method: "post",
         url: "/admin/orders/orderDetails/increase",
+        headers: { Authorization: localStorage.getItem("access_token") },
         data: { order_items_id },
       });
     };
@@ -159,6 +160,7 @@ const OrderDetails = () => {
       await axios({
         method: "post",
         url: "/admin/orders/orderDetails/decrease",
+        headers: { Authorization: localStorage.getItem("access_token") },
         data: { order_items_id },
       });
     };
@@ -172,6 +174,7 @@ const OrderDetails = () => {
       const response = await axios({
         method: "post",
         url: "/admin/orders/orderDetails/delete",
+        headers: { Authorization: localStorage.getItem("access_token") },
         data: {
           order_detail_id,
           order_items_id,
@@ -194,6 +197,7 @@ const OrderDetails = () => {
       const response = await axios({
         method: "post",
         url: "/admin/orders/handleOrderStatus",
+        headers: { Authorization: localStorage.getItem("access_token") },
         data: { actionConfirm, actionConfirmed, codeOrder },
       });
 
@@ -204,7 +208,6 @@ const OrderDetails = () => {
 
     setReset(!reset);
   };
-
 
   return (
     <Styled>

@@ -19,7 +19,7 @@ import CircularProgressCustomize from "~/components/progress/CircularProgressCus
 import { useSnackbar } from "notistack";
 import { refreshPage } from "~/utils";
 
-const FormUpload = ({ imageList }) => {
+const FormUpload = ({ imageList, reset, setReset }) => {
   const productId = useParams().productId;
   const [open, setOpen] = React.useState(false);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -88,7 +88,10 @@ const FormUpload = ({ imageList }) => {
 
       const response = await axios({
         method: "put",
-        url: `/admin/product/update/${productId}/updateImageList`,
+        url: `/admin/products/update/${productId}/updateImageList`,
+        headers: {
+          Authorization: localStorage.getItem("access_token"),
+        },
         data: { image: arrayToString },
       });
 
@@ -98,7 +101,8 @@ const FormUpload = ({ imageList }) => {
 
       // if don't have error is refresh page
       if (response.data.err === 0) {
-        refreshPage();
+        handleClose();
+        setReset(!reset);
       }
     };
 

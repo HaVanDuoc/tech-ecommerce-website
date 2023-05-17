@@ -18,6 +18,7 @@ const cart = require("./client/cart");
 const profile = require("./client/profile");
 const search = require("./client/search");
 const orders = require("./admin/orders");
+const users = require("./admin/users");
 
 const initRoute = (app) => {
   // Routes
@@ -40,6 +41,7 @@ const initRoute = (app) => {
   app.use("/api/v1/client/search", search);
 
   // Admin routes
+  app.use("/api/v1/admin/users", users);
   app.use("/api/v1/admin/products", products);
   app.use("/api/v1/admin/orders", orders);
 

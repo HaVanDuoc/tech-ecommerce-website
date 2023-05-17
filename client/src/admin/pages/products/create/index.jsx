@@ -99,6 +99,9 @@ export default function CreateNewProduct() {
           const response = await axios({
             method: "post",
             url: "/admin/products",
+            headers: {
+              Authorization: localStorage.getItem("access_token"),
+            },
             data: data,
           });
 

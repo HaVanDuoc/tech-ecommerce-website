@@ -22,6 +22,8 @@ export default function ProductList() {
   const fetchKhachHang = useSelector(selectorKhachHang);
   const dispatch = useDispatch();
 
+  const token = localStorage.getItem("access_token");
+
   // Fetch list product
   useEffect(() => {
     // fetch data
@@ -31,6 +33,9 @@ export default function ProductList() {
       const response = await axios({
         method: "post",
         url: "/admin/products/getProducts",
+        headers: {
+          Authorization: token,
+        },
         data: { page },
       });
 
@@ -49,7 +54,7 @@ export default function ProductList() {
 
     (fetchKhachHang.isFetch && fetchKhachHang.payload[`page-${page}`]) ||
       fetch();
-  }, [page, dispatch, fetchKhachHang]);
+  }, [page, dispatch, fetchKhachHang, token]);
 
   const handleSnackBar = (res) => {
     if (res.data.err === 0) {
