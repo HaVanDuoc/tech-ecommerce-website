@@ -23,10 +23,12 @@ exports.getCurrentUser = (userId) =>
                           users.address,
                           users.transactionVolume,
                           users.dateOfBirth,
+                          roles.name as 'role',
                           cart_sessions.id as 'cart_sessions_id'
                       from
                           users
                           left join genders on genders.code = users.genderCode
+                          left join roles on roles.roleId = users.roleId
                           left join cart_sessions on cart_sessions.user_id = users.id
                       where
                           users.userId = '${userId}'

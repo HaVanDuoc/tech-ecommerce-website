@@ -6,6 +6,7 @@ import AdminLayout from "./admin/layouts";
 import { DefaultLayout } from "./layouts";
 import { CURRENT_USER } from "./redux/AuthCurrentUser/constant";
 import { privateRoutes, publicRoutes } from "./Routes";
+import GoToAdminPage from "./components/GoToAdminPage";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -52,6 +53,7 @@ const App = () => {
                 <div className="__havanduoc">
                   <Layout>
                     <Page />
+                    <GoToAdminPage />
                   </Layout>
                 </div>
               }
@@ -72,6 +74,7 @@ const App = () => {
                 <div className="__havanduoc__admin">
                   <Layout>
                     <Page />
+                    <GoToAdminPage />
                   </Layout>
                 </div>
               }
