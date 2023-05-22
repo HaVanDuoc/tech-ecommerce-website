@@ -2,7 +2,6 @@
   "name": "ecommerce-reactjs-nodejs-mysql",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:4000/api/v1",
   "dependencies": {
     "@mui/x-data-grid": "^5.17.26",
     "@mui/x-date-pickers": "^5.0.20",

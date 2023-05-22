@@ -1,8 +1,8 @@
 import { Box, Container, styled } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FormUpload from "./FormUpload";
+import axiosInstance from "~/utils/axiosInstance";
 
 const ImageProduct = () => {
   const [images, setImages] = useState([]);
@@ -12,7 +12,7 @@ const ImageProduct = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "get",
         url: `/admin/products/update/${productId}/getImageList`,
         headers: {

@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@mui/material";
 import "~/styles/slider";
-import axios from "axios";
 import Slider from "react-slick";
 import { PF } from "~/__variables";
 import Card from "~/components/card";
@@ -25,6 +24,7 @@ import { selectorProducts } from "~/redux/products/reducer";
 import React, { Fragment, useEffect, useState } from "react";
 import { default as SliderMaterial } from "@mui/material/Slider";
 import { convertURLParamsToCategory } from "./helpers/convertURLParamsToCategory";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Products = () => {
   const [data, setData] = useState([]);
@@ -45,7 +45,7 @@ const Products = () => {
   const fetchProducts = async (category) => {
     setPending(true);
 
-    const response = await axios({
+    const response = await axiosInstance({
       method: "post",
       url: "/client/products",
       data: { category, page, brandParams },
@@ -381,7 +381,7 @@ export const ListBrands = ({ category, setBrandParams }) => {
 
   useEffect(() => {
     const fetch = async () => {
-      let response = await axios({
+      let response = await axiosInstance({
         method: "post",
         url: "/client/productDetails/sectionBrands",
         data: { category },
@@ -407,7 +407,7 @@ export const ListBrands = ({ category, setBrandParams }) => {
 
     const setView = () => {
       const view = async () => {
-        await axios({
+        await axiosInstance({
           method: "post",
           url: "/client/products/setView",
           data: { brand },
@@ -469,7 +469,7 @@ const SectionCategories = ({
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/client/productDetails/sectionCategories");
+      const response = await axiosInstance("/client/productDetails/sectionCategories");
 
       setCategories(response.data.data);
     };

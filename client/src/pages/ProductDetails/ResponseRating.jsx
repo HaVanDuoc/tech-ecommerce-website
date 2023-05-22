@@ -127,8 +127,6 @@ const ResponseRating = () => {
 
 export default ResponseRating;
 
-const ImageResponse = styled(Box)(() => ({}));
-
 const ShowMore = styled(Box)(() => ({
   textAlign: "center",
 

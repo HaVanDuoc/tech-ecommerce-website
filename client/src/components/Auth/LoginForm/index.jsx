@@ -13,12 +13,12 @@ import {
 } from "@mui/material";
 import React from "react";
 import * as Yup from "yup";
-import axios from "axios";
 import { refreshPage } from "~/utils";
 import { useDispatch } from "react-redux";
 import GoogleIcon from "@mui/icons-material/Google";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { showSignUpForm } from "~/redux/ModalContainer/ModalContainerAction";
+import axiosInstance from "~/utils/axiosInstance";
 
 const LoginForm = () => {
   const [error, setError] = React.useState(null);
@@ -44,7 +44,7 @@ const LoginForm = () => {
 
           setTimeout(async () => {
             // get data from DB
-            const response = await axios({
+            const response = await axiosInstance({
               method: "post",
               url: "/client/auth/login",
               data: values,

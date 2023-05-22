@@ -11,12 +11,12 @@ import {
 } from "@mui/material";
 import React, { Fragment } from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
 import { PF } from "~/__variables";
 import { useSnackbar } from "notistack";
 import { formatPhoneNumber } from "~/helper/format";
 import dayjs from "dayjs";
 import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
+import axiosInstance from "~/utils/axiosInstance";
 
 const ButtonCreateOrder = () => {
   const [open, setOpen] = React.useState(false);
@@ -27,7 +27,7 @@ const ButtonCreateOrder = () => {
 
   const onChange = (e) => {
     const search = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/findCustomer",
         data: { key: e.target.value },
@@ -228,7 +228,7 @@ const Item = ({
 
   const handleAddProduct = () => {
     const addProduct = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/orderDetails/addProduct",
         // data: { order_detail_id, product_id: id, quantity },

@@ -1,7 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import React from "react";
-import axios from "axios";
 import { Box, FormHelperText } from "@mui/material";
 import Notification from "~/components/Notification";
 import { AdminTitle, FieldForm } from "~/admin/Styled";
@@ -11,6 +10,7 @@ import removeEmpty from "~/helper/removeEmpty";
 import DateOfBirth from "~/admin/components/DateOfBirth";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import { fields } from "./components/array";
+import axiosInstance from "~/utils/axiosInstance";
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -64,7 +64,7 @@ export default function NewUser() {
 
         setTimeout(async () => {
           // get data from DB
-          const response = await axios({
+          const response = await axiosInstance({
             method: "post",
             url: "/admin/users/newUser",
             headers: {

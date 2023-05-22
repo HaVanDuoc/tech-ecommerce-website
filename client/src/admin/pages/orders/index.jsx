@@ -1,5 +1,4 @@
 import { Box, Button, IconButton } from "@mui/material";
-import axios from "axios";
 import { useSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -13,6 +12,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { actionConfirm, handleButtonConfirm } from "./components/handleConfirm";
 import { refreshPage } from "~/utils";
 import ButtonCreateOrder from "./components/ButtonCreateOrder";
+import axiosInstance from "~/utils/axiosInstance";
 
 export default function Orders() {
   const [data, setData] = useState([]);
@@ -29,7 +29,7 @@ export default function Orders() {
     const fetch = async () => {
       setPending(true);
 
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/getOrders",
         data: { page },
@@ -69,7 +69,7 @@ export default function Orders() {
 
   const handleDelete = (productId) => {
     setTimeout(async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "delete",
         url: `/admin/product/${productId}`,
       });
@@ -83,7 +83,7 @@ export default function Orders() {
 
   const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
     const request = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/handleOrderStatus",
         data: { actionConfirm, actionConfirmed, codeOrder },

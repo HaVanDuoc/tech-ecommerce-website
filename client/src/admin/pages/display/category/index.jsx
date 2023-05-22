@@ -4,12 +4,11 @@ import React, { useEffect, useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { Box } from "@mui/material";
-import axios from "axios";
 import { useSnackbar } from "notistack";
+import axiosInstance from "~/utils/axiosInstance";
 
 export default function DisplayCategory() {
   const [data, setData] = useState([]);
-  const [brand, setBrand] = useState([])
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -32,7 +31,7 @@ export default function DisplayCategory() {
   // Fetch list category
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/display/category");
+      const response = await axiosInstance("/admin/display/category");
       setData(response.data.data);
     };
 
@@ -42,7 +41,7 @@ export default function DisplayCategory() {
 
   const handleDelete = (productId) => {
     setTimeout(async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "delete",
         url: `/admin/product/${productId}`,
       });

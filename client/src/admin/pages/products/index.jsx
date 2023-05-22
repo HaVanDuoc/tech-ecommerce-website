@@ -1,4 +1,3 @@
-import axios from "axios";
 import { refreshPage } from "~/utils";
 import { Link } from "react-router-dom";
 import { useSnackbar } from "notistack";
@@ -12,6 +11,7 @@ import { selectorKhachHang } from "~/redux/Admin/reducers";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { formatStatusProduct, formatVND } from "~/helper/format";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import axiosInstance from "~/utils/axiosInstance";
 
 export default function ProductList() {
   const [page, setPage] = useState(
@@ -30,7 +30,7 @@ export default function ProductList() {
     const fetch = async () => {
       setPending(true);
 
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/products/getProducts",
         headers: {
@@ -74,7 +74,7 @@ export default function ProductList() {
 
   const handleDelete = (productId) => {
     setTimeout(async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "delete",
         url: `/admin/product/${productId}`,
       });

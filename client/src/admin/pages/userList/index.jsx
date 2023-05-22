@@ -13,10 +13,10 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { FormatFullName, formatVND } from "~/helper/format";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { useSnackbar } from "notistack";
+import axiosInstance from "~/utils/axiosInstance";
 
 export default function UserList() {
   const [data, setData] = useState([]);
@@ -26,7 +26,7 @@ export default function UserList() {
   // Fetch list user
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "get",
         url: "/admin/users/",
         headers: {
@@ -72,7 +72,7 @@ export default function UserList() {
 
   const handleAgreeDelete = (userId) => {
     setTimeout(async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "delete",
         url: `/admin/users/${userId}`,
         headers: { Authorization: localStorage.getItem("access_token") },

@@ -19,8 +19,6 @@ import {
   Typography,
 } from "@mui/material";
 import * as Yup from "yup";
-
-import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSnackbar } from "notistack";
 import React, { useState } from "react";
@@ -29,6 +27,7 @@ import { refreshPage } from "~/utils";
 import { FieldForm } from "~/admin/Styled";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import removeEmpty from "~/helper/removeEmpty";
+import axiosInstance from "~/utils/axiosInstance";
 
 const DetailProduct = ({ fetch }) => {
   const [open, setOpen] = React.useState(false);
@@ -174,7 +173,7 @@ const DetailProduct = ({ fetch }) => {
 
               setTimeout(async () => {
                 // get data from DB
-                const response = await axios({
+                const response = await axiosInstance({
                   method: "put",
                   url: "/admin/products/updateDetails",
                   headers: {

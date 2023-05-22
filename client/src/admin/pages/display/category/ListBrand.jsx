@@ -7,9 +7,9 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { Field } from "formik";
+import axiosInstance from "~/utils/axiosInstance";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -40,7 +40,7 @@ export default function ListBrand({ props }) {
   // Fetch brand selected
   React.useEffect(() => {
     const fetch = async () => {
-      const response = await axios(
+      const response = await axiosInstance(
         `/admin/display/category/updateCategory/${categoryId}/selectedBrands`
       );
 
@@ -53,7 +53,7 @@ export default function ListBrand({ props }) {
   // Fetch list brand
   React.useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/listBrand");
+      const response = await axiosInstance("/admin/listBrand");
 
       setList(response.data.data.map((item) => item.name));
     };

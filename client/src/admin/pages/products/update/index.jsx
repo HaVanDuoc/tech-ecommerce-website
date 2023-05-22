@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { AdminTitle } from "~/admin/Styled";
-import { Button, Container, Divider, Grid, Stack } from "@mui/material";
+import {  Container, Divider, Grid, Stack } from "@mui/material";
 import { useParams } from "react-router-dom";
 import ImageProduct from "./ImageProduct";
 import DetailProduct from "./DetailProduct";
-import axios from "axios";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Update = () => {
   const [fetch, setFetch] = React.useState({});
@@ -13,7 +13,7 @@ const Update = () => {
   const productId = useParams().productId;
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios(`/admin/product/${productId}`);
+      const response = await axiosInstance(`/admin/product/${productId}`);
       setFetch(response.data.data);
     };
 

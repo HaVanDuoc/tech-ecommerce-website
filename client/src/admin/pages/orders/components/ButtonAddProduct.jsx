@@ -7,7 +7,6 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import axios from "axios";
 import { PF } from "~/__variables";
 import { useSnackbar } from "notistack";
 import React, { Fragment } from "react";
@@ -17,6 +16,7 @@ import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined";
 import ControlPointDuplicateOutlinedIcon from "@mui/icons-material/ControlPointDuplicateOutlined";
+import axiosInstance from "~/utils/axiosInstance";
 
 const ButtonAddProduct = ({ order_detail_id, reset, setReset }) => {
   const [open, setOpen] = React.useState(false);
@@ -29,7 +29,7 @@ const ButtonAddProduct = ({ order_detail_id, reset, setReset }) => {
 
   const onChange = (e) => {
     const search = async () => {
-      const result = await axios({
+      const result = await axiosInstance({
         method: "post",
         url: "/client/search/suggest",
         data: { key: e.target.value, limit: 6 },
@@ -171,7 +171,7 @@ const Item = ({
     const quantity = document.querySelector(`#quantity-${index}`).innerHTML;
 
     const addProduct = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/orderDetails/addProduct",
         data: { order_detail_id, product_id: id, quantity },

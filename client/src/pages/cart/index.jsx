@@ -19,7 +19,6 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Brand } from "~/components/Header";
 import AccountMenu from "~/components/Header/AccountMenu";
 import { Footer } from "~/components";
-import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 import { PF } from "~/__variables";
@@ -28,6 +27,7 @@ import { useSnackbar } from "notistack";
 import { selectorCart } from "~/redux/cart/reudcer";
 import { GetCart } from "~/redux/cart/action";
 import Search from "~/components/Search";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Cart = () => {
   const [reFetch, setReFetch] = useState(true); // Đơn giản là sử dụng để reset dữ liệu fetch về thôi
@@ -41,7 +41,7 @@ const Cart = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/client/cart",
         data: {
@@ -97,7 +97,7 @@ const Cart = () => {
 
     // update quantity
     const fetch = async () => {
-      await axios({
+      await axiosInstance({
         method: "post",
         url: "/client/cart/increase",
         data: {
@@ -152,7 +152,7 @@ const Cart = () => {
 
     // update quantity
     const fetch = async () => {
-      await axios({
+      await axiosInstance({
         method: "post",
         url: "/client/cart/decrease",
         data: {
@@ -183,7 +183,7 @@ const Cart = () => {
   const handleDelete = (index, product_id, cart_session_id) => {
     // Request to server delete item
     const fetch = async () => {
-      await axios({
+      await axiosInstance({
         method: "delete",
         url: "/client/cart/delete",
         data: {
@@ -265,7 +265,7 @@ const Cart = () => {
     });
 
     const fetch = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/client/cart/order",
         data: order,

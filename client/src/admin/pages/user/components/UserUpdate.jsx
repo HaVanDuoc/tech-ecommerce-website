@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import dayjs from "dayjs";
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -12,6 +11,7 @@ import RadioGender from "~/components/RadioGender";
 import StatusAccount from "~/components/StatusAccount";
 import SelectRole from "~/components/SelectRole";
 import UploadAvatar from "./UploadAvatar";
+import axiosInstance from "~/utils/axiosInstance";
 
 const UserUpdate = ({ fetch }) => {
   const { userId } = fetch;
@@ -30,7 +30,7 @@ const UserUpdate = ({ fetch }) => {
 
     // handle update
     setTimeout(async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "put",
         url: `/admin/users/${userId}`,
         headers: { Authorization: localStorage.getItem("access_token") },

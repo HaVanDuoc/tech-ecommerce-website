@@ -13,7 +13,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSnackbar } from "notistack";
 import React, { Fragment, useEffect, useState } from "react";
@@ -24,6 +23,7 @@ import { FieldForm } from "~/admin/Styled";
 import removeEmpty from "~/helper/removeEmpty";
 import { refreshPage } from "~/utils";
 import ListBrand from "./ListBrand";
+import axiosInstance from "~/utils/axiosInstance";
 
 const UpdateCategory = () => {
   const [data, setData] = useState({});
@@ -31,7 +31,7 @@ const UpdateCategory = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios(`/admin/display/category/${categoryId}`);
+      const response = await axiosInstance(`/admin/display/category/${categoryId}`);
       setData(response.data.data);
     };
 
@@ -100,7 +100,7 @@ const UpdateCategory = () => {
           setSubmitting(true);
 
           setTimeout(async () => {
-            const response = await axios({
+            const response = await axiosInstance({
               method: "put",
               url: `/admin/display/category/${categoryId}`,
               data: data,

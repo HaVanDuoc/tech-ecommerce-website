@@ -1,14 +1,14 @@
 import { Container, Grid } from "@mui/material";
-import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axiosInstance from "~/utils/axiosInstance";
 
 const ShowBrand = ({ currentPage }) => {
   const [brands, setBrands] = useState([]);
 
   useEffect(() => {
     const fetch = async () => {
-      let response = await axios({
+      let response = await axiosInstance({
         method: "post",
         url: "/client/showBrand",
         data: { currentPage },

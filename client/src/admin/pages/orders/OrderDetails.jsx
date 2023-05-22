@@ -18,7 +18,6 @@ import {
   formatVND,
 } from "~/helper/format";
 import dayjs from "dayjs";
-import axios from "axios";
 import { PF } from "~/__variables";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
@@ -26,6 +25,7 @@ import { AdminTitle } from "~/admin/Styled";
 import ButtonAddProduct from "./components/ButtonAddProduct";
 import React, { Fragment, useEffect, useState } from "react";
 import { actionConfirm, handleButtonConfirm } from "./components/handleConfirm";
+import axiosInstance from "~/utils/axiosInstance";
 
 const OrderDetails = () => {
   const [orders, setOrders] = useState([]);
@@ -35,7 +35,7 @@ const OrderDetails = () => {
 
   useEffect(() => {
     const getOrders = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/getOrderDetails",
         data: { codeOrder },
@@ -119,7 +119,7 @@ const OrderDetails = () => {
 
     // update quantity
     const fetch = async () => {
-      await axios({
+      await axiosInstance({
         method: "post",
         url: "/admin/orders/orderDetails/increase",
         headers: { Authorization: localStorage.getItem("access_token") },
@@ -157,7 +157,7 @@ const OrderDetails = () => {
 
     // update quantity
     const fetch = async () => {
-      await axios({
+      await axiosInstance({
         method: "post",
         url: "/admin/orders/orderDetails/decrease",
         headers: { Authorization: localStorage.getItem("access_token") },
@@ -171,7 +171,7 @@ const OrderDetails = () => {
   const handleDelete = (order_items_id, order_detail_id, product_id) => {
     // Request to server delete product
     const deleteProduct = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/orderDetails/delete",
         headers: { Authorization: localStorage.getItem("access_token") },
@@ -194,7 +194,7 @@ const OrderDetails = () => {
 
   const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
     const request = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/handleOrderStatus",
         headers: { Authorization: localStorage.getItem("access_token") },

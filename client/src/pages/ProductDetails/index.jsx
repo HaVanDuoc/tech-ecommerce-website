@@ -1,5 +1,4 @@
 import "./style.css";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import ResponseRating from "./ResponseRating";
 import React, { useEffect, useState } from "react";
@@ -24,6 +23,7 @@ import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
 import ModalContainer from "~/containers/ModalContainer";
 import { useSnackbar } from "notistack";
+import axiosInstance from "~/utils/axiosInstance";
 
 export default function ProductDetails() {
   const [fetch, setFetch] = useState(null);
@@ -41,7 +41,7 @@ export default function ProductDetails() {
     window.scrollTo(0, 0); // Set position for scroll when access page
 
     const fetch = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/client/pageProduct/product",
         data: {
@@ -74,7 +74,7 @@ export default function ProductDetails() {
 
     const user_id = currentUser && currentUser?.user?.data?.id;
     const fetch = async () => {
-      await axios({
+      await axiosInstance({
         method: "post",
         url: "/client/productDetails/addCart",
         data: {
@@ -223,7 +223,7 @@ export default function ProductDetails() {
     });
 
     const fetchOrder = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/client/cart/order",
         data: order,

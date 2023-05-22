@@ -1,6 +1,6 @@
 import "./user.css";
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import UserShow from "./components/UserShow";
 import UserUpdate from "./components/UserUpdate";
 import { FetchUser } from "~/helper/fetch";

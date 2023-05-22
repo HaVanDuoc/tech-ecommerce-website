@@ -1,7 +1,6 @@
 import "./styles/fonts.css";
 import "./styles/slider-banner.scss";
 import { Box, Container, Grid, Stack, styled, Typography } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
@@ -21,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FetchProducts } from "~/redux/home/fetchProducts/action";
 import { selectorFetchProducts } from "~/redux/home/fetchProducts/reducer";
 import SkeletonCard from "~/components/skeleton";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Wrapper = styled(Box)(() => ({
   "--home-bg-second": "#f0f2f5",
@@ -37,7 +37,7 @@ const Home = () => {
     if (fetchProducts.isFetch) return;
 
     const fetch = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/client/home",
         data: { offset, limit },
@@ -47,6 +47,7 @@ const Home = () => {
     };
 
     fetch();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, offset, limit]);
 
   console.log("fetchProducts", fetchProducts);
@@ -724,7 +725,7 @@ export const Categories = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/client/nav");
+      const response = await axiosInstance("/client/nav");
 
       setCategory(response.data.data);
     };
@@ -733,7 +734,7 @@ export const Categories = () => {
   }, []);
 
   // const handleClick = async (id) => {
-  //   await axios({
+  //   await axiosInstance({
   //     method: "put",
   //     url: "/client/categories/view",
   //     data: { id },

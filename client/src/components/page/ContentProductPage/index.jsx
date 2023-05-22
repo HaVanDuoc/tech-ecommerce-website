@@ -12,7 +12,6 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -21,6 +20,7 @@ import {
   formatPrice,
   formatVND,
 } from "~/helper/format";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Styles = styled(Box)(() => ({
   ".card:hover": {
@@ -64,7 +64,7 @@ const ContentProductPage = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: `/sectionProduct/getListProduct/${page}`,
       });

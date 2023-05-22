@@ -21,7 +21,6 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import removeEmpty from "~/helper/removeEmpty";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
-import axios from "axios";
 import { useSnackbar } from "notistack";
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,6 +28,7 @@ import { FetchBrand, FetchCategorySelect } from "~/helper/fetch";
 import { formatCapitalization } from "~/helper/format";
 import { refreshPage } from "~/utils";
 import CheckIcon from "@mui/icons-material/Check";
+import axiosInstance from "~/utils/axiosInstance";
 
 const initialValues = {
   name: "",
@@ -72,7 +72,7 @@ export default function CreateNewProduct() {
     const input = document.querySelector("input#name").value;
 
     const check = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/products/checkNameProduct",
         data: { key: input },
@@ -96,7 +96,7 @@ export default function CreateNewProduct() {
         setTimeout(async () => {
           setSubmitting(true);
           // get data from DB
-          const response = await axios({
+          const response = await axiosInstance({
             method: "post",
             url: "/admin/products",
             headers: {

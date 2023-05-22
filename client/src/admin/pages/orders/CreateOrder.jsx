@@ -16,7 +16,6 @@ import {
   formatVND,
 } from "~/helper/format";
 import dayjs from "dayjs";
-import axios from "axios";
 import { PF } from "~/__variables";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
@@ -24,6 +23,7 @@ import { AdminTitle } from "~/admin/Styled";
 import React, { Fragment, useEffect, useState } from "react";
 import ButtonAddProductInCreateOrder from "./components/ButtonAddProductInCreateOrder";
 import { refreshPage } from "~/utils";
+import axiosInstance from "~/utils/axiosInstance";
 
 const CreateOrder = () => {
   const [orders, setOrders] = useState([]);
@@ -34,7 +34,7 @@ const CreateOrder = () => {
 
   useEffect(() => {
     const getUsers = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/createOrder/getUser",
         data: { user_id },
@@ -167,7 +167,7 @@ const CreateOrder = () => {
 
   const handleComplete = () => {
     const complete = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/orders/createOrder/create",
         data: { orders, user_id, payment },

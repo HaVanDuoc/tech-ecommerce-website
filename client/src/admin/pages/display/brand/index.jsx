@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { Box } from "@mui/material";
-import axios from "axios";
 import { useSnackbar } from "notistack";
+import axiosInstance from "~/utils/axiosInstance";
 
 export default function DisplayBrand() {
   const [data, setData] = useState([]);
@@ -31,7 +31,7 @@ export default function DisplayBrand() {
   // Fetch list product
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/display/brand");
+      const response = await axiosInstance("/admin/display/brand");
       setData(response.data.data);
     };
 
@@ -41,7 +41,7 @@ export default function DisplayBrand() {
 
   const handleDelete = (brandId) => {
     setTimeout(async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "delete",
         url: `/admin/product/${brandId}`,
       });

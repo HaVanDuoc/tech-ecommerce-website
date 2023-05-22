@@ -18,7 +18,6 @@ import { Link } from "react-router-dom";
 import Tabs from "./Tabs";
 import { useSelector } from "react-redux";
 import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
-import axios from "axios";
 import {
   FormatFullName,
   formatCost,
@@ -26,6 +25,7 @@ import {
   formatVND,
 } from "~/helper/format";
 import dayjs from "dayjs";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Profile = () => {
   const currentUser = useSelector(selectorCurrentUser);
@@ -60,7 +60,7 @@ const Feed = ({ currentUser }) => {
     const fetch = async () => {
       setPending(true);
 
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/client/profile/order",
         data: {
@@ -85,7 +85,7 @@ const Feed = ({ currentUser }) => {
 
   const handleDestroyOrder = (order_details_id) => {
     const fetch = async () => {
-      await axios({
+      await axiosInstance({
         method: "post",
         url: "/client/profile/destroyOrder",
         data: { order_details_id },

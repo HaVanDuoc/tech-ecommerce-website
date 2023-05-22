@@ -13,7 +13,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSnackbar } from "notistack";
 import React, { Fragment, useEffect, useState } from "react";
@@ -23,6 +22,7 @@ import ButtonSubmit from "~/admin/components/ButtonSubmit";
 import { FieldForm } from "~/admin/Styled";
 import removeEmpty from "~/helper/removeEmpty";
 import { refreshPage } from "~/utils";
+import axiosInstance from "~/utils/axiosInstance";
 
 const UpdateBrand = () => {
   const [data, setData] = useState({});
@@ -30,7 +30,7 @@ const UpdateBrand = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios(`/admin/display/brand/${brandId}`);
+      const response = await axiosInstance(`/admin/display/brand/${brandId}`);
       setData(response.data.data);
     };
 
@@ -98,7 +98,7 @@ const UpdateBrand = () => {
           setSubmitting(true);
 
           setTimeout(async () => {
-            const response = await axios({
+            const response = await axiosInstance({
               method: "put",
               url: `/admin/display/brand/update/${brandId}`,
               data: data,

@@ -13,11 +13,10 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import CircularProgressCustomize from "~/components/progress/CircularProgressCustomize";
 import { useSnackbar } from "notistack";
-import { refreshPage } from "~/utils";
+import axiosInstance from "~/utils/axiosInstance";
 
 const FormUpload = ({ imageList, reset, setReset }) => {
   const productId = useParams().productId;
@@ -86,7 +85,7 @@ const FormUpload = ({ imageList, reset, setReset }) => {
 
       setSubmitting(true);
 
-      const response = await axios({
+      const response = await axiosInstance({
         method: "put",
         url: `/admin/products/update/${productId}/updateImageList`,
         headers: {

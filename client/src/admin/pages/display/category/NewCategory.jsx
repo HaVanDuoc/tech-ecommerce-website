@@ -5,8 +5,8 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import removeEmpty from "~/helper/removeEmpty";
 import ButtonSubmit from "~/admin/components/ButtonSubmit";
-import axios from "axios";
 import { useSnackbar } from "notistack";
+import axiosInstance from "~/utils/axiosInstance";
 
 const categories = [
   {
@@ -69,7 +69,7 @@ const NewCategory = () => {
 
         setTimeout(async () => {
           // get data from DB
-          const response = await axios({
+          const response = await axiosInstance({
             method: "post",
             url: "/admin/display/category/newCategory",
             data: data,

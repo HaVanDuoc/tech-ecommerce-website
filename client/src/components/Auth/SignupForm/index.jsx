@@ -15,8 +15,8 @@ import * as Yup from "yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useDispatch } from "react-redux";
 import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
-import axios from "axios";
 import { refreshPage } from "~/utils";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Styled = styled(Box)(() => ({
   width: 400,
@@ -96,7 +96,7 @@ const SignUpForm = () => {
 
           setTimeout(async () => {
             // get data from DB
-            const response = await axios({
+            const response = await axiosInstance({
               method: "post",
               url: "/client/auth/register",
               data: { firstName, middleName, lastName, email, password },

@@ -9,7 +9,6 @@ import {
   styled,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import Slider from "react-slick";
 import { Link } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
@@ -20,6 +19,7 @@ import AccountMenu from "./AccountMenu";
 import Notification from "./Notification";
 import Cart from "./Cart";
 import Search from "~/components/Search";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Header = () => {
   return (
@@ -104,7 +104,7 @@ export const Nav = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/client/header/nav");
+      const response = await axiosInstance("/client/header/nav");
       setNav(response.data.data);
     };
 

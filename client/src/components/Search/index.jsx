@@ -2,13 +2,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { selectorCurrentUser } from "~/redux/AuthCurrentUser/reducer";
 import { Fragment, useEffect, useState } from "react";
-import axios from "axios";
 import { Recent } from "~/redux/Search/action";
 import styled from "@emotion/styled";
 import { Box, Button, InputBase, Stack, Typography } from "@mui/material";
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
 import { Link } from "react-router-dom";
 import { selectorSearch } from "~/redux/Search/reducer";
+import axiosInstance from "~/utils/axiosInstance";
 
 const Search = () => {
   const [suggestion, setSuggestion] = useState(null);
@@ -18,7 +18,7 @@ const Search = () => {
 
   useEffect(() => {
     const recent = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/client/search/recent",
         data: {
@@ -34,7 +34,7 @@ const Search = () => {
 
   const handleChange = (e) => {
     const suggest = async () => {
-      const result = await axios({
+      const result = await axiosInstance({
         method: "post",
         url: "/client/search/suggest",
         data: { key: e.target.value, limit: 6 },
@@ -198,7 +198,7 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
 
                 /* Save result search */
                 const request = async () => {
-                  const saveSearch = await axios({
+                  const saveSearch = await axiosInstance({
                     method: "post",
                     url: "/client/search/saveRecent",
                     data: { product_id: item.id, user_id },

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -7,20 +6,16 @@ import { DefaultLayout } from "./layouts";
 import { CURRENT_USER } from "./redux/AuthCurrentUser/constant";
 import { privateRoutes, publicRoutes } from "./Routes";
 import GoToAdminPage from "./components/GoToAdminPage";
+import axiosInstance from "./utils/axiosInstance";
 
 const App = () => {
   const dispatch = useDispatch();
 
   const checkCurrentUser = useCallback(async () => {
     try {
-      const token = localStorage.getItem("access_token");
-
-      const response = await axios({
+      const response = await axiosInstance({
         method: "get",
         url: "/client/auth",
-        headers: {
-          Authorization: token,
-        },
       });
 
       if (response?.data?.err === 0) {
