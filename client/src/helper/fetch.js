@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axiosInstance from "~/utils/axiosInstance";
 
 // Fetch list user
 export const FetchUserList = () => {
@@ -7,7 +7,7 @@ export const FetchUserList = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/users");
+      const response = await axiosInstance("/admin/users");
       setList(response.data.data);
     };
 
@@ -23,7 +23,7 @@ export const FetchRoleList = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/user/newUser/listRoles");
+      const response = await axiosInstance("/admin/user/newUser/listRoles");
       setList(response.data.data);
     };
 
@@ -39,7 +39,7 @@ export const FetchUser = (userId) => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios(`/admin/user/${userId}`);
+      const response = await axiosInstance(`/admin/user/${userId}`);
 
       setUser(response.data.data);
     };
@@ -56,7 +56,7 @@ export const FetchGender = () => {
 
   React.useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/db/getGender");
+      const response = await axiosInstance("/db/getGender");
 
       setGender(response.data.data);
     };
@@ -73,7 +73,7 @@ export const FetchListRole = () => {
 
   React.useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/db/listRole");
+      const response = await axiosInstance("/db/listRole");
 
       setRole(response.data.data);
     };
@@ -90,7 +90,7 @@ export const FetchStatusAccount = () => {
 
   React.useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/db/statusAccount");
+      const response = await axiosInstance("/db/statusAccount");
 
       setStatus(response.data.data);
     };
@@ -107,7 +107,7 @@ export const FetchProductList = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/products");
+      const response = await axiosInstance("/admin/products");
       setList(response.data.data);
     };
 
@@ -123,7 +123,7 @@ export const FetchListTables = () => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/db");
+      const response = await axiosInstance("/db");
       setList(response.data.data);
     };
 
@@ -139,7 +139,9 @@ export const FetchCategorySelect = () => {
 
   React.useEffect(() => {
     const fetch = async () => {
-      const response = await axios("/admin/product/newProduct/listCategory");
+      const response = await axiosInstance(
+        "/admin/product/newProduct/listCategory"
+      );
 
       setCategory(response.data.data);
     };
@@ -156,7 +158,7 @@ export const FetchBrand = (categoryId) => {
 
   React.useEffect(() => {
     const fetch = async () => {
-      const response = await axios({
+      const response = await axiosInstance({
         method: "post",
         url: "/admin/product/newProduct/listSelectBrand",
         data: { categoryId },
@@ -177,7 +179,7 @@ export const FetchProduct = (id) => {
 
   useEffect(() => {
     const fetch = async () => {
-      const response = await axios(`/admin/product/${id}`);
+      const response = await axiosInstance(`/admin/product/${id}`);
 
       setData(response.data.data);
     };

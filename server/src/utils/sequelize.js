@@ -15,13 +15,4 @@ const sequelize = new Sequelize(database, username, password, {
   },
 });
 
-const connectionDatabase = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log(`Kết nối CSDL ${database} thành công...`);
-  } catch (error) {
-    console.error("Kết nối CSDL thất bại:", error);
-  }
-};
-
-connectionDatabase();
+module.exports = sequelize;

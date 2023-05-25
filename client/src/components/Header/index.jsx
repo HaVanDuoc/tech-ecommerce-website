@@ -105,6 +105,7 @@ export const Nav = () => {
   useEffect(() => {
     const fetch = async () => {
       const response = await axiosInstance("/client/header/nav");
+      console.log('response', response)
       setNav(response.data.data);
     };
 

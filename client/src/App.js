@@ -6,17 +6,14 @@ import { DefaultLayout } from "./layouts";
 import { CURRENT_USER } from "./redux/AuthCurrentUser/constant";
 import { privateRoutes, publicRoutes } from "./Routes";
 import GoToAdminPage from "./components/GoToAdminPage";
-import axiosInstance from "./utils/axiosInstance";
+import { getCurrentUserAPI } from "./utils/axiosAPI";
 
 const App = () => {
   const dispatch = useDispatch();
 
   const checkCurrentUser = useCallback(async () => {
     try {
-      const response = await axiosInstance({
-        method: "get",
-        url: "/client/auth",
-      });
+      const response = await getCurrentUserAPI();
 
       if (response?.data?.err === 0) {
         const user = response.data;

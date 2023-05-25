@@ -5,7 +5,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
-import axiosInstance from "~/utils/axiosInstance";
+import { deleteBrand, getListBrand } from "~/utils/axiosAPI";
 
 export default function DisplayBrand() {
   const [data, setData] = useState([]);
@@ -31,7 +31,7 @@ export default function DisplayBrand() {
   // Fetch list product
   useEffect(() => {
     const fetch = async () => {
-      const response = await axiosInstance("/admin/display/brand");
+      const response = await getListBrand();
       setData(response.data.data);
     };
 
@@ -41,10 +41,7 @@ export default function DisplayBrand() {
 
   const handleDelete = (brandId) => {
     setTimeout(async () => {
-      const response = await axiosInstance({
-        method: "delete",
-        url: `/admin/product/${brandId}`,
-      });
+      const response = await deleteBrand(brandId);
 
       if (response.data.err === 0) {
         handleSnackBar(response);

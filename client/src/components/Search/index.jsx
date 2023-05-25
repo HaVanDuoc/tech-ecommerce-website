@@ -9,6 +9,7 @@ import { formatCost, formatDiscount, formatPrice } from "~/helper/format";
 import { Link } from "react-router-dom";
 import { selectorSearch } from "~/redux/Search/reducer";
 import axiosInstance from "~/utils/axiosInstance";
+import { RecentAPI } from "~/utils/axiosAPI";
 
 const Search = () => {
   const [suggestion, setSuggestion] = useState(null);
@@ -18,14 +19,11 @@ const Search = () => {
 
   useEffect(() => {
     const recent = async () => {
-      const response = await axiosInstance({
-        method: "post",
-        url: "/client/search/recent",
-        data: {
-          user_id: currentUser.isLogged ? currentUser.user.data.id : null,
-          limit: 6,
-        },
+      const response = await RecentAPI({
+        user_id: currentUser.isLogged ? currentUser.user.data.id : null,
+        limit: 6,
       });
+
       dispatch(Recent(response.data.data));
     };
 
