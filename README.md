@@ -45,6 +45,16 @@ Developed entirly by me
      - Product management
      - Order management
 
+## Deploying
+
+Products are deployed at Google Cloud Platform
+
+Status: FAIL
+
+Error: SequelizeConnectionRefusedError (Haven't found a fix yet)
+
+Website: https://tech2-387808.as.r.appspot.com/
+
 ## Demo
 
 ### 1. Home page
