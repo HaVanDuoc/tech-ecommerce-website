@@ -29,6 +29,8 @@ const App = () => {
 
     return (
         <BrowserRouter>
+
+        
             <Routes>
                 {publicRoutes.map((route, index) => {
                     const path = route.path
