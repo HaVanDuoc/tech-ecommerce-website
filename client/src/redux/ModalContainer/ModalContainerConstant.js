@@ -1,2 +1,0 @@
-export const SHOW_LOGIN_FORM = "SHOW_LOGIN_FORM";
-export const SHOW_SIGNUP_FORM = "SHOW_SIGNUP_FORM";

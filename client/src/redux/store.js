@@ -1,7 +1,18 @@
-import rootReducer from "./reducers";
+import { configureStore } from "@reduxjs/toolkit"
+import authReducer from "./authSlice"
+import productReducer from "./productSlice"
+import searchReducer from "./searchSlice"
+import productByTypeReducer from "./productByTypeSlice"
+import adminReducer from "./adminSlice"
 
-import { createStore } from "@reduxjs/toolkit";
+const store = configureStore({
+    reducer: {
+        auth: authReducer,
+        product: productReducer,
+        search: searchReducer,
+        productByType: productByTypeReducer,
+        admin: adminReducer,
+    },
+})
 
-const store = createStore(rootReducer);
-
-export default store;
+export default store

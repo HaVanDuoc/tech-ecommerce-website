@@ -5,7 +5,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { ButtonCreate, StackButtons } from "~/admin/Styled";
 import { Box } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { deleteBrand, getListBrand } from "~/utils/axiosAPI";
+import { deleteBrand, getListBrand } from "~/utils/api";
 
 export default function DisplayBrand() {
   const [data, setData] = useState([]);
