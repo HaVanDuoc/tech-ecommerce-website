@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import AdminLayout from "./admin/layouts"
 import { DefaultLayout } from "./layouts"
 import { privateRoutes, publicRoutes } from "./Routes"
-import GoToAdminPage from "./components/GoToAdminPage"
+// import GoToAdminPage from "./components/GoToAdminPage"
 import { getCurrentUser } from "./utils/api"
 import { currentUser } from "./redux/authSlice"
 
