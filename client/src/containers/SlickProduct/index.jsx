@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import Slider from "react-slick";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 
 const Wrapper = styled(Box)(() => ({
   "& .slick-slide": {

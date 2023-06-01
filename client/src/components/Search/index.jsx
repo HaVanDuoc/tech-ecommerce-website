@@ -6,9 +6,9 @@ import { Fragment, useEffect, useState } from "react"
 import { Box, Button, InputBase, Stack, Typography } from "@mui/material"
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format"
 import { Link } from "react-router-dom"
-import { RecentAPI } from "~/utils/api"
 import { searchRecent, selectorSearchRecent } from "~/redux/searchSlice"
 import { selectorCurrentUser } from "~/redux/authSlice"
+import { RecentAPI } from "~/api"
 
 const Search = () => {
     const [suggestion, setSuggestion] = useState(null)
@@ -83,11 +83,7 @@ const Search = () => {
 
             <AutoComplete
                 suggestion={suggestion}
-                recent={
-                    resultSearchRecent.isPending
-                        ? resultSearchRecent.result
-                        : []
-                }
+                recent={resultSearchRecent.isPending ? resultSearchRecent.result : []}
                 user_id={currentUser.isLogged ? currentUser.user.data.id : null}
             />
         </SearchWrap>
@@ -130,11 +126,7 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
     if (searchBar)
         new ResizeObserver(() => {
             let widthSearch = document.querySelector("#search-bar").offsetWidth
-            widthSearch < 500
-                ? setRow(1)
-                : widthSearch < 850
-                ? setRow(2)
-                : setRow(3)
+            widthSearch < 500 ? setRow(1) : widthSearch < 850 ? setRow(2) : setRow(3)
         }).observe(searchBar)
 
     const Suggestion = styled(Box)(() => ({}))
@@ -144,14 +136,8 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
         <Box
             id="auto-complete"
             tabIndex={-1}
-            onFocus={() =>
-                (document.querySelector("#auto-complete").style.display =
-                    "block")
-            }
-            onBlur={() =>
-                (document.querySelector("#auto-complete").style.display =
-                    "none")
-            }
+            onFocus={() => (document.querySelector("#auto-complete").style.display = "block")}
+            onBlur={() => (document.querySelector("#auto-complete").style.display = "none")}
             sx={{
                 width: "100%",
                 backgroundColor: "#fff",
@@ -201,9 +187,7 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
                         {suggestion.map((item, index) => {
                             const handleClick = () => {
                                 /* Close auto complete */
-                                document.querySelector(
-                                    "#auto-complete"
-                                ).style.display = "none"
+                                document.querySelector("#auto-complete").style.display = "none"
 
                                 /* Save result search */
                                 const request = async () => {
@@ -235,40 +219,15 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
                                     }}
                                     onClick={handleClick}
                                 >
-                                    <Link
-                                        to={`${item.categoryLink}/${item.name}`}
-                                        className="link"
-                                    >
-                                        <Stack
-                                            flexDirection="row"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            <Stack
-                                                justifyContent="center"
-                                                alignItems="center"
-                                                width={80}
-                                            >
-                                                <img
-                                                    src={
-                                                        JSON.parse(
-                                                            item.image
-                                                        )[0].base64
-                                                    }
-                                                    alt=""
-                                                    width="100%"
-                                                />
+                                    <Link to={`${item.categoryLink}/${item.name}`} className="link">
+                                        <Stack flexDirection="row" justifyContent="center" alignItems="center">
+                                            <Stack justifyContent="center" alignItems="center" width={80}>
+                                                <img src={JSON.parse(item.image)[0].base64} alt="" width="100%" />
                                             </Stack>
 
-                                            <Stack
-                                                justifyContent="center"
-                                                alignItems="start"
-                                                marginLeft={1}
-                                            >
+                                            <Stack justifyContent="center" alignItems="start" marginLeft={1}>
                                                 <Box>
-                                                    <Typography className="name">
-                                                        {item.name}
-                                                    </Typography>
+                                                    <Typography className="name">{item.name}</Typography>
                                                 </Box>
                                                 <Stack
                                                     flexDirection="row"
@@ -280,28 +239,14 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
                                                         },
                                                     }}
                                                 >
-                                                    <Typography
-                                                        color="crimson"
-                                                        fontWeight={500}
-                                                    >
-                                                        {formatPrice(
-                                                            item.price,
-                                                            item.discount
-                                                        )}
+                                                    <Typography color="crimson" fontWeight={500}>
+                                                        {formatPrice(item.price, item.discount)}
                                                     </Typography>
                                                     {item.discount && (
                                                         <Fragment>
-                                                            <Typography>
-                                                                {formatCost(
-                                                                    item.price
-                                                                )}
-                                                            </Typography>
-                                                            <Typography
-                                                                fontSize={14}
-                                                            >
-                                                                {formatDiscount(
-                                                                    item.discount
-                                                                )}
+                                                            <Typography>{formatCost(item.price)}</Typography>
+                                                            <Typography fontSize={14}>
+                                                                {formatDiscount(item.discount)}
                                                             </Typography>
                                                         </Fragment>
                                                     )}
@@ -339,40 +284,15 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
                                         },
                                     }}
                                 >
-                                    <Link
-                                        to={`${item.categoryLink}/${item.name}`}
-                                        className="link"
-                                    >
-                                        <Stack
-                                            flexDirection="row"
-                                            justifyContent="center"
-                                            alignItems="center"
-                                        >
-                                            <Stack
-                                                justifyContent="center"
-                                                alignItems="center"
-                                                width={80}
-                                            >
-                                                <img
-                                                    src={
-                                                        JSON.parse(
-                                                            item.image
-                                                        )[0].base64
-                                                    }
-                                                    alt=""
-                                                    width="100%"
-                                                />
+                                    <Link to={`${item.categoryLink}/${item.name}`} className="link">
+                                        <Stack flexDirection="row" justifyContent="center" alignItems="center">
+                                            <Stack justifyContent="center" alignItems="center" width={80}>
+                                                <img src={JSON.parse(item.image)[0].base64} alt="" width="100%" />
                                             </Stack>
 
-                                            <Stack
-                                                justifyContent="center"
-                                                alignItems="start"
-                                                marginLeft={1}
-                                            >
+                                            <Stack justifyContent="center" alignItems="start" marginLeft={1}>
                                                 <Box>
-                                                    <Typography className="name">
-                                                        {item.name}
-                                                    </Typography>
+                                                    <Typography className="name">{item.name}</Typography>
                                                 </Box>
                                                 <Stack
                                                     flexDirection="row"
@@ -384,28 +304,14 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
                                                         },
                                                     }}
                                                 >
-                                                    <Typography
-                                                        color="crimson"
-                                                        fontWeight={500}
-                                                    >
-                                                        {formatPrice(
-                                                            item.price,
-                                                            item.discount
-                                                        )}
+                                                    <Typography color="crimson" fontWeight={500}>
+                                                        {formatPrice(item.price, item.discount)}
                                                     </Typography>
                                                     {item.discount && (
                                                         <Fragment>
-                                                            <Typography>
-                                                                {formatCost(
-                                                                    item.price
-                                                                )}
-                                                            </Typography>
-                                                            <Typography
-                                                                fontSize={14}
-                                                            >
-                                                                {formatDiscount(
-                                                                    item.discount
-                                                                )}
+                                                            <Typography>{formatCost(item.price)}</Typography>
+                                                            <Typography fontSize={14}>
+                                                                {formatDiscount(item.discount)}
                                                             </Typography>
                                                         </Fragment>
                                                     )}

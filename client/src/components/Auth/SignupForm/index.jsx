@@ -1,23 +1,12 @@
-import {
-    Alert,
-    Box,
-    Button,
-    Checkbox,
-    CircularProgress,
-    Link,
-    styled,
-    TextField,
-    Typography,
-} from "@mui/material"
+import { Alert, Box, Button, Checkbox, CircularProgress, Link, styled, TextField, Typography } from "@mui/material"
 import React from "react"
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import * as Yup from "yup"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import { useDispatch } from "react-redux"
-// import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction";
-import { refreshPage } from "~/utils"
 import axiosInstance from "~/utils/axiosInstance"
 import { modalLoginForm } from "~/redux/authSlice"
+import refreshPage from "~/utils/refreshPage"
 
 const Styled = styled(Box)(() => ({
     width: 400,
@@ -71,31 +60,19 @@ const SignUpForm = () => {
                     confirmPassword: "",
                 }}
                 validationSchema={Yup.object({
-                    firstName: Yup.string()
-                        .max(15, "*Tối đa 15 ký tự")
-                        .required("*Bắt buộc"),
-                    middleName: Yup.string()
-                        .max(15, "*Tối đa 15 ký tự")
-                        .required("*Bắt buộc"),
-                    lastName: Yup.string()
-                        .max(20, "Tối đa 20 ký tự")
-                        .required("*Bắt buộc"),
-                    email: Yup.string()
-                        .email("*Định dạng email không chính xác")
-                        .required("*Bắt buộc"),
+                    firstName: Yup.string().max(15, "*Tối đa 15 ký tự").required("*Bắt buộc"),
+                    middleName: Yup.string().max(15, "*Tối đa 15 ký tự").required("*Bắt buộc"),
+                    lastName: Yup.string().max(20, "Tối đa 20 ký tự").required("*Bắt buộc"),
+                    email: Yup.string().email("*Định dạng email không chính xác").required("*Bắt buộc"),
                     password: Yup.string().min(6).required("*Bắt buộc"),
                     confirmPassword: Yup.string()
-                        .oneOf(
-                            [Yup.ref("password"), null],
-                            "*Mật khẩu không trùng khớp"
-                        )
+                        .oneOf([Yup.ref("password"), null], "*Mật khẩu không trùng khớp")
                         .required("*Bắt buộc"),
                 })}
                 onSubmit={(values, props) => {
                     setSubmitting(true)
                     // destructuring - loại property 'confirmPassword'
-                    const { firstName, middleName, lastName, email, password } =
-                        values
+                    const { firstName, middleName, lastName, email, password } = values
 
                     // return console.log('values', values)
 
@@ -122,10 +99,7 @@ const SignUpForm = () => {
                             // setSubmitting(false); // submit xong mở khóa
                         } else {
                             // Đăng ký thành công, lưu token vào LocalStorage
-                            localStorage.setItem(
-                                "access_token",
-                                response.data.access_token
-                            )
+                            localStorage.setItem("access_token", response.data.access_token)
 
                             refreshPage()
                         }
@@ -231,11 +205,8 @@ const SignUpForm = () => {
                         >
                             <Checkbox name="eula" defaultChecked />
                             <Box component="span">
-                                Đã đọc và đồng ý{" "}
-                                <Link href="#">Điều khoản dịch vụ</Link> &{" "}
-                                <Link href="#">
-                                    Chính Sách Về Quyền Riêng Tư
-                                </Link>
+                                Đã đọc và đồng ý <Link href="#">Điều khoản dịch vụ</Link> &{" "}
+                                <Link href="#">Chính Sách Về Quyền Riêng Tư</Link>
                             </Box>
                         </Box>
 
@@ -248,11 +219,7 @@ const SignUpForm = () => {
                                 height: "50px",
                             }}
                         >
-                            {isSubmitting ? (
-                                <CircularProgress color="inherit" />
-                            ) : (
-                                "Đăng ký"
-                            )}
+                            {isSubmitting ? <CircularProgress color="inherit" /> : "Đăng ký"}
                         </Button>
 
                         <LinkBackToLogin />

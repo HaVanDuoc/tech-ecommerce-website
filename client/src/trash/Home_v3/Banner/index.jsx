@@ -3,7 +3,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
 import { Wrap } from "~/styles/styled";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 
 const bigBanner = {
   display: "flex",

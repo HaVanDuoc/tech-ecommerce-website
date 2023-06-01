@@ -1,6 +1,6 @@
 import { Avatar, Box, CircularProgress, Container, Stack, Typography, styled } from "@mui/material"
 import React, { Fragment, useEffect, useState } from "react"
-import { PF } from "~/__variables"
+import { PF } from "~/utils/__variables"
 import ShoppingBasketOutlinedIcon from "@mui/icons-material/ShoppingBasketOutlined"
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"

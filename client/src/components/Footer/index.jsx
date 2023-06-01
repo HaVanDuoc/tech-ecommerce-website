@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 
 const Footer = () => {
   const supports = [

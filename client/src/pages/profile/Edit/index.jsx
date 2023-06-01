@@ -15,7 +15,7 @@ import {
 import React from "react"
 import { Background, HeaderProfile } from ".."
 import { useSelector } from "react-redux"
-import { PF } from "~/__variables"
+import { PF } from "~/utils/__variables"
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import * as Yup from "yup"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"

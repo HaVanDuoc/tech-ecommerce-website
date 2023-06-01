@@ -6,7 +6,7 @@ import {
   formatVND,
   getPrice,
 } from "~/helper/format";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 import { dummyData } from "../dummyData";
 import { Section, Title } from "../StyledHome";
 

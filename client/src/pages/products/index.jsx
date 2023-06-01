@@ -1,7 +1,7 @@
 import { Box, Button, CircularProgress, Container, Grid, Stack, styled, Typography } from "@mui/material"
 import "~/styles/slider"
 import Slider from "react-slick"
-import { PF } from "~/__variables"
+import { PF } from "~/utils/__variables"
 import Card from "~/components/card"
 import { Footer } from "~/components"
 import { formatVND } from "~/helper/format"

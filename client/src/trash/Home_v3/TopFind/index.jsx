@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 import { Section } from "../StyledHome";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import { formatVND } from "~/helper/format";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 import Slick from "~/components/Slick";
 
 const dummyData = [

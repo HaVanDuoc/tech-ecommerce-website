@@ -1,4 +1,3 @@
-import { refreshPage } from "~/utils"
 import { Link } from "react-router-dom"
 import { useSnackbar } from "notistack"
 import { DataGrid } from "@mui/x-data-grid"
@@ -11,6 +10,7 @@ import { formatStatusProduct, formatVND } from "~/helper/format"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import axiosInstance from "~/utils/axiosInstance"
 import { getUsersAdmin, selectorProductsAdmin } from "~/redux/adminSlice"
+import refreshPage from "~/utils/refreshPage"
 
 export default function ProductList() {
     const [page, setPage] = useState(Number(new URLSearchParams(window.location.search).get("page")) || 1)

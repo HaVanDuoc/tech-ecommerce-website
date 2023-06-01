@@ -7,7 +7,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 import { useSnackbar } from "notistack";
 import React, { Fragment } from "react";
 import SearchIcon from "@mui/icons-material/Search";

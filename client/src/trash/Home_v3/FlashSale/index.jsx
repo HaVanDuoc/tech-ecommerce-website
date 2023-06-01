@@ -8,7 +8,7 @@ import {
   formatVND,
   getPrice,
 } from "~/helper/format";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 import { Section } from "../StyledHome";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import { dummyData } from "../dummyData";

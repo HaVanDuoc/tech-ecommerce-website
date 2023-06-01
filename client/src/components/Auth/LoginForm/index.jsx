@@ -13,13 +13,12 @@ import {
 } from "@mui/material"
 import React from "react"
 import * as Yup from "yup"
-import { refreshPage } from "~/utils"
 import { useDispatch } from "react-redux"
 import GoogleIcon from "@mui/icons-material/Google"
 import { ErrorMessage, Field, Form, Formik } from "formik"
-// import { showSignUpForm } from "~/redux/ModalContainer/ModalContainerAction";
 import axiosInstance from "~/utils/axiosInstance"
 import { modalSignUpForm } from "~/redux/authSlice"
+import refreshPage from "~/utils/refreshPage"
 
 const LoginForm = () => {
     const [error, setError] = React.useState(null)
@@ -33,12 +32,8 @@ const LoginForm = () => {
                     password: "",
                 }}
                 validationSchema={Yup.object({
-                    email: Yup.string()
-                        .email("*Định dạng email không chính xác")
-                        .required("*Bắt buộc"),
-                    password: Yup.string()
-                        .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
-                        .required("*Bắt buộc"),
+                    email: Yup.string().email("*Định dạng email không chính xác").required("*Bắt buộc"),
+                    password: Yup.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự").required("*Bắt buộc"),
                 })}
                 onSubmit={(values, props) => {
                     setSubmitting(true) // click submit khóa liền
@@ -60,10 +55,7 @@ const LoginForm = () => {
                             // setSubmitting(false); // submit xong mở khóa
                         } else {
                             // Đăng nhập thành công, lưu token vào LocalStorage
-                            localStorage.setItem(
-                                "access_token",
-                                response.data.access_token
-                            )
+                            localStorage.setItem("access_token", response.data.access_token)
 
                             refreshPage()
                         }
@@ -115,11 +107,7 @@ const LoginForm = () => {
                                 height: "50px",
                             }}
                         >
-                            {isSubmitting ? (
-                                <CircularProgress color="inherit" />
-                            ) : (
-                                "Đăng nhập"
-                            )}
+                            {isSubmitting ? <CircularProgress color="inherit" /> : "Đăng nhập"}
                         </Button>
 
                         <LinkSignUp>Đăng ký ngay</LinkSignUp>
@@ -162,8 +150,7 @@ const LinkSignUp = ({ children }) => {
 
     return (
         <Box textAlign="center">
-            Bạn chưa có tài khoản?{" "}
-            <Link onClick={() => dispatch(modalSignUpForm())}>{children}</Link>
+            Bạn chưa có tài khoản? <Link onClick={() => dispatch(modalSignUpForm())}>{children}</Link>
         </Box>
     )
 }
@@ -185,12 +172,7 @@ const MethodLoginOther = () => {
                 </Divider>
             </Grid>
             <Grid item xs={12} display="flex" justifyContent="center">
-                <Button
-                    size="large"
-                    variant="outlined"
-                    fullWidth
-                    sx={{ height: "50px", margin: "10px 0" }}
-                >
+                <Button size="large" variant="outlined" fullWidth sx={{ height: "50px", margin: "10px 0" }}>
                     <GoogleIcon color="red" />
                     <Typography
                         sx={{

@@ -8,10 +8,10 @@ import PaginationCustomize from "~/components/Pagination"
 import { useDispatch, useSelector } from "react-redux"
 import { DataGrid } from "@mui/x-data-grid"
 import { actionConfirm, handleButtonConfirm } from "./components/handleConfirm"
-import { refreshPage } from "~/utils"
 import ButtonCreateOrder from "./components/ButtonCreateOrder"
 import axiosInstance from "~/utils/axiosInstance"
 import { getOrdersAdmin, selectorOrdersAdmin } from "~/redux/adminSlice"
+import refreshPage from "~/utils/refreshPage"
 
 export default function Orders() {
     const [data, setData] = useState([])

@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import Slider from "react-slick";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 import { Link } from "react-router-dom";
 import { NextArrow, PrevArrow } from "~/styles/slider";
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format";

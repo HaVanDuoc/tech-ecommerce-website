@@ -18,7 +18,7 @@ import {
   formatVND,
 } from "~/helper/format";
 import dayjs from "dayjs";
-import { PF } from "~/__variables";
+import { PF } from "~/utils/__variables";
 import { useSnackbar } from "notistack";
 import { useParams } from "react-router-dom";
 import { AdminTitle } from "~/admin/Styled";

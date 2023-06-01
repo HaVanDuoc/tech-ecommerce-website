@@ -19,9 +19,9 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import ModalContainer from "~/containers/ModalLogin"
 import { Logout, PersonAdd, Settings } from "@mui/icons-material"
 import { FormatFullName } from "~/helper/format"
-import { refreshPage } from "~/utils"
 import { Link } from "react-router-dom"
 import { modalLoginForm, selectorCurrentUser } from "~/redux/authSlice"
+import refreshPage from "~/utils/refreshPage"
 
 const AccountMenu = () => {
     const currentUser = useSelector(selectorCurrentUser)
@@ -61,9 +61,7 @@ const AccountMenu = () => {
                                 onClick={handleClick}
                                 size="small"
                                 sx={{ ml: 2 }}
-                                aria-controls={
-                                    open ? "account-menu" : undefined
-                                }
+                                aria-controls={open ? "account-menu" : undefined}
                                 aria-haspopup="true"
                                 aria-expanded={open ? "true" : undefined}
                             >
@@ -75,10 +73,7 @@ const AccountMenu = () => {
                                     }}
                                     variant="dot"
                                 >
-                                    <Avatar
-                                        alt="avatar"
-                                        src={currentUser.user.data.avatar}
-                                    />
+                                    <Avatar alt="avatar" src={currentUser.user.data.avatar} />
                                 </StyledBadge>
                             </IconButton>
                         </Tooltip>
@@ -127,11 +122,7 @@ const AccountMenu = () => {
                         <Link to="/profile" className="link">
                             <MenuItem onClick={handleClose}>
                                 <Avatar src={currentUser.user.data.avatar} />{" "}
-                                <Typography
-                                    variant="span"
-                                    color="var(--color-text) !important"
-                                    fontWeight={500}
-                                >
+                                <Typography variant="span" color="var(--color-text) !important" fontWeight={500}>
                                     {FormatFullName(
                                         currentUser.user.data.firstName,
                                         currentUser.user.data.middleName,
