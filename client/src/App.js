@@ -1,31 +1,18 @@
-import React, { useCallback, useEffect } from "react"
-import { useDispatch } from "react-redux"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { privateRoutes, publicRoutes } from "./Routes"
+import React, { useEffect } from "react"
 import AdminLayout from "./admin/layouts"
 import { DefaultLayout } from "./layouts"
-import { privateRoutes, publicRoutes } from "./Routes"
+import { requestGetCurrentUser } from "./api"
+import { useDispatch } from "react-redux"
 // import GoToAdminPage from "./components/GoToAdminPage"
-import { getCurrentUser } from "./api"
-import { currentUser } from "./redux/authSlice"
 
 const App = () => {
     const dispatch = useDispatch()
 
-    const checkCurrentUser = useCallback(async () => {
-        try {
-            const response = await getCurrentUser()
-
-            if (response?.data?.err === 0) {
-                dispatch(currentUser(response.data))
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }, [dispatch])
-
     useEffect(() => {
-        checkCurrentUser()
-    }, [checkCurrentUser])
+        requestGetCurrentUser(dispatch)
+    }, [dispatch])
 
     return (
         <BrowserRouter>

@@ -1,9 +1,9 @@
 import { Box, Modal, styled } from "@mui/material"
 import React from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import LoginForm from "~/components/Auth/LoginForm"
 import SignUpForm from "~/components/Auth/SignupForm"
-import { selectorModalForm } from "~/redux/authSlice"
+import { loginFail, registerFail, selectorModalForm } from "~/redux/authSlice"
 
 const Styled = styled(Box)(() => ({}))
 
@@ -20,10 +20,16 @@ const style = {
 }
 
 const ModalLogin = ({ children }) => {
+    const dispatch = useDispatch()
+
     // State for open Modal
     const [open, setOpen] = React.useState(false)
     const handleOpen = () => setOpen(true)
-    const handleClose = () => setOpen(false)
+    const handleClose = () => {
+        setOpen(false)
+        dispatch(loginFail(null))
+        dispatch(registerFail(null))
+    }
 
     const show = useSelector(selectorModalForm)
 

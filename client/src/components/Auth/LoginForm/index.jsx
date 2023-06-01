@@ -13,16 +13,15 @@ import {
 } from "@mui/material"
 import React from "react"
 import * as Yup from "yup"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import GoogleIcon from "@mui/icons-material/Google"
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import axiosInstance from "~/utils/axiosInstance"
-import { modalSignUpForm } from "~/redux/authSlice"
-import refreshPage from "~/utils/refreshPage"
+import { modalSignUpForm, selectorStatusLogin } from "~/redux/authSlice"
+import { requestLogin } from "~/api"
 
 const LoginForm = () => {
-    const [error, setError] = React.useState(null)
-    const [isSubmitting, setSubmitting] = React.useState(false)
+    const dispatch = useDispatch()
+    const stateLogin = useSelector(selectorStatusLogin)
 
     return (
         <Styled>
@@ -35,32 +34,7 @@ const LoginForm = () => {
                     email: Yup.string().email("*Định dạng email không chính xác").required("*Bắt buộc"),
                     password: Yup.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự").required("*Bắt buộc"),
                 })}
-                onSubmit={(values, props) => {
-                    setSubmitting(true) // click submit khóa liền
-
-                    setTimeout(async () => {
-                        // get data from DB
-                        const response = await axiosInstance({
-                            method: "post",
-                            url: "/client/auth/login",
-                            data: values,
-                        })
-
-                        setSubmitting(false)
-
-                        if (response.data.err !== 0) {
-                            // Đăng nhập thất bại
-                            setError(response.data.msg)
-
-                            // setSubmitting(false); // submit xong mở khóa
-                        } else {
-                            // Đăng nhập thành công, lưu token vào LocalStorage
-                            localStorage.setItem("access_token", response.data.access_token)
-
-                            refreshPage()
-                        }
-                    }, 2000)
-                }}
+                onSubmit={(values, props) => requestLogin(dispatch, values)}
             >
                 {(props) => (
                     <Form>
@@ -92,9 +66,9 @@ const LoginForm = () => {
 
                         <LinkForgotPassword>Quên mật khẩu?</LinkForgotPassword>
 
-                        {error && (
+                        {stateLogin.error && (
                             <Alert severity="error" sx={{ marginTop: 1 }}>
-                                {error}
+                                {stateLogin.error}
                             </Alert>
                         )}
 
@@ -107,7 +81,7 @@ const LoginForm = () => {
                                 height: "50px",
                             }}
                         >
-                            {isSubmitting ? <CircularProgress color="inherit" /> : "Đăng nhập"}
+                            {stateLogin.isPending ? <CircularProgress color="inherit" /> : "Đăng nhập"}
                         </Button>
 
                         <LinkSignUp>Đăng ký ngay</LinkSignUp>

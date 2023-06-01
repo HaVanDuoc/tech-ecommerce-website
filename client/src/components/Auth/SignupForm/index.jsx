@@ -1,12 +1,11 @@
 import { Alert, Box, Button, Checkbox, CircularProgress, Link, styled, TextField, Typography } from "@mui/material"
-import React from "react"
+import { modalLoginForm, selectorStatusRegister } from "~/redux/authSlice"
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import * as Yup from "yup"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
-import { useDispatch } from "react-redux"
-import axiosInstance from "~/utils/axiosInstance"
-import { modalLoginForm } from "~/redux/authSlice"
-import refreshPage from "~/utils/refreshPage"
+import { useDispatch, useSelector } from "react-redux"
+import { requestRegister } from "~/api"
+import * as Yup from "yup"
+import React from "react"
 
 const Styled = styled(Box)(() => ({
     width: 400,
@@ -45,8 +44,8 @@ const LinkBackToLogin = () => {
 }
 
 const SignUpForm = () => {
-    const [error, setError] = React.useState(null)
-    const [isSubmitting, setSubmitting] = React.useState(false)
+    const dispatch = useDispatch()
+    const stateRegister = useSelector(selectorStatusRegister)
 
     return (
         <Styled>
@@ -69,42 +68,7 @@ const SignUpForm = () => {
                         .oneOf([Yup.ref("password"), null], "*Mật khẩu không trùng khớp")
                         .required("*Bắt buộc"),
                 })}
-                onSubmit={(values, props) => {
-                    setSubmitting(true)
-                    // destructuring - loại property 'confirmPassword'
-                    const { firstName, middleName, lastName, email, password } = values
-
-                    // return console.log('values', values)
-
-                    setTimeout(async () => {
-                        // get data from DB
-                        const response = await axiosInstance({
-                            method: "post",
-                            url: "/client/auth/register",
-                            data: {
-                                firstName,
-                                middleName,
-                                lastName,
-                                email,
-                                password,
-                            },
-                        })
-
-                        setSubmitting(false)
-
-                        if (response.data.err !== 0) {
-                            // Đăng ký thất bại
-                            setError(response.data.msg)
-
-                            // setSubmitting(false); // submit xong mở khóa
-                        } else {
-                            // Đăng ký thành công, lưu token vào LocalStorage
-                            localStorage.setItem("access_token", response.data.access_token)
-
-                            refreshPage()
-                        }
-                    }, 2000)
-                }}
+                onSubmit={(values, props) => requestRegister(dispatch, values)}
             >
                 {(props) => (
                     <Form>
@@ -185,9 +149,9 @@ const SignUpForm = () => {
                             helperText={<ErrorMessage name="confirmPassword" />}
                         />
 
-                        {error && (
+                        {stateRegister.error && (
                             <Alert severity="error" sx={{ marginTop: 1 }}>
-                                {error}
+                                {stateRegister.error}
                             </Alert>
                         )}
 
@@ -219,7 +183,7 @@ const SignUpForm = () => {
                                 height: "50px",
                             }}
                         >
-                            {isSubmitting ? <CircularProgress color="inherit" /> : "Đăng ký"}
+                            {stateRegister.isPending ? <CircularProgress color="inherit" /> : "Đăng ký"}
                         </Button>
 
                         <LinkBackToLogin />
