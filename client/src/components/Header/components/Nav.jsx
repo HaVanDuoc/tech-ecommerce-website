@@ -1,11 +1,11 @@
-import styled from "@emotion/styled"
+import { selectorCategories } from "~/redux/productSlice"
 import { Box, Container, Typography } from "@mui/material"
-import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
+import { requestGetCategories } from "~/api"
+import React, { useEffect } from "react"
 import { Link } from "react-router-dom"
+import styled from "@emotion/styled"
 import Slider from "react-slick"
-import { getCategories, selectorCategories } from "~/redux/productSlice"
-import axiosInstance from "~/utils/axiosInstance"
 
 const Nav = () => {
     const nav = useSelector(selectorCategories)
@@ -13,13 +13,7 @@ const Nav = () => {
 
     useEffect(() => {
         if (nav.isFetch) return
-
-        const fetch = async () => {
-            const response = await axiosInstance("/client/header/nav")
-            dispatch(getCategories(response.data.data))
-        }
-
-        fetch()
+        requestGetCategories(dispatch)
     }, [dispatch, nav])
 
     const Styled = styled(Box)(() => ({
@@ -48,10 +42,9 @@ const Nav = () => {
             fontSize: "20px",
         },
 
-        ".slick-prev.slick-disabled:before, .slick-next.slick-disabled:before":
-            {
-                opacity: 0,
-            },
+        ".slick-prev.slick-disabled:before, .slick-next.slick-disabled:before": {
+            opacity: 0,
+        },
     }))
 
     return (
@@ -66,13 +59,7 @@ const Nav = () => {
                         minHeight: "50px",
                     }}
                 >
-                    <Slider
-                        dots={false}
-                        infinite={false}
-                        speed={500}
-                        slidesToShow={8}
-                        slidesToScroll={8}
-                    >
+                    <Slider dots={false} infinite={false} speed={500} slidesToShow={8} slidesToScroll={8}>
                         {nav.isFetch &&
                             Array.isArray(nav.categories) &&
                             nav.categories.map((item, index) => {
@@ -85,7 +72,7 @@ const Nav = () => {
                                         }}
                                     >
                                         <Link
-                                            to={item?.link}
+                                            to={item.accessLink}
                                             style={{
                                                 display: "flex",
                                                 justifyContent: "center",
@@ -100,7 +87,7 @@ const Nav = () => {
                                                 fontWeight={500}
                                                 justifyContent="center"
                                             >
-                                                {item?.name}
+                                                {item.categoryName}
                                             </Typography>
                                         </Link>
                                     </Box>

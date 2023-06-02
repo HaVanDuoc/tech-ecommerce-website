@@ -32,14 +32,14 @@ export const productSlice = createSlice({
         endFetchCardProduct: (state) => {
             state.cart.isPending = false
         },
-        getCategories: (state, action) => {
+        setCategories: (state, action) => {
             state.categories.isFetch = true
             state.categories.categories = action.payload
         },
     },
 })
 
-export const { latestProducts, startFetchCardProduct, setCardProduct, endFetchCardProduct, getCategories, getMobile } =
+export const { latestProducts, startFetchCardProduct, setCardProduct, endFetchCardProduct, setCategories, getMobile } =
     productSlice.actions
 
 export const selectorLatestProducts = (state) => state.product.latestProducts

@@ -17,7 +17,7 @@ import {
     startSearchHeaderRecent,
     startSearchHeaderSuggest,
 } from "~/redux/searchSlice"
-import { endFetchCardProduct, setCardProduct, startFetchCardProduct } from "~/redux/productSlice"
+import { endFetchCardProduct, setCardProduct, setCategories, startFetchCardProduct } from "~/redux/productSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -143,6 +143,12 @@ export const requestDecreaseProductCart = async (product_id, cart_session_id) =>
 export const requestDeleteProductCart = async (product_id, cart_session_id) => {
     const data = { product_id, cart_session_id }
     await axiosInstance("delete", "/cart/delete", data)
+}
+
+// CATEGORY
+export const requestGetCategories = async (dispatch) => {
+    const response = await axiosInstance("get", "/category/getCategories")
+    dispatch(setCategories(response.data.data))
 }
 
 // path: client\src\admin\pages\display\brand\index.jsx

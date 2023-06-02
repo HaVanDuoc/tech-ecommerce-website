@@ -1,10 +1,6 @@
-// authController.js
-
 const { intervalServerError, badRequest } = require("../middleware/handleError")
-const services = require("../services")
-const { firstName, middleName, lastName, email, password } = require("../helper/joiSchema")
+const authService = require("../services/authService")
 const Joi = require("joi")
-const { getCurrentUser } = require("../services")
 
 exports.getCurrentUser = async (req, res) => {
     try {
@@ -20,7 +16,7 @@ exports.getCurrentUser = async (req, res) => {
 
         const userId = req.user
 
-        const response = await getCurrentUser(userId)
+        const response = await authService.getCurrentUser(userId)
 
         return res.status(200).json(response)
     } catch (error) {
@@ -43,7 +39,7 @@ exports.register = async (req, res) => {
 
         if (error) return badRequest(error.details[0]?.message, res)
 
-        const response = await services.register(req.body)
+        const response = await authService.register(req.body)
 
         return res.status(200).json(response)
         //
@@ -64,7 +60,7 @@ exports.login = async (req, res) => {
 
         if (error) return badRequest(error.details[0]?.message, res)
 
-        const response = await services.login(req.body)
+        const response = await authService.login(req.body)
 
         return res.status(200).json(response)
         //
