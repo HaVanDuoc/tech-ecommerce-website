@@ -9,6 +9,14 @@ import {
     startLogin,
     startRegister,
 } from "~/redux/authSlice"
+import {
+    endSearchHeaderRecent,
+    endSearchHeaderSuggest,
+    setSearchHeaderRecent,
+    setSearchHeaderSuggest,
+    startSearchHeaderRecent,
+    startSearchHeaderSuggest,
+} from "~/redux/searchSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -25,6 +33,7 @@ export const axiosInstance = async (method, url, data) => {
     })
 }
 
+// AUTH
 export const requestGetCurrentUser = async (dispatch) => {
     try {
         const response = await axiosInstance("get", "/auth/getCurrentUser")
@@ -57,7 +66,7 @@ export const requestLogin = (dispatch, values) => {
 
 export const requestRegister = (dispatch, values) => {
     dispatch(startRegister())
-    
+
     const { firstName, middleName, lastName, email, password } = values
 
     // return console.log('values', values)
@@ -83,9 +92,31 @@ export const requestRegister = (dispatch, values) => {
     }, 2000)
 }
 
-// path: client\src\components\Search\index.jsx
-export const RecentAPI = (data) => {
-    return axiosInstance("post", "client/search/recent", data)
+// SEARCH
+export const requestSearchHeaderSuggest = async (dispatch, e) => {
+    const data = {
+        key: e.target.value,
+        limit: 6,
+    }
+
+    dispatch(startSearchHeaderSuggest())
+    const result = await axiosInstance("post", "/search/header/getSuggest", data)
+    dispatch(setSearchHeaderSuggest(result.data.data))
+    dispatch(endSearchHeaderSuggest())
+}
+
+export const requestSearchHeaderRecent = async (dispatch, user_id) => {
+    const data = { user_id, limit: 6 }
+
+    dispatch(startSearchHeaderRecent())
+    const response = await axiosInstance("post", "/search/header/getRecent", data)
+    dispatch(setSearchHeaderRecent(response.data.data))
+    dispatch(endSearchHeaderRecent())
+}
+
+export const requestSearchHeaderSaveRecent = async (product_id, user_id) => {
+    const data = { product_id, user_id }
+    await axiosInstance("post", "/search/header/saveRecent", data)
 }
 
 // path: client\src\admin\pages\display\brand\index.jsx

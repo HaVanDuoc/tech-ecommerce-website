@@ -1,54 +1,28 @@
 import styled from "@emotion/styled"
 import SearchIcon from "@mui/icons-material/Search"
-import axiosInstance from "~/utils/axiosInstance"
 import { useDispatch, useSelector } from "react-redux"
 import { Fragment, useEffect, useState } from "react"
-import { Box, Button, InputBase, Stack, Typography } from "@mui/material"
+import { Box, Button, CircularProgress, InputBase, Stack, Typography } from "@mui/material"
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format"
 import { Link } from "react-router-dom"
-import { searchRecent, selectorSearchRecent } from "~/redux/searchSlice"
 import { selectorCurrentUser } from "~/redux/authSlice"
-import { RecentAPI } from "~/api"
+import { requestSearchHeaderRecent, requestSearchHeaderSaveRecent, requestSearchHeaderSuggest } from "~/api"
+import { selectorSearchHeader } from "~/redux/searchSlice"
 
 const Search = () => {
-    const [suggestion, setSuggestion] = useState(null)
     const currentUser = useSelector(selectorCurrentUser)
-    const resultSearchRecent = useSelector(selectorSearchRecent)
     const dispatch = useDispatch()
+    const stateSearch = useSelector(selectorSearchHeader)
 
     useEffect(() => {
-        const recent = async () => {
-            const response = await RecentAPI({
-                user_id: currentUser.isLogged ? currentUser.user.data.id : null,
-                limit: 6,
-            })
+        if (stateSearch.recent.isFetch) return
+        requestSearchHeaderRecent(dispatch, currentUser.isLogged ? currentUser.user.data.id : null)
+    }, [dispatch, currentUser, stateSearch])
 
-            dispatch(searchRecent(response.data.data))
-        }
-
-        recent()
-    }, [dispatch, currentUser])
-
-    const handleChange = (e) => {
-        const suggest = async () => {
-            const result = await axiosInstance({
-                method: "post",
-                url: "/client/search/suggest",
-                data: { key: e.target.value, limit: 6 },
-            })
-
-            setSuggestion(result.data.data)
-        }
-
-        suggest()
-    }
+    const handleChange = (e) => requestSearchHeaderSuggest(dispatch, e)
 
     const handleClick = () => {
         document.querySelector("#auto-complete").style.display = "block"
-
-        // document.querySelector("#input-search").addEventListener("focus", () => {
-        //   document.querySelector("#auto-complete").style.display = "none";
-        // });
     }
 
     return (
@@ -81,11 +55,7 @@ const Search = () => {
                 Tìm kiếm
             </Button>
 
-            <AutoComplete
-                suggestion={suggestion}
-                recent={resultSearchRecent.isPending ? resultSearchRecent.result : []}
-                user_id={currentUser.isLogged ? currentUser.user.data.id : null}
-            />
+            <AutoComplete user_id={currentUser.isLogged ? currentUser.user.data.id : null} />
         </SearchWrap>
     )
 }
@@ -119,9 +89,10 @@ const SearchWrap = styled(Box)(() => ({
     },
 }))
 
-const AutoComplete = ({ suggestion, recent, user_id }) => {
+const AutoComplete = ({ user_id }) => {
     const [row, setRow] = useState(1)
     const searchBar = document.querySelector("#search-bar")
+    const stateSearch = useSelector(selectorSearchHeader)
 
     if (searchBar)
         new ResizeObserver(() => {
@@ -177,30 +148,22 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
                 },
             }}
         >
-            {suggestion && (
+            {stateSearch.suggest.isPending ? (
+                <Loading />
+            ) : stateSearch.suggest.result.length ? (
                 <Suggestion className="suggestion">
                     <Box className="title">
                         <Typography>Gợi ý sản phẩm</Typography>
                     </Box>
 
                     <Box className="container-result">
-                        {suggestion.map((item, index) => {
+                        {stateSearch.suggest.result.map((item, index) => {
                             const handleClick = () => {
                                 /* Close auto complete */
                                 document.querySelector("#auto-complete").style.display = "none"
 
                                 /* Save result search */
-                                const request = async () => {
-                                    const saveSearch = await axiosInstance({
-                                        method: "post",
-                                        url: "/client/search/saveRecent",
-                                        data: { product_id: item.id, user_id },
-                                    })
-
-                                    saveSearch()
-                                }
-
-                                request()
+                                requestSearchHeaderSaveRecent(item.id, user_id)
                             }
 
                             return (
@@ -259,16 +222,20 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
                         })}
                     </Box>
                 </Suggestion>
+            ) : (
+                <Fragment />
             )}
 
-            {recent && (
+            {stateSearch.recent.isPending ? (
+                <Loading />
+            ) : (
                 <Recent className="suggestion">
                     <Box className="title">
                         <Typography>Tìm kiếm gần đây</Typography>
                     </Box>
 
                     <Box className="container-result">
-                        {recent.map((item, index) => {
+                        {stateSearch.recent.result.map((item, index) => {
                             return (
                                 <Box
                                     key={index}
@@ -328,3 +295,9 @@ const AutoComplete = ({ suggestion, recent, user_id }) => {
         </Box>
     )
 }
+
+const Loading = () => (
+    <Stack justifyContent="center" alignItems="center" width="100%" minHeight="80px">
+        <CircularProgress />
+    </Stack>
+)

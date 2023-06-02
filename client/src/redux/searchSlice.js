@@ -3,21 +3,51 @@ import { createSlice } from "@reduxjs/toolkit"
 export const searchSlice = createSlice({
     name: "search",
     initialState: {
-        recent: {
-            isPending: false,
-            result: null,
+        header: {
+            recent: {
+                isFetch: false,
+                isPending: false,
+                result: [],
+            },
+            suggest: {
+                isFetch: false,
+                isPending: false,
+                result: [],
+            },
         },
     },
     reducers: {
-        searchRecent: (state, action) => {
-            state.recent.isPending = true
-            state.recent.result = action.payload
+        startSearchHeaderRecent: (state) => {
+            state.header.recent.isPending = true
+        },
+        setSearchHeaderRecent: (state, action) => {
+            state.header.recent.isFetch = true
+            state.header.recent.result = action.payload
+        },
+        endSearchHeaderRecent: (state) => {
+            state.header.recent.isPending = false
+        },
+        startSearchHeaderSuggest: (state) => {
+            state.header.suggest.isPending = true
+        },
+        setSearchHeaderSuggest: (state, action) => {
+            state.header.suggest.result = action.payload
+        },
+        endSearchHeaderSuggest: (state) => {
+            state.header.suggest.isPending = false
         },
     },
 })
 
-export const { searchRecent } = searchSlice.actions
+export const {
+    startSearchHeaderRecent,
+    setSearchHeaderRecent,
+    endSearchHeaderRecent,
+    startSearchHeaderSuggest,
+    setSearchHeaderSuggest,
+    endSearchHeaderSuggest,
+} = searchSlice.actions
 
-export const selectorSearchRecent = (state) => state.search.recent
+export const selectorSearchHeader = (state) => state.search.header
 
 export default searchSlice.reducer

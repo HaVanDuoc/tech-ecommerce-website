@@ -16,16 +16,18 @@ const home = require("./client/home")
 const productsClient = require("./client/products")
 const cart = require("./client/cart")
 const profile = require("./client/profile")
-const search = require("./client/search")
+// const search = require("./client/search")
 const orders = require("./admin/orders")
 const users = require("./admin/users")
 
 const authRoute = require("./authRoute")
+const searchRoute = require("./searchRoute")
 
 const initRoute = (app) => {
     const v1 = "/api/v1"
 
     app.use(`${v1}/auth`, authRoute)
+    app.use(`${v1}/search`, searchRoute)
 
     // Routes
     app.use("/api/v1/user", userRoute)
@@ -44,7 +46,7 @@ const initRoute = (app) => {
     app.use("/api/v1/client/products", productsClient)
     app.use("/api/v1/client/cart", cart)
     app.use("/api/v1/client/profile", profile)
-    app.use("/api/v1/client/search", search)
+    // app.use("/api/v1/client/search", search)
 
     // Admin routes
     app.use("/api/v1/admin/users", users)
