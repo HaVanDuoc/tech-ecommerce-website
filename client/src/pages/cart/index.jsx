@@ -1,49 +1,39 @@
 import { formatCost, formatDiscount, formatPrice, formatVND } from "~/helper/format"
 import { Box, Checkbox, Container, Divider, Grid, styled, Typography } from "@mui/material"
-import { Link } from "react-router-dom"
 import React, { Fragment, useEffect, useState } from "react"
 import { Brand } from "~/components/Header"
 import AccountMenu from "~/components/Header/AccountMenu"
 import { Footer } from "~/components"
 import { useDispatch, useSelector } from "react-redux"
-import { PF } from "~/utils/__variables"
 import TopBar from "~/components/Header/TopBar"
 import { useSnackbar } from "notistack"
 import Search from "~/components/Search"
 import axiosInstance from "~/utils/axiosInstance"
 import { selectorCurrentUser } from "~/redux/authSlice"
-import { getCartProducts, selectorCartProducts } from "~/redux/productSlice"
+import { selectorCartProducts } from "~/redux/productSlice"
+import {
+    requestCartProduct,
+    requestDecreaseProductCart,
+    requestDeleteProductCart,
+    requestIncreaseProductCart,
+} from "~/api"
 import CartEmpty from "./components/CartEmpty"
+import Loading from "./components/Loading"
 
 const Cart = () => {
     const [reFetch, setReFetch] = useState(true) // Đơn giản là sử dụng để reset dữ liệu fetch về thôi
     const [payment, setPayment] = useState(0) // số tiền thanh toán
     const [paymentProductNumber, setPaymentProductNumber] = useState(0) // số sản phẩm đã chọn
     const [selectedProduct, setSelectedProduct] = useState([])
-    const currentUser = useSelector(selectorCurrentUser)
-    const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
+    const dispatch = useDispatch()
+    const currentUser = useSelector(selectorCurrentUser)
     const cart = useSelector(selectorCartProducts)
-
-    console.log("cart", cart)
 
     useEffect(() => {
         if (cart.isFetch) return
-
-        const fetch = async () => {
-            const response = await axiosInstance({
-                method: "post",
-                url: "/client/cart",
-                data: {
-                    user_id: currentUser.isLogged ? currentUser.user.data.id : null,
-                },
-            })
-
-            dispatch(getCartProducts(response.data))
-        }
-
-        fetch()
-    }, [currentUser, reFetch, dispatch, cart]) // ở bất kỳ đâu chỉ cần setReFetch là có thể làm mới fetch này
+        requestCartProduct(dispatch, currentUser?.user?.data?.id)
+    }, [dispatch, currentUser, cart])
 
     const handleSnackBar = (res) => {
         if (res.data.err === 0) {
@@ -74,18 +64,7 @@ const Cart = () => {
         )
 
         // update quantity
-        const fetch = async () => {
-            await axiosInstance({
-                method: "post",
-                url: "/client/cart/increase",
-                data: {
-                    product_id,
-                    cart_session_id,
-                },
-            })
-        }
-
-        fetch()
+        requestIncreaseProductCart(product_id, cart_session_id)
 
         // update payment
         // cũng giống dưới handleSelect
@@ -112,18 +91,7 @@ const Cart = () => {
         )
 
         // update quantity
-        const fetch = async () => {
-            await axiosInstance({
-                method: "post",
-                url: "/client/cart/decrease",
-                data: {
-                    product_id,
-                    cart_session_id,
-                },
-            })
-        }
-
-        fetch()
+        requestDecreaseProductCart(product_id, cart_session_id)
 
         // update payment
         // cũng giống dưới handleSelect
@@ -134,21 +102,8 @@ const Cart = () => {
         }
     }
 
-    const handleDelete = (index, product_id, cart_session_id) => {
-        // Request to server delete item
-        const fetch = async () => {
-            await axiosInstance({
-                method: "delete",
-                url: "/client/cart/delete",
-                data: {
-                    product_id,
-                    cart_session_id,
-                },
-            })
-        }
-
-        fetch()
-
+    const handleDelete = (product_id, cart_session_id) => {
+        requestDeleteProductCart(product_id, cart_session_id)
         setReFetch(!reFetch)
     }
 
@@ -209,10 +164,10 @@ const Cart = () => {
             return order
         })
 
-        const fetch = async () => {
+        const request = async () => {
             const response = await axiosInstance({
                 method: "post",
-                url: "/client/cart/order",
+                url: "/cart/order",
                 data: order,
             })
 
@@ -221,7 +176,7 @@ const Cart = () => {
             handleSnackBar(response) // xuất thông báo
         }
 
-        fetch()
+        request()
     }
 
     return (
@@ -230,332 +185,284 @@ const Cart = () => {
 
             <ContentCart>
                 <Container maxWidth="lg" disableGutters>
-                    {cart.isFetch ? (
-                        cart.products.data ? (
-                            <Fragment>
-                                <Box
-                                    sx={{
-                                        borderRadius: "5px",
-                                        backgroundColor: "#fff",
-                                        margin: "30px 24px",
-                                    }}
-                                >
-                                    <Option>
-                                        {/* title */}
-                                        <Box className="title col">
-                                            <Box className="col-0">
-                                                <Checkbox />
-                                            </Box>
-                                            <Box className="col-1">
-                                                <Typography>Sản phẩm</Typography>
-                                            </Box>
-                                            <Box className="col-2">
-                                                <Typography>Đơn giá</Typography>
-                                            </Box>
-                                            <Box className="col-3">
-                                                <Typography>Số lượng</Typography>
-                                            </Box>
-                                            <Box className="col-4">
-                                                <Typography>Số tiền</Typography>
-                                            </Box>
-                                            <Box className="col-5">
-                                                <Typography>Thao tác</Typography>
-                                            </Box>
+                    {cart.isPending ? (
+                        <Loading />
+                    ) : Array.isArray(cart.products) && cart.products.length ? (
+                        <Fragment>
+                            <Box
+                                sx={{
+                                    borderRadius: "5px",
+                                    backgroundColor: "#fff",
+                                    margin: "30px 24px",
+                                }}
+                            >
+                                <Option>
+                                    {/* title */}
+                                    <Box className="title col">
+                                        <Box className="col-0">
+                                            <Checkbox />
                                         </Box>
+                                        <Box className="col-1">
+                                            <Typography>Sản phẩm</Typography>
+                                        </Box>
+                                        <Box className="col-2">
+                                            <Typography>Đơn giá</Typography>
+                                        </Box>
+                                        <Box className="col-3">
+                                            <Typography>Số lượng</Typography>
+                                        </Box>
+                                        <Box className="col-4">
+                                            <Typography>Số tiền</Typography>
+                                        </Box>
+                                        <Box className="col-5">
+                                            <Typography>Thao tác</Typography>
+                                        </Box>
+                                    </Box>
 
-                                        {/* Content */}
-                                        <Box className="content">
-                                            {cart.products.data &&
-                                                cart.products.data.map((item, index) => {
-                                                    return (
-                                                        <Box className={`item col cart-item-${index}`} key={index}>
-                                                            {/* CheckBox */}
-                                                            <Box className="col-0">
-                                                                <Checkbox
-                                                                    className={`box-select-${index}`}
-                                                                    onClick={() =>
-                                                                        handleSelect(index, item.price, item.discount)
-                                                                    }
-                                                                />
+                                    {/* Content */}
+                                    <Box className="content">
+                                        {cart.products &&
+                                            cart.products.map((item, index) => {
+                                                return (
+                                                    <Box className={`item col cart-item-${index}`} key={index}>
+                                                        {/* CheckBox */}
+                                                        <Box className="col-0">
+                                                            <Checkbox
+                                                                className={`box-select-${index}`}
+                                                                onClick={() =>
+                                                                    handleSelect(index, item.price, item.discount)
+                                                                }
+                                                            />
 
-                                                                <Box
-                                                                    sx={{
-                                                                        display: "none",
-                                                                    }}
-                                                                    className={`box-product-id-${index}`}
-                                                                >
-                                                                    {item.id}
-                                                                </Box>
+                                                            <Box
+                                                                sx={{
+                                                                    display: "none",
+                                                                }}
+                                                                className={`box-product-id-${index}`}
+                                                            >
+                                                                {item.id}
                                                             </Box>
+                                                        </Box>
 
-                                                            {/* Sản phẩm */}
-                                                            <Box className="col-1">
-                                                                <Grid container spacing={1} flexDirection="row">
-                                                                    <Grid item xs={4}>
-                                                                        <img
-                                                                            src={
-                                                                                item.image
-                                                                                    ? JSON.parse(item.image)[0].base64
-                                                                                    : ""
-                                                                            }
-                                                                            alt=""
-                                                                            width="100%"
-                                                                        />
-                                                                    </Grid>
-                                                                    <Grid item xs>
-                                                                        <Box
-                                                                            sx={{
-                                                                                display: "flex",
-                                                                                justifyContent: "start",
-                                                                                alignItems: "center",
-                                                                                height: "100%",
-                                                                            }}
-                                                                        >
-                                                                            <Typography>{item.name}</Typography>
-                                                                        </Box>
-                                                                    </Grid>
+                                                        {/* Sản phẩm */}
+                                                        <Box className="col-1">
+                                                            <Grid container spacing={1} flexDirection="row">
+                                                                <Grid item xs={4}>
+                                                                    <img
+                                                                        src={
+                                                                            item.image
+                                                                                ? JSON.parse(item.image)[0].base64
+                                                                                : ""
+                                                                        }
+                                                                        alt=""
+                                                                        width="100%"
+                                                                    />
                                                                 </Grid>
-                                                            </Box>
-
-                                                            {/* Đơn giá */}
-                                                            <Box className="col-2 field-bill">
-                                                                {item?.discount && (
-                                                                    <Typography
+                                                                <Grid item xs>
+                                                                    <Box
                                                                         sx={{
                                                                             display: "flex",
-                                                                            flexDirection: "row",
-                                                                            justifyContent: "center",
+                                                                            justifyContent: "start",
                                                                             alignItems: "center",
-
-                                                                            "span:nth-child(n)": {
-                                                                                marginLeft: "5px",
-                                                                            },
+                                                                            height: "100%",
                                                                         }}
                                                                     >
-                                                                        <Typography
-                                                                            variant="span"
-                                                                            color="#666"
-                                                                            fontSize="14px"
-                                                                        >
-                                                                            {formatCost(item.price)}
-                                                                        </Typography>
-                                                                        <Typography
-                                                                            variant="span"
-                                                                            color="crimson"
-                                                                            fontWeight={500}
-                                                                            fontSize="14px"
-                                                                        >
-                                                                            {formatDiscount(item.discount)}
-                                                                        </Typography>
-                                                                    </Typography>
-                                                                )}
-                                                                <Typography>
-                                                                    {formatPrice(item.price, item.discount)}
-                                                                </Typography>
-                                                            </Box>
+                                                                        <Typography>{item.name}</Typography>
+                                                                    </Box>
+                                                                </Grid>
+                                                            </Grid>
+                                                        </Box>
 
-                                                            {/* Số lượng */}
-                                                            <Box className={`col-3 box-quantity-${index}`}>
-                                                                <Box sx={styles}>
-                                                                    <Box
-                                                                        className="btn"
-                                                                        onClick={() =>
-                                                                            handleDecrease(
-                                                                                index,
-                                                                                item.price,
-                                                                                item.discount,
-                                                                                item.id,
-                                                                                item.cart_session_id
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        -
-                                                                    </Box>
-                                                                    <Box className={`count get-quantity-${index}`}>
-                                                                        {item.quantity}
-                                                                    </Box>
-                                                                    <Box
-                                                                        className="btn"
-                                                                        onClick={() =>
-                                                                            handleIncrease(
-                                                                                index,
-                                                                                item.price,
-                                                                                item.discount,
-                                                                                item.id,
-                                                                                item.cart_session_id
-                                                                            )
-                                                                        }
-                                                                    >
-                                                                        +
-                                                                    </Box>
-                                                                </Box>
-                                                            </Box>
-
-                                                            {/* Số tiền */}
-                                                            <Box className="col-4">
+                                                        {/* Đơn giá */}
+                                                        <Box className="col-2 field-bill">
+                                                            {item?.discount && (
                                                                 <Typography
-                                                                    className={`box-price-${index}`}
                                                                     sx={{
-                                                                        color: "crimson",
+                                                                        display: "flex",
+                                                                        flexDirection: "row",
+                                                                        justifyContent: "center",
+                                                                        alignItems: "center",
+
+                                                                        "span:nth-child(n)": {
+                                                                            marginLeft: "5px",
+                                                                        },
                                                                     }}
                                                                 >
-                                                                    {formatVND(
-                                                                        (item.price -
-                                                                            item.price *
-                                                                                ((item.discount ? item.discount : 0) /
-                                                                                    100)) *
-                                                                            item.quantity
-                                                                    )}
+                                                                    <Typography
+                                                                        variant="span"
+                                                                        color="#666"
+                                                                        fontSize="14px"
+                                                                    >
+                                                                        {formatCost(item.price)}
+                                                                    </Typography>
+                                                                    <Typography
+                                                                        variant="span"
+                                                                        color="crimson"
+                                                                        fontWeight={500}
+                                                                        fontSize="14px"
+                                                                    >
+                                                                        {formatDiscount(item.discount)}
+                                                                    </Typography>
                                                                 </Typography>
-                                                            </Box>
+                                                            )}
+                                                            <Typography>
+                                                                {formatPrice(item.price, item.discount)}
+                                                            </Typography>
+                                                        </Box>
 
-                                                            {/* Thao tác */}
-                                                            <Box className="col-5">
-                                                                <Typography
-                                                                    sx={{
-                                                                        color: "crimson",
-                                                                        cursor: "pointer",
-                                                                    }}
+                                                        {/* Số lượng */}
+                                                        <Box className={`col-3 box-quantity-${index}`}>
+                                                            <Box sx={styles}>
+                                                                <Box
+                                                                    className="btn"
                                                                     onClick={() =>
-                                                                        handleDelete(
+                                                                        handleDecrease(
                                                                             index,
+                                                                            item.price,
+                                                                            item.discount,
                                                                             item.id,
                                                                             item.cart_session_id
                                                                         )
                                                                     }
                                                                 >
-                                                                    Xóa
-                                                                </Typography>
+                                                                    -
+                                                                </Box>
+                                                                <Box className={`count get-quantity-${index}`}>
+                                                                    {item.quantity}
+                                                                </Box>
+                                                                <Box
+                                                                    className="btn"
+                                                                    onClick={() =>
+                                                                        handleIncrease(
+                                                                            index,
+                                                                            item.price,
+                                                                            item.discount,
+                                                                            item.id,
+                                                                            item.cart_session_id
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    +
+                                                                </Box>
                                                             </Box>
                                                         </Box>
-                                                    )
-                                                })}
-                                        </Box>
 
-                                        {/* Payment */}
-                                        <Payment>
+                                                        {/* Số tiền */}
+                                                        <Box className="col-4">
+                                                            <Typography
+                                                                className={`box-price-${index}`}
+                                                                sx={{
+                                                                    color: "crimson",
+                                                                }}
+                                                            >
+                                                                {formatVND(
+                                                                    (item.price -
+                                                                        item.price *
+                                                                            ((item.discount ? item.discount : 0) /
+                                                                                100)) *
+                                                                        item.quantity
+                                                                )}
+                                                            </Typography>
+                                                        </Box>
+
+                                                        {/* Thao tác */}
+                                                        <Box className="col-5">
+                                                            <Typography
+                                                                sx={{
+                                                                    color: "crimson",
+                                                                    cursor: "pointer",
+                                                                }}
+                                                                onClick={() =>
+                                                                    handleDelete(index, item.id, item.cart_session_id)
+                                                                }
+                                                            >
+                                                                Xóa
+                                                            </Typography>
+                                                        </Box>
+                                                    </Box>
+                                                )
+                                            })}
+                                    </Box>
+
+                                    {/* Payment */}
+                                    <Payment>
+                                        <Box
+                                            sx={{
+                                                padding: "10px 24px",
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Box
                                                 sx={{
-                                                    padding: "10px 24px",
                                                     display: "flex",
                                                     justifyContent: "space-between",
                                                     alignItems: "center",
+                                                    flexDirection: "row",
                                                 }}
                                             >
-                                                <Box
+                                                <Checkbox />
+                                                <Typography
                                                     sx={{
-                                                        display: "flex",
-                                                        justifyContent: "space-between",
-                                                        alignItems: "center",
-                                                        flexDirection: "row",
+                                                        textTransform: "capitalize",
                                                     }}
                                                 >
-                                                    <Checkbox />
+                                                    Chọn tất cả ({paymentProductNumber})
+                                                </Typography>
+                                            </Box>
+
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    flexDirection: "row",
+                                                }}
+                                            >
+                                                <Typography>
+                                                    Tổng thanh toán ({paymentProductNumber} sản phẩm):{" "}
                                                     <Typography
+                                                        variant="span"
                                                         sx={{
-                                                            textTransform: "capitalize",
+                                                            color: "crimson",
+                                                            fontWeight: 600,
+                                                            fontSize: "1.2rem",
                                                         }}
                                                     >
-                                                        Chọn tất cả ({paymentProductNumber})
+                                                        {formatVND(payment)}
                                                     </Typography>
-                                                </Box>
+                                                </Typography>
 
                                                 <Box
                                                     sx={{
+                                                        marginLeft: 3,
+                                                        backgroundColor: "crimson",
+                                                        border: "1px solid crimson",
+                                                        borderRadius: "5px",
+                                                        color: "#fff",
                                                         display: "flex",
                                                         justifyContent: "center",
                                                         alignItems: "center",
-                                                        flexDirection: "row",
+                                                        padding: "10px 30px",
+                                                        cursor: "pointer",
+                                                        boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
+                                                        transition: "all .2s ease-in-out",
+
+                                                        ":hover": {
+                                                            boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
+                                                        },
                                                     }}
+                                                    onClick={handleOrder}
                                                 >
-                                                    <Typography>
-                                                        Tổng thanh toán ({paymentProductNumber} sản phẩm):{" "}
-                                                        <Typography
-                                                            variant="span"
-                                                            sx={{
-                                                                color: "crimson",
-                                                                fontWeight: 600,
-                                                                fontSize: "1.2rem",
-                                                            }}
-                                                        >
-                                                            {formatVND(payment)}
-                                                        </Typography>
-                                                    </Typography>
-
-                                                    <Box
-                                                        sx={{
-                                                            marginLeft: 3,
-                                                            backgroundColor: "crimson",
-                                                            border: "1px solid crimson",
-                                                            borderRadius: "5px",
-                                                            color: "#fff",
-                                                            display: "flex",
-                                                            justifyContent: "center",
-                                                            alignItems: "center",
-                                                            padding: "10px 30px",
-                                                            cursor: "pointer",
-                                                            boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
-                                                            transition: "all .2s ease-in-out",
-
-                                                            ":hover": {
-                                                                boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
-                                                            },
-                                                        }}
-                                                        onClick={handleOrder}
-                                                    >
-                                                        Đặt hàng
-                                                    </Box>
+                                                    Đặt hàng
                                                 </Box>
                                             </Box>
-                                        </Payment>
-                                    </Option>
-                                </Box>
-                            </Fragment>
-                        ) : (
-                            <Fragment>
-                                <Box
-                                    sx={{
-                                        height: "400px",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        flexDirection: "column",
-                                    }}
-                                >
-                                    <Box sx={{ pointerEvents: "none" }}>
-                                        <img
-                                            src={PF + "/assets/cart/empty-cart-removebg-preview.png"}
-                                            alt=""
-                                            width="270px"
-                                        />
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            pointerEvents: "none",
-                                            margin: 2,
-                                            fontSize: "16px",
-                                            fontWeight: 500,
-                                            color: "#666",
-                                        }}
-                                    >
-                                        Giỏ hàng của bạn còn trống
-                                    </Box>
-                                    <Link to="/">
-                                        <Box
-                                            sx={{
-                                                color: "#fff",
-                                                backgroundColor: "dodgerblue",
-                                                textTransform: "uppercase",
-                                                padding: "10px 30px",
-                                                borderRadius: "5px",
-                                            }}
-                                        >
-                                            Mua ngay
                                         </Box>
-                                    </Link>
-                                </Box>
-                            </Fragment>
-                        )
+                                    </Payment>
+                                </Option>
+                            </Box>
+                        </Fragment>
                     ) : (
                         <CartEmpty />
                     )}

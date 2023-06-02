@@ -9,6 +9,7 @@ export const productSlice = createSlice({
         },
         cart: {
             isFetch: false,
+            isPending: false,
             products: null,
         },
         categories: {
@@ -21,9 +22,15 @@ export const productSlice = createSlice({
             state.latestProducts.isFetch = true
             state.latestProducts.products = action.payload
         },
-        getCartProducts: (state, action) => {
+        startFetchCardProduct: (state) => {
+            state.cart.isPending = true
+        },
+        setCardProduct: (state, action) => {
             state.cart.isFetch = true
             state.cart.products = action.payload
+        },
+        endFetchCardProduct: (state) => {
+            state.cart.isPending = false
         },
         getCategories: (state, action) => {
             state.categories.isFetch = true
@@ -32,7 +39,8 @@ export const productSlice = createSlice({
     },
 })
 
-export const { latestProducts, getCartProducts, getCategories, getMobile } = productSlice.actions
+export const { latestProducts, startFetchCardProduct, setCardProduct, endFetchCardProduct, getCategories, getMobile } =
+    productSlice.actions
 
 export const selectorLatestProducts = (state) => state.product.latestProducts
 export const selectorCartProducts = (state) => state.product.cart

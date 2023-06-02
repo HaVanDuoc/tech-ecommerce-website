@@ -206,7 +206,7 @@ export default function ProductDetails() {
         const fetchOrder = async () => {
             const response = await axiosInstance({
                 method: "post",
-                url: "/client/cart/order",
+                url: "/cart/order",
                 data: order,
             })
 

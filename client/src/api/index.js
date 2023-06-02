@@ -17,6 +17,7 @@ import {
     startSearchHeaderRecent,
     startSearchHeaderSuggest,
 } from "~/redux/searchSlice"
+import { endFetchCardProduct, setCardProduct, startFetchCardProduct } from "~/redux/productSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -117,6 +118,31 @@ export const requestSearchHeaderRecent = async (dispatch, user_id) => {
 export const requestSearchHeaderSaveRecent = async (product_id, user_id) => {
     const data = { product_id, user_id }
     await axiosInstance("post", "/search/header/saveRecent", data)
+}
+
+// CART
+export const requestCartProduct = async (dispatch, user_id) => {
+    if (user_id) {
+        dispatch(startFetchCardProduct())
+        const response = await axiosInstance("post", "/cart/getCartProduct", { user_id })
+        dispatch(setCardProduct(response.data.data))
+        dispatch(endFetchCardProduct())
+    }
+}
+
+export const requestIncreaseProductCart = async (product_id, cart_session_id) => {
+    const data = { product_id, cart_session_id }
+    await axiosInstance("post", "/cart/increase", data)
+}
+
+export const requestDecreaseProductCart = async (product_id, cart_session_id) => {
+    const data = { product_id, cart_session_id }
+    await axiosInstance("post", "/cart/decrease", data)
+}
+
+export const requestDeleteProductCart = async (product_id, cart_session_id) => {
+    const data = { product_id, cart_session_id }
+    await axiosInstance("delete", "/cart/delete", data)
 }
 
 // path: client\src\admin\pages\display\brand\index.jsx
