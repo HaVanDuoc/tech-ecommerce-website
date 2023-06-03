@@ -18,6 +18,7 @@ import {
     startSearchHeaderSuggest,
 } from "~/redux/searchSlice"
 import { endFetchCardProduct, setCardProduct, setCategories, startFetchCardProduct } from "~/redux/productSlice"
+import { setBrandByCategory } from "~/redux/brandSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -149,6 +150,18 @@ export const requestDeleteProductCart = async (product_id, cart_session_id) => {
 export const requestGetCategories = async (dispatch) => {
     const response = await axiosInstance("get", "/category/getCategories")
     dispatch(setCategories(response.data.data))
+}
+
+// BRAND
+export const requestGetBrandsByCategory = async (dispatch, link) => {
+    let response = await axiosInstance("post", "/brand/getBrandsByCategory", { link })
+
+    const config = {
+        link: response.data.data[0].categoryLink,
+        brands: response.data.data,
+    }
+
+    dispatch(setBrandByCategory(config))
 }
 
 // path: client\src\admin\pages\display\brand\index.jsx

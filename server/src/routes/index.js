@@ -15,6 +15,7 @@ const authRoute = require("./authRoute")
 const searchRoute = require("./searchRoute")
 const cartRoute = require("./cartRoute")
 const categoryRoute = require("./categoryRoute")
+const brandRoute = require("./brandRoute")
 
 const adminUserRoute = require("./admin/users")
 const adminProductRoute = require("./admin/products")
@@ -27,6 +28,7 @@ const initRoute = (app) => {
     app.use(`${v1}/search`, searchRoute)
     app.use(`${v1}/cart`, cartRoute)
     app.use(`${v1}/category`, categoryRoute)
+    app.use(`${v1}/brand`, brandRoute)
 
     // Admin routes
     app.use(`${v1}/admin/users`, adminUserRoute)
