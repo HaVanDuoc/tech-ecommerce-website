@@ -1,11 +1,13 @@
 import { Box, Container, Stack } from "@mui/material"
 import React from "react"
+import { useParams } from "react-router-dom"
 import Slider from "react-slick"
 import { NextArrow, PrevArrow } from "~/styles/slider"
 import { PF } from "~/utils/__variables"
 
-const Banner = ({ page }) => {
+const Banner = () => {
     let array = null
+    const page = useParams().category
     let category = page
 
     const dienThoai = [

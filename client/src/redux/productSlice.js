@@ -3,9 +3,13 @@ import { createSlice } from "@reduxjs/toolkit"
 export const productSlice = createSlice({
     name: "product",
     initialState: {
-        latestProducts: {
+        latest: {
             isFetch: false,
             products: null,
+        },
+        productsByCategory: {
+            isPending: false,
+            reFetch: false,
         },
         cart: {
             isFetch: false,
@@ -18,10 +22,41 @@ export const productSlice = createSlice({
         },
     },
     reducers: {
-        latestProducts: (state, action) => {
-            state.latestProducts.isFetch = true
-            state.latestProducts.products = action.payload
+        setLatestProduct: (state, action) => {
+            state.latest.isFetch = true
+            state.latest.products = action.payload
         },
+
+        // PRODUCT PAGE
+        startProductByCategory: (state) => {
+            state.productsByCategory.isPending = true
+        },
+        setProductByCategory: (state, action) => {
+            if (!state.productsByCategory[`${action.payload.category}`]) {
+                state.productsByCategory[`${action.payload.category}`] = {}
+                state.productsByCategory[`${action.payload.category}`]["limit"] = action.payload.products.limitOfPage
+                state.productsByCategory[`${action.payload.category}`]["counterPage"] =
+                    action.payload.products.counterPage
+                state.productsByCategory[`${action.payload.category}`]["counterProduct"] =
+                    action.payload.products.counterProduct
+            }
+
+            state.productsByCategory[`${action.payload.category}`][`page-${action.payload.page}`] =
+                action.payload.products.list
+        },
+        resetSateProductByCategory: (state) => {
+            state.productsByCategory = {
+                isPending: false,
+                reFetch: false,
+            }
+        },
+        reFetchProductPage: (state) => {
+            state.productsByCategory.reFetch = !state.productsByCategory.reFetch
+        },
+        endProductByCategory: (state) => {
+            state.productsByCategory.isPending = false
+        },
+
         startFetchCardProduct: (state) => {
             state.cart.isPending = true
         },
@@ -39,11 +74,23 @@ export const productSlice = createSlice({
     },
 })
 
-export const { latestProducts, startFetchCardProduct, setCardProduct, endFetchCardProduct, setCategories, getMobile } =
-    productSlice.actions
+export const {
+    setLatestProduct,
+    startProductByCategory,
+    setProductByCategory,
+    resetSateProductByCategory,
+    reFetchProductPage,
+    endProductByCategory,
+    startFetchCardProduct,
+    setCardProduct,
+    endFetchCardProduct,
+    setCategories,
+} = productSlice.actions
 
-export const selectorLatestProducts = (state) => state.product.latestProducts
+export const selectorLatestProducts = (state) => state.product.latest
+export const selectorProductByCategory = (state) => state.product.productsByCategory
 export const selectorCartProducts = (state) => state.product.cart
 export const selectorCategories = (state) => state.product.categories
+export const selectorUrlParamsProductPage = (state) => state.product.urlParamsProductPage
 
 export default productSlice.reducer

@@ -1,33 +1,29 @@
-import { Pagination, Stack } from "@mui/material";
-import React from "react";
+import React from "react"
+import { Pagination, Stack } from "@mui/material"
+import addOrUpdateURLParams from "~/utils/addURLParams"
+import { useDispatch } from "react-redux"
+import { reFetchProductPage } from "~/redux/productSlice"
 
-const PaginationCustomize = ({ page, setPage, countProducts, limit }) => {
-  const handleChangePagination = (event, value) => {
-    setPage(value);
+const PaginationCustomize = ({ counterPage }) => {
+    const page = Number(new URLSearchParams(window.location.search).get("page")) || 1
+    const dispatch = useDispatch()
 
-    const addOrUpdateURLParams = (key, value) => {
-      const searchParams = new URLSearchParams(window.location.search);
-      searchParams.set(key, value);
-      const newRelativePathQuery =
-        window.location.pathname + "?" + searchParams.toString();
-      // eslint-disable-next-line no-restricted-globals
-      history.pushState(null, "", newRelativePathQuery);
-    };
+    const handleChangePagination = (event, value) => {
+        addOrUpdateURLParams("page", value)
+        dispatch(reFetchProductPage())
+    }
 
-    addOrUpdateURLParams("page", value);
-  };
+    return (
+        <Stack justifyContent="center" alignItems="center" marginTop={2}>
+            <Pagination
+                count={counterPage}
+                page={page}
+                color="primary"
+                size="large"
+                onChange={handleChangePagination}
+            />
+        </Stack>
+    )
+}
 
-  return (
-    <Stack justifyContent="center" alignItems="center" marginTop={2}>
-      <Pagination
-        count={Number(Math.floor(countProducts / limit) + 1)}
-        page={page}
-        color="primary"
-        size="large"
-        onChange={handleChangePagination}
-      />
-    </Stack>
-  );
-};
-
-export default PaginationCustomize;
+export default PaginationCustomize

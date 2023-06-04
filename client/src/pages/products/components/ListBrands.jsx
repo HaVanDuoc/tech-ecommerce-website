@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import { requestGetBrandsByCategory } from "~/api"
 import { selectorBrand } from "~/redux/brandSlice"
-import axiosInstance from "~/utils/axiosInstance"
+import { reFetchProductPage, resetSateProductByCategory } from "~/redux/productSlice"
+import addOrUpdateURLParams from "~/utils/addURLParams"
 
-const ListBrands = ({ setBrandParams }) => {
+const ListBrands = () => {
     const dispatch = useDispatch()
     const brands = useSelector(selectorBrand)
     const currentPageLink = useParams().category
@@ -17,31 +18,9 @@ const ListBrands = ({ setBrandParams }) => {
     }, [dispatch, currentPageLink, brands])
 
     const handleClick = (brand) => {
-        const addOrUpdateURLParams = (key, value) => {
-            const searchParams = new URLSearchParams(window.location.search)
-            searchParams.set(key, value)
-            const newRelativePathQuery = window.location.pathname + "?" + searchParams.toString()
-            // eslint-disable-next-line no-restricted-globals
-            history.pushState(null, "", newRelativePathQuery)
-        }
-
         addOrUpdateURLParams("brand", brand)
-
-        const setView = () => {
-            const view = async () => {
-                await axiosInstance({
-                    method: "post",
-                    url: "/client/products/setView",
-                    data: { brand },
-                })
-            }
-
-            view()
-        }
-
-        setView()
-
-        setBrandParams(brand)
+        dispatch(resetSateProductByCategory())
+        dispatch(reFetchProductPage())
     }
 
     return (

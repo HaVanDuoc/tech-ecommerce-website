@@ -1,163 +1,67 @@
-import { Box, Button, CircularProgress, Container, Grid, Stack, styled, Typography } from "@mui/material"
-import { getProductByType, selectorProductByType } from "~/redux/productByTypeSlice"
-import { convertURLParamsToCategory } from "./helpers/convertURLParamsToCategory"
+import { Box, CircularProgress, Container, Grid, Stack, styled, Typography } from "@mui/material"
+import { selectorProductByCategory } from "~/redux/productSlice"
 import { default as SliderMaterial } from "@mui/material/Slider"
 import SectionCategories from "./components/SectionCategories"
-import React, { Fragment, useEffect, useState } from "react"
 import PaginationCustomize from "~/components/Pagination"
 import { useDispatch, useSelector } from "react-redux"
-import axiosInstance from "~/utils/axiosInstance"
 import ListBrands from "./components/ListBrands"
+import removeEmpty from "~/helper/removeEmpty"
 import { AppBar } from "~/components/Header"
 import { useParams } from "react-router-dom"
 import { formatVND } from "~/helper/format"
+import { requestGetProducts } from "~/api"
+import React, { useEffect } from "react"
 import Banner from "./components/Banner"
+import SortBy from "./components/SortBy"
 import { Footer } from "~/components"
 import Card from "~/components/card"
 import "~/styles/slider"
 
 const Products = () => {
-    const [data, setData] = useState([])
-    const [page, setPage] = useState(Number(new URLSearchParams(window.location.search).get("page")) || 1)
-    const [isPending, setPending] = useState(false)
-    const [brandParams, setBrandParams] = useState(new URLSearchParams(window.location.search).get("brand"))
     const dispatch = useDispatch()
-    const current = useParams().category // get category of current page
+    const products = useSelector(selectorProductByCategory)
 
-    const products = useSelector(selectorProductByType)
+    const category = useParams().category
+    const page = Number(new URLSearchParams(window.location.search).get("page")) || 1
+    const brand = new URLSearchParams(window.location.search).get("brand")
+    const sortBy = new URLSearchParams(window.location.search).get("sortBy")
 
-    const category = convertURLParamsToCategory(current)
+    useEffect(() => {
+        window.scrollTo(0, 357)
 
-    const fetchProducts = async (category) => {
-        setPending(true)
-
-        const response = await axiosInstance({
-            method: "post",
-            url: "/client/products",
-            data: { category, page, brandParams },
-        })
+        // Stop handle when data available
+        if (products[`/${category}`] && products[`/${category}`][`page-${page}`]) return
 
         const config = {
-            category: response.data.category,
-            countPage: response.data.countPage,
-            currentPage: response.data.currentPage,
-            countProducts: response.data.countProducts,
-            limit: response.data.limit,
-            products: response.data.data,
+            category: `/${category}`,
+            page,
+            brand,
+            sortBy,
         }
 
-        dispatch(getProductByType(config))
-
-        setPending(false)
-    }
-
-    useEffect(() => {
-        window.scrollTo(0, 357)
-
-        switch (current) {
-            case "dien-thoai":
-                if (!products.dienthoai.products[`page-${page}`]) fetchProducts("Điện thoại")
-                setData(products.dienthoai)
-                break
-
-            case "tablet":
-                if (!products.tablet.products[`page-${page}`]) fetchProducts("Tablet")
-                setData(products.tablet)
-                break
-
-            case "laptop":
-                if (!products.laptop.products[`page-${page}`]) fetchProducts("Laptop")
-                setData(products.laptop)
-                break
-
-            case "tai-nghe":
-                if (!products.tainghe.products[`page-${page}`]) fetchProducts("Tai nghe")
-                setData(products.tainghe)
-                break
-
-            case "dong-ho":
-                if (!products.dongho.products[`page-${page}`]) fetchProducts("Đồng hồ")
-                setData(products.dongho)
-                break
-
-            case "pc":
-                if (!products.pc.products[`page-${page}`]) fetchProducts("Pc")
-                setData(products.pc)
-                break
-
-            case "sim":
-                if (!products.sim.products[`page-${page}`]) fetchProducts("Sim")
-                setData(products.sim)
-                break
-
-            case "may-giat":
-                if (!products.maygiat.products[`page-${page}`]) fetchProducts("Máy giặt")
-                setData(products.maygiat)
-                break
-
-            case "tivi":
-                if (!products.tivi.products[`page-${page}`]) fetchProducts("Tivi")
-                setData(products.tivi)
-                break
-
-            case "tu-lanh":
-                if (!products.tulanh.products[`page-${page}`]) fetchProducts("Tủ lạnh")
-                setData(products.tulanh)
-                break
-
-            case "loa":
-                if (!products.loa.products[`page-${page}`]) fetchProducts("Loa")
-                setData(products.loa)
-                break
-
-            case "quat-dieu-hoa":
-                if (!products.quatdieuhoa.products[`page-${page}`]) fetchProducts("Quạt điều hòa")
-                setData(products.quatdieuhoa)
-                break
-
-            default:
-                break
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, products, current, brandParams])
-
-    useEffect(() => {
-        window.scrollTo(0, 357)
-        fetchProducts(convertURLParamsToCategory(current))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [brandParams])
+        requestGetProducts(dispatch, removeEmpty(config))
+    }, [dispatch, category, page, brand, sortBy, products])
 
     return (
         <Wrapper>
-            {/* AppBar */}
-            <Box
-                sx={{
-                    backgroundColor: "#fff",
-                    boxShadow: "0 0 1px 1px rgba(0,0,0,0.1)",
-                }}
-            >
+            <Box sx={styles1}>
                 <AppBar />
             </Box>
 
-            <Banner page={current} />
+            <Banner />
 
             <Body>
                 <Container maxWidth="lg" disableGutters>
-                    {/* Brands */}
                     <Box sx={{ marginBottom: 2 }}>
-                        <ListBrands setBrandParams={setBrandParams} />
+                        <ListBrands />
                     </Box>
 
-                    {/*  */}
                     <Grid container spacing={2}>
                         <Grid item xs={2.5}>
-                            {/* Danh muc */}
-                            <SectionCategories category={category} setPage={setPage} setBrandParams={setBrandParams} />
+                            <SectionCategories />
 
-                            {/* Bộ lọc */}
                             <Box className="box filter">
                                 <Typography className="title">Bộ lọc</Typography>
-
                                 <Box sx={{ padding: "0 16px" }}>
                                     <Typography sx={{ fontWeight: 500 }}>Giá</Typography>
                                     <SliderPrice />
@@ -166,55 +70,16 @@ const Products = () => {
                         </Grid>
 
                         <Grid item xs>
-                            {/* Xếp theo */}
-                            <SortBy>
-                                <Box className="wrapper">
-                                    <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
-                                        <Box>
-                                            <Typography variant="span" fontWeight={500}>
-                                                Xếp theo
-                                            </Typography>
+                            <SortBy />
 
-                                            <Button>Sale</Button>
-                                            <Button>Mới nhất</Button>
-                                            <Button>Bán chạy</Button>
-                                        </Box>
-
-                                        <Box>
-                                            {isPending ? (
-                                                <Fragment />
-                                            ) : data.countProducts > 0 ? (
-                                                <Typography sx={{ fontWeight: 500 }}>
-                                                    {`${data.countProducts} ${data.category}`}
-                                                </Typography>
-                                            ) : (
-                                                <Typography sx={{ fontWeight: 500 }}>Chưa có sản phẩm nào!</Typography>
-                                            )}
-                                        </Box>
-                                    </Stack>
-                                </Box>
-                            </SortBy>
-
-                            {/* sản phẩm */}
-                            {isPending ? (
-                                <Stack
-                                    flexDirection="column"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    width="100%"
-                                    height={460}
-                                >
-                                    <CircularProgress />
-                                    <Typography marginTop={2}>Chờ chút xíu...</Typography>
-                                </Stack>
+                            {products.isPending ? (
+                                <Loading />
                             ) : (
                                 <ListProduct>
                                     <Grid container spacing={1}>
-                                        {data &&
-                                            data.isFetch &&
-                                            data.products &&
-                                            data.products[`page-${page}`] &&
-                                            data.products[`page-${page}`].map((item, index) => {
+                                        {products &&
+                                            products[`/${category}`] &&
+                                            products[`/${category}`][`page-${page}`]?.map((item, index) => {
                                                 return (
                                                     <Grid item xs={3} key={index}>
                                                         <Card product={item} />
@@ -223,14 +88,9 @@ const Products = () => {
                                             })}
                                     </Grid>
 
-                                    {data.countPage > 1 && (
+                                    {products[`/${category}`]?.counterPage > 1 && (
                                         <Stack alignItems="center" justifyContent="center" marginTop={5}>
-                                            <PaginationCustomize
-                                                page={page}
-                                                setPage={setPage}
-                                                countProducts={data.countProducts}
-                                                limit={data.limit}
-                                            />
+                                            <PaginationCustomize counterPage={products[`/${category}`]?.counterPage} />
                                         </Stack>
                                     )}
                                 </ListProduct>
@@ -246,6 +106,18 @@ const Products = () => {
 }
 
 export default Products
+
+const Loading = () => (
+    <Stack flexDirection="column" justifyContent="center" alignItems="center" width="100%" height={460}>
+        <CircularProgress />
+        <Typography marginTop={2}>Chờ chút xíu...</Typography>
+    </Stack>
+)
+
+const styles1 = {
+    backgroundColor: "#fff",
+    boxShadow: "0 0 1px 1px rgba(0,0,0,0.1)",
+}
 
 const Wrapper = styled(Box)(() => ({
     minHeight: "500px",
@@ -297,19 +169,6 @@ const Wrapper = styled(Box)(() => ({
 
 const ListProduct = styled(Box)(() => ({
     padding: "15px 0",
-}))
-
-const SortBy = styled(Box)(() => ({
-    ".wrapper": {
-        backgroundColor: "#fff",
-        boxShadow: "0 0 1px 1px rgba(0,0,0,0.1)",
-        borderRadius: "5px",
-        padding: "10px 16px",
-
-        "& button": {
-            margin: "0 5px",
-        },
-    },
 }))
 
 const SliderPrice = () => {

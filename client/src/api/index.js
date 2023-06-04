@@ -17,7 +17,16 @@ import {
     startSearchHeaderRecent,
     startSearchHeaderSuggest,
 } from "~/redux/searchSlice"
-import { endFetchCardProduct, setCardProduct, setCategories, startFetchCardProduct } from "~/redux/productSlice"
+import {
+    endFetchCardProduct,
+    endProductByCategory,
+    setCardProduct,
+    setCategories,
+    setLatestProduct,
+    setProductByCategory,
+    startFetchCardProduct,
+    startProductByCategory,
+} from "~/redux/productSlice"
 import { setBrandByCategory } from "~/redux/brandSlice"
 
 const token = localStorage.getItem("access_token")
@@ -33,6 +42,31 @@ export const axiosInstance = async (method, url, data) => {
         url,
         data,
     })
+}
+
+// PRODUCT
+export const requestGetProducts = async (dispatch, config) => {
+    try {
+        dispatch(startProductByCategory())
+
+        const response = await axiosInstance("post", "/product/getProducts", config)
+
+        const payload = {
+            category: config.category,
+            page: config.page,
+            products: response.data.data,
+        }
+
+        if (config.category) {
+            dispatch(setProductByCategory(payload))
+        }
+
+        dispatch(setLatestProduct(response.data.data))
+
+        dispatch(endProductByCategory())
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 // AUTH

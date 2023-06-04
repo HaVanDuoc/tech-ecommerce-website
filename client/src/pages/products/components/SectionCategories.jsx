@@ -1,13 +1,15 @@
 import { Box, Stack, Typography } from "@mui/material"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { requestGetCategories } from "~/api"
-import { selectorCategories } from "~/redux/productSlice"
+import { reFetchProductPage, selectorCategories } from "~/redux/productSlice"
+import addOrUpdateURLParams from "~/utils/addURLParams"
 
-const SectionCategories = ({ category, setPage, setBrandParams }) => {
+const SectionCategories = () => {
     const categories = useSelector(selectorCategories)
     const dispatch = useDispatch()
+    const currentCategory = `/${useParams().category}`
 
     useEffect(() => {
         if (categories.isFetch) return
@@ -15,8 +17,8 @@ const SectionCategories = ({ category, setPage, setBrandParams }) => {
     }, [dispatch, categories])
 
     const handleClick = () => {
-        setPage(1)
-        setBrandParams(null)
+        addOrUpdateURLParams()
+        dispatch(reFetchProductPage())
     }
 
     return (
@@ -26,7 +28,7 @@ const SectionCategories = ({ category, setPage, setBrandParams }) => {
                 {categories?.categories?.map((item, index) => {
                     return (
                         <Link to={item.accessLink} key={index} onClick={handleClick}>
-                            <Box className={`item ${category === item.categoryName && "selected"}`}>
+                            <Box className={`item ${currentCategory === item.accessLink && "selected"}`}>
                                 {item.categoryName}
                             </Box>
                         </Link>

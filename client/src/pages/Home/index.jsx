@@ -1,7 +1,7 @@
 import "./styles/fonts.css"
 import "./styles/slider-banner.scss"
 import { Box, Container, Grid, Stack, styled, Typography } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 import Slider from "react-slick"
 import { PF } from "~/utils/__variables"
@@ -10,12 +10,9 @@ import FlashOnIcon from "@mui/icons-material/FlashOn"
 import SportsEsportsIcon from "@mui/icons-material/SportsEsports"
 import ExtensionIcon from "@mui/icons-material/Extension"
 import { NextArrow, PrevArrow } from "~/styles/slider"
-import Card from "~/components/card"
-import { useDispatch, useSelector } from "react-redux"
-import SkeletonCard from "~/components/skeleton"
-import axiosInstance from "~/utils/axiosInstance"
-import { latestProducts, selectorLatestProducts } from "~/redux/productSlice"
 import Categories from "./components/Categories"
+import LatestProduct from "./components/LatestProduct"
+import SuggestProduct from "./components/SuggestProduct"
 
 const Wrapper = styled(Box)(() => ({
     "--home-bg-second": "#f0f2f5",
@@ -23,35 +20,11 @@ const Wrapper = styled(Box)(() => ({
 }))
 
 const Home = () => {
-    const [offset, setOffset] = useState(0)
-    const [limit, setLimit] = useState(20)
-    const fetchProducts = useSelector(selectorLatestProducts)
-    const dispatch = useDispatch()
-
-    useEffect(() => {
-        if (fetchProducts.isFetch) return
-
-        const fetch = async () => {
-            const response = await axiosInstance({
-                method: "post",
-                url: "/client/home",
-                data: { offset, limit },
-            })
-
-            dispatch(latestProducts(response.data))
-        }
-
-        fetch()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, offset, limit])
-
-    console.log("latestProducts", fetchProducts)
-
     return (
         <Wrapper>
             <Banner />
 
-            <NewProduct products={fetchProducts.isFetch && fetchProducts} />
+            <LatestProduct Title={Title} />
 
             <Categories />
 
@@ -64,173 +37,12 @@ const Home = () => {
 
             <News />
 
-            <SuggestProduct
-                products={fetchProducts.isFetch && fetchProducts}
-                countProducts={fetchProducts.isFetch && fetchProducts.products.count}
-                offset={offset}
-                setOffset={setOffset}
-                limit={limit}
-                setLimit={setLimit}
-            />
+            <SuggestProduct Title={Title} />
         </Wrapper>
     )
 }
 
 export default Home
-
-const SuggestProduct = ({ products, countProducts, offset, setOffset, limit, setLimit }) => {
-    const handleSeeMore = () => {
-        // if (offset === 0) {
-        //   setOffset(limit);
-        //   setLimit(10);
-        //   return;
-        // }
-        // setOffset(offset + 10);
-        // setLimit(10);
-    }
-
-    return (
-        <Box sx={{ paddingBottom: 8 }}>
-            <Container maxWidth="lg" disableGutters>
-                <Box>
-                    <Box sx={{ marginBottom: 2 }}>
-                        <Title>Gợi ý cho hôm nay</Title>
-                    </Box>
-
-                    <Box>
-                        {products.isFetch ? (
-                            <Grid container spacing={2}>
-                                {products.products.data.map((item, index) => {
-                                    return (
-                                        <Grid item xs={2.4} key={index}>
-                                            <Card product={item} />
-                                        </Grid>
-                                    )
-                                })}
-                            </Grid>
-                        ) : (
-                            <Grid container spacing={2}>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                                <Grid item xs={2.4}>
-                                    <SkeletonCard />
-                                </Grid>
-                            </Grid>
-                        )}
-
-                        {/* Button Xem thêm */}
-                        <Box
-                            sx={{
-                                width: "100%",
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginTop: "32px",
-                            }}
-                        >
-                            {countProducts - products.products?.data.length > 0 ? (
-                                <Box
-                                    onClick={handleSeeMore}
-                                    sx={{
-                                        width: "350px",
-                                        height: "50px",
-                                        display: "flex",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        border: "1px solid #aaa",
-                                        borderRadius: "8px",
-                                        cursor: "pointer",
-                                        backgroundColor: "#fff",
-                                        boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
-                                        transition: "all .3s ease",
-
-                                        ":hover": {
-                                            borderColor: "var(--color-main)",
-                                            boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
-
-                                            "& p": {
-                                                color: "var(--color-main)",
-                                            },
-                                        },
-                                    }}
-                                >
-                                    <Typography
-                                        sx={{
-                                            color: "var(--color-text)",
-                                            textTransform: "capitalize",
-                                            fontWeight: 500,
-                                        }}
-                                    >
-                                        {`Xem thêm ${countProducts - products.products?.data.length} sản phẩm`}
-                                    </Typography>
-                                </Box>
-                            ) : (
-                                <Typography fontSize="13px" fontStyle="italic">
-                                    (Đã đến cuối)
-                                </Typography>
-                            )}
-                        </Box>
-                    </Box>
-                </Box>
-            </Container>
-        </Box>
-    )
-}
 
 const News = () => {
     return (
@@ -637,57 +449,6 @@ export const PaymentOnline = () => {
                         })}
                     </Slider>
                 </Box>
-            </Container>
-        </Box>
-    )
-}
-
-export const NewProduct = ({ products }) => {
-    return (
-        <Box sx={{ backgroundColor: "#fff", padding: "40px 0" }}>
-            <Container maxWidth="lg" disableGutters>
-                <Stack flexDirection="row" justifyContent="space-between">
-                    <Title>Sản phẩm mới</Title>
-                </Stack>
-
-                {products.isFetch ? (
-                    <Box sx={{ padding: "16px 0" }}>
-                        <Slider
-                            dots={false}
-                            infinite={true}
-                            speed="500"
-                            slidesToShow={4}
-                            slidesToScroll={4}
-                            nextArrow={<NextArrow />}
-                            prevArrow={<PrevArrow />}
-                            className="custom-slider"
-                        >
-                            {products.products.data.slice(0, 8).map((item, index) => {
-                                return (
-                                    <Box key={index}>
-                                        <Card product={item} />
-                                    </Box>
-                                )
-                            })}
-                        </Slider>
-                    </Box>
-                ) : (
-                    <Stack
-                        flexDirection="row"
-                        sx={{
-                            padding: "16px 0",
-                            "& > div": { marginRight: 2 },
-                            "& > div:last-child": {
-                                marginRight: 0,
-                            },
-                        }}
-                    >
-                        <SkeletonCard />
-                        <SkeletonCard />
-                        <SkeletonCard />
-                        <SkeletonCard />
-                    </Stack>
-                )}
             </Container>
         </Box>
     )
