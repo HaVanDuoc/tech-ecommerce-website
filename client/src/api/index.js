@@ -20,18 +20,21 @@ import {
 import {
     endFetchCardProduct,
     endProductByCategory,
+    endSetProduct,
     setCardProduct,
     setCategories,
     setLatestProduct,
+    setProduct,
     setProductByCategory,
     startFetchCardProduct,
     startProductByCategory,
+    startSetProduct,
 } from "~/redux/productSlice"
 import { setBrandByCategory } from "~/redux/brandSlice"
 
 const token = localStorage.getItem("access_token")
 
-export const axiosInstance = async (method, url, data) => {
+const axiosInstance = async (method, url, data) => {
     return await axios({
         baseURL: process.env.REACT_APP_AXIOS_BASE_URL,
         timeout: 10000,
@@ -43,6 +46,8 @@ export const axiosInstance = async (method, url, data) => {
         data,
     })
 }
+
+export default axiosInstance
 
 // PRODUCT
 export const requestGetProducts = async (dispatch, config) => {
@@ -64,6 +69,20 @@ export const requestGetProducts = async (dispatch, config) => {
         dispatch(setLatestProduct(response.data.data))
 
         dispatch(endProductByCategory())
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const requestGetProduct = async (dispatch, config) => {
+    try {
+        dispatch(startSetProduct())
+
+        const response = await axiosInstance("post", "/product/getProduct", config)
+
+        dispatch(setProduct(response.data.data))
+
+        dispatch(endSetProduct())
     } catch (error) {
         console.log(error)
     }

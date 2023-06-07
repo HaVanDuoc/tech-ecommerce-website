@@ -19,8 +19,6 @@ export default function ProductList() {
     const dispatch = useDispatch()
     const listProducts = useSelector(selectorProductsAdmin)
 
-    console.log("listProducts", listProducts)
-
     const token = localStorage.getItem("access_token")
 
     // Fetch list product

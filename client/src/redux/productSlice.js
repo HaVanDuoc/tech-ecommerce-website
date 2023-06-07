@@ -20,6 +20,11 @@ export const productSlice = createSlice({
             isFetch: false,
             categories: null,
         },
+        product: {
+            reFetch: false,
+            isPending: false,
+            data: null,
+        },
     },
     reducers: {
         setLatestProduct: (state, action) => {
@@ -57,6 +62,7 @@ export const productSlice = createSlice({
             state.productsByCategory.isPending = false
         },
 
+        // CART
         startFetchCardProduct: (state) => {
             state.cart.isPending = true
         },
@@ -67,9 +73,25 @@ export const productSlice = createSlice({
         endFetchCardProduct: (state) => {
             state.cart.isPending = false
         },
+
+        // CATEGORY
         setCategories: (state, action) => {
             state.categories.isFetch = true
             state.categories.categories = action.payload
+        },
+
+        // PRODUCT
+        startSetProduct: (state) => {
+            state.product.isPending = true
+        },
+        setProduct: (state, action) => {
+            state.product.data = action.payload
+        },
+        reFetchProduct: (state) => {
+            state.product.reFetch = !state.product.reFetch
+        },
+        endSetProduct: (state) => {
+            state.product.isPending = false
         },
     },
 })
@@ -85,6 +107,10 @@ export const {
     setCardProduct,
     endFetchCardProduct,
     setCategories,
+    startSetProduct,
+    setProduct,
+    reFetchProduct,
+    endSetProduct,
 } = productSlice.actions
 
 export const selectorLatestProducts = (state) => state.product.latest
@@ -92,5 +118,6 @@ export const selectorProductByCategory = (state) => state.product.productsByCate
 export const selectorCartProducts = (state) => state.product.cart
 export const selectorCategories = (state) => state.product.categories
 export const selectorUrlParamsProductPage = (state) => state.product.urlParamsProductPage
+export const selectorProduct = (state) => state.product.product
 
 export default productSlice.reducer
