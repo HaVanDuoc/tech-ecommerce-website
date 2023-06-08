@@ -21,7 +21,7 @@ exports.getProducts = async (req) => {
                 brands.name as product_brand,
                 categories.name as product_category,
                 categories.link as category_link,
-                products.image as product_image
+                products.files as product_image
             from
                 products
                 left join categories on categories.categoryId = products.categoryId
@@ -117,7 +117,7 @@ exports.updateImage = async (productId, files, deleted) => {
 
         let available = response.files
 
-        if (available === null) return { err: 1, msg: "Not Found Product!" }
+        if (!available) available = []
 
         const deleteImages = (available, deleted) => {
             for (let i = 0; i < deleted.length; i++) {
@@ -182,6 +182,43 @@ exports.updateInfo = async (data) => {
             err: response ? 0 : 1,
             msg: response ? "Cập nhật thành công!" : "Cập nhật thất bại!",
             data: response ? response : null,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.getProductsAdmin = async (page) => {
+    try {
+        const limit = 3
+        const offset = (page - 1) * limit || 0
+
+        const [amount] = await db.sequelize.query(`select count(*) as 'count' from products`)
+
+        const [response] = await db.sequelize.query(`
+            select
+                products.id,
+                products.productId,
+                products.name,
+                products.files,
+                products.price,
+                products.stock,
+                products.isActive
+            from
+                products
+            order by
+                products.createdAt desc
+            limit ${limit} 
+            offset ${offset};
+        `)
+
+        return {
+            err: response ? 0 : 1,
+            msg: response ? "Get data successfully" : "Get data failure",
+            limit: limit ? limit : 1,
+            all: amount ? amount[0].count : null,
+            counterPage: response ? Math.ceil(amount[0].count / limit) : null,
+            images: response ? response : null,
         }
     } catch (error) {
         return error

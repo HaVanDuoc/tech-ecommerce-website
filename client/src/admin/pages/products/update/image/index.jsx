@@ -1,5 +1,5 @@
 import { Box, Container, styled } from "@mui/material"
-import React, { Fragment, useState } from "react"
+import React, { useState } from "react"
 import ModalUpload from "./ModalUpload"
 import { useSelector } from "react-redux"
 import { selectorProduct } from "~/redux/productSlice"
@@ -13,52 +13,49 @@ const Image = () => {
     }
 
     return (
-        <Fragment>
-            {images && (
-                <Styled>
-                    <Container disableGutters>
-                        <Box className="changeImage">
-                            <ButtonUpload>
-                                <ModalUpload />
-                            </ButtonUpload>
-                        </Box>
+        <Styled>
+            <Container disableGutters>
+                <Box className="changeImage">
+                    <ButtonUpload>
+                        <ModalUpload />
+                    </ButtonUpload>
+                </Box>
 
-                        <Box className="mainImage">
-                            <img
-                                src={selected ? selected.path : images[0].path}
-                                alt="Ảnh minh họa sản phẩm"
-                                className="slide"
-                            />
-                        </Box>
+                <Box className="mainImage">
+                    <img
+                        src={images && (selected ? selected.path : images[0].path)}
+                        alt="Ảnh minh họa sản phẩm"
+                        className="slide"
+                    />
+                </Box>
 
-                        <Box className="optionImage">
-                            {images.map((image, index) => {
-                                return (
-                                    <img
-                                        height={"100%"}
-                                        src={image.path}
-                                        alt=""
-                                        key={index}
-                                        style={
-                                            image === selected
-                                                ? {
-                                                      border: "3px solid dodgerblue",
-                                                      opacity: 1,
-                                                  }
-                                                : {
-                                                      border: "3px solid transparent",
-                                                      opacity: 0.5,
-                                                  }
-                                        }
-                                        onClick={() => handleClick(index)}
-                                    />
-                                )
-                            })}
-                        </Box>
-                    </Container>
-                </Styled>
-            )}
-        </Fragment>
+                <Box className="optionImage">
+                    {images &&
+                        images.map((image, index) => {
+                            return (
+                                <img
+                                    height={"100%"}
+                                    src={image.path}
+                                    alt=""
+                                    key={index}
+                                    style={
+                                        image === selected
+                                            ? {
+                                                  border: "3px solid dodgerblue",
+                                                  opacity: 1,
+                                              }
+                                            : {
+                                                  border: "3px solid transparent",
+                                                  opacity: 0.5,
+                                              }
+                                    }
+                                    onClick={() => handleClick(index)}
+                                />
+                            )
+                        })}
+                </Box>
+            </Container>
+        </Styled>
     )
 }
 

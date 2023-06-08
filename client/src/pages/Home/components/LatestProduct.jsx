@@ -7,8 +7,9 @@ import Card from "~/components/card"
 import SkeletonCard from "~/components/skeleton"
 import { selectorLatestProducts } from "~/redux/productSlice"
 import { NextArrow, PrevArrow } from "~/styles/slider"
+import Title from "./Title"
 
-const LatestProduct = ({ Title }) => {
+const LatestProduct = () => {
     const latestProduct = useSelector(selectorLatestProducts)
     const dispatch = useDispatch()
 
@@ -51,16 +52,7 @@ const LatestProduct = ({ Title }) => {
                         </Slider>
                     </Box>
                 ) : (
-                    <Stack
-                        flexDirection="row"
-                        sx={{
-                            padding: "16px 0",
-                            "& > div": { marginRight: 2 },
-                            "& > div:last-child": {
-                                marginRight: 0,
-                            },
-                        }}
-                    >
+                    <Stack flexDirection="row" sx={styles1}>
                         <SkeletonCard />
                         <SkeletonCard />
                         <SkeletonCard />
@@ -73,3 +65,11 @@ const LatestProduct = ({ Title }) => {
 }
 
 export default LatestProduct
+
+const styles1 = {
+    padding: "16px 0",
+    "& > div": { marginRight: 2 },
+    "& > div:last-child": {
+        marginRight: 0,
+    },
+}

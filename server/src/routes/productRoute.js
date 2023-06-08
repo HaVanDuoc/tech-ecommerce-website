@@ -6,5 +6,6 @@ router.post("/getProducts", productController.getProducts)
 router.post("/getProduct", productController.getProduct)
 router.put("/updateImage", uploadCloudinary.array("image"), productController.updateImage)
 router.put("/updateInfo", productController.updateInfo)
+router.post("/admin/getProducts", productController.getProductsAdmin)
 
 module.exports = router

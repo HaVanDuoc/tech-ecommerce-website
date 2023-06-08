@@ -97,6 +97,7 @@ const ModalUpload = ({ reset, setReset }) => {
         handleSnackBar(response)
 
         if (response.data.err === 0) {
+            setPreview([])
             handleClose()
             dispatch(reFetchProduct())
         }
@@ -117,59 +118,59 @@ const ModalUpload = ({ reset, setReset }) => {
 
     return (
         <Fragment>
-            {current && (
-                <Styled>
-                    <Box onClick={handleClick} sx={stylesButtonOpenFormUpload}>
-                        <FileUploadOutlinedIcon />
-                        <Typography sx={{ marginLeft: 1 }}>Tải hình ảnh</Typography>
-                    </Box>
+            <Styled>
+                <Box onClick={handleClick} sx={stylesButtonOpenFormUpload}>
+                    <FileUploadOutlinedIcon />
+                    <Typography sx={{ marginLeft: 1 }}>Tải hình ảnh</Typography>
+                </Box>
 
-                    <Dialog
-                        open={open}
-                        TransitionComponent={Transition}
-                        keepMounted
-                        onClose={handleClose}
-                        aria-describedby="alert-dialog-slide-description"
-                    >
-                        <Wrapper>
-                            <Header>Cập nhật hình ảnh</Header>
+                <Dialog
+                    open={open}
+                    TransitionComponent={Transition}
+                    keepMounted
+                    onClose={handleClose}
+                    aria-describedby="alert-dialog-slide-description"
+                >
+                    <Wrapper>
+                        <Header>Cập nhật hình ảnh</Header>
 
-                            <Input>
-                                <input
-                                    name="images"
-                                    className="file-input"
-                                    type="file"
-                                    accept="image/*"
-                                    hidden
-                                    multiple
-                                    onChange={handleChange}
-                                />
-                                <CloudUploadOutlinedIcon fontSize="large" />
-                                <Typography>Chọn ảnh để tải lên</Typography>
-                            </Input>
+                        <Input>
+                            <input
+                                name="images"
+                                className="file-input"
+                                type="file"
+                                accept="image/*"
+                                hidden
+                                multiple
+                                onChange={handleChange}
+                            />
+                            <CloudUploadOutlinedIcon fontSize="large" />
+                            <Typography>Chọn ảnh để tải lên</Typography>
+                        </Input>
 
-                            {preview.length > 0 && (
-                                <NewImages>
-                                    <Typography>Ảnh mới</Typography>
-                                    <ImageList sx={{ width: "100%", height: "auto" }} cols={3} rowHeight={164}>
-                                        {preview.map((item, index) => {
-                                            return (
-                                                <ImageListItem key={index} sx={style1}>
-                                                    <IconButton className="delete" sx={style2}>
-                                                        <DeleteIcon onClick={() => handleDeletePreview(item)} />
-                                                    </IconButton>
-                                                    <img className="image" src={item.url} alt="" loading="lazy" />
-                                                </ImageListItem>
-                                            )
-                                        })}
-                                    </ImageList>
-                                    <Divider />
-                                </NewImages>
-                            )}
-
-                            <CurrentImages>
+                        {preview.length > 0 && (
+                            <NewImages>
+                                <Typography>Ảnh mới</Typography>
                                 <ImageList sx={{ width: "100%", height: "auto" }} cols={3} rowHeight={164}>
-                                    {current.map((item, index) => {
+                                    {preview.map((item, index) => {
+                                        return (
+                                            <ImageListItem key={index} sx={style1}>
+                                                <IconButton className="delete" sx={style2}>
+                                                    <DeleteIcon onClick={() => handleDeletePreview(item)} />
+                                                </IconButton>
+                                                <img className="image" src={item.url} alt="" loading="lazy" />
+                                            </ImageListItem>
+                                        )
+                                    })}
+                                </ImageList>
+                                <Divider />
+                            </NewImages>
+                        )}
+
+                        <CurrentImages>
+                            <ImageList sx={{ width: "100%", height: "auto" }} cols={3} rowHeight={164}>
+                                {current &&
+                                    current.map((item, index) => {
                                         return (
                                             <ImageListItem key={index} sx={style1}>
                                                 <IconButton className="delete" sx={style2}>
@@ -179,16 +180,15 @@ const ModalUpload = ({ reset, setReset }) => {
                                             </ImageListItem>
                                         )
                                     })}
-                                </ImageList>
-                            </CurrentImages>
+                            </ImageList>
+                        </CurrentImages>
 
-                            <ButtonUpdate onClick={handleSubmit}>
-                                {isPending ? <CircularProgressCustomize /> : "Cập nhật"}
-                            </ButtonUpdate>
-                        </Wrapper>
-                    </Dialog>
-                </Styled>
-            )}
+                        <ButtonUpdate onClick={handleSubmit}>
+                            {isPending ? <CircularProgressCustomize /> : "Cập nhật"}
+                        </ButtonUpdate>
+                    </Wrapper>
+                </Dialog>
+            </Styled>
         </Fragment>
     )
 }

@@ -2,54 +2,47 @@ import { Link } from "react-router-dom"
 import { useSnackbar } from "notistack"
 import { DataGrid } from "@mui/x-data-grid"
 import { Box, IconButton } from "@mui/material"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import PaginationCustomize from "~/components/Pagination"
 import { ButtonCreate, StackButtons } from "~/admin/Styled"
 import { formatStatusProduct, formatVND } from "~/helper/format"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
-import axiosInstance from "~/utils/axiosInstance"
-import { getUsersAdmin, selectorProductsAdmin } from "~/redux/adminSlice"
+import { endSetProduct, refetchProduct, selectorProductsAdmin, setProducts, startSetProduct } from "~/redux/adminSlice"
 import refreshPage from "~/utils/refreshPage"
+import axiosInstance from "~/api"
 
 export default function ProductList() {
-    const [page, setPage] = useState(Number(new URLSearchParams(window.location.search).get("page")) || 1)
-    const [isPending, setPending] = useState(false)
+    const page = Number(new URLSearchParams(window.location.search).get("page")) || 1
     const { enqueueSnackbar } = useSnackbar()
     const dispatch = useDispatch()
-    const listProducts = useSelector(selectorProductsAdmin)
 
-    const token = localStorage.getItem("access_token")
+    const products = useSelector(selectorProductsAdmin)
 
-    // Fetch list product
+    console.log("products", products)
+
     useEffect(() => {
-        // fetch data
         const fetch = async () => {
-            setPending(true)
+            dispatch(startSetProduct())
 
-            const response = await axiosInstance({
-                method: "post",
-                url: "/admin/products/getProducts",
-                headers: {
-                    Authorization: token,
-                },
-                data: { page },
-            })
+            const response = await axiosInstance("post", "/product/admin/getProducts", { page })
 
             dispatch(
-                getUsersAdmin({
+                setProducts({
                     countProduct: response.data.all,
                     currentPage: page,
+                    counterPage: response.data.counterPage,
                     limit: response.data.limit,
-                    payload: response.data.data,
+                    payload: response.data.images,
                 })
             )
 
-            setPending(false)
+            dispatch(endSetProduct())
         }
 
-        ;(listProducts.isFetch && listProducts.payload[`page-${page}`]) || fetch()
-    }, [page, dispatch, listProducts, token])
+        if (!products.payload[`page-${page}`]) fetch()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, page, products.refetch])
 
     const handleSnackBar = (res) => {
         if (res.data.err === 0) {
@@ -89,15 +82,13 @@ export default function ProductList() {
             width: 350,
             renderCell: (params) => {
                 return (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        {params.row.image && (
-                            <img src={JSON.parse(params.row.image)[0].base64} alt="" style={{ width: "100px" }} />
+                    <Box sx={styles1}>
+                        {params.row.files && (
+                            <img
+                                src={params.row.files[0].path}
+                                alt=""
+                                style={{ width: "100px", marginRight: "10px" }}
+                            />
                         )}
                         {params.row.name}
                     </Box>
@@ -146,11 +137,7 @@ export default function ProductList() {
                 <ButtonCreate href="/admin/product/newProduct" />
             </StackButtons>
             <DataGrid
-                rows={
-                    listProducts.isFetch && listProducts?.payload[`page-${page}`]
-                        ? listProducts?.payload[`page-${page}`]
-                        : []
-                }
+                rows={products.isFetch && products?.payload[`page-${page}`] ? products?.payload[`page-${page}`] : []}
                 disableSelectionOnClick
                 columns={columns}
                 pageSize={3}
@@ -158,39 +145,39 @@ export default function ProductList() {
                 autoHeight
                 autoPageSize
                 rowHeight={150}
-                loading={isPending}
+                loading={products.isPending}
                 hideFooter
             />
 
-            <PaginationCustomize
-                page={page}
-                setPage={setPage}
-                countProducts={listProducts.countProduct}
-                limit={listProducts.limit}
-            />
+            <PaginationCustomize counterPage={products.counterPage} refetch={refetchProduct()} />
         </Box>
     )
 }
 
 const ButtonEdit = ({ children, ...props }) => {
-    return (
-        <Box
-            {...props}
-            sx={{
-                border: "none",
-                borderRadius: "10px",
-                padding: "5px 20px",
-                backgroundColor: "#3bb077",
-                color: "#fff",
-                cursor: "pointer",
-                marginRight: "20px",
+    const style = {
+        border: "none",
+        borderRadius: "10px",
+        padding: "5px 20px",
+        backgroundColor: "#3bb077",
+        color: "#fff",
+        cursor: "pointer",
+        marginRight: "20px",
 
-                "&:hover": {
-                    backgroundColor: "#2c8157",
-                },
-            }}
-        >
+        "&:hover": {
+            backgroundColor: "#2c8157",
+        },
+    }
+
+    return (
+        <Box {...props} sx={style}>
             {children}
         </Box>
     )
+}
+
+const styles1 = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
 }
