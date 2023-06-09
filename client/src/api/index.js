@@ -185,13 +185,11 @@ export const requestSearchHeaderSaveRecent = async (product_id, user_id) => {
 }
 
 // CART
-export const requestCartProduct = async (dispatch, user_id) => {
-    if (user_id) {
-        dispatch(startFetchCardProduct())
-        const response = await axiosInstance("post", "/cart/getCartProduct", { user_id })
-        dispatch(setCardProduct(response.data.data))
-        dispatch(endFetchCardProduct())
-    }
+export const requestCartProduct = async (dispatch) => {
+    dispatch(startFetchCardProduct())
+    const response = await axiosInstance("post", "/cart/getCartProduct")
+    dispatch(setCardProduct(response.data.data))
+    dispatch(endFetchCardProduct())
 }
 
 export const requestIncreaseProductCart = async (product_id, cart_session_id) => {

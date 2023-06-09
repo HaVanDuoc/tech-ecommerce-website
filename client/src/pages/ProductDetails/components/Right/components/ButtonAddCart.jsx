@@ -1,11 +1,10 @@
 import { Button, Typography } from "@mui/material"
 import { Fragment } from "react"
 import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined"
-import ModalContainer from "~/containers/ModalLogin"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import { useDispatch, useSelector } from "react-redux"
 import { reFetchProduct, selectorProduct } from "~/redux/productSlice"
-import { modalLoginForm, selectorCurrentUser } from "~/redux/authSlice"
+import { modalLogin, selectorCurrentUser } from "~/redux/authSlice"
 import axiosInstance from "~/api"
 
 const ButtonAddCart = () => {
@@ -15,7 +14,7 @@ const ButtonAddCart = () => {
     const dispatch = useDispatch()
 
     const handleAddCart = async () => {
-        if (currentUser.isLogged === false) return dispatch(modalLoginForm())
+        if (currentUser.isLogged === false) return dispatch(modalLogin())
 
         await axiosInstance("post", "/product/addCart", { product_id })
 
@@ -30,12 +29,10 @@ const ButtonAddCart = () => {
                     <Typography>Đã có trong giỏ hàng</Typography>
                 </Button>
             ) : (
-                <ModalContainer>
-                    <Button sx={styles2} onClick={() => handleAddCart()}>
-                        <ShoppingCartOutlinedIcon />
-                        <Typography>Thêm vào giỏ hàng</Typography>
-                    </Button>
-                </ModalContainer>
+                <Button sx={styles2} onClick={() => handleAddCart()}>
+                    <ShoppingCartOutlinedIcon />
+                    <Typography>Thêm vào giỏ hàng</Typography>
+                </Button>
             )}
         </Fragment>
     )

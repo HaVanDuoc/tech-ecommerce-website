@@ -1,17 +1,12 @@
 import { formatCost, formatDiscount, formatPrice, formatVND } from "~/helper/format"
-import { Box, Checkbox, Container, Divider, Grid, styled, Typography } from "@mui/material"
+import { Box, Checkbox, Container, Grid, styled, Typography } from "@mui/material"
 import React, { Fragment, useEffect, useState } from "react"
-import { Brand } from "~/components/Header"
-import AccountMenu from "~/components/Header/AccountMenu"
 import { Footer } from "~/components"
 import { useDispatch, useSelector } from "react-redux"
-import TopBar from "~/components/Header/TopBar"
 import { useSnackbar } from "notistack"
-import Search from "~/components/Search"
-import axiosInstance from "~/utils/axiosInstance"
 import { selectorCurrentUser } from "~/redux/authSlice"
-import { selectorCartProducts } from "~/redux/productSlice"
-import {
+import { refetchCart, selectorCartProducts } from "~/redux/productSlice"
+import axiosInstance, {
     requestCartProduct,
     requestDecreaseProductCart,
     requestDeleteProductCart,
@@ -19,6 +14,7 @@ import {
 } from "~/api"
 import CartEmpty from "./components/CartEmpty"
 import Loading from "./components/Loading"
+import HeaderCart from "./components/HeaderCart"
 
 const Cart = () => {
     const [reFetch, setReFetch] = useState(true) // Đơn giản là sử dụng để reset dữ liệu fetch về thôi
@@ -28,12 +24,16 @@ const Cart = () => {
     const { enqueueSnackbar } = useSnackbar()
     const dispatch = useDispatch()
     const currentUser = useSelector(selectorCurrentUser)
+
     const cart = useSelector(selectorCartProducts)
+    const products = useSelector(selectorCartProducts)?.data?.products
+    const cart_session_id = useSelector(selectorCartProducts)?.data?.cart_session_id
+
+    console.log("cart", cart)
 
     useEffect(() => {
-        if (cart.isFetch) return
-        requestCartProduct(dispatch, currentUser?.user?.data?.id)
-    }, [dispatch, currentUser, cart])
+        requestCartProduct(dispatch)
+    }, [dispatch, cart.refetch])
 
     const handleSnackBar = (res) => {
         if (res.data.err === 0) {
@@ -51,7 +51,11 @@ const Cart = () => {
         }
     }
 
-    const handleIncrease = (index, price, discount, product_id, cart_session_id) => {
+    const handleIncrease = (index) => {
+        const product_id = products[index].id
+        const price = products[index].price
+        const discount = products[index].discount
+
         // get value current quantity
         const currentValue = document.querySelector(`.box-quantity-${index} .count`).innerHTML
 
@@ -75,7 +79,11 @@ const Cart = () => {
         }
     }
 
-    const handleDecrease = (index, price, discount, product_id, cart_session_id) => {
+    const handleDecrease = (index) => {
+        const product_id = products[index].id
+        const price = products[index].price
+        const discount = products[index].discount
+
         // get value current quantity
         const currentValue = document.querySelector(`.box-quantity-${index} .count`).innerHTML
 
@@ -102,12 +110,17 @@ const Cart = () => {
         }
     }
 
-    const handleDelete = (product_id, cart_session_id) => {
+    const handleDelete = (index) => {
+        const product_id = products[index].id
+
         requestDeleteProductCart(product_id, cart_session_id)
-        setReFetch(!reFetch)
+        dispatch(refetchCart())
     }
 
-    const handleSelect = (index, price, discount) => {
+    const handleSelect = (index) => {
+        const price = products[index].price
+        const discount = products[index].discount
+
         // vì trước đó là thay đổi value của element thôi
         // ko thay đổi gì về fetch hay setState
         // nên phải dùng querySelector để xác định giá trị
@@ -137,41 +150,24 @@ const Cart = () => {
     }
 
     const handleOrder = () => {
-        let order = []
+        let orders = []
 
         // Nếu chưa chọn sản phẩm thì dừng
         if (!selectedProduct.length) return
 
-        selectedProduct.map((item) => {
-            const user_id = currentUser.user.data.id
+        selectedProduct.map((index) => {
+            const product_id = products[index].id
+            const quantity = products[index].quantity
 
-            const product_id = document.querySelector(`.cart-item-${item} .box-product-id-${item}`).innerHTML
+            orders.push({ product_id, quantity })
 
-            const quantity = document.querySelector(`.cart-item-${item} .get-quantity-${item}`).innerHTML
-
-            const totalPayment = payment
-
-            const cart_sessions_id = currentUser.user.data.cart_sessions_id
-
-            order.push({
-                user_id,
-                product_id,
-                quantity,
-                totalPayment,
-                cart_sessions_id,
-            })
-
-            return order
+            return orders
         })
 
         const request = async () => {
-            const response = await axiosInstance({
-                method: "post",
-                url: "/cart/order",
-                data: order,
-            })
+            const response = await axiosInstance("post", "/product/order", { orders })
 
-            setReFetch(!reFetch) // reset fetch
+            dispatch(refetchCart())
 
             handleSnackBar(response) // xuất thông báo
         }
@@ -187,57 +183,26 @@ const Cart = () => {
                 <Container maxWidth="lg" disableGutters>
                     {cart.isPending ? (
                         <Loading />
-                    ) : Array.isArray(cart.products) && cart.products.length ? (
+                    ) : products && products.length ? (
                         <Fragment>
-                            <Box
-                                sx={{
-                                    borderRadius: "5px",
-                                    backgroundColor: "#fff",
-                                    margin: "30px 24px",
-                                }}
-                            >
+                            <Box sx={{ borderRadius: "5px", backgroundColor: "#fff", margin: "30px 24px" }}>
                                 <Option>
-                                    {/* title */}
-                                    <Box className="title col">
-                                        <Box className="col-0">
-                                            <Checkbox />
-                                        </Box>
-                                        <Box className="col-1">
-                                            <Typography>Sản phẩm</Typography>
-                                        </Box>
-                                        <Box className="col-2">
-                                            <Typography>Đơn giá</Typography>
-                                        </Box>
-                                        <Box className="col-3">
-                                            <Typography>Số lượng</Typography>
-                                        </Box>
-                                        <Box className="col-4">
-                                            <Typography>Số tiền</Typography>
-                                        </Box>
-                                        <Box className="col-5">
-                                            <Typography>Thao tác</Typography>
-                                        </Box>
-                                    </Box>
+                                    <Title />
 
-                                    {/* Content */}
                                     <Box className="content">
-                                        {cart.products &&
-                                            cart.products.map((item, index) => {
+                                        {products &&
+                                            products.map((item, index) => {
                                                 return (
                                                     <Box className={`item col cart-item-${index}`} key={index}>
                                                         {/* CheckBox */}
                                                         <Box className="col-0">
                                                             <Checkbox
                                                                 className={`box-select-${index}`}
-                                                                onClick={() =>
-                                                                    handleSelect(index, item.price, item.discount)
-                                                                }
+                                                                onClick={() => handleSelect(index)}
                                                             />
 
                                                             <Box
-                                                                sx={{
-                                                                    display: "none",
-                                                                }}
+                                                                sx={{ display: "none" }}
                                                                 className={`box-product-id-${index}`}
                                                             >
                                                                 {item.id}
@@ -249,12 +214,8 @@ const Cart = () => {
                                                             <Grid container spacing={1} flexDirection="row">
                                                                 <Grid item xs={4}>
                                                                     <img
-                                                                        src={
-                                                                            item.image
-                                                                                ? JSON.parse(item.image)[0].base64
-                                                                                : ""
-                                                                        }
-                                                                        alt=""
+                                                                        src={item.files[0].path}
+                                                                        alt={item.files[0].originalName}
                                                                         width="100%"
                                                                     />
                                                                 </Grid>
@@ -315,15 +276,7 @@ const Cart = () => {
                                                             <Box sx={styles}>
                                                                 <Box
                                                                     className="btn"
-                                                                    onClick={() =>
-                                                                        handleDecrease(
-                                                                            index,
-                                                                            item.price,
-                                                                            item.discount,
-                                                                            item.id,
-                                                                            item.cart_session_id
-                                                                        )
-                                                                    }
+                                                                    onClick={() => handleDecrease(index)}
                                                                 >
                                                                     -
                                                                 </Box>
@@ -332,15 +285,7 @@ const Cart = () => {
                                                                 </Box>
                                                                 <Box
                                                                     className="btn"
-                                                                    onClick={() =>
-                                                                        handleIncrease(
-                                                                            index,
-                                                                            item.price,
-                                                                            item.discount,
-                                                                            item.id,
-                                                                            item.cart_session_id
-                                                                        )
-                                                                    }
+                                                                    onClick={() => handleIncrease(index)}
                                                                 >
                                                                     +
                                                                 </Box>
@@ -372,9 +317,7 @@ const Cart = () => {
                                                                     color: "crimson",
                                                                     cursor: "pointer",
                                                                 }}
-                                                                onClick={() =>
-                                                                    handleDelete(index, item.id, item.cart_session_id)
-                                                                }
+                                                                onClick={() => handleDelete(index)}
                                                             >
                                                                 Xóa
                                                             </Typography>
@@ -476,6 +419,31 @@ const Cart = () => {
 
 export default Cart
 
+const Title = () => {
+    return (
+        <Box className="title col">
+            <Box className="col-0">
+                <Checkbox />
+            </Box>
+            <Box className="col-1">
+                <Typography>Sản phẩm</Typography>
+            </Box>
+            <Box className="col-2">
+                <Typography>Đơn giá</Typography>
+            </Box>
+            <Box className="col-3">
+                <Typography>Số lượng</Typography>
+            </Box>
+            <Box className="col-4">
+                <Typography>Số tiền</Typography>
+            </Box>
+            <Box className="col-5">
+                <Typography>Thao tác</Typography>
+            </Box>
+        </Box>
+    )
+}
+
 const Payment = styled(Box)(() => ({
     borderRadius: "0 0 5px 5px",
     boxShadow: "0px 0px 2px 1px rgba(0, 0, 0, 0.25)",
@@ -555,61 +523,6 @@ const ContentCart = styled(Box)(() => ({
 const Root = styled(Box)(() => ({
     position: "relative",
 }))
-
-export const HeaderCart = () => {
-    return (
-        <Box className="header-cart" sx={{ boxShadow: "0 1px 0 rgba(0, 0, 0, 0.125)" }}>
-            <TopBar />
-
-            <Bottom sx={{ backgroundColor: "#fff", padding: "30px 0" }}>
-                <Container>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
-                            <Brand />
-                            <Divider
-                                orientation="vertical"
-                                variant="middle"
-                                flexItem
-                                sx={{
-                                    margin: "auto 20px",
-                                    height: "30px",
-                                    borderWidth: "1px",
-                                    borderColor: "var(--color-main)",
-                                }}
-                            />
-                            <Typography
-                                sx={{
-                                    color: "var(--color-main)",
-                                    fontSize: "24px",
-                                }}
-                            >
-                                Giỏ hàng
-                            </Typography>
-                        </Box>
-
-                        <Search />
-
-                        <AccountMenu />
-                    </Box>
-                </Container>
-            </Bottom>
-        </Box>
-    )
-}
-
-const Bottom = styled(Box)(() => ({}))
 
 const styles = {
     display: "flex",

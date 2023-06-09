@@ -13,11 +13,7 @@ const Cart = () => {
             <Link to="/cart">
                 <Button sx={{ color: "var(--color-main)" }}>
                     <StyledBadge
-                        badgeContent={
-                            currentUser.isLogged
-                                ? currentUser.user.countProductInCart
-                                : 0
-                        }
+                        badgeContent={currentUser.isLogged ? currentUser.user.countProductInCart : 0}
                         color="error"
                     >
                         <ShoppingCartOutlinedIcon sx={{ color: "#666" }} />

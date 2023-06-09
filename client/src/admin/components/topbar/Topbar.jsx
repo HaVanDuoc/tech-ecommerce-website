@@ -4,7 +4,7 @@ import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import LanguageIcon from "@mui/icons-material/Language";
 import SettingsIcon from "@mui/icons-material/Settings";
 import { Link } from "react-router-dom";
-import AccountMenu from "~/components/Header/AccountMenu";
+import AccountMenu from "~/components/Header/components/AccountMenu";
 
 export default function Topbar() {
   return (

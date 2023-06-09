@@ -3,7 +3,7 @@ const { getCart, increaseQuantity, decreaseQuantity, deleteCartItem, order } = r
 
 exports.getCart = async (req, res) => {
     try {
-        const response = await getCart(req.body)
+        const response = await getCart(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)

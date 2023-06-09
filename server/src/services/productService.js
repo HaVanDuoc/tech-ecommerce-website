@@ -268,6 +268,13 @@ exports.addCart = async (req) => {
             raw: true,
         })
 
+        // get info product
+        const product = await db.Product.findOne({
+            where: { id: product_id },
+            attributes: ["id", "price", "discount"],
+            raw: true,
+        })
+
         // Second, check to see if the product is already in shopping cart
         // if yes, delete it otherwise, add it
         const checkAdd = await db.Cart_Item.findOrCreate({
@@ -276,6 +283,7 @@ exports.addCart = async (req) => {
                 cart_session_id: cart_session_id.id,
                 product_id,
                 quantity: 1,
+                pay: calculatePayment(product.price, 1, product.discount),
             },
         })
 
@@ -339,6 +347,8 @@ exports.order = async (req) => {
 
             const pay = calculatePayment(product.price, item.quantity, product.discount)
 
+            // console.log("pay", pay)
+
             // get current total of order then plus with pay of new item order
             const getTotalOrder = await db.Order_Detail.findOne({
                 where: { id: createOrder.dataValues.id },
@@ -346,7 +356,11 @@ exports.order = async (req) => {
                 raw: true,
             })
 
+            // console.log("getTotalOrder.total", getTotalOrder.total)
+
             const totalPayment = Number(getTotalOrder.total) + Number(pay)
+
+            // console.log("totalPayment", totalPayment)
 
             await db.Order_Detail.update(
                 { total: totalPayment },
@@ -367,7 +381,7 @@ exports.order = async (req) => {
                     users.id = ${user_id};
             `)
 
-            if (user.cart_session_id && item.product_id) {
+            if (user.cart_sessions_id && item.product_id) {
                 await db.Cart_Item.destroy({
                     where: {
                         cart_session_id: user.cart_sessions_id,

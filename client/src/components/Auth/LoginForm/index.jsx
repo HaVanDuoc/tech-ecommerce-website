@@ -16,7 +16,7 @@ import * as Yup from "yup"
 import { useDispatch, useSelector } from "react-redux"
 import GoogleIcon from "@mui/icons-material/Google"
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import { modalSignUpForm, selectorStatusLogin } from "~/redux/authSlice"
+import { modalRegister, selectorStatusLogin } from "~/redux/authSlice"
 import { requestLogin } from "~/api"
 
 const LoginForm = () => {
@@ -124,7 +124,7 @@ const LinkSignUp = ({ children }) => {
 
     return (
         <Box textAlign="center">
-            Bạn chưa có tài khoản? <Link onClick={() => dispatch(modalSignUpForm())}>{children}</Link>
+            Bạn chưa có tài khoản? <Link onClick={() => dispatch(modalRegister())}>{children}</Link>
         </Box>
     )
 }

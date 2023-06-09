@@ -1,9 +1,11 @@
 const db = require("../models")
 
-exports.getCart = async (data) => {
+exports.getCart = async (req) => {
     try {
+        const user_id = req.user.id
+
         const cart_session_id = await db.Cart_Session.findOne({
-            where: { user_id: data.user_id },
+            where: { user_id },
             attributes: ["id"],
             raw: true,
         })
@@ -11,18 +13,22 @@ exports.getCart = async (data) => {
         const query = `select
                         products.id,
                         products.name,
-                        products.image,
+                        products.files,
                         products.price,
                         products.discount,
                         cart_items.quantity,
-                        cart_items.cart_session_id
+                        cart_items.pay
                     from
                         cart_items
                         left join products on products.id = cart_items.product_id
                     where
                         cart_items.cart_session_id = '${cart_session_id.id}';`
 
-        const [response] = await db.sequelize.query(query)
+        const [products] = await db.sequelize.query(query)
+
+        var response = new Object()
+        response["cart_session_id"] = cart_session_id.id
+        response["products"] = products
 
         return {
             err: response ? 0 : 1,
