@@ -64,3 +64,21 @@ exports.getProductsAdmin = async (req, res) => {
         return intervalServerError(res)
     }
 }
+
+exports.addCart = async (req, res) => {
+    try {
+        const response = await productService.addCart(req)
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.order = async (req, res) => {
+    try {
+        const response = await productService.order(req)
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}

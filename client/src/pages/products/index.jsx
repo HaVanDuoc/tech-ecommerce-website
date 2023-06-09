@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Container, Grid, Stack, styled, Typography } from "@mui/material"
-import { selectorProductByCategory } from "~/redux/productSlice"
+import { reFetchProductPage, selectorProductByCategory } from "~/redux/productSlice"
 import { default as SliderMaterial } from "@mui/material/Slider"
 import SectionCategories from "./components/SectionCategories"
 import PaginationCustomize from "~/components/Pagination"
@@ -90,7 +90,10 @@ const Products = () => {
 
                                     {products[`/${category}`]?.counterPage > 1 && (
                                         <Stack alignItems="center" justifyContent="center" marginTop={5}>
-                                            <PaginationCustomize counterPage={products[`/${category}`]?.counterPage} />
+                                            <PaginationCustomize
+                                                counterPage={products[`/${category}`]?.counterPage}
+                                                refetch={reFetchProductPage()}
+                                            />
                                         </Stack>
                                     )}
                                 </ListProduct>

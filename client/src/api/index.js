@@ -50,6 +50,16 @@ const axiosInstance = async (method, url, data) => {
 export default axiosInstance
 
 // PRODUCT
+export const requestGetLatestProduct = async (dispatch, config) => {
+    try {
+        const response = await axiosInstance("post", "/product/getProducts", config)
+
+        dispatch(setLatestProduct(response.data.data))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const requestGetProducts = async (dispatch, config) => {
     try {
         dispatch(startProductByCategory())
@@ -62,11 +72,11 @@ export const requestGetProducts = async (dispatch, config) => {
             products: response.data.data,
         }
 
-        if (config.category) {
-            dispatch(setProductByCategory(payload))
-        }
+        // if (config.category) {
+        dispatch(setProductByCategory(payload))
+        // }
 
-        dispatch(setLatestProduct(response.data.data))
+        // dispatch(setLatestProduct(response.data.data))
 
         dispatch(endProductByCategory())
     } catch (error) {

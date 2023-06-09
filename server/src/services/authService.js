@@ -107,6 +107,7 @@ exports.register = async (data) => {
         const token = response[1]
             ? jwt.sign(
                   {
+                      id: response[0].id,
                       userId: response[0].userId,
                       firstName: response[0].firstName,
                       middleName: response[0].middleName,
@@ -145,6 +146,7 @@ exports.login = async (data) => {
         const token = isCheckedPassword
             ? jwt.sign(
                   {
+                      id: response.id,
                       userId: response.userId,
                       email: response.email,
                       firstName: response.firstName,

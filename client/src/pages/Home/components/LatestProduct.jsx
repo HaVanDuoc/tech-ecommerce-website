@@ -2,7 +2,7 @@ import { Box, Container, Stack } from "@mui/material"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Slider from "react-slick"
-import { requestGetProducts } from "~/api"
+import { requestGetLatestProduct } from "~/api"
 import Card from "~/components/card"
 import SkeletonCard from "~/components/skeleton"
 import { selectorLatestProducts } from "~/redux/productSlice"
@@ -16,11 +16,9 @@ const LatestProduct = () => {
     useEffect(() => {
         if (latestProduct.isFetch) return
 
-        const config = {
-            limit: 20,
-        }
+        const config = { limit: 20 }
 
-        requestGetProducts(dispatch, config)
+        requestGetLatestProduct(dispatch, config)
     }, [dispatch, latestProduct])
 
     return (

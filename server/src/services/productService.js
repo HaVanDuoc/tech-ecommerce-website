@@ -1,4 +1,6 @@
 const db = require("../models")
+const { v4: uuidv4 } = require("uuid")
+const calculatePayment = require("../utils/calculatePayment")
 
 exports.getProducts = async (req) => {
     try {
@@ -73,6 +75,8 @@ exports.getProducts = async (req) => {
 exports.getProduct = async (req) => {
     try {
         const productId = req.body.productId
+        const productName = req.body.nameProduct
+        const user = req.user
 
         const [product] = await db.sequelize.query(`
             select
@@ -94,8 +98,33 @@ exports.getProduct = async (req) => {
                 left join brands on brands.brandId = products.brandId
             where
                 products.id > -1
-                ${productId ? 'and products.productId = "' + productId + '"' : ""};
+                ${productId ? 'and products.productId = "' + productId + '"' : ""}
+                ${productName ? 'and products.name = "' + productName + '"' : ""};
         `)
+
+        if (user) {
+            // Check product has in cart
+            const product_id = product[0].id
+            const user_id = user.id
+
+            const [response] = await db.sequelize.query(`
+                select
+                    *
+                from
+                    cart_sessions
+                    left join cart_items on cart_sessions.id = cart_items.cart_session_id
+                    left join users on users.id = cart_sessions.user_id
+                where
+                    users.id = ${user_id}
+                    and cart_items.product_id = ${product_id};
+            `)
+
+            if (response && response.length) {
+                product[0]["inCart"] = true // has in cart
+            } else {
+                product[0]["inCart"] = false // no has in cart
+            }
+        }
 
         return {
             err: product ? 0 : 1,
@@ -219,6 +248,138 @@ exports.getProductsAdmin = async (page) => {
             all: amount ? amount[0].count : null,
             counterPage: response ? Math.ceil(amount[0].count / limit) : null,
             images: response ? response : null,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.addCart = async (req) => {
+    try {
+        const user_id = req.user.id
+        const product_id = req.body.product_id
+
+        if (!user_id && !product_id) return
+
+        // First, find `cart_session_id`
+        const cart_session_id = await db.Cart_Session.findOne({
+            where: { user_id },
+            attributes: ["id"],
+            raw: true,
+        })
+
+        // Second, check to see if the product is already in shopping cart
+        // if yes, delete it otherwise, add it
+        const checkAdd = await db.Cart_Item.findOrCreate({
+            where: { cart_session_id: cart_session_id.id, product_id },
+            defaults: {
+                cart_session_id: cart_session_id.id,
+                product_id,
+                quantity: 1,
+            },
+        })
+
+        if (!checkAdd[1]) {
+            const destroy = await db.Cart_Item.destroy({
+                where: { cart_session_id: cart_session_id.id, product_id },
+            })
+
+            resolve({
+                err: destroy ? 0 : 1,
+                msg: destroy && "Đã xóa sản phẩm khỏi giỏ hàng",
+            })
+        }
+
+        return {
+            err: checkAdd ? 0 : 1,
+            msg: checkAdd && "Đã thêm sản phẩm vào giỏ hàng",
+            // data: checkAdd ? checkAdd[0] : null,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.order = async (req) => {
+    try {
+        const uuid = uuidv4() // code for order details
+        const user_id = req.user.id
+        const orders = req.body.orders
+
+        if (!user_id || !orders) return { err: 1, msg: "Lỗi!" }
+
+        // First, create order
+        const [createOrder, created] = await db.Order_Detail.findOrCreate({
+            where: { code: uuid },
+            defaults: {
+                user_id,
+                status_id: 1, // default 1 - Chờ xác nhận
+                total: 0,
+                code: uuid,
+            },
+            raw: true,
+        })
+
+        if (!created) return { err: 1, msg: "Không khởi tạo được đơn hàng. Vui lòng thử lại!" }
+
+        // Tạo order_item vào đơn hàng trên
+        orders.map(async (item) => {
+            const product = await db.Product.findOne({
+                where: { id: item.product_id },
+                attributes: ["id", "price", "discount"],
+                raw: true,
+            })
+
+            await db.Order_Item.create({
+                order_detail_id: createOrder.dataValues.id,
+                product_id: item.product_id,
+                quantity: item.quantity,
+                pay: calculatePayment(product.price, item.quantity, product.discount),
+            })
+
+            const pay = calculatePayment(product.price, item.quantity, product.discount)
+
+            // get current total of order then plus with pay of new item order
+            const getTotalOrder = await db.Order_Detail.findOne({
+                where: { id: createOrder.dataValues.id },
+                attributes: ["total"],
+                raw: true,
+            })
+
+            const totalPayment = Number(getTotalOrder.total) + Number(pay)
+
+            await db.Order_Detail.update(
+                { total: totalPayment },
+                {
+                    where: { id: createOrder.dataValues.id },
+                }
+            )
+
+            // Đặt hàng rồi thì vô giỏ hàng xóa nó đi
+            const [[user]] = await db.sequelize.query(`
+                select
+                    users.id,
+                    cart_sessions.id as 'cart_sessions_id'
+                from
+                    users
+                    left join cart_sessions on cart_sessions.user_id = users.id
+                where
+                    users.id = ${user_id};
+            `)
+
+            if (user.cart_session_id && item.product_id) {
+                await db.Cart_Item.destroy({
+                    where: {
+                        cart_session_id: user.cart_sessions_id,
+                        product_id: item.product_id,
+                    },
+                })
+            }
+        })
+
+        return {
+            err: createOrder ? 0 : 1,
+            msg: createOrder ? "Cảm ơn quý khách (づ￣ 3￣)づ" : "Đặt hàng thất bại!",
         }
     } catch (error) {
         return error

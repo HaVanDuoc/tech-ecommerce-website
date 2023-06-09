@@ -4,7 +4,6 @@ const adminRoute = require("./adminRoute")
 const dbRoute = require("./dbRoute")
 const sectionProduct = require("./sectionProduct")
 const pageProduct = require("./pageProduct")
-const productDetails = require("./client/productDetails")
 const productsClient = require("./client/products")
 const profile = require("./client/profile")
 
@@ -40,7 +39,6 @@ const initRoute = (app) => {
     app.use("/api/v1/admin", adminRoute)
     app.use("/api/v1/db", dbRoute)
     app.use("/api/v1/sectionProduct", sectionProduct) // Section list Product
-    app.use("/api/v1/client/productDetails", productDetails) //
 
     // Client routes
     app.use("/api/v1/client/pageProduct/", pageProduct)
