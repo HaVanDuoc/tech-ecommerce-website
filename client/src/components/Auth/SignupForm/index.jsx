@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Checkbox, CircularProgress, Link, styled, TextField, Typography } from "@mui/material"
-import { modalLoginForm, selectorStatusRegister } from "~/redux/authSlice"
+import { modalLogin, selectorStatusRegister } from "~/redux/authSlice"
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import { useDispatch, useSelector } from "react-redux"
@@ -34,7 +34,7 @@ const LinkBackToLogin = () => {
                     alignItems: "center",
                     marginTop: 3,
                 }}
-                onClick={() => dispatch(modalLoginForm())}
+                onClick={() => dispatch(modalLogin())}
             >
                 <ArrowBackIcon fontSize="small" />
                 <Typography>Trở về đăng nhập</Typography>

@@ -14,13 +14,11 @@ import {
 } from "@mui/material"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
-// import { showLoginForm } from "~/redux/ModalContainer/ModalContainerAction"
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt"
-import ModalContainer from "~/containers/ModalLogin"
 import { Logout, PersonAdd, Settings } from "@mui/icons-material"
 import { FormatFullName } from "~/helper/format"
 import { Link } from "react-router-dom"
-import { modalLoginForm, selectorCurrentUser } from "~/redux/authSlice"
+import { modalLogin, selectorCurrentUser } from "~/redux/authSlice"
 import refreshPage from "~/utils/refreshPage"
 
 const AccountMenu = () => {
@@ -162,17 +160,10 @@ const AccountMenu = () => {
                 //
                 // chưa đăng nhập
                 //
-                <ModalContainer>
-                    <Button
-                        onClick={() => dispatch(modalLoginForm)}
-                        sx={{
-                            color: "var(--color-secondary)",
-                        }}
-                    >
-                        <Typography textTransform="none">Đăng nhập</Typography>
-                        <SentimentSatisfiedAltIcon sx={{ marginLeft: 1 }} />
-                    </Button>
-                </ModalContainer>
+                <Button onClick={() => dispatch(modalLogin())} sx={{ color: "var(--color-secondary)" }}>
+                    <Typography textTransform="none">Đăng nhập</Typography>
+                    <SentimentSatisfiedAltIcon sx={{ marginLeft: 1 }} />
+                </Button>
             )}
         </Box>
     )

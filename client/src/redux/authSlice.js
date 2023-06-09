@@ -7,6 +7,10 @@ export const authSlice = createSlice({
             isLogged: false,
             user: null,
         },
+        modalAuth: {
+            isOpen: false,
+            isForm: true, // default true is form login & false is form register
+        },
         modalForm: true,
         login: {
             isPending: false,
@@ -22,6 +26,19 @@ export const authSlice = createSlice({
             state.currentUser.isLogged = true
             state.currentUser.user = action.payload
         },
+
+        isOpenModalLogin: (state) => {
+            state.modalAuth.isOpen = !state.modalAuth.isOpen
+        },
+        modalLogin: (state) => {
+            state.modalAuth.isOpen = true
+            state.modalAuth.isForm = true
+        },
+        modalRegister: (state) => {
+            state.modalAuth.isOpen = true
+            state.modalAuth.isForm = false
+        },
+
         modalLoginForm: (state) => {
             state.modalForm = true
         },
@@ -51,6 +68,9 @@ export const authSlice = createSlice({
 
 export const {
     currentUser,
+    isOpenModalLogin,
+    modalLogin,
+    modalRegister,
     modalLoginForm,
     modalSignUpForm,
     startLogin,
@@ -65,5 +85,6 @@ export const selectorCurrentUser = (state) => state.auth.currentUser
 export const selectorModalForm = (state) => state.auth.modalForm
 export const selectorStatusLogin = (state) => state.auth.login
 export const selectorStatusRegister = (state) => state.auth.register
+export const selectorModalLogin = (state) => state.auth.modalAuth
 
 export default authSlice.reducer

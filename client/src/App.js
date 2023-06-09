@@ -5,6 +5,7 @@ import AdminLayout from "./admin/layouts"
 import { DefaultLayout } from "./layouts"
 import { requestGetCurrentUser } from "./api"
 import { useDispatch } from "react-redux"
+import ModalLogin from "./components/Auth/ModalLogin"
 // import GoToAdminPage from "./components/GoToAdminPage"
 
 const App = () => {
@@ -31,6 +32,7 @@ const App = () => {
                                     <Layout>
                                         <Page />
                                         {/* <GoToAdminPage /> */}
+                                        <ModalLogin />
                                     </Layout>
                                 </div>
                             }
@@ -52,6 +54,7 @@ const App = () => {
                                     <Layout>
                                         <Page />
                                         {/* <GoToAdminPage /> */}
+                                        <ModalLogin />
                                     </Layout>
                                 </div>
                             }
