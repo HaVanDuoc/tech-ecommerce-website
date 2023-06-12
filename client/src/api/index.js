@@ -31,6 +31,7 @@ import {
     startSetProduct,
 } from "~/redux/productSlice"
 import { setBrandByCategory } from "~/redux/brandSlice"
+import { refetch, setTabs } from "~/redux/orderSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -48,6 +49,37 @@ const axiosInstance = async (method, url, data) => {
 }
 
 export default axiosInstance
+
+// ORDER
+export const requestOrders = async (dispatch, config) => {
+    try {
+        const response = await axiosInstance("post", "/client/profile/order", config)
+
+        dispatch(setLatestProduct(response.data.data))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const requestTabs = async (dispatch) => {
+    try {
+        const response = await axiosInstance("get", "/order/getTabs")
+
+        dispatch(setTabs(response.data.data))
+    } catch (error) {
+        return error
+    }
+}
+
+export const requestDestroyOrder = async (dispatch, order_details_id) => {
+    try {
+        await axiosInstance("post", "/order/destroyOrder", { order_details_id })
+
+        dispatch(refetch())
+    } catch (error) {
+        return error
+    }
+}
 
 // PRODUCT
 export const requestGetLatestProduct = async (dispatch, config) => {
@@ -104,7 +136,7 @@ export const requestGetCurrentUser = async (dispatch) => {
         const response = await axiosInstance("get", "/auth/getCurrentUser")
 
         if (response?.data?.err === 0) {
-            dispatch(currentUser(response.data))
+            dispatch(currentUser(response.data.data))
         }
     } catch (error) {
         console.log(error)

@@ -14,9 +14,9 @@ exports.getCurrentUser = async (req, res) => {
             })
         }
 
-        const userId = req.user
+        const user_id = req.user.user_id
 
-        const response = await authService.getCurrentUser(userId)
+        const response = await authService.getCurrentUser(user_id)
 
         return res.status(200).json(response)
     } catch (error) {

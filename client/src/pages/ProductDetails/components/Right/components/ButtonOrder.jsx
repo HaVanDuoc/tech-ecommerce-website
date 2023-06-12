@@ -8,8 +8,8 @@ import { useState } from "react"
 import { Fragment } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { endSetProduct, selectorProduct, startSetProduct } from "~/redux/productSlice"
-import calculatePayment from "~/utils/calculatePayment"
 import { CircularProgress } from "@mui/material"
+import { calculatePayment } from "~/utils/calculate"
 
 const ButtonOrder = () => {
     const product = useSelector(selectorProduct)

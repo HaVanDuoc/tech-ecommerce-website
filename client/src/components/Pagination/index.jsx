@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { Pagination, Stack } from "@mui/material"
 import addOrUpdateURLParams from "~/utils/addURLParams"
 import { useDispatch } from "react-redux"
@@ -13,15 +13,19 @@ const PaginationCustomize = ({ counterPage, refetch }) => {
     }
 
     return (
-        <Stack justifyContent="center" alignItems="center" marginTop={2}>
-            <Pagination
-                count={counterPage}
-                page={page}
-                color="primary"
-                size="large"
-                onChange={handleChangePagination}
-            />
-        </Stack>
+        <Fragment>
+            {counterPage > 1 && (
+                <Stack justifyContent="center" alignItems="center" marginTop={2}>
+                    <Pagination
+                        count={counterPage}
+                        page={page}
+                        color="primary"
+                        size="large"
+                        onChange={handleChangePagination}
+                    />
+                </Stack>
+            )}
+        </Fragment>
     )
 }
 

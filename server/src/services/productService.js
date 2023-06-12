@@ -338,6 +338,8 @@ exports.order = async (req) => {
                 raw: true,
             })
 
+            // console.log("product", product)
+
             await db.Order_Item.create({
                 order_detail_id: createOrder.dataValues.id,
                 product_id: item.product_id,
@@ -362,24 +364,28 @@ exports.order = async (req) => {
 
             // console.log("totalPayment", totalPayment)
 
-            await db.Order_Detail.update(
+            const updateTotal = await db.Order_Detail.update(
                 { total: totalPayment },
                 {
                     where: { id: createOrder.dataValues.id },
                 }
             )
 
+            // console.log("updateTotal", updateTotal)
+
             // Đặt hàng rồi thì vô giỏ hàng xóa nó đi
             const [[user]] = await db.sequelize.query(`
-                select
-                    users.id,
-                    cart_sessions.id as 'cart_sessions_id'
-                from
-                    users
-                    left join cart_sessions on cart_sessions.user_id = users.id
-                where
-                    users.id = ${user_id};
-            `)
+                    select
+                        users.id,
+                        cart_sessions.id as 'cart_sessions_id'
+                    from
+                        users
+                        left join cart_sessions on cart_sessions.user_id = users.id
+                    where
+                        users.id = ${user_id};
+                `)
+
+            console.log("user", user)
 
             if (user.cart_sessions_id && item.product_id) {
                 await db.Cart_Item.destroy({
@@ -389,6 +395,8 @@ exports.order = async (req) => {
                     },
                 })
             }
+
+            // console.log("first")
         })
 
         return {

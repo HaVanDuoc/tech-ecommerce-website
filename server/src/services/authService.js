@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken")
 const { padUserId } = require("../helper/padLeft")
 const { hashPassword } = require("../helper/hashPassword")
 
-exports.getCurrentUser = async (userId) => {
+exports.getCurrentUser = async (user_id) => {
     try {
         const query = `select
                           users.id,
@@ -20,7 +20,6 @@ exports.getCurrentUser = async (userId) => {
                           users.avatar,
                           users.phoneNumber,
                           users.address,
-                          users.transactionVolume,
                           users.dateOfBirth,
                           roles.name as 'role',
                           cart_sessions.id as 'cart_sessions_id'
@@ -30,7 +29,7 @@ exports.getCurrentUser = async (userId) => {
                           left join roles on roles.roleId = users.roleId
                           left join cart_sessions on cart_sessions.user_id = users.id
                       where
-                          users.userId = '${userId}'
+                          users.id = '${user_id}'
                       limit
                           1;`
 
@@ -42,13 +41,24 @@ exports.getCurrentUser = async (userId) => {
                 `select count(*) as 'count' from cart_items where cart_session_id = '${response[0].cart_sessions_id}'`
             )
 
-            countProductInCart = count[0].count
+            // countProductInCart = count[0].count
+            return count[0].count
         }
 
-        checkCountProductInCart()
+        // checkCountProductInCart()
+
+        const getSumPayment = async () => {
+            const [sum] = await db.sequelize.query(
+                `select sum(total) as sum from order_details where user_id = ${user_id}`
+            )
+
+            return sum[0].sum
+        }
+
+        response[0]["counterCart"] = await checkCountProductInCart()
+        response[0]["sumPayment"] = await getSumPayment()
 
         return {
-            countProductInCart: countProductInCart ? countProductInCart : 0,
             err: response ? 0 : 1,
             msg: response ? "Get successfully" : "Get failure",
             data: response ? response[0] : null,
@@ -66,7 +76,6 @@ exports.register = async (data) => {
         const query = `select userId from users order by id desc limit 1;`
         const [lastId] = await db.sequelize.query(query, { raw: true }) // Get uid of user final e.g 'U00000006'
         const sliceId = lastId.length ? lastId[0].userId.slice(-8) : 0 // get 8 char final to result e.g '00000006'
-        console.log("sliceId", sliceId)
         const userId = padUserId(parseInt(sliceId) + 1) // parseInt is convert 00000006 to 6
 
         const roleId = "R001" // Role default is "R001" - "khách hàng"

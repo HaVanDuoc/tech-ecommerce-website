@@ -50,9 +50,9 @@ const AccountMenu = () => {
                     >
                         <Tooltip
                             title={FormatFullName(
-                                currentUser.user.data.firstName,
-                                currentUser.user.data.middleName,
-                                currentUser.user.data.lastName
+                                currentUser?.user?.firstName,
+                                currentUser?.user?.middleName,
+                                currentUser?.user?.lastName
                             )}
                         >
                             <IconButton
@@ -71,7 +71,7 @@ const AccountMenu = () => {
                                     }}
                                     variant="dot"
                                 >
-                                    <Avatar alt="avatar" src={currentUser.user.data.avatar} />
+                                    <Avatar alt="avatar" src={currentUser?.user?.avatar} />
                                 </StyledBadge>
                             </IconButton>
                         </Tooltip>
@@ -119,12 +119,12 @@ const AccountMenu = () => {
                     >
                         <Link to="/profile" className="link">
                             <MenuItem onClick={handleClose}>
-                                <Avatar src={currentUser.user.data.avatar} />{" "}
+                                <Avatar src={currentUser?.user?.avatar} />{" "}
                                 <Typography variant="span" color="var(--color-text) !important" fontWeight={500}>
                                     {FormatFullName(
-                                        currentUser.user.data.firstName,
-                                        currentUser.user.data.middleName,
-                                        currentUser.user.data.lastName
+                                        currentUser?.user?.firstName,
+                                        currentUser?.user?.middleName,
+                                        currentUser?.user?.lastName
                                     )}
                                 </Typography>
                             </MenuItem>

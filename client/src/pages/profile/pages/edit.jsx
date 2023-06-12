@@ -13,7 +13,6 @@ import {
     styled,
 } from "@mui/material"
 import React from "react"
-import { Background, HeaderProfile } from ".."
 import { useSelector } from "react-redux"
 import { PF } from "~/utils/__variables"
 import { ErrorMessage, Field, Form, Formik } from "formik"
@@ -21,22 +20,24 @@ import * as Yup from "yup"
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers"
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
 import { selectorCurrentUser } from "~/redux/authSlice"
+import HeaderProfile from "../components/HeaderProfile"
+import Background from "../components/Background"
 
 const Edit = () => {
-    const currentUser = useSelector(selectorCurrentUser)
-
     return (
         <Box>
             <Background />
             <HeaderProfile />
-            <SectionEdit currentUser={currentUser} />
+            <SectionEdit />
         </Box>
     )
 }
 
 export default Edit
 
-const SectionEdit = ({ currentUser }) => {
+const SectionEdit = () => {
+    const currentUser = useSelector(selectorCurrentUser)
+
     return (
         <Box sx={{ position: "relative", top: -100 }}>
             <Container maxWidth="lg" disableGutters>
@@ -64,7 +65,7 @@ const SectionEdit = ({ currentUser }) => {
                     >
                         <Box sx={{ position: "relative", margin: 4 }}>
                             <Avatar
-                                src={currentUser.isLogged && currentUser.user.data.avatar}
+                                src={currentUser.isLogged && currentUser?.user?.avatar}
                                 sx={{ width: 120, height: 120 }}
                             />
                             <Avatar

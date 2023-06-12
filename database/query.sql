@@ -1,5 +1,14 @@
 USE TECH;
 
+select
+    count(*) as amount_order
+from
+    order_details
+    left join order_statuses on order_statuses.id = order_details.status_id
+where
+    order_details.user_id = 26
+    and order_statuses.status = "Chờ xác nhận";
+
 -- GET ALL USER
 -- server\src\services\adminService.js
 SELECT

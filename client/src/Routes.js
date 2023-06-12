@@ -27,10 +27,10 @@ import ProductDetails from "./pages/productDetails"
 import ProductDetailsLayout from "./layouts/productDetails"
 import Profile from "./pages/profile"
 import ProfileLayout from "./layouts/profile"
-import Edit from "./pages/profile/Edit"
 import Orders from "./admin/pages/orders"
 import OrderDetails from "./admin/pages/orders/OrderDetails"
 import CreateOrder from "./admin/pages/orders/CreateOrder"
+import Edit from "./pages/profile/pages/edit"
 
 export const publicRoutes = [
     { path: "/", page: Home },

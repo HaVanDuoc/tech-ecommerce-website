@@ -15,7 +15,7 @@ const Search = () => {
 
     useEffect(() => {
         if (stateSearch.recent.isFetch) return
-        requestSearchHeaderRecent(dispatch, currentUser.isLogged ? currentUser.user.data.id : null)
+        requestSearchHeaderRecent(dispatch, currentUser.isLogged ? currentUser?.user?.id : null)
     }, [dispatch, currentUser, stateSearch])
 
     return (
@@ -28,7 +28,7 @@ const Search = () => {
                 Tìm kiếm
             </Button>
 
-            <AutoComplete user_id={currentUser.isLogged ? currentUser.user.data.id : null} />
+            <AutoComplete user_id={currentUser.isLogged ? currentUser?.user?.id : null} />
         </SearchWrap>
     )
 }
