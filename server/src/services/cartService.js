@@ -120,3 +120,27 @@ exports.deleteCartItem = async (data) => {
         return error
     }
 }
+
+exports.counterProducts = async (req) => {
+    try {
+        const user_id = req.user.id
+
+        const query = `select
+                            count(*) as counter
+                        from
+                            cart_items
+                            left join cart_sessions on cart_sessions.id = cart_items.cart_session_id
+                        where
+                            user_id = 26;`
+
+        const [response] = await db.sequelize.query(query)
+
+        return {
+            err: response ? 0 : 1,
+            msg: response ? "Successfully" : "Failure",
+            data: response ? response[0].counter : null,
+        }
+    } catch (error) {
+        return error
+    }
+}

@@ -5,7 +5,6 @@ const dbRoute = require("./dbRoute")
 const sectionProduct = require("./sectionProduct")
 const pageProduct = require("./pageProduct")
 const productsClient = require("./client/products")
-const profile = require("./client/profile")
 
 //
 const authRoute = require("./authRoute")
@@ -45,7 +44,6 @@ const initRoute = (app) => {
     // Client routes
     app.use("/api/v1/client/pageProduct/", pageProduct)
     app.use("/api/v1/client/products", productsClient)
-    app.use("/api/v1/client/profile", profile)
 
     // Route không xác định được response error not found
     return app.use(notFound)

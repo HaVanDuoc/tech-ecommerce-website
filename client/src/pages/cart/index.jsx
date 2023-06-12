@@ -4,7 +4,6 @@ import React, { Fragment, useEffect, useState } from "react"
 import { Footer } from "~/components"
 import { useDispatch, useSelector } from "react-redux"
 import { useSnackbar } from "notistack"
-import { selectorCurrentUser } from "~/redux/authSlice"
 import { refetchCart, selectorCartProducts } from "~/redux/productSlice"
 import axiosInstance, {
     requestCartProduct,
@@ -17,13 +16,11 @@ import Loading from "./components/Loading"
 import HeaderCart from "./components/HeaderCart"
 
 const Cart = () => {
-    const [reFetch, setReFetch] = useState(true) // Đơn giản là sử dụng để reset dữ liệu fetch về thôi
     const [payment, setPayment] = useState(0) // số tiền thanh toán
     const [paymentProductNumber, setPaymentProductNumber] = useState(0) // số sản phẩm đã chọn
     const [selectedProduct, setSelectedProduct] = useState([])
     const { enqueueSnackbar } = useSnackbar()
     const dispatch = useDispatch()
-    const currentUser = useSelector(selectorCurrentUser)
 
     const cart = useSelector(selectorCartProducts)
     const products = useSelector(selectorCartProducts)?.data?.products

@@ -1,21 +1,32 @@
 import { Badge, Button, Stack, styled } from "@mui/material"
-import React from "react"
-import { useSelector } from "react-redux"
+import React, { useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import { Link } from "react-router-dom"
-import { selectorCurrentUser } from "~/redux/authSlice"
+import { selectorCartProducts, setCounterCartProduct } from "~/redux/productSlice"
+import axiosInstance from "~/api"
 
 const Cart = () => {
-    const currentUser = useSelector(selectorCurrentUser)
+    const cart = useSelector(selectorCartProducts)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        const fetch = async () => {
+            const response = await axiosInstance("get", "/cart/counter")
+
+            dispatch(setCounterCartProduct(response.data.data))
+        }
+
+        fetch()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cart.refetchCounter])
 
     return (
         <Stack justifyContent="center" alignItems="center">
             <Link to="/cart">
                 <Button sx={{ color: "var(--color-main)" }}>
-                    <StyledBadge
-                        badgeContent={currentUser.isLogged ? currentUser.user.countProductInCart : 0}
-                        color="error"
-                    >
+                    <StyledBadge badgeContent={cart.counter ? cart.counter : 0} color="error">
                         <ShoppingCartOutlinedIcon sx={{ color: "#666" }} />
                     </StyledBadge>
                 </Button>

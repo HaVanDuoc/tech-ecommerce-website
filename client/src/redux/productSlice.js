@@ -15,6 +15,8 @@ export const productSlice = createSlice({
             isFetch: false,
             isPending: false,
             refetch: false,
+            counter: 0,
+            refetchCounter: false,
             data: null,
         },
         categories: {
@@ -80,6 +82,12 @@ export const productSlice = createSlice({
         endFetchCardProduct: (state) => {
             state.cart.isPending = false
         },
+        setCounterCartProduct: (state, action) => {
+            state.cart.counter = action.payload
+        },
+        refetchCounterCartProduct: (state) => {
+            state.cart.refetchCounter = !state.cart.refetchCounter
+        },
 
         // CATEGORY
         setCategories: (state, action) => {
@@ -115,6 +123,8 @@ export const {
     setCardProduct,
     refetchCart,
     endFetchCardProduct,
+    setCounterCartProduct,
+    refetchCounterCartProduct,
     setCategories,
     startSetProduct,
     setProduct,

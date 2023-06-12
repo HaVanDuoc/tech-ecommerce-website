@@ -1,5 +1,15 @@
 USE TECH;
 
+-- 
+select
+    count(*) as couter
+from
+    cart_items
+    left join cart_sessions on cart_sessions.id = cart_items.cart_session_id
+where
+    user_id = 26;
+
+-- 
 select
     count(*) as amount_order
 from

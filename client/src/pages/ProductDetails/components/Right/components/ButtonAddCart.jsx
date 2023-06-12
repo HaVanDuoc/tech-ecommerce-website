@@ -3,7 +3,7 @@ import { Fragment } from "react"
 import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutlined"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import { useDispatch, useSelector } from "react-redux"
-import { reFetchProduct, selectorProduct } from "~/redux/productSlice"
+import { reFetchProduct, refetchCounterCartProduct, selectorProduct } from "~/redux/productSlice"
 import { modalLogin, selectorCurrentUser } from "~/redux/authSlice"
 import axiosInstance from "~/api"
 
@@ -19,6 +19,7 @@ const ButtonAddCart = () => {
         await axiosInstance("post", "/product/addCart", { product_id })
 
         dispatch(reFetchProduct())
+        dispatch(refetchCounterCartProduct())
     }
 
     return (

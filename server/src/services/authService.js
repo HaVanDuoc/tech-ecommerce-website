@@ -35,18 +35,6 @@ exports.getCurrentUser = async (user_id) => {
 
         const [response] = await db.sequelize.query(query, { raw: true })
 
-        // Get count products in the cart to display at button cart on app bar
-        const checkCountProductInCart = async () => {
-            const [count] = await db.sequelize.query(
-                `select count(*) as 'count' from cart_items where cart_session_id = '${response[0].cart_sessions_id}'`
-            )
-
-            // countProductInCart = count[0].count
-            return count[0].count
-        }
-
-        // checkCountProductInCart()
-
         const getSumPayment = async () => {
             const [sum] = await db.sequelize.query(
                 `select sum(total) as sum from order_details where user_id = ${user_id}`
@@ -55,7 +43,6 @@ exports.getCurrentUser = async (user_id) => {
             return sum[0].sum
         }
 
-        response[0]["counterCart"] = await checkCountProductInCart()
         response[0]["sumPayment"] = await getSumPayment()
 
         return {
