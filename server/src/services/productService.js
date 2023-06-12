@@ -407,3 +407,18 @@ exports.order = async (req) => {
         return error
     }
 }
+
+exports.updateView = async (req) => {
+    try {
+        const product_id = req.body.product_id
+
+        const response = await db.sequelize.query(`update products set view = view + 1 where id = ${product_id};`)
+
+        return {
+            err: response ? 0 : 1,
+            msg: response ? "Successfully" : "Failure",
+        }
+    } catch (error) {
+        return error
+    }
+}

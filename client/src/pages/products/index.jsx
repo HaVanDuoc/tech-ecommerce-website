@@ -14,7 +14,7 @@ import React, { useEffect } from "react"
 import Banner from "./components/Banner"
 import SortBy from "./components/SortBy"
 import { Footer } from "~/components"
-import Card from "~/components/card"
+import Card from "~/components/Card"
 import "~/styles/slider"
 
 const Products = () => {

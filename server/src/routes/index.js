@@ -3,8 +3,6 @@ const userRoute = require("./userRoute")
 const adminRoute = require("./adminRoute")
 const dbRoute = require("./dbRoute")
 const sectionProduct = require("./sectionProduct")
-const pageProduct = require("./pageProduct")
-const productsClient = require("./client/products")
 
 //
 const authRoute = require("./authRoute")
@@ -40,10 +38,6 @@ const initRoute = (app) => {
     app.use("/api/v1/admin", adminRoute)
     app.use("/api/v1/db", dbRoute)
     app.use("/api/v1/sectionProduct", sectionProduct) // Section list Product
-
-    // Client routes
-    app.use("/api/v1/client/pageProduct/", pageProduct)
-    app.use("/api/v1/client/products", productsClient)
 
     // Route không xác định được response error not found
     return app.use(notFound)

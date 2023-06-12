@@ -10,6 +10,7 @@ router.use(decryptToken)
 router.post("/getProducts", productController.getProducts)
 router.post("/getProduct", productController.getProduct)
 router.post("/admin/getProducts", productController.getProductsAdmin)
+router.put("/updateView", productController.updateView)
 
 router.use(verifyToken)
 // router.use(verifyRole);

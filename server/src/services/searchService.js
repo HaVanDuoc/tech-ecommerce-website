@@ -1,21 +1,13 @@
 const db = require("../models")
 
-const searchService = {
-    header: {
-        suggest: null,
-        recent: null,
-        saveRecent: null,
-    },
-}
-
-searchService.header.suggest = async (key, limit) => {
+exports.headerSuggest = async (key, limit) => {
     try {
         const query = `SELECT
                           products.id,
                           products.name,
                           products.price,
                           products.discount,
-                          products.image,
+                          products.files,
                           categories.name as 'category',
                           categories.link as 'categoryLink'
                       FROM
@@ -39,8 +31,10 @@ searchService.header.suggest = async (key, limit) => {
     }
 }
 
-searchService.header.recent = async (user_id, limit) => {
+exports.headerRecent = async (req) => {
     try {
+        const user_id = req.user.id
+
         const query = `
                     select
                     *
@@ -52,12 +46,13 @@ searchService.header.recent = async (user_id, limit) => {
                                 products.name,
                                 products.price,
                                 products.discount,
-                                products.image,
+                                products.files,
                                 categories.link as 'categoryLink'
                             from
                                 products
                                 left join categories on categories.categoryId = products.categoryId
                         ) as temp on temp.id = searches.product_id
+                        where searches.user_id = ${user_id}
                     order by
                         searches.createdAt desc
                     limit
@@ -76,7 +71,7 @@ searchService.header.recent = async (user_id, limit) => {
     }
 }
 
-searchService.header.saveRecent = async (product_id, user_id) => {
+exports.headerSaveRecent = async (product_id, user_id) => {
     try {
         // Trường hợp đã tìm trước đó có trong database
         // Tìm và xóa cái cũ đi
@@ -112,5 +107,3 @@ searchService.header.saveRecent = async (product_id, user_id) => {
         return error
     }
 }
-
-module.exports = searchService

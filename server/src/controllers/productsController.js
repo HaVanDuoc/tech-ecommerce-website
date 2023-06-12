@@ -82,3 +82,12 @@ exports.order = async (req, res) => {
         return intervalServerError(res)
     }
 }
+
+exports.updateView = async (req, res) => {
+    try {
+        const response = await productService.updateView(req)
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}

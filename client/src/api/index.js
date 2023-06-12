@@ -82,6 +82,10 @@ export const requestDestroyOrder = async (dispatch, order_details_id) => {
 }
 
 // PRODUCT
+export const requestUpdateViewProduct = async (product_id) => {
+    await axiosInstance("put", "/product/updateView", { product_id })
+}
+
 export const requestGetLatestProduct = async (dispatch, config) => {
     try {
         const response = await axiosInstance("post", "/product/getProducts", config)

@@ -20,6 +20,7 @@ import { FormatFullName } from "~/helper/format"
 import { Link } from "react-router-dom"
 import { modalLogin, selectorCurrentUser } from "~/redux/authSlice"
 import refreshPage from "~/utils/refreshPage"
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"
 
 const AccountMenu = () => {
     const currentUser = useSelector(selectorCurrentUser)
@@ -131,12 +132,23 @@ const AccountMenu = () => {
                         </Link>
 
                         <Divider />
+
                         <MenuItem onClick={handleClose}>
                             <ListItemIcon>
                                 <PersonAdd fontSize="small" />
                             </ListItemIcon>
                             Thêm một tài khoản khác
                         </MenuItem>
+                        <Link to={window.location.pathname.includes("/admin") ? "/" : "/admin"} className="link">
+                            <MenuItem>
+                                <ListItemIcon>
+                                    <AdminPanelSettingsIcon fontSize="small" />
+                                </ListItemIcon>
+                                {window.location.pathname.includes("/admin")
+                                    ? "Quay lại trang chủ"
+                                    : "Đến trang quản trị"}
+                            </MenuItem>
+                        </Link>
                         <MenuItem onClick={handleClose}>
                             <ListItemIcon>
                                 <Settings fontSize="small" />

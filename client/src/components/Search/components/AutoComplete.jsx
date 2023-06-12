@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, Typography, styled } from "@mui/material"
 import { Fragment, useState } from "react"
 import { useSelector } from "react-redux"
 import { Link } from "react-router-dom"
-import { requestSearchHeaderSaveRecent } from "~/api"
+import { requestSearchHeaderSaveRecent, requestUpdateViewProduct } from "~/api"
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format"
 import { selectorSearchHeader } from "~/redux/searchSlice"
 
@@ -10,6 +10,9 @@ const AutoComplete = ({ user_id }) => {
     const [row, setRow] = useState(1)
     const searchBar = document.querySelector("#search-bar")
     const stateSearch = useSelector(selectorSearchHeader)
+
+    const recent = stateSearch?.recent
+    const suggest = stateSearch?.suggest
 
     if (searchBar)
         new ResizeObserver(() => {
@@ -62,22 +65,24 @@ const AutoComplete = ({ user_id }) => {
                 },
             }}
         >
-            {stateSearch.suggest.isPending ? (
+            {suggest?.isPending ? (
                 <Loading />
-            ) : stateSearch.suggest.result.length ? (
+            ) : suggest?.result?.length ? (
                 <Suggestion className="suggestion">
                     <Box className="title">
                         <Typography>Gợi ý sản phẩm</Typography>
                     </Box>
 
                     <Box className="container-result">
-                        {stateSearch.suggest.result.map((item, index) => {
+                        {suggest?.result.map((item, index) => {
                             const handleClick = () => {
                                 /* Close auto complete */
                                 document.querySelector("#auto-complete").style.display = "none"
 
                                 /* Save result search */
                                 requestSearchHeaderSaveRecent(item.id, user_id)
+
+                                requestUpdateViewProduct(item.id)
                             }
 
                             return (
@@ -99,7 +104,11 @@ const AutoComplete = ({ user_id }) => {
                                     <Link to={`${item.categoryLink}/${item.name}`} className="link">
                                         <Stack flexDirection="row" justifyContent="center" alignItems="center">
                                             <Stack justifyContent="center" alignItems="center" width={80}>
-                                                <img src={JSON.parse(item.image)[0].base64} alt="" width="100%" />
+                                                <img
+                                                    src={item.files[0].path}
+                                                    alt={item.files[0].originalName}
+                                                    width="100%"
+                                                />
                                             </Stack>
 
                                             <Stack justifyContent="center" alignItems="start" marginLeft={1}>
@@ -140,7 +149,7 @@ const AutoComplete = ({ user_id }) => {
                 <Fragment />
             )}
 
-            {stateSearch.recent.isPending ? (
+            {recent?.isPending ? (
                 <Loading />
             ) : (
                 <Recent className="suggestion">
@@ -149,7 +158,7 @@ const AutoComplete = ({ user_id }) => {
                     </Box>
 
                     <Box className="container-result">
-                        {stateSearch.recent.result.map((item, index) => {
+                        {recent?.result?.map((item, index) => {
                             return (
                                 <Box
                                     key={index}
@@ -168,7 +177,11 @@ const AutoComplete = ({ user_id }) => {
                                     <Link to={`${item.categoryLink}/${item.name}`} className="link">
                                         <Stack flexDirection="row" justifyContent="center" alignItems="center">
                                             <Stack justifyContent="center" alignItems="center" width={80}>
-                                                <img src={JSON.parse(item.image)[0].base64} alt="" width="100%" />
+                                                <img
+                                                    src={item.files[0].path}
+                                                    alt={item.files[0].originalName}
+                                                    width="100%"
+                                                />
                                             </Stack>
 
                                             <Stack justifyContent="center" alignItems="start" marginLeft={1}>

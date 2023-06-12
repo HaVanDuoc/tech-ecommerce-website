@@ -4,77 +4,81 @@ import { formatCost, formatDiscount, formatPrice } from "~/helper/format"
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined"
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined"
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { requestUpdateViewProduct } from "~/api"
 
 const Card = ({ product }) => {
+    const navigate = useNavigate()
+
+    const handleClick = () => {
+        requestUpdateViewProduct(product.product_id)
+        navigate(`${product?.category_link}/${product?.product_name}`)
+    }
+
     return (
-        <Link to={`${product?.category_link}/${product?.product_name}`}>
-            <Box className="card" sx={styles1}>
-                <Stack flexDirection="column">
-                    <Box sx={styles2}>
-                        <img
-                            src={product?.product_image ? product?.product_image[0].path : ""}
-                            alt=""
-                            width="100%"
-                            className="image"
-                        />
-                    </Box>
-
-                    <Stack flexDirection="column" sx={{ height: 180, zIndex: 2 }}>
-                        <Typography sx={styles3}>
-                            {product?.product_category ? product?.product_category : ""}
-                        </Typography>
-
-                        <Typography className="name-product" sx={styles4}>
-                            {product?.product_name ? product?.product_name : ""}
-                        </Typography>
-
-                        <Stack flexDirection="row" alignItems="center" paddingBottom={1} height={35}>
-                            <Rating value={4} readOnly size="small" />
-                            <Typography fontSize={13} sx={styles5}>
-                                (32)
-                            </Typography>
-                        </Stack>
-
-                        <Stack flexDirection="row" alignItems="center">
-                            {product?.product_price ? (
-                                <Typography sx={styles6}>
-                                    {formatPrice(product.product_price, product.product_discount)}
-                                </Typography>
-                            ) : (
-                                <Fragment />
-                            )}
-
-                            {product?.discount && (
-                                <Typography sx={styles7}>{formatCost(product?.product_price)}</Typography>
-                            )}
-                        </Stack>
-                    </Stack>
-                </Stack>
-
-                <Box className="select" sx={styles8}>
-                    <Stack flexDirection="column" spacing={1}>
-                        <Box className="item">
-                            <FavoriteBorderOutlinedIcon />
-                        </Box>
-                        <Box className="item">
-                            <RemoveRedEyeOutlinedIcon />
-                        </Box>
-                        <Box className="item">
-                            <LocalMallOutlinedIcon />
-                        </Box>
-                    </Stack>
+        <Box className="card" sx={styles1} onClick={handleClick}>
+            <Stack flexDirection="column">
+                <Box sx={styles2}>
+                    <img
+                        src={product?.product_image ? product?.product_image[0].path : ""}
+                        alt=""
+                        width="100%"
+                        className="image"
+                    />
                 </Box>
 
-                {product?.product_discount && (
-                    <Box sx={styles9}>
-                        <Typography fontSize={12} fontWeight={600}>
-                            {formatDiscount(product?.product_discount)}
+                <Stack flexDirection="column" sx={{ height: 180, zIndex: 2 }}>
+                    <Typography sx={styles3}>{product?.product_category ? product?.product_category : ""}</Typography>
+
+                    <Typography className="name-product" sx={styles4}>
+                        {product?.product_name ? product?.product_name : ""}
+                    </Typography>
+
+                    <Stack flexDirection="row" alignItems="center" paddingBottom={1} height={35}>
+                        <Rating value={4} readOnly size="small" />
+                        <Typography fontSize={13} sx={styles5}>
+                            (32)
                         </Typography>
+                    </Stack>
+
+                    <Stack flexDirection="row" alignItems="center">
+                        {product?.product_price ? (
+                            <Typography sx={styles6}>
+                                {formatPrice(product.product_price, product.product_discount)}
+                            </Typography>
+                        ) : (
+                            <Fragment />
+                        )}
+
+                        {product?.discount && (
+                            <Typography sx={styles7}>{formatCost(product?.product_price)}</Typography>
+                        )}
+                    </Stack>
+                </Stack>
+            </Stack>
+
+            <Box className="select" sx={styles8}>
+                <Stack flexDirection="column" spacing={1}>
+                    <Box className="item">
+                        <FavoriteBorderOutlinedIcon />
                     </Box>
-                )}
+                    <Box className="item">
+                        <RemoveRedEyeOutlinedIcon />
+                    </Box>
+                    <Box className="item">
+                        <LocalMallOutlinedIcon />
+                    </Box>
+                </Stack>
             </Box>
-        </Link>
+
+            {product?.product_discount && (
+                <Box sx={styles9}>
+                    <Typography fontSize={12} fontWeight={600}>
+                        {formatDiscount(product?.product_discount)}
+                    </Typography>
+                </Box>
+            )}
+        </Box>
     )
 }
 

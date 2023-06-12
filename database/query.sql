@@ -1,6 +1,23 @@
 USE TECH;
 
 -- 
+update
+    products
+set
+    view = view + 1
+where
+    id > -1
+    and name = "Lenovo Yoga Tab 11";
+-- 
+-- 
+update
+    products
+set
+    view = view + 1
+where
+    id = 8;
+
+-- 
 select
     count(*) as couter
 from
