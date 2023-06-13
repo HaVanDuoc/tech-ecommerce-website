@@ -1,5 +1,4 @@
 const { notFound } = require("../middleware/handleError")
-const userRoute = require("./userRoute")
 const adminRoute = require("./adminRoute")
 const dbRoute = require("./dbRoute")
 const sectionProduct = require("./sectionProduct")
@@ -12,8 +11,8 @@ const categoryRoute = require("./categoryRoute")
 const brandRoute = require("./brandRoute")
 const productRoute = require("./productRoute")
 const orderRoute = require("./orderRoute")
+const userRoute = require("./userRoute")
 
-const adminUserRoute = require("./admin/users")
 const adminProductRoute = require("./admin/products")
 const adminOrderRoute = require("./admin/orders")
 
@@ -27,14 +26,13 @@ const initRoute = (app) => {
     app.use(`${v1}/brand`, brandRoute)
     app.use(`${v1}/product`, productRoute)
     app.use(`${v1}/order`, orderRoute)
+    app.use(`${v1}/user`, userRoute)
 
     // Admin routes
-    app.use(`${v1}/admin/users`, adminUserRoute)
     app.use(`${v1}/admin/products`, adminProductRoute)
     app.use(`${v1}/admin/orders`, adminOrderRoute)
 
     // Routes
-    app.use("/api/v1/user", userRoute)
     app.use("/api/v1/admin", adminRoute)
     app.use("/api/v1/db", dbRoute)
     app.use("/api/v1/sectionProduct", sectionProduct) // Section list Product

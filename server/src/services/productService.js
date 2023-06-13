@@ -338,8 +338,7 @@ exports.order = async (req) => {
                 raw: true,
             })
 
-            // console.log("product", product)
-
+            // create order item of order
             await db.Order_Item.create({
                 order_detail_id: createOrder.dataValues.id,
                 product_id: item.product_id,
@@ -349,29 +348,10 @@ exports.order = async (req) => {
 
             const pay = calculatePayment(product.price, item.quantity, product.discount)
 
-            // console.log("pay", pay)
-
-            // get current total of order then plus with pay of new item order
-            const getTotalOrder = await db.Order_Detail.findOne({
-                where: { id: createOrder.dataValues.id },
-                attributes: ["total"],
-                raw: true,
-            })
-
-            // console.log("getTotalOrder.total", getTotalOrder.total)
-
-            const totalPayment = Number(getTotalOrder.total) + Number(pay)
-
-            // console.log("totalPayment", totalPayment)
-
-            const updateTotal = await db.Order_Detail.update(
-                { total: totalPayment },
-                {
-                    where: { id: createOrder.dataValues.id },
-                }
-            )
-
-            // console.log("updateTotal", updateTotal)
+            // Update total plus in order_details
+            const [updateTotal] = await db.sequelize.query(`
+                update order_details set total = total + ${Number(pay) || 0} where id = ${createOrder.dataValues.id};
+            `)
 
             // Đặt hàng rồi thì vô giỏ hàng xóa nó đi
             const [[user]] = await db.sequelize.query(`
@@ -385,8 +365,6 @@ exports.order = async (req) => {
                         users.id = ${user_id};
                 `)
 
-            console.log("user", user)
-
             if (user.cart_sessions_id && item.product_id) {
                 await db.Cart_Item.destroy({
                     where: {
@@ -395,8 +373,6 @@ exports.order = async (req) => {
                     },
                 })
             }
-
-            // console.log("first")
         })
 
         return {

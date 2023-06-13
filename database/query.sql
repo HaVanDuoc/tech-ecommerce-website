@@ -1,5 +1,35 @@
 USE TECH;
 
+-- Get users
+select
+    users.id,
+    userId,
+    firstName,
+    middleName,
+    lastName,
+    email,
+    avatar,
+    statuses.name,
+    tbl_SumPayment.sumPayment
+from
+    users
+    left join statuses on statuses.statusId = users.statusId
+    left join roles on roles.roleId = users.roleId
+    left join (
+        select
+            order_details.user_id,
+            sum(total) as sumPayment
+        from
+            order_details
+        group by
+            user_id
+    ) tbl_SumPayment on tbl_SumPayment.user_id = users.id
+order by
+    users.createdAt desc
+limit
+    10 offset 0;
+
+--
 -- 
 update
     products
@@ -8,6 +38,7 @@ set
 where
     id > -1
     and name = "Lenovo Yoga Tab 11";
+
 -- 
 -- 
 update

@@ -5,6 +5,7 @@ import searchReducer from "./searchSlice"
 import adminReducer from "./adminSlice"
 import brandReducer from "./brandSlice"
 import orderReducer from "./orderSlice"
+import userReducer from "./userSlice"
 
 const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
         admin: adminReducer,
         brand: brandReducer,
         order: orderReducer,
+        user: userReducer,
     },
 })
 

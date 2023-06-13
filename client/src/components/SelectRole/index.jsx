@@ -1,37 +1,29 @@
-import { Box, FormControl, InputLabel, NativeSelect } from "@mui/material";
-import { Field } from "formik";
-import React from "react";
-import { FetchListRole } from "~/helper/fetch";
+import { Box, FormControl, InputLabel, NativeSelect } from "@mui/material"
+import { Field } from "formik"
+import React from "react"
+import { useSelector } from "react-redux"
+import { selectorUser } from "~/redux/userSlice"
 
 const SelectRole = () => {
-  const [options, setOptions] = React.useState([]);
+    const roles = useSelector(selectorUser)?.roles
 
-  const listRole = FetchListRole();
-  React.useEffect(() => {
-    setOptions(listRole);
-  }, [listRole]);
+    return (
+        <Box sx={{ minWidth: 120 }}>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+                Tài khoản dành cho
+            </InputLabel>
+            <FormControl fullWidth>
+                <Field as={NativeSelect} id="roleId" name="roleId">
+                    {roles.length &&
+                        roles.map((item, index) => (
+                            <option key={index} value={item.roleId}>
+                                {item.name}
+                            </option>
+                        ))}
+                </Field>
+            </FormControl>
+        </Box>
+    )
+}
 
-  return (
-    <Box sx={{ minWidth: 120 }}>
-      <InputLabel variant="standard" htmlFor="uncontrolled-native">
-        Tài khoản dành cho
-      </InputLabel>
-      <FormControl fullWidth>
-        <Field
-          as={NativeSelect}
-          id="roleId"
-          name="roleId"
-          defaultValue={options[0]?.roleId}
-        >
-          {options.map((item, index) => (
-            <option key={index} value={item.roleId}>
-              {item.name}
-            </option>
-          ))}
-        </Field>
-      </FormControl>
-    </Box>
-  );
-};
-
-export default SelectRole;
+export default SelectRole

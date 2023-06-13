@@ -1,13 +1,33 @@
-const express = require("express");
-const userController = require("../controllers/userControllers");
-const verifyToken = require("../middleware/verifyToken");
+const express = require("express")
+const verifyToken = require("../middleware/verifyToken")
+const verifyRole = require("../middleware/verifyRole")
+const decryptToken = require("../middleware/decryptToken")
+const {
+    getUsers,
+    createUser,
+    getUser,
+    getStatus,
+    updateUser,
+    deleteUser,
+    getRoles,
+    getGender,
+} = require("../controllers/userControllers")
 
-const router = express.Router();
+const router = express.Router()
 
-// router.use(verifyToken);
+router.use(decryptToken)
 
-router.get("/", userController.getCurrent);
+router.post("/getUsers", getUsers)
+router.get("/getUser/:userId", getUser)
+router.get("/getStatus", getStatus)
+router.get("/getRoles", getRoles)
+router.get("/getGender", getGender)
 
-router.post("/newUser", userController.newUser);
+router.use(verifyToken)
+router.use(verifyRole)
 
-module.exports = router;
+router.post("/createUser", createUser)
+router.put("/updateUser/:userId", updateUser)
+router.delete("/:userId", deleteUser)
+
+module.exports = router

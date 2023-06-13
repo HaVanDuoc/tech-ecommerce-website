@@ -2,6 +2,7 @@ import {
     Avatar,
     Box,
     Button,
+    CircularProgress,
     Dialog,
     DialogActions,
     DialogContent,
@@ -17,29 +18,27 @@ import { DataGrid } from "@mui/x-data-grid"
 import { FormatFullName, formatVND } from "~/helper/format"
 import { ButtonCreate, StackButtons } from "~/admin/Styled"
 import { useSnackbar } from "notistack"
-import axiosInstance from "~/utils/axiosInstance"
+import { useDispatch, useSelector } from "react-redux"
+import { refetch, selectorUsers } from "~/redux/userSlice"
+import axiosInstance, { requestUsers } from "~/api"
+import PaginationCustomize from "~/components/Pagination"
 
 export default function UserList() {
     const [data, setData] = useState([])
     const [open, setOpen] = React.useState(false)
     const [userDelete, setUserDelete] = useState(null)
 
-    // Fetch list user
+    const page = new URLSearchParams(window.location.search).get("page") || 1
+
+    const users = useSelector(selectorUsers)
+    const currentPage = users && users?.data[`page-${page}`]
+
+    const dispatch = useDispatch()
+
     useEffect(() => {
-        const fetchUsers = async () => {
-            const response = await axiosInstance({
-                method: "get",
-                url: "/admin/users/",
-                headers: {
-                    Authorization: localStorage.getItem("access_token"),
-                },
-            })
-
-            setData(response.data.data)
-        }
-
-        fetchUsers()
-    }, [])
+        if (!users.data[`page-${page}`]) requestUsers(dispatch, page)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [users.refetch])
 
     const { enqueueSnackbar } = useSnackbar()
 
@@ -73,11 +72,7 @@ export default function UserList() {
 
     const handleAgreeDelete = (userId) => {
         setTimeout(async () => {
-            const response = await axiosInstance({
-                method: "delete",
-                url: `/admin/users/${userId}`,
-                headers: { Authorization: localStorage.getItem("access_token") },
-            })
+            const response = await axiosInstance("delete", `/user/${userId}`)
 
             if (response.data.err === 0) {
                 setData(data.filter((item) => item.userId !== userId))
@@ -115,7 +110,7 @@ export default function UserList() {
                                 marginRight: "10px",
                             }}
                         />
-                        {firstName + " " + middleName + " " + lastName}
+                        {FormatFullName(firstName, middleName, lastName)}
                     </Stack>
                 )
             },
@@ -125,28 +120,13 @@ export default function UserList() {
             field: "status",
             headerName: "Trạng thái",
             width: 150,
-            renderCell: (params) => {
-                switch (params.row.status) {
-                    case "active":
-                        return "Đang hoạt động"
-
-                    case "block":
-                        return "Tạm khóa"
-
-                    case "disable":
-                        return "Khóa vĩnh viễn"
-
-                    default:
-                        return
-                }
-            },
         },
         {
             field: "transactionVolume",
             headerName: "Tổng thanh toán",
             width: 200,
             renderCell: (params) => {
-                return formatVND(params.row.transactionVolume)
+                return formatVND(params.row.sumPayment)
             },
         },
         {
@@ -191,18 +171,24 @@ export default function UserList() {
     return (
         <Box sx={{ flex: 4 }}>
             <StackButtons>
-                <ButtonCreate href="/admin/user/newUser" />
+                <ButtonCreate to="/admin/user/newUser">Tạo mới</ButtonCreate>
             </StackButtons>
 
-            <DataGrid
-                rows={data}
-                disableSelectionOnClick
-                columns={columns}
-                pageSize={10}
-                checkboxSelection
-                autoHeight
-                hideFooter
-            />
+            {users.isPending ? (
+                <Stack flexDirection="row" justifyContent="center" alignItems="center" height="70vh">
+                    <CircularProgress />
+                </Stack>
+            ) : (
+                <DataGrid
+                    rows={currentPage ? currentPage : []}
+                    disableSelectionOnClick
+                    columns={columns}
+                    pageSize={10}
+                    checkboxSelection
+                    autoHeight
+                    hideFooter
+                />
+            )}
 
             {/* Dialog Delete Box */}
             {open && (
@@ -234,6 +220,8 @@ export default function UserList() {
                     </DialogActions>
                 </Dialog>
             )}
+
+            <PaginationCustomize counterPage={users?.data?.sumPages} refetch={refetch()} />
         </Box>
     )
 }

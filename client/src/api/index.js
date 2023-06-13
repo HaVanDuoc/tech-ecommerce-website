@@ -32,6 +32,7 @@ import {
 } from "~/redux/productSlice"
 import { setBrandByCategory } from "~/redux/brandSlice"
 import { refetch, setTabs } from "~/redux/orderSlice"
+import { isPendingGetUsers, setGender, setRoles, setStatus, setUser, setUsers } from "~/redux/userSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -49,6 +50,34 @@ const axiosInstance = async (method, url, data) => {
 }
 
 export default axiosInstance
+
+// USER
+export const requestGenderUser = async (dispatch) => {
+    const response = await axiosInstance("get", "/user/getGender")
+    dispatch(setGender(response.data.data))
+}
+
+export const requestRolesUser = async (dispatch) => {
+    const response = await axiosInstance("get", "/user/getRoles")
+    dispatch(setRoles(response.data.data))
+}
+
+export const requestStatusUser = async (dispatch) => {
+    const response = await axiosInstance("get", "/user/getStatus")
+    dispatch(setStatus(response.data.data))
+}
+
+export const requestUser = async (dispatch, userId) => {
+    const response = await axiosInstance("get", `/user/getUser/${userId}`)
+    dispatch(setUser(response.data.data))
+}
+
+export const requestUsers = async (dispatch, page) => {
+    const response = await axiosInstance("post", "/user/getUsers", { page })
+    dispatch(isPendingGetUsers())
+    dispatch(setUsers({ data: response.data.data }))
+    dispatch(isPendingGetUsers())
+}
 
 // ORDER
 export const requestOrders = async (dispatch, config) => {

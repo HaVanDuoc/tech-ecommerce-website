@@ -1,12 +1,4 @@
-import {
-    DatabaseAdmin,
-    HomeAdmin,
-    NewUserAdmin,
-    ProductAdmin,
-    ProductListAdmin,
-    UserAdmin,
-    UserListAdmin,
-} from "./admin/pages"
+import { DatabaseAdmin, HomeAdmin, ProductAdmin, ProductListAdmin, UserAdmin, UserListAdmin } from "./admin/pages"
 import AdminLayout from "./admin/layouts"
 import Banner from "./admin/pages/banner"
 import Update from "./admin/pages/products/update"
@@ -31,6 +23,7 @@ import Orders from "./admin/pages/orders"
 import OrderDetails from "./admin/pages/orders/OrderDetails"
 import CreateOrder from "./admin/pages/orders/CreateOrder"
 import Edit from "./pages/profile/pages/edit"
+import CreateUser from "./admin/pages/users/CreateUser"
 
 export const publicRoutes = [
     { path: "/", page: Home },
@@ -57,7 +50,7 @@ export const privateRoutes = [
     // User routes
     { path: "/admin/users", page: UserListAdmin, layout: AdminLayout }, // User
     { path: "/admin/user/update/:userId", page: UserAdmin, layout: AdminLayout }, // Update user
-    { path: "/admin/user/newUser", page: NewUserAdmin, layout: AdminLayout }, // Create new user
+    { path: "/admin/user/newUser", page: CreateUser, layout: AdminLayout }, // Create new user
 
     // Product routes
     { path: "/admin/products", page: ProductListAdmin, layout: AdminLayout }, // Products
