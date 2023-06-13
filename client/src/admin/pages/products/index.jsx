@@ -19,8 +19,6 @@ export default function ProductList() {
 
     const products = useSelector(selectorProductsAdmin)
 
-    console.log("products", products)
-
     useEffect(() => {
         const fetch = async () => {
             dispatch(startSetProduct())
@@ -41,7 +39,7 @@ export default function ProductList() {
         }
 
         if (!products.payload[`page-${page}`]) fetch()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, page, products.refetch])
 
     const handleSnackBar = (res) => {
@@ -134,8 +132,9 @@ export default function ProductList() {
     return (
         <Box flex={4}>
             <StackButtons>
-                <ButtonCreate href="/admin/product/newProduct" />
+                <ButtonCreate to="/admin/product/newProduct">Tạo mới</ButtonCreate>
             </StackButtons>
+            
             <DataGrid
                 rows={products.isFetch && products?.payload[`page-${page}`] ? products?.payload[`page-${page}`] : []}
                 disableSelectionOnClick

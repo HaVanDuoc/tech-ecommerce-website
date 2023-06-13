@@ -2,19 +2,19 @@ import { Box, Stack, Typography } from "@mui/material"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useParams } from "react-router-dom"
-import { requestGetCategories } from "~/api"
-import { reFetchProductPage, selectorCategories } from "~/redux/productSlice"
+import { requestCategories } from "~/api"
+import { reFetchProductPage, selectorProducts } from "~/redux/productSlice"
 import addOrUpdateURLParams from "~/utils/addURLParams"
 
 const SectionCategories = () => {
-    const categories = useSelector(selectorCategories)
+    const categories = useSelector(selectorProducts)?.categories
+    const currentCategory = useParams().category
     const dispatch = useDispatch()
-    const currentCategory = `/${useParams().category}`
 
     useEffect(() => {
-        if (categories.isFetch) return
-        requestGetCategories(dispatch)
-    }, [dispatch, categories])
+        if (!categories.length) requestCategories(dispatch)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleClick = () => {
         addOrUpdateURLParams()
@@ -25,15 +25,16 @@ const SectionCategories = () => {
         <Box className="box categories">
             <Typography className="title">Danh mục</Typography>
             <Stack className="list">
-                {categories?.categories?.map((item, index) => {
-                    return (
-                        <Link to={item.accessLink} key={index} onClick={handleClick}>
-                            <Box className={`item ${currentCategory === item.accessLink && "selected"}`}>
-                                {item.categoryName}
-                            </Box>
-                        </Link>
-                    )
-                })}
+                {categories.length &&
+                    categories.map((item, index) => {
+                        return (
+                            <Link to={`/${item.alias}`} key={index} onClick={handleClick}>
+                                <Box className={`item ${currentCategory === item.alias && "selected"}`}>
+                                    {item.categoryName}
+                                </Box>
+                            </Link>
+                        )
+                    })}
             </Stack>
         </Box>
     )

@@ -1,3 +1,17 @@
+import React, { useEffect, useState } from "react"
+import { AdminTitle, FieldForm } from "~/admin/Styled"
+import { ErrorMessage, Field, Form, Formik } from "formik"
+import * as Yup from "yup"
+import removeEmpty from "~/helper/removeEmpty"
+import ButtonSubmit from "~/admin/components/ButtonSubmit"
+import { useSnackbar } from "notistack"
+import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined"
+import DeleteIcon from "@mui/icons-material/Delete"
+import { FetchBrand, FetchCategorySelect } from "~/helper/fetch"
+import { formatCapitalization } from "~/helper/format"
+import CheckIcon from "@mui/icons-material/Check"
+import axiosInstance from "~/utils/axiosInstance"
+import refreshPage from "~/utils/refreshPage"
 import {
     Box,
     Chip,
@@ -15,38 +29,6 @@ import {
     TextField,
     Typography,
 } from "@mui/material"
-import React, { useEffect, useState } from "react"
-import { AdminTitle, FieldForm } from "~/admin/Styled"
-import { ErrorMessage, Field, Form, Formik } from "formik"
-import * as Yup from "yup"
-import removeEmpty from "~/helper/removeEmpty"
-import ButtonSubmit from "~/admin/components/ButtonSubmit"
-import { useSnackbar } from "notistack"
-import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined"
-import DeleteIcon from "@mui/icons-material/Delete"
-import { FetchBrand, FetchCategorySelect } from "~/helper/fetch"
-import { formatCapitalization } from "~/helper/format"
-import CheckIcon from "@mui/icons-material/Check"
-import axiosInstance from "~/utils/axiosInstance"
-import refreshPage from "~/utils/refreshPage"
-
-const initialValues = {
-    name: "",
-    image: "",
-    price: "",
-    stock: "",
-    category: "",
-    brand: "",
-}
-
-const validationSchema = Yup.object({
-    name: Yup.string().required("*Bắt buộc"),
-    image: Yup.mixed().required("*Bắt buộc"),
-    price: Yup.string().required("*Bắt buộc"),
-    stock: Yup.string().required("*Bắt buộc"),
-    category: Yup.string().required("*Bắt buộc"),
-    brand: Yup.string().required("*Bắt buộc"),
-})
 
 export default function CreateNewProduct() {
     const [isSubmitting, setSubmitting] = React.useState(false)
@@ -168,7 +150,6 @@ export default function CreateNewProduct() {
     )
 }
 
-//
 const Brands = ({ props, name, categoryId }) => {
     const [listBrand, setListBrand] = useState([])
 
@@ -230,7 +211,6 @@ const Brands = ({ props, name, categoryId }) => {
     )
 }
 
-//
 const Categories = ({ props, name }) => {
     const [listCategory, setListCategory] = useState([])
 
@@ -444,7 +424,24 @@ const UploadImage = ({ props, name }) => {
     )
 }
 
-//
+const initialValues = {
+    name: "",
+    image: "",
+    price: "",
+    stock: "",
+    category: "",
+    brand: "",
+}
+
+const validationSchema = Yup.object({
+    name: Yup.string().required("*Bắt buộc"),
+    image: Yup.mixed().required("*Bắt buộc"),
+    price: Yup.string().required("*Bắt buộc"),
+    stock: Yup.string().required("*Bắt buộc"),
+    category: Yup.string().required("*Bắt buộc"),
+    brand: Yup.string().required("*Bắt buộc"),
+})
+
 const dummyProducts = [
     {
         as: TextField,

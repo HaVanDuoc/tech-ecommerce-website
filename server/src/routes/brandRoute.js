@@ -1,6 +1,7 @@
 const router = require("express").Router()
-const brandController = require("../controllers/brandController")
+const { getBrands } = require("../controllers/brandController")
 
-router.post("/getBrandsByCategory", brandController.getBrands)
+router.post("/getBrandsByCategory", getBrands)
+router.post("/getBrands", getBrands)
 
 module.exports = router

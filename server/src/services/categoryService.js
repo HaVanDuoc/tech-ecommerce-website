@@ -7,6 +7,7 @@ exports.getCategories = async () => {
                 categories.id as category_id,
                 categories.categoryId,
                 categories.name as categoryName,
+                categories.alias,
                 categories.link as accessLink,
                 count.count_product,
                 categories.createdAt,

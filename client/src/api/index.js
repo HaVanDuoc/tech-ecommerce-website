@@ -115,10 +115,9 @@ export const requestUpdateViewProduct = async (product_id) => {
     await axiosInstance("put", "/product/updateView", { product_id })
 }
 
-export const requestGetLatestProduct = async (dispatch, config) => {
+export const requestLatestProducts = async (dispatch, config) => {
     try {
         const response = await axiosInstance("post", "/product/getProducts", config)
-
         dispatch(setLatestProduct(response.data.data))
     } catch (error) {
         console.log(error)
@@ -273,7 +272,7 @@ export const requestDeleteProductCart = async (product_id, cart_session_id) => {
 }
 
 // CATEGORY
-export const requestGetCategories = async (dispatch) => {
+export const requestCategories = async (dispatch) => {
     const response = await axiosInstance("get", "/category/getCategories")
     dispatch(setCategories(response.data.data))
 }

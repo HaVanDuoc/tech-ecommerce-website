@@ -4,9 +4,9 @@ import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined"
 import PercentOutlinedIcon from "@mui/icons-material/PercentOutlined"
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined"
 import { Box, Container, Stack, Typography } from "@mui/material"
-import { selectorCategories } from "~/redux/productSlice"
+import { selectorProducts } from "~/redux/productSlice"
 import { useDispatch, useSelector } from "react-redux"
-import { requestGetCategories } from "~/api"
+import { requestCategories } from "~/api"
 import { NextArrow } from "~/styles/slider"
 import { PrevArrow } from "~/styles/slider"
 import React, { useEffect } from "react"
@@ -47,23 +47,16 @@ const offers = [
 ]
 
 const Categories = () => {
-    const category = useSelector(selectorCategories)
+    const category = useSelector(selectorProducts)?.categories
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (category.isFetch) return
-        requestGetCategories(dispatch)
-    }, [dispatch, category])
+        if (!category.length) requestCategories(dispatch)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
-        <Box
-            sx={{
-                ".bg-color": {
-                    backgroundColor: "var(--home-bg-second)",
-                    padding: "50px 0",
-                },
-            }}
-        >
+        <Box sx={style1}>
             <Box className="bg-color">
                 <Container maxWidth="lg" disableGutters>
                     <Box className="info">
@@ -71,36 +64,10 @@ const Categories = () => {
                             <Stack alignItems="center" flexDirection="row">
                                 {offers.map((item) => (
                                     <Stack alignItems="center" flexDirection="row" key={item.id}>
-                                        <Stack
-                                            alignItems="center"
-                                            justifyContent="center"
-                                            sx={{
-                                                width: "80px",
-                                                height: "80px",
-                                                svg: {
-                                                    fontSize: "2.2rem",
-                                                },
-                                            }}
-                                        >
-                                            {item.icon}
-                                        </Stack>
+                                        <Stack sx={style2}>{item.icon}</Stack>
                                         <Stack>
-                                            <Typography
-                                                sx={{
-                                                    fontWeight: 500,
-                                                    fontSize: ".9rem",
-                                                }}
-                                            >
-                                                {item.name}
-                                            </Typography>
-                                            <Typography
-                                                sx={{
-                                                    fontSize: ".8rem",
-                                                    color: "#666",
-                                                }}
-                                            >
-                                                {item.value}
-                                            </Typography>
+                                            <Typography sx={style3}>{item.name}</Typography>
+                                            <Typography sx={style4}>{item.value}</Typography>
                                         </Stack>
                                     </Stack>
                                 ))}
@@ -108,38 +75,7 @@ const Categories = () => {
                         </Stack>
                     </Box>
 
-                    <Box
-                        sx={{
-                            backgroundColor: "#fff",
-                            padding: 2,
-                            borderRadius: 3,
-                            marginTop: 4,
-                            marginBottom: 4,
-                            boxShadow: "0 0 5px 1px rgba(0, 0, 0, 0.125)",
-
-                            // custom divider
-                            ".slick-current > div:first-child": {
-                                "& > div": {
-                                    borderRight: "1px solid #eee",
-                                    borderBottom: "1px solid #eee",
-                                },
-
-                                "& > div:last-child": {
-                                    borderRight: "1px solid #fff",
-                                },
-                            },
-
-                            ".slick-current > div:last-child": {
-                                "& > div": {
-                                    borderRight: "1px solid #eee",
-                                },
-
-                                "& > div:last-child": {
-                                    borderRight: "1px solid #fff",
-                                },
-                            },
-                        }}
-                    >
+                    <Box sx={style5}>
                         <Slider
                             dots={false}
                             infinite={true}
@@ -152,32 +88,16 @@ const Categories = () => {
                             prevArrow={<PrevArrow />}
                             className="custom-slider"
                         >
-                            {category &&
-                                category.categories &&
-                                category.categories.length &&
-                                category.categories.map((item, index) => {
+                            {category.length &&
+                                category.map((item, index) => {
                                     return (
                                         <Box key={index}>
-                                            <Link to={item.accessLink} className="link">
-                                                <Stack
-                                                    flexDirection="row"
-                                                    alignItems="center"
-                                                    justifyContent="space-between"
-                                                    padding={2}
-                                                    sx={{
-                                                        ":hover": {
-                                                            span: {
-                                                                color: "var(--color-main)",
-                                                            },
-                                                        },
-                                                    }}
-                                                >
-                                                    {/* col right image */}
+                                            <Link to={`/${item.alias}`} className="link">
+                                                <Stack padding={2} sx={style6}>
                                                     <Stack width="65px">
                                                         <img src={item.image} alt="" width="100%" />
                                                     </Stack>
 
-                                                    {/* col left */}
                                                     <Stack
                                                         flexDirection="column"
                                                         alignItems="center"
@@ -186,12 +106,10 @@ const Categories = () => {
                                                         lineHeight="30px"
                                                         paddingLeft={2}
                                                     >
-                                                        {/* Name category */}
                                                         <Stack fontSize="16px" fontWeight={500} width="100%">
                                                             {item.categoryName}
                                                         </Stack>
 
-                                                        {/* Count */}
                                                         <Stack
                                                             flexDirection="row"
                                                             alignItems="center"
@@ -215,6 +133,76 @@ const Categories = () => {
             </Box>
         </Box>
     )
+}
+
+const style1 = {
+    ".bg-color": {
+        backgroundColor: "var(--home-bg-second)",
+        padding: "50px 0",
+    },
+}
+
+const style2 = {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80px",
+    height: "80px",
+    svg: {
+        fontSize: "2.2rem",
+    },
+}
+
+const style3 = {
+    fontWeight: 500,
+    fontSize: ".9rem",
+}
+
+const style4 = {
+    fontSize: ".8rem",
+    color: "#666",
+}
+
+const style5 = {
+    backgroundColor: "#fff",
+    padding: 2,
+    borderRadius: 3,
+    marginTop: 4,
+    marginBottom: 4,
+    boxShadow: "0 0 5px 1px rgba(0, 0, 0, 0.125)",
+
+    // custom divider
+    ".slick-current > div:first-child": {
+        "& > div": {
+            borderRight: "1px solid #eee",
+            borderBottom: "1px solid #eee",
+        },
+
+        "& > div:last-child": {
+            borderRight: "1px solid #fff",
+        },
+    },
+
+    ".slick-current > div:last-child": {
+        "& > div": {
+            borderRight: "1px solid #eee",
+        },
+
+        "& > div:last-child": {
+            borderRight: "1px solid #fff",
+        },
+    },
+}
+
+const style6 = {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+
+    ":hover": {
+        span: {
+            color: "var(--color-main)",
+        },
+    },
 }
 
 export default Categories

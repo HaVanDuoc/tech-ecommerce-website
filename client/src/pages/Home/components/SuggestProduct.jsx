@@ -1,25 +1,23 @@
 import { Box, Container, Grid, Typography } from "@mui/material"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { requestGetProducts } from "~/api"
+import { requestLatestProducts } from "~/api"
 import Card from "~/components/Card"
 import SkeletonCard from "~/components/skeleton"
-import { selectorLatestProducts } from "~/redux/productSlice"
+import { selectorProducts } from "~/redux/productSlice"
 import Title from "./Title"
 
 const SuggestProduct = () => {
-    const products = useSelector(selectorLatestProducts)
     const dispatch = useDispatch()
+    const products = useSelector(selectorProducts)?.pageHome?.latest
+    const more = new URLSearchParams(window.location.search).get("more") || 1
 
     useEffect(() => {
-        if (products.isFetch) return
-
-        const config = {
-            limit: 20,
-        }
-
-        requestGetProducts(dispatch, config)
-    }, [dispatch, products])
+        if (products && products.payload[`${more}`]) return
+        const config = { limit: 20 }
+        requestLatestProducts(dispatch, config)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const handleSeeMore = () => {
         // if (offset === 0) {
@@ -40,9 +38,9 @@ const SuggestProduct = () => {
                     </Box>
 
                     <Box>
-                        {products.isFetch ? (
+                        {products && products.payload[`${more}`] ? (
                             <Grid container spacing={2}>
-                                {products?.products?.list?.map((item, index) => {
+                                {products.payload[`${more}`].map((item, index) => {
                                     return (
                                         <Grid item xs={2.4} key={index}>
                                             <Card product={item} />
@@ -61,11 +59,11 @@ const SuggestProduct = () => {
                         )}
 
                         <Box sx={styles1}>
-                            {products?.products?.counterProduct - products?.products?.list?.length > 0 ? (
+                            {products?.currentPage !== products?.sumPages ? (
                                 <Box onClick={handleSeeMore} sx={styles2}>
                                     <Typography sx={styles3}>
                                         {`Xem thêm ${
-                                            products?.products?.counterProduct - products?.products?.list?.length
+                                            products?.sumProducts - products?.currentPage * products?.limit
                                         } sản phẩm`}
                                     </Typography>
                                 </Box>

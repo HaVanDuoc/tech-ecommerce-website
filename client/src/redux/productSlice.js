@@ -3,10 +3,7 @@ import { createSlice } from "@reduxjs/toolkit"
 export const productSlice = createSlice({
     name: "product",
     initialState: {
-        latest: {
-            isFetch: false,
-            products: null,
-        },
+        pageHome: {},
         productsByCategory: {
             isPending: false,
             reFetch: false,
@@ -19,20 +16,29 @@ export const productSlice = createSlice({
             refetchCounter: false,
             data: null,
         },
-        categories: {
-            isFetch: false,
-            categories: null,
-        },
         product: {
             reFetch: false,
             isPending: false,
             data: null,
         },
+        categories: {},
+        brands: {},
     },
     reducers: {
         setLatestProduct: (state, action) => {
-            state.latest.isFetch = true
-            state.latest.products = action.payload
+            if (!state.pageHome.latest) {
+                state.pageHome["latest"] = {
+                    isPending: false,
+                    payload: {},
+                }
+            }
+
+            state.pageHome.latest["limit"] = action.payload.limitOfPage
+            state.pageHome.latest["currentPage"] = action.payload.currentPage
+            state.pageHome.latest["sumPages"] = action.payload.counterPage
+            state.pageHome.latest["sumProducts"] = action.payload.counterProduct
+
+            state.pageHome.latest.payload[`${action.payload.currentPage}`] = action.payload.list
         },
 
         // PRODUCT PAGE
@@ -89,12 +95,6 @@ export const productSlice = createSlice({
             state.cart.refetchCounter = !state.cart.refetchCounter
         },
 
-        // CATEGORY
-        setCategories: (state, action) => {
-            state.categories.isFetch = true
-            state.categories.categories = action.payload
-        },
-
         // PRODUCT
         startSetProduct: (state) => {
             state.product.isPending = true
@@ -107,6 +107,14 @@ export const productSlice = createSlice({
         },
         endSetProduct: (state) => {
             state.product.isPending = false
+        },
+
+        setCategories: (state, action) => {
+            state.categories = action.payload
+        },
+
+        setBrands: (state, action) => {
+            state[`${action.payload.link}`] = action.payload.brands
         },
     },
 })
@@ -132,11 +140,12 @@ export const {
     endSetProduct,
 } = productSlice.actions
 
-export const selectorLatestProducts = (state) => state.product.latest
 export const selectorProductByCategory = (state) => state.product.productsByCategory
 export const selectorCartProducts = (state) => state.product.cart
 export const selectorCategories = (state) => state.product.categories
 export const selectorUrlParamsProductPage = (state) => state.product.urlParamsProductPage
 export const selectorProduct = (state) => state.product.product
+
+export const selectorProducts = (state) => state.product
 
 export default productSlice.reducer

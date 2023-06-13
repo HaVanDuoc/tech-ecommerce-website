@@ -13,11 +13,12 @@ router.post("/admin/getProducts", productController.getProductsAdmin)
 router.put("/updateView", productController.updateView)
 
 router.use(verifyToken)
-// router.use(verifyRole);
+router.use(verifyRole)
 
 router.put("/updateImage", uploadCloudinary.array("image"), productController.updateImage)
 router.put("/updateInfo", productController.updateInfo)
 router.post("/addCart", productController.addCart)
 router.post("/order", productController.order)
+router.post("/createProduct", productController.createProduct)
 
 module.exports = router

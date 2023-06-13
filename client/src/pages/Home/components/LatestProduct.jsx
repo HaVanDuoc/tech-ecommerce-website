@@ -2,24 +2,24 @@ import { Box, Container, Stack } from "@mui/material"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import Slider from "react-slick"
-import { requestGetLatestProduct } from "~/api"
+import { requestLatestProducts } from "~/api"
 import Card from "~/components/Card"
 import SkeletonCard from "~/components/skeleton"
-import { selectorLatestProducts } from "~/redux/productSlice"
+import { selectorProducts } from "~/redux/productSlice"
 import { NextArrow, PrevArrow } from "~/styles/slider"
 import Title from "./Title"
 
 const LatestProduct = () => {
-    const latestProduct = useSelector(selectorLatestProducts)
     const dispatch = useDispatch()
+    const latestProduct = useSelector(selectorProducts)?.pageHome?.latest?.payload
+    const more = new URLSearchParams(window.location.search).get("more") || 1
 
     useEffect(() => {
-        if (latestProduct.isFetch) return
-
+        if (latestProduct && latestProduct[`${more}`]) return
         const config = { limit: 20 }
-
-        requestGetLatestProduct(dispatch, config)
-    }, [dispatch, latestProduct])
+        requestLatestProducts(dispatch, config)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <Box sx={{ backgroundColor: "#fff", padding: "40px 0" }}>
@@ -28,7 +28,7 @@ const LatestProduct = () => {
                     <Title>Sản phẩm mới</Title>
                 </Stack>
 
-                {latestProduct.isFetch ? (
+                {latestProduct ? (
                     <Box sx={{ padding: "16px 0" }}>
                         <Slider
                             dots={false}
@@ -40,7 +40,7 @@ const LatestProduct = () => {
                             prevArrow={<PrevArrow />}
                             className="custom-slider"
                         >
-                            {latestProduct?.products?.list?.slice(0, 8)?.map((item, index) => {
+                            {latestProduct[`${more}`].slice(0, 8)?.map((item, index) => {
                                 return (
                                     <Box key={index}>
                                         <Card product={item} />

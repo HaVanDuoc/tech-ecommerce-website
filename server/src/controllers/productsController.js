@@ -1,3 +1,4 @@
+const Joi = require("joi")
 const { intervalServerError } = require("../middleware/handleError")
 const productService = require("../services/productService")
 const cloudinary = require("cloudinary").v2
@@ -86,6 +87,28 @@ exports.order = async (req, res) => {
 exports.updateView = async (req, res) => {
     try {
         const response = await productService.updateView(req)
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.createProduct = async (req, res) => {
+    try {
+        const { error } = Joi.object({
+            name: Joi.string().required(),
+            price: Joi.number().required(),
+            stock: Joi.number().required(),
+            category: Joi.string().required(),
+            brand: Joi.string().required(),
+            discount: Joi.number(),
+            image: Joi.string().required(),
+        }).validate(req.body)
+
+        if (error) return badRequest(error.details[0]?.message, res)
+
+        const response = await productService.createProduct(req.body)
+
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)

@@ -1,33 +1,32 @@
-import { selectorCategories } from "~/redux/productSlice"
+import { selectorProducts } from "~/redux/productSlice"
 import { Box, Container, Typography } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
-import { requestGetCategories } from "~/api"
+import { requestCategories } from "~/api"
 import React, { useEffect } from "react"
 import { Link } from "react-router-dom"
 import styled from "@emotion/styled"
 import Slider from "react-slick"
 
 const Nav = () => {
-    const nav = useSelector(selectorCategories)
+    const nav = useSelector(selectorProducts)?.categories
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (nav.isFetch) return
-        requestGetCategories(dispatch)
-    }, [dispatch, nav])
+        if (!nav.length) requestCategories(dispatch)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <Styled>
             <Container maxWidth="lg" disableGutters>
                 <Box sx={style1}>
                     <Slider dots={false} infinite={false} speed={500} slidesToShow={8} slidesToScroll={8}>
-                        {nav.isFetch &&
-                            Array.isArray(nav.categories) &&
-                            nav.categories.map((item, index) => {
+                        {nav.length &&
+                            nav.map((item, index) => {
                                 return (
                                     <Box key={index} sx={{ paddingLeft: "10px", paddingRight: "10px" }}>
                                         <Link
-                                            to={item.accessLink}
+                                            to={`/${item.alias}`}
                                             style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
                                         >
                                             <Typography
