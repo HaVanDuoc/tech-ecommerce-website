@@ -3,22 +3,15 @@ import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import { Link } from "react-router-dom"
-import { selectorCartProducts, setCounterCartProduct } from "~/redux/productSlice"
-import axiosInstance from "~/api"
+import { selectorProducts } from "~/redux/productSlice"
+import { requestCounterCart } from "~/api"
 
 const Cart = () => {
-    const cart = useSelector(selectorCartProducts)
-
+    const cart = useSelector(selectorProducts)?.cart
     const dispatch = useDispatch()
 
     useEffect(() => {
-        const fetch = async () => {
-            const response = await axiosInstance("get", "/cart/counter")
-
-            dispatch(setCounterCartProduct(response.data.data))
-        }
-
-        fetch()
+        if (!cart.counter) requestCounterCart(dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart.refetchCounter])
 
@@ -26,7 +19,7 @@ const Cart = () => {
         <Stack justifyContent="center" alignItems="center">
             <Link to="/cart">
                 <Button sx={{ color: "var(--color-main)" }}>
-                    <StyledBadge badgeContent={cart.counter ? cart.counter : 0} color="error">
+                    <StyledBadge badgeContent={cart?.counter ? cart.counter : 0} color="error">
                         <ShoppingCartOutlinedIcon sx={{ color: "#666" }} />
                     </StyledBadge>
                 </Button>

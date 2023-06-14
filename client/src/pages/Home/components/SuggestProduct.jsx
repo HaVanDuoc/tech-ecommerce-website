@@ -9,7 +9,7 @@ import Title from "./Title"
 
 const SuggestProduct = () => {
     const dispatch = useDispatch()
-    const products = useSelector(selectorProducts)?.pageHome?.latest
+    const products = useSelector(selectorProducts)?.home?.latest
     const more = new URLSearchParams(window.location.search).get("more") || 1
 
     useEffect(() => {

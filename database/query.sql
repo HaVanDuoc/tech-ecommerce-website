@@ -1,5 +1,25 @@
 USE TECH;
 
+-- get brands
+select
+    brands.id,
+    brands.brandId,
+    brands.name,
+    brands.image,
+    brands.view,
+    categories.name as categoryName,
+    categories.alias as categoryAlias
+from
+    categorybrands
+    left join brands on brands.id = categorybrands.brandId
+    left join categories on categories.id = categorybrands.categoryId
+where
+    categorybrands.id > -1 
+    and categories.name = "Điện thoại"
+    and categories.alias = "dien-thoai"
+order by
+    brands.view desc;
+
 -- Get users
 select
     users.id,

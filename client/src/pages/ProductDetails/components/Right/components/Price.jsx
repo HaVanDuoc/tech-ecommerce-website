@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material"
+import { Fragment } from "react"
 import { useSelector } from "react-redux"
 import { formatDiscount, formatPrice, formatVND } from "~/helper/format"
 import { selectorProduct } from "~/redux/productSlice"
@@ -8,14 +9,13 @@ const Price = () => {
     const discount = useSelector(selectorProduct)?.data?.discount
 
     return (
-        price &&
-        discount && (
+        price && (
             <Stack flexDirection="row" justifyContent="center" alignItems="center" sx={styles1}>
-                {discount > 0 && <Typography sx={styles2}>{formatVND(price)}</Typography>}
+                {discount !== 0 ? <Typography sx={styles2}>{formatVND(price)}</Typography> : <Fragment />}
 
                 <Typography sx={styles3}>{formatPrice(price, discount)}</Typography>
 
-                {discount && <Typography sx={styles4}>{formatDiscount(discount)}</Typography>}
+                {discount !== 0 ? <Typography sx={styles4}>{formatDiscount(discount)}</Typography> : <Fragment />}
             </Stack>
         )
     )

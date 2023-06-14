@@ -1,6 +1,7 @@
 const Joi = require("joi")
 const { intervalServerError } = require("../middleware/handleError")
 const productService = require("../services/productService")
+const destroyUpload = require("../utils/destroyUpload")
 const cloudinary = require("cloudinary").v2
 
 exports.getProducts = async (req, res) => {
@@ -22,10 +23,6 @@ exports.getProduct = async (req, res) => {
 }
 
 exports.updateImage = async (req, res) => {
-    const destroyUpload = (images) => {
-        images.map((item) => cloudinary.uploader.destroy(item.filename))
-    }
-
     try {
         const productId = req.body.productId
 
@@ -96,18 +93,30 @@ exports.updateView = async (req, res) => {
 exports.createProduct = async (req, res) => {
     try {
         const { error } = Joi.object({
-            name: Joi.string().required(),
-            price: Joi.number().required(),
-            stock: Joi.number().required(),
-            category: Joi.string().required(),
-            brand: Joi.string().required(),
+            name: Joi.string(),
+            price: Joi.number(),
+            stock: Joi.number(),
+            category: Joi.string(),
+            brand: Joi.string(),
             discount: Joi.number(),
-            image: Joi.string().required(),
+            // image: Joi.string(),
         }).validate(req.body)
 
         if (error) return badRequest(error.details[0]?.message, res)
 
-        const response = await productService.createProduct(req.body)
+        const response = await productService.createProduct(req)
+
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.checkNameProduct = async (req, res) => {
+    try {
+        const key = req.body.key
+
+        const response = await productService.checkNameProduct(key)
 
         res.status(200).json(response)
     } catch (error) {

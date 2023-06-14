@@ -11,7 +11,7 @@ import Title from "./Title"
 
 const LatestProduct = () => {
     const dispatch = useDispatch()
-    const latestProduct = useSelector(selectorProducts)?.pageHome?.latest?.payload
+    const latestProduct = useSelector(selectorProducts)?.home?.latest?.payload
     const more = new URLSearchParams(window.location.search).get("more") || 1
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const LatestProduct = () => {
                     <Title>Sản phẩm mới</Title>
                 </Stack>
 
-                {latestProduct ? (
+                {latestProduct[`${more}`] ? (
                     <Box sx={{ padding: "16px 0" }}>
                         <Slider
                             dots={false}

@@ -17,23 +17,6 @@ export const FetchListTables = () => {
     return list
 }
 
-// Fetch List Categories
-export const FetchCategorySelect = () => {
-    const [category, setCategory] = React.useState([])
-
-    React.useEffect(() => {
-        const fetch = async () => {
-            const response = await axiosInstance("/admin/product/newProduct/listCategory")
-
-            setCategory(response.data.data)
-        }
-
-        fetch()
-    }, [])
-
-    return category
-}
-
 // Fetch List Brand
 export const FetchBrand = (categoryId) => {
     const [brand, setBrand] = useState([])

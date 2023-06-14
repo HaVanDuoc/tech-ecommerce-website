@@ -92,17 +92,6 @@ exports.deleteProduct = async (req, res) => {
     }
 }
 
-// List category
-exports.getListCategory = async (req, res) => {
-    try {
-        const response = await productServices.getListCategory()
-
-        res.status(200).json(response)
-    } catch (error) {
-        return intervalServerError(res)
-    }
-}
-
 // List brand
 exports.getListSelectBrand = async (req, res) => {
     try {

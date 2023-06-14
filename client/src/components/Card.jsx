@@ -71,7 +71,7 @@ const Card = ({ product }) => {
                 </Stack>
             </Box>
 
-            {product?.product_discount && (
+            {product?.product_discount !== 0 && (
                 <Box sx={styles9}>
                     <Typography fontSize={12} fontWeight={600}>
                         {formatDiscount(product?.product_discount)}

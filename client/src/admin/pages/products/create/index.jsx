@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import { AdminTitle, FieldForm } from "~/admin/Styled"
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import * as Yup from "yup"
-import removeEmpty from "~/helper/removeEmpty"
 import ButtonSubmit from "~/admin/components/ButtonSubmit"
 import { useSnackbar } from "notistack"
 import CloudUploadOutlinedIcon from "@mui/icons-material/CloudUploadOutlined"
 import DeleteIcon from "@mui/icons-material/Delete"
-import { FetchBrand, FetchCategorySelect } from "~/helper/fetch"
 import { formatCapitalization } from "~/helper/format"
 import CheckIcon from "@mui/icons-material/Check"
-import axiosInstance from "~/utils/axiosInstance"
 import refreshPage from "~/utils/refreshPage"
 import {
     Box,
@@ -29,6 +26,10 @@ import {
     TextField,
     Typography,
 } from "@mui/material"
+import { useDispatch, useSelector } from "react-redux"
+import { refetchBrands, selectorProducts } from "~/redux/productSlice"
+import axiosInstance, { requestBrands, requestCategories, requestCheckNewNameProduct } from "~/api"
+import addOrUpdateURLParams from "~/utils/addURLParams"
 
 export default function CreateNewProduct() {
     const [isSubmitting, setSubmitting] = React.useState(false)
@@ -50,20 +51,13 @@ export default function CreateNewProduct() {
         }
     }
 
-    const checkName = () => {
+    const checkName = async () => {
         const input = document.querySelector("input#name").value
 
-        const check = async () => {
-            const response = await axiosInstance({
-                method: "post",
-                url: "/admin/products/checkNameProduct",
-                data: { key: input },
-            })
-
+        if (input) {
+            const response = await requestCheckNewNameProduct(input)
             handleSnackBar(response)
         }
-
-        check()
     }
 
     return (
@@ -71,30 +65,30 @@ export default function CreateNewProduct() {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values, props) => {
-                var data = removeEmpty(values) // Exclude filed data blank
+                const formData = new FormData()
 
-                // return console.log(JSON.stringify(data, null, 2)); // Test submit
+                // add files to FormData
+                if (values.image) {
+                    for (let i = 0; i < values.image.length; i++) {
+                        formData.append("files", values.image[i])
+                    }
+                }
+
+                // next, other info
+                if (values.name) formData.append("name", values.name)
+                if (values.brand) formData.append("brand", values.brand)
+                if (values.category) formData.append("category", values.category)
+                if (values.price) formData.append("price", values.price)
+                if (values.stock) formData.append("stock", values.stock)
+                if (values.discount) formData.append("discount", values.stock)
 
                 setTimeout(async () => {
                     setSubmitting(true)
-                    // get data from DB
-                    const response = await axiosInstance({
-                        method: "post",
-                        url: "/admin/products",
-                        headers: {
-                            Authorization: localStorage.getItem("access_token"),
-                        },
-                        data: data,
-                    })
-
+                    const response = await axiosInstance("post", "/product/createProduct", formData)
                     setSubmitting(false)
-
                     handleSnackBar(response)
 
-                    // Nếu tạo thành công thì reset page
-                    if (response.data.err === 0) {
-                        refreshPage()
-                    }
+                    if (response.data.err === 0) refreshPage()
                 })
             }}
         >
@@ -126,20 +120,20 @@ export default function CreateNewProduct() {
                                         </FieldForm>
                                     ))}
 
-                                {/* Phân loại */}
                                 <FieldForm>
                                     <Categories props={props} name="category" />
                                 </FieldForm>
 
-                                {/* Button Submit */}
+                                <FieldForm>
+                                    <Brands name="brand" props={props} />
+                                </FieldForm>
+
                                 <FieldForm>
                                     <ButtonSubmit disabled={isSubmitting}>Tạo</ButtonSubmit>
                                 </FieldForm>
                             </Grid>
 
-                            {/* Upload Image */}
                             <Grid item xs={7.5}>
-                                {/* <UploadFile props={props} name="image" /> */}
                                 <UploadImage props={props} name="image" />
                             </Grid>
                         </Grid>
@@ -150,85 +144,26 @@ export default function CreateNewProduct() {
     )
 }
 
-const Brands = ({ props, name, categoryId }) => {
-    const [listBrand, setListBrand] = useState([])
-
-    // Fetch list brand
-    const brandList = FetchBrand(categoryId)
-    useEffect(() => {
-        setListBrand(brandList)
-    }, [brandList])
-
-    const [value, setValue] = useState("")
-    const handleChange = (event) => {
-        setValue(event.target.value)
-        props.setFieldValue(name, event.target.value)
-    }
-
-    return (
-        <Box>
-            <FormControl>
-                <FormLabel sx={{ marginBottom: 1 }}>Chọn thương hiệu</FormLabel>
-                <Field
-                    as={RadioGroup}
-                    row
-                    name={name}
-                    value={value}
-                    onChange={handleChange}
-                    sx={{
-                        "& .MuiRadio-root ": {
-                            display: "none",
-                        },
-                    }}
-                >
-                    {Array.isArray(listBrand) &&
-                        listBrand.map((item) => (
-                            <FormControlLabel
-                                key={item.id}
-                                name={item.name}
-                                value={item.brandId}
-                                control={<Radio />}
-                                label={
-                                    <Chip
-                                        label={formatCapitalization(item.name)}
-                                        variant={value === item.brandId ? "contained" : "outlined"}
-                                        color={value === item.brandId ? "primary" : "default"}
-                                        sx={{
-                                            marginLeft: 1,
-                                            marginBottom: 1,
-                                        }}
-                                    />
-                                }
-                            />
-                        ))}
-                </Field>
-            </FormControl>
-
-            <FormHelperText>
-                <ErrorMessage name={name} />
-            </FormHelperText>
-        </Box>
-    )
-}
-
 const Categories = ({ props, name }) => {
-    const [listCategory, setListCategory] = useState([])
+    const categories = useSelector(selectorProducts)?.categories
+    const dispatch = useDispatch()
 
-    // Fetch list category
-    const categoryList = FetchCategorySelect()
-    React.useEffect(() => {
-        setListCategory(categoryList)
-    }, [categoryList])
+    useEffect(() => {
+        if (!categories.length) requestCategories(dispatch)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const [value, setValue] = React.useState("")
+
     const handleChange = (event) => {
+        addOrUpdateURLParams("category", event.target.name)
         setValue(event.target.value)
         props.setFieldValue(name, event.target.value)
+        dispatch(refetchBrands())
     }
 
     return (
-        <Box>
-            {/* Phân loại */}
+        <Fragment>
             <Box>
                 <FormControl>
                     <FormLabel sx={{ marginBottom: 1 }}>Phân loại</FormLabel>
@@ -238,28 +173,21 @@ const Categories = ({ props, name }) => {
                         name={name}
                         value={value}
                         onChange={handleChange}
-                        sx={{
-                            "& .MuiRadio-root ": {
-                                display: "none",
-                            },
-                        }}
+                        sx={{ "& .MuiRadio-root ": { display: "none" } }}
                     >
-                        {Array.isArray(listCategory) &&
-                            listCategory.map((item) => (
+                        {categories.length &&
+                            categories.map((item) => (
                                 <FormControlLabel
-                                    key={item.id}
-                                    name={item.name}
+                                    key={item.category_id}
+                                    name={item.categoryName}
                                     value={item.categoryId}
                                     control={<Radio />}
                                     label={
                                         <Chip
-                                            label={formatCapitalization(item.name)}
+                                            label={formatCapitalization(item.categoryName)}
                                             variant={value === item.categoryId ? "contained" : "outlined"}
                                             color={value === item.categoryId ? "primary" : "default"}
-                                            sx={{
-                                                marginLeft: 1,
-                                                marginBottom: 1,
-                                            }}
+                                            sx={{ marginLeft: 1, marginBottom: 1 }}
                                         />
                                     }
                                 />
@@ -271,26 +199,88 @@ const Categories = ({ props, name }) => {
                     <ErrorMessage name={name} />
                 </FormHelperText>
             </Box>
+        </Fragment>
+    )
+}
 
-            {/* Thương hiệu */}
-            {value && <Brands name="brand" props={props} categoryId={value} />}
-        </Box>
+const Brands = ({ props, name }) => {
+    const fetch = useSelector(selectorProducts)?.brands
+    const brands = fetch?.payload
+    const category = new URLSearchParams(window.location.search).get("category")
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (category) {
+            if (brands[`${category}`]) return
+            requestBrands(dispatch, { category })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetch.refetch])
+
+    const [value, setValue] = useState("")
+
+    const handleChange = (event) => {
+        setValue(event.target.value)
+        props.setFieldValue(name, event.target.value)
+    }
+
+    return (
+        <Fragment>
+            {brands[`${category}`] ? (
+                <Box>
+                    <FormControl>
+                        <FormLabel sx={{ marginBottom: 1 }}>Chọn thương hiệu</FormLabel>
+                        <Field
+                            as={RadioGroup}
+                            row
+                            name={name}
+                            value={value}
+                            onChange={handleChange}
+                            sx={{ "& .MuiRadio-root ": { display: "none" } }}
+                        >
+                            {brands[`${category}`].map((item) => (
+                                <FormControlLabel
+                                    key={item.id}
+                                    name={item.name}
+                                    value={item.brandId}
+                                    control={<Radio />}
+                                    label={
+                                        <Chip
+                                            label={formatCapitalization(item.name)}
+                                            variant={value === item.brandId ? "contained" : "outlined"}
+                                            color={value === item.brandId ? "primary" : "default"}
+                                            sx={{ marginLeft: 1, marginBottom: 1 }}
+                                        />
+                                    }
+                                />
+                            ))}
+                        </Field>
+                    </FormControl>
+
+                    <FormHelperText>
+                        <ErrorMessage name={name} />
+                    </FormHelperText>
+                </Box>
+            ) : (
+                <Fragment />
+            )}
+        </Fragment>
     )
 }
 
 //
 const UploadImage = ({ props, name }) => {
     const [selected, setSelected] = useState([])
+    const [files, setFiles] = useState(null)
 
     useEffect(() => {
-        // Phải chuyển sang string trước khi gửi đến server
-        const arrayToString = JSON.stringify(selected)
-
-        props.setFieldValue(name, arrayToString)
+        props.setFieldValue(name, files)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selected])
+    }, [files])
 
     const handleChange = (e) => {
+        setFiles(e.target.files)
+
         const images = e.target.files
 
         // `images` là 1 object array

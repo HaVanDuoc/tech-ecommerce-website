@@ -12,7 +12,6 @@ router.post("/product/newProduct", productControllers.createNewProduct) // Creat
 router.get("/product/:productId", productControllers.getProduct) // Get a product
 router.put("/product/update/:productId", productControllers.updateProduct) // update product
 router.delete("/product/:productId", productControllers.deleteProduct) // Delete a product
-router.get("/product/newProduct/listCategory", productControllers.getListCategory) // List category
 router.post("/product/newProduct/listSelectBrand", productControllers.getListSelectBrand) // List brand
 
 // ---- Display

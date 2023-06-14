@@ -21,8 +21,10 @@ import {
     endFetchCardProduct,
     endProductByCategory,
     endSetProduct,
+    setBrands,
     setCardProduct,
     setCategories,
+    setCounterCartProduct,
     setLatestProduct,
     setProduct,
     setProductByCategory,
@@ -111,6 +113,10 @@ export const requestDestroyOrder = async (dispatch, order_details_id) => {
 }
 
 // PRODUCT
+export const requestCheckNewNameProduct = async (key) => {
+    return await axiosInstance("post", "/product/checkNameProduct", { key })
+}
+
 export const requestUpdateViewProduct = async (product_id) => {
     await axiosInstance("put", "/product/updateView", { product_id })
 }
@@ -249,6 +255,11 @@ export const requestSearchHeaderSaveRecent = async (product_id, user_id) => {
 }
 
 // CART
+export const requestCounterCart = async (dispatch) => {
+    const response = await axiosInstance("get", "/cart/counter")
+    dispatch(setCounterCartProduct(response.data.data))
+}
+
 export const requestCartProduct = async (dispatch) => {
     dispatch(startFetchCardProduct())
     const response = await axiosInstance("post", "/cart/getCartProduct")
@@ -278,6 +289,16 @@ export const requestCategories = async (dispatch) => {
 }
 
 // BRAND
+export const requestBrands = async (dispatch, config) => {
+    const response = await axiosInstance("post", "/brand/getBrands", config)
+    dispatch(
+        setBrands({
+            type: config.category,
+            payload: response.data.data,
+        })
+    )
+}
+
 export const requestGetBrandsByCategory = async (dispatch, link) => {
     let response = await axiosInstance("post", "/brand/getBrandsByCategory", { link })
 

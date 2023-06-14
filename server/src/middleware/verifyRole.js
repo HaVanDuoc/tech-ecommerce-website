@@ -1,11 +1,9 @@
-const { unauthorized } = require("../middleware/handleError");
+const { unauthorized } = require("../middleware/handleError")
 
 const isAdmin = (req, res, next) => {
-  const roleCode = req.user.roleId; // req.user get from verifyToken.js
-  if (roleCode === "R001")
-    return unauthorized("Tài khoản không đủ thẩm quyền để thực hiện!", res);
+    const roleCode = req.user.roleId
+    if (roleCode === "R001") return unauthorized("Bạn không được phép thực hiện chức năng này!", res)
+    next()
+}
 
-  next();
-};
-
-module.exports = isAdmin;
+module.exports = isAdmin

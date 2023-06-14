@@ -3,7 +3,12 @@ import { createSlice } from "@reduxjs/toolkit"
 export const productSlice = createSlice({
     name: "product",
     initialState: {
-        pageHome: {},
+        home: {
+            latest: {
+                isPending: false,
+                payload: {},
+            },
+        },
         productsByCategory: {
             isPending: false,
             reFetch: false,
@@ -12,7 +17,7 @@ export const productSlice = createSlice({
             isFetch: false,
             isPending: false,
             refetch: false,
-            counter: 0,
+            counter: null,
             refetchCounter: false,
             data: null,
         },
@@ -22,23 +27,19 @@ export const productSlice = createSlice({
             data: null,
         },
         categories: {},
-        brands: {},
+        brands: {
+            refetch: false,
+            payload: {},
+        },
     },
     reducers: {
         setLatestProduct: (state, action) => {
-            if (!state.pageHome.latest) {
-                state.pageHome["latest"] = {
-                    isPending: false,
-                    payload: {},
-                }
-            }
+            state.home.latest["limit"] = action.payload.limitOfPage
+            state.home.latest["currentPage"] = action.payload.currentPage
+            state.home.latest["sumPages"] = action.payload.counterPage
+            state.home.latest["sumProducts"] = action.payload.counterProduct
 
-            state.pageHome.latest["limit"] = action.payload.limitOfPage
-            state.pageHome.latest["currentPage"] = action.payload.currentPage
-            state.pageHome.latest["sumPages"] = action.payload.counterPage
-            state.pageHome.latest["sumProducts"] = action.payload.counterProduct
-
-            state.pageHome.latest.payload[`${action.payload.currentPage}`] = action.payload.list
+            state.home.latest.payload[`${action.payload.currentPage}`] = action.payload.list
         },
 
         // PRODUCT PAGE
@@ -114,7 +115,10 @@ export const productSlice = createSlice({
         },
 
         setBrands: (state, action) => {
-            state[`${action.payload.link}`] = action.payload.brands
+            state.brands.payload[`${action.payload.type}`] = action.payload.payload
+        },
+        refetchBrands: (state) => {
+            state.brands.refetch = !state.brands.refetch
         },
     },
 })
@@ -138,6 +142,8 @@ export const {
     setProduct,
     reFetchProduct,
     endSetProduct,
+    setBrands,
+    refetchBrands,
 } = productSlice.actions
 
 export const selectorProductByCategory = (state) => state.product.productsByCategory

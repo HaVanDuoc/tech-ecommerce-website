@@ -9,7 +9,7 @@ const router = require("express").Router()
 
 router.post("/getProducts", getListProducts) // Products
 router.post("/checkNameProduct", checkNameProduct)
-router.get("/update/:productId/getImageList", getImageList)
+// router.get("/update/:productId/getImageList", getImageList)
 
 router.use(verifyToken)
 router.use(verifyRole)

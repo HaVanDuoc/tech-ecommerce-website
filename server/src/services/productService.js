@@ -2,6 +2,7 @@ const db = require("../models")
 const { v4: uuidv4 } = require("uuid")
 const { padProductId } = require("../helper/padLeft")
 const { calculatePayment } = require("../utils/calculator")
+const destroyUpload = require("../utils/destroyUpload")
 
 exports.getProducts = async (req) => {
     try {
@@ -400,9 +401,10 @@ exports.updateView = async (req) => {
     }
 }
 
-exports.createProduct = async (data) => {
+exports.createProduct = async (req) => {
     try {
-        const { name, image, price, stock, category, brand, discount } = data
+        const { name, price, stock, category, brand, discount } = req.body
+        const files = req.files
 
         // Create Product Id
         const query = `select productId from products order by id desc limit 1;`
@@ -415,20 +417,36 @@ exports.createProduct = async (data) => {
             defaults: {
                 productId,
                 name,
-                image,
-                price,
-                stock,
-                discount,
+                files,
+                price: price || 0,
+                stock: stock || 0,
+                discount: discount || 0,
                 categoryId: category,
                 brandId: brand,
             },
             raw: true,
         })
 
+        // if error, delete files uploaded
+        if (!response[1]) destroyUpload(files)
+
         return {
             err: response[1] ? 0 : 1,
             msg: response[1] ? "Đã tạo sản phẩm!" : `${name} đã tồn tại!`,
             data: response[1] ? response[0] : null,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.checkNameProduct = async (key) => {
+    try {
+        const response = await db.Product.findOne({ where: { name: key } })
+
+        return {
+            err: response ? 1 : 0,
+            msg: response ? "Đã có sản phẩm này!" : "Có thế sử dụng tên này!",
         }
     } catch (error) {
         return error

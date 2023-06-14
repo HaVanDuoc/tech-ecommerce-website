@@ -237,25 +237,6 @@ exports.createNewCategory = (data) =>
         }
     })
 
-// Get list categories
-exports.getListCategory = () =>
-    new Promise(async (resolve, reject) => {
-        try {
-            const response = await db.Category.findAll({
-                attributes: ["id", "categoryId", "name"],
-                raw: true,
-            })
-
-            resolve({
-                err: response ? 0 : 1,
-                msg: response ? "Get data successfully" : "Get data failed",
-                data: response,
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
-
 // Create new status
 exports.createNewStatus = (data) =>
     new Promise(async (resolve, reject) => {
