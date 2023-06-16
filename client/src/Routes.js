@@ -20,10 +20,10 @@ import ProductDetailsLayout from "./layouts/productDetails"
 import Profile from "./pages/profile"
 import ProfileLayout from "./layouts/profile"
 import Orders from "./admin/pages/orders"
-import OrderDetails from "./admin/pages/orders/OrderDetails"
-import CreateOrder from "./admin/pages/orders/CreateOrder"
 import Edit from "./pages/profile/pages/edit"
 import CreateUser from "./admin/pages/users/CreateUser"
+import CreateOrder from "./admin/pages/orders/CreateOrder"
+import OrderDetails from "./admin/pages/orders/OrderDetails"
 
 export const publicRoutes = [
     { path: "/", page: Home },

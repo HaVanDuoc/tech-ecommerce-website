@@ -13,7 +13,7 @@ export default function User() {
     const fetch = useSelector(selectorUser)
 
     useEffect(() => {
-        requestUser(dispatch, userId)
+        requestUser(dispatch, { userId })
         if (!fetch.status.length) requestStatusUser(dispatch)
         if (!fetch.roles.length) requestRolesUser(dispatch)
         if (!fetch.gender.length) requestGenderUser(dispatch)

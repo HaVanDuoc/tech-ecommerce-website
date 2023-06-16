@@ -6,36 +6,29 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined"
 import { useDispatch, useSelector } from "react-redux"
 import { PF } from "~/utils/__variables"
 import Tabs from "./Tabs"
-import { isPending, refetch, selectorOrders, setOrders } from "~/redux/orderSlice"
-import axiosInstance, { requestDestroyOrder } from "~/api"
+import { refetch, selectorOrders } from "~/redux/orderSlice"
+import { requestDestroyOrder, requestOrders } from "~/api"
 import PaginationCustomize from "~/components/Pagination"
 import { setPositionWindow } from "~/utils/calculate"
+import { selectorCurrentUser } from "~/redux/authSlice"
 
 const Feed = () => {
     const orders = useSelector(selectorOrders)
 
-    const tab = new URLSearchParams(window.location.search).get("tab") || "Tất cả"
+    const tab = new URLSearchParams(window.location.search).get("tab")
     const page = Number(new URLSearchParams(window.location.search).get("page")) || 1
-    const products = orders?.data && orders.data[`${tab}`] && orders.data[`${tab}`][`page-${page}`]
-    const amountPages = orders?.data && orders.data[`${tab}`] && orders.data[`${tab}`]?.amountPages
+    const products = orders?.payload && orders.payload[`${tab}`] && orders.payload[`${tab}`][`page-${page}`]
+    const sumPages = orders?.payload && orders.payload[`${tab}`] && orders.payload[`${tab}`]?.sumPages
+    const user_id = useSelector(selectorCurrentUser)?.user?.id
     const dispatch = useDispatch()
 
     useEffect(() => {
         setPositionWindow(0, 200)
-
-        const fetch = async () => {
-            dispatch(isPending())
-
-            const response = await axiosInstance("post", "/order/getOrders", { tab, page })
-
-            dispatch(setOrders({ tab, page, data: response.data.data }))
-
-            dispatch(isPending())
-        }
-
-        fetch()
+        if (!products) requestOrders(dispatch, tab, page, user_id)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orders.refetch])
+
+    console.log("orders", orders)
 
     const handleDestroyOrder = (order_details_id) => {
         requestDestroyOrder(dispatch, order_details_id)
@@ -95,7 +88,6 @@ const Feed = () => {
                                             <Box display="flex" flexWrap="wrap">
                                                 {item.orderItem &&
                                                     item.orderItem.map((item, index) => {
-
                                                         return (
                                                             <Stack key={index} flexDirection="row" sx={style3}>
                                                                 <Box sx={style4}>
@@ -219,7 +211,7 @@ const Feed = () => {
                     )}
                 </Box>
 
-                <PaginationCustomize counterPage={amountPages} refetch={refetch()} />
+                <PaginationCustomize counterPage={sumPages} refetch={refetch()} />
             </Container>
         </Box>
     )

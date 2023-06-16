@@ -11,6 +11,7 @@ const {
     deleteUser,
     getRoles,
     getGender,
+    searchUser,
 } = require("../controllers/userControllers")
 
 const router = express.Router()
@@ -18,10 +19,11 @@ const router = express.Router()
 router.use(decryptToken)
 
 router.post("/getUsers", getUsers)
-router.get("/getUser/:userId", getUser)
+router.post("/getUser", getUser)
 router.get("/getStatus", getStatus)
 router.get("/getRoles", getRoles)
 router.get("/getGender", getGender)
+router.post("/search", searchUser)
 
 router.use(verifyToken)
 router.use(verifyRole)

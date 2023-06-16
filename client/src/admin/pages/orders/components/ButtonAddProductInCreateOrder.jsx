@@ -1,36 +1,35 @@
 import { Box, IconButton, Modal, Stack, Tooltip, Typography, styled } from "@mui/material"
 import { PF } from "~/utils/__variables"
 // import { useSnackbar } from "notistack"
-import React, { Fragment } from "react"
+import React, { Fragment, useState } from "react"
 import SearchIcon from "@mui/icons-material/Search"
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined"
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined"
 import { formatCost, formatDiscount, formatPrice } from "~/helper/format"
 import LibraryAddOutlinedIcon from "@mui/icons-material/LibraryAddOutlined"
 import ControlPointDuplicateOutlinedIcon from "@mui/icons-material/ControlPointDuplicateOutlined"
-import axiosInstance from "~/utils/axiosInstance"
+import { useDispatch, useSelector } from "react-redux"
+import { resetSearch, selectorSearch } from "~/redux/productSlice"
+import { requestSearchProduct } from "~/api"
 
-const ButtonAddProductInCreateOrder = ({ orders, setOrders, reset, setReset }) => {
+const ButtonAddProductInCreateOrder = ({ orders, setOrders }) => {
     const [open, setOpen] = React.useState(false)
-    const [result, setResult] = React.useState(null)
-    const handleOpen = () => setOpen(true)
+    const [key, setKey] = useState()
+    const dispatch = useDispatch()
+
+    const searches = useSelector(selectorSearch)
+
+    const handleOpen = () => {
+        setOpen(true)
+    }
     const handleClose = () => {
-        setResult(null)
+        dispatch(resetSearch())
         setOpen(false)
     }
 
     const onChange = (e) => {
-        const search = async () => {
-            const result = await axiosInstance({
-                method: "post",
-                url: "/client/search/suggest",
-                data: { key: e.target.value, limit: 6 },
-            })
-
-            setResult(result.data.data)
-        }
-
-        search()
+        setKey(e.target.value)
+        requestSearchProduct(dispatch, e.target.value, 3)
     }
 
     return (
@@ -42,15 +41,7 @@ const ButtonAddProductInCreateOrder = ({ orders, setOrders, reset, setReset }) =
                 sx={{ cursor: "pointer" }}
                 onClick={handleOpen}
             >
-                <ControlPointDuplicateOutlinedIcon
-                    sx={{
-                        width: 50,
-                        height: 50,
-                        color: "#44b700",
-                        zIndex: 2,
-                        backgroundColor: "#fff",
-                    }}
-                />
+                <ControlPointDuplicateOutlinedIcon sx={style2} />
                 <Stack position="relative" left={-10} border="2px solid #44b700" borderRadius={15} padding="1px 15px">
                     <Typography fontSize={13} fontWeight={500}>
                         Thêm sản phẩm
@@ -65,28 +56,13 @@ const ButtonAddProductInCreateOrder = ({ orders, setOrders, reset, setReset }) =
                         <input id="input-search" placeholder="Tìm kiếm..." autoFocus onChange={onChange} />
                     </Input>
                     <AutoComplete>
-                        {Array.isArray(result) ? (
-                            result.length ? (
-                                result.slice(0, 3).map((item, index) => {
-                                    return (
-                                        <Item
-                                            index={index}
-                                            id={item.id}
-                                            image={JSON.parse(item.image)[0].base64}
-                                            category={item.category}
-                                            name={item.name}
-                                            price={item.price}
-                                            discount={item.discount}
-                                            handleCloseSearch={handleClose}
-                                            reset={reset}
-                                            setReset={setReset}
-                                            orders={orders}
-                                            setOrders={setOrders}
-                                        />
-                                    )
+                        {key ? (
+                            searches?.payload?.length ? (
+                                searches?.payload?.map((item, index) => {
+                                    return <Item index={index} orders={orders} setOrders={setOrders} />
                                 })
                             ) : (
-                                <NoResult value={document.querySelector("#input-search").value} />
+                                <NoResult value={key} />
                             )
                         ) : (
                             <StartSearch />
@@ -100,104 +76,45 @@ const ButtonAddProductInCreateOrder = ({ orders, setOrders, reset, setReset }) =
 
 export default ButtonAddProductInCreateOrder
 
-const Item = ({
-    index,
-    id,
-    image,
-    category,
-    name,
-    price,
-    discount,
-    order_detail_id,
-    handleCloseSearch,
-    reset,
-    setReset,
-    orders,
-    setOrders,
-}) => {
-    // const { enqueueSnackbar } = useSnackbar();
+const Item = ({ index, orders, setOrders }) => {
+    const search = useSelector(selectorSearch)?.payload
 
-    // const handleSnackBar = (res) => {
-    //   if (res.data.err === 0) {
-    //     enqueueSnackbar(res.data.msg, {
-    //       variant: "success",
-    //       anchorOrigin: { vertical: "top", horizontal: "center" },
-    //       autoHideDuration: 4000,
-    //     });
-    //   } else {
-    //     enqueueSnackbar(res.data.msg, {
-    //       variant: "error",
-    //       anchorOrigin: { vertical: "top", horizontal: "center" },
-    //       autoHideDuration: 4000,
-    //     });
-    //   }
-    // };
+    const id = search[index]?.id
+    const category = search[index]?.category
+    const name = search[index]?.name
+    const price = search[index]?.price
+    const discount = search[index]?.discount
+    const image = search[index]?.files[0]?.path
 
     const handleDecrease = () => {
         const quantity = document.querySelector(`#quantity-${index}`).innerHTML
-
         if (Number(quantity) === 1) return
-
         document.querySelector(`#quantity-${index}`).innerHTML = Number(quantity) - 1
     }
 
     const handleIncrease = () => {
         const quantity = document.querySelector(`#quantity-${index}`).innerHTML
-
         document.querySelector(`#quantity-${index}`).innerHTML = Number(quantity) + 1
     }
 
     const handleAddProduct = () => {
         const quantity = document.querySelector(`#quantity-${index}`).innerHTML
-
         const product = { id, category, name, image, price, discount, quantity }
 
         setOrders([...orders, product])
     }
 
     return (
-        <Stack
-            key={index}
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            height={150}
-            padding="12px 54px"
-            width="100%"
-            sx={{
-                ":hover": {
-                    backgroundColor: "#1e90ff12",
-                },
-            }}
-        >
+        <Stack key={index} sx={style1}>
             <Stack flexDirection="row" height="100%" width="70%" alignItems="center" justifyContent="start">
                 <Stack width="30%" height="80%" justifyContent="center" alignItems="center">
                     <img src={image} alt="" height="100%" width="auto" />
                 </Stack>
 
                 <Stack ml={2}>
-                    <Typography
-                        sx={{
-                            color: "#d51919",
-                            fontWeight: 500,
-                            textTransform: "uppercase",
-                            fontFamily: "'Chakra Petch', sans-serif",
-                        }}
-                    >
-                        {category}
-                    </Typography>
+                    <Typography sx={style3}>{category}</Typography>
 
-                    <Typography
-                        className="name-product"
-                        sx={{
-                            fontFamily: "'Montserrat', sans-serif",
-                            fontWeight: 500,
-                            paddingBottom: 1,
-                            fontSize: "17px",
-                            color: "var(--color-text)",
-                            overflowWrap: "break-word",
-                        }}
-                    >
+                    <Typography className="name-product" sx={style4}>
                         {name}
                     </Typography>
 
@@ -218,17 +135,7 @@ const Item = ({
                 </Stack>
             </Stack>
 
-            <Stack
-                flexDirection="row"
-                alignItems="center"
-                sx={{
-                    "& svg": {
-                        ":hover": {
-                            cursor: "pointer",
-                        },
-                    },
-                }}
-            >
+            <Stack flexDirection="row" alignItems="center" sx={style5}>
                 <IconButton id={`button-decrease-${index}`} onClick={handleDecrease}>
                     <RemoveOutlinedIcon fontSize="small" />
                 </IconButton>
@@ -240,24 +147,10 @@ const Item = ({
                 </IconButton>
             </Stack>
 
-            <Stack
-                sx={{
-                    "& svg": {
-                        ":hover": {
-                            cursor: "pointer",
-                        },
-                    },
-                }}
-            >
+            <Stack sx={style6}>
                 <Tooltip title="Thêm vào">
                     <IconButton onClick={handleAddProduct}>
-                        <LibraryAddOutlinedIcon
-                            sx={{
-                                ":hover": {
-                                    color: "dodgerblue",
-                                },
-                            }}
-                        />
+                        <LibraryAddOutlinedIcon sx={style7} />
                     </IconButton>
                 </Tooltip>
             </Stack>
@@ -334,4 +227,60 @@ const style = {
     backgroundColor: "#fff",
     boxShadow: 24,
     borderRadius: 5,
+}
+
+const style2 = {
+    width: 50,
+    height: 50,
+    color: "#44b700",
+    zIndex: 2,
+    backgroundColor: "#fff",
+}
+
+const style1 = {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 150,
+    padding: "12px 54px",
+    width: "100%",
+    ":hover": { backgroundColor: "#1e90ff12" },
+}
+
+const style3 = {
+    color: "#d51919",
+    fontWeight: 500,
+    textTransform: "uppercase",
+    fontFamily: "'Chakra Petch', sans-serif",
+}
+
+const style4 = {
+    fontFamily: "'Montserrat', sans-serif",
+    fontWeight: 500,
+    paddingBottom: 1,
+    fontSize: "17px",
+    color: "var(--color-text)",
+    overflowWrap: "break-word",
+}
+
+const style5 = {
+    "& svg": {
+        ":hover": {
+            cursor: "pointer",
+        },
+    },
+}
+
+const style6 = {
+    "& svg": {
+        ":hover": {
+            cursor: "pointer",
+        },
+    },
+}
+
+const style7 = {
+    ":hover": {
+        color: "dodgerblue",
+    },
 }

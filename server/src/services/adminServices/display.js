@@ -3,25 +3,25 @@ const { sequelize } = require("../../models");
 const db = require("../../models");
 
 // Get list categories
-exports.listCategories = () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const response = await db.Category.findAll({
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-        raw: true,
-      });
+// exports.listCategories = () =>
+//   new Promise(async (resolve, reject) => {
+//     try {
+//       const response = await db.Category.findAll({
+//         attributes: {
+//           exclude: ["createdAt", "updatedAt"],
+//         },
+//         raw: true,
+//       });
 
-      resolve({
-        err: response ? 0 : 1,
-        msg: response ? "Get data successfully" : "Get data failed",
-        data: response,
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
+//       resolve({
+//         err: response ? 0 : 1,
+//         msg: response ? "Get data successfully" : "Get data failed",
+//         data: response,
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
 
 exports.createNewCategory = (data) =>
   new Promise(async (resolve, reject) => {
@@ -201,25 +201,25 @@ exports.createNewBrand = (data) =>
     }
   });
 
-exports.listBrand = () =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const response = await db.Brand.findAll({
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-        raw: true,
-      });
+// exports.listBrand = () =>
+//   new Promise(async (resolve, reject) => {
+//     try {
+//       const response = await db.Brand.findAll({
+//         attributes: {
+//           exclude: ["createdAt", "updatedAt"],
+//         },
+//         raw: true,
+//       });
 
-      resolve({
-        err: response ? 0 : 1,
-        msg: response ? "Get data successfully" : "Get data failed",
-        data: response,
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
+//       resolve({
+//         err: response ? 0 : 1,
+//         msg: response ? "Get data successfully" : "Get data failed",
+//         data: response,
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
 
 exports.setBrandForCategories = (categoryId, data) =>
   new Promise(async (resolve, reject) => {

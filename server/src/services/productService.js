@@ -310,82 +310,6 @@ exports.addCart = async (req) => {
     }
 }
 
-exports.order = async (req) => {
-    try {
-        const uuid = uuidv4() // code for order details
-        const user_id = req.user.id
-        const orders = req.body.orders
-
-        if (!user_id || !orders) return { err: 1, msg: "Lỗi!" }
-
-        // First, create order
-        const [createOrder, created] = await db.Order_Detail.findOrCreate({
-            where: { code: uuid },
-            defaults: {
-                user_id,
-                status_id: 1, // default 1 - Chờ xác nhận
-                total: 0,
-                code: uuid,
-            },
-            raw: true,
-        })
-
-        if (!created) return { err: 1, msg: "Không khởi tạo được đơn hàng. Vui lòng thử lại!" }
-
-        // Tạo order_item vào đơn hàng trên
-        orders.map(async (item) => {
-            const product = await db.Product.findOne({
-                where: { id: item.product_id },
-                attributes: ["id", "price", "discount"],
-                raw: true,
-            })
-
-            // create order item of order
-            await db.Order_Item.create({
-                order_detail_id: createOrder.dataValues.id,
-                product_id: item.product_id,
-                quantity: item.quantity,
-                pay: calculatePayment(product.price, item.quantity, product.discount),
-            })
-
-            const pay = calculatePayment(product.price, item.quantity, product.discount)
-
-            // Update total plus in order_details
-            const [updateTotal] = await db.sequelize.query(`
-                update order_details set total = total + ${Number(pay) || 0} where id = ${createOrder.dataValues.id};
-            `)
-
-            // Đặt hàng rồi thì vô giỏ hàng xóa nó đi
-            const [[user]] = await db.sequelize.query(`
-                    select
-                        users.id,
-                        cart_sessions.id as 'cart_sessions_id'
-                    from
-                        users
-                        left join cart_sessions on cart_sessions.user_id = users.id
-                    where
-                        users.id = ${user_id};
-                `)
-
-            if (user.cart_sessions_id && item.product_id) {
-                await db.Cart_Item.destroy({
-                    where: {
-                        cart_session_id: user.cart_sessions_id,
-                        product_id: item.product_id,
-                    },
-                })
-            }
-        })
-
-        return {
-            err: createOrder ? 0 : 1,
-            msg: createOrder ? "Cảm ơn quý khách (づ￣ 3￣)づ" : "Đặt hàng thất bại!",
-        }
-    } catch (error) {
-        return error
-    }
-}
-
 exports.updateView = async (req) => {
     try {
         const product_id = req.body.product_id
@@ -447,6 +371,43 @@ exports.checkNameProduct = async (key) => {
         return {
             err: response ? 1 : 0,
             msg: response ? "Đã có sản phẩm này!" : "Có thế sử dụng tên này!",
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.searchProduct = async (req) => {
+    try {
+        const key = req.body.key
+        const limit = req.body.limit || 3
+
+        if (!key) return { err: 1, msg: "Vui lòng thông tin nào về sản phẩm!" }
+
+        const query = `SELECT
+                          products.id,
+                          products.name,
+                          products.price,
+                          products.discount,
+                          products.files,
+                          categories.name as 'category',
+                          categories.link as 'categoryLink'
+                      FROM
+                          products
+                      LEFT JOIN
+                          categories on categories.categoryId = products.categoryId
+                      Where
+                          categories.name LIKE "%${key}%"
+                          or products.name LIKE "%${key}%"
+                      LIMIT
+                          ${limit};`
+
+        const [result] = await db.sequelize.query(query)
+
+        return {
+            err: result ? 0 : 1,
+            msg: result ? "Get successfully" : "Get failure",
+            data: result ? result : null,
         }
     } catch (error) {
         return error

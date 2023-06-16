@@ -1,31 +1,27 @@
 import { Box, Button, Dialog, Divider, Slide, Stack, Typography } from "@mui/material"
 import { useSnackbar } from "notistack"
 import Slider from "react-slick"
-import axiosInstance from "~/api"
+import { requestCreateOrder } from "~/api"
 import { formatDiscount, formatPrice, formatVND } from "~/helper/format"
-import React from "react"
+import React, { useEffect } from "react"
 import { useState } from "react"
 import { Fragment } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { endSetProduct, selectorProduct, startSetProduct } from "~/redux/productSlice"
+import { selectorProduct } from "~/redux/productSlice"
 import { CircularProgress } from "@mui/material"
 import { calculatePayment } from "~/utils/calculate"
+import { selectorCurrentUser } from "~/redux/authSlice"
+import { resetCreateOrder, selectorCreateOrder } from "~/redux/orderSlice"
 
 const ButtonOrder = () => {
     const product = useSelector(selectorProduct)
+    const user_id = useSelector(selectorCurrentUser)?.user?.id
+    const responseOrder = useSelector(selectorCreateOrder)
     const dispatch = useDispatch()
 
     const { enqueueSnackbar } = useSnackbar()
     const [open, setOpen] = React.useState(false)
     const [quantity, setQuantity] = useState(1)
-
-    const handleClickOpen = () => {
-        setOpen(true)
-    }
-
-    const handleClose = () => {
-        setOpen(false)
-    }
 
     const handleSnackBar = (res) => {
         if (res.data.err === 0) {
@@ -43,24 +39,27 @@ const ButtonOrder = () => {
         }
     }
 
+    useEffect(() => {
+        if (responseOrder?.response) {
+            handleSnackBar(responseOrder?.response)
+            dispatch(resetCreateOrder())
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [responseOrder.response])
+
+    const handleClickOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
     const handleOrder = () => {
         let orders = []
-
         const product_id = product?.data?.id
-
         orders.push({ product_id, quantity })
-
-        dispatch(startSetProduct())
-
-        setTimeout(async () => {
-            const response = await axiosInstance("post", "/product/order", { orders })
-
-            handleSnackBar(response) // xuất thông báo
-
-            handleClose()
-        }, 1500)
-
-        dispatch(endSetProduct())
+        requestCreateOrder(dispatch, { user_id, orders })
     }
 
     return (
@@ -121,9 +120,15 @@ const ButtonOrder = () => {
                                     />
                                 </Stack>
 
-                                <Button onClick={handleOrder} sx={style15}>
-                                    {product.isPending ? <CircularProgress /> : <Typography>Đặt hàng</Typography>}
-                                </Button>
+                                {responseOrder?.isPending ? (
+                                    <Button sx={style15}>
+                                        <CircularProgress size={23} sx={{ color: "#fff" }} />
+                                    </Button>
+                                ) : (
+                                    <Button onClick={handleOrder} sx={style15}>
+                                        <Typography>Đặt hàng</Typography>
+                                    </Button>
+                                )}
                             </Box>
                         </Box>
                     </Dialog>
@@ -367,7 +372,8 @@ const style14 = {
 }
 
 const style15 = {
-    padding: "10px 50px",
+    width: "182px",
+    padding: "10px 0",
     backgroundColor: "crimson",
     color: "#fff",
     border: "2px solid transparent",

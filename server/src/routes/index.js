@@ -1,6 +1,5 @@
 const { notFound } = require("../middleware/handleError")
 const adminRoute = require("./adminRoute")
-const dbRoute = require("./dbRoute")
 
 //
 const authRoute = require("./authRoute")
@@ -12,8 +11,7 @@ const productRoute = require("./productRoute")
 const orderRoute = require("./orderRoute")
 const userRoute = require("./userRoute")
 
-const adminProductRoute = require("./admin/products")
-const adminOrderRoute = require("./admin/orders")
+// const adminOrderRoute = require("./admin/orders")
 
 const initRoute = (app) => {
     const v1 = "/api/v1"
@@ -24,16 +22,14 @@ const initRoute = (app) => {
     app.use(`${v1}/category`, categoryRoute)
     app.use(`${v1}/brand`, brandRoute)
     app.use(`${v1}/product`, productRoute)
-    app.use(`${v1}/order`, orderRoute)
     app.use(`${v1}/user`, userRoute)
+    app.use(`${v1}/order`, orderRoute)
 
     // Admin routes
-    app.use(`${v1}/admin/products`, adminProductRoute)
-    app.use(`${v1}/admin/orders`, adminOrderRoute)
+    // app.use(`${v1}/admin/orders`, adminOrderRoute)
 
     // Routes
     app.use("/api/v1/admin", adminRoute)
-    app.use("/api/v1/db", dbRoute)
 
     // Route không xác định được response error not found
     return app.use(notFound)

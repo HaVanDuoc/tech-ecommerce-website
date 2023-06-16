@@ -5,6 +5,7 @@ import {
     Button,
     Divider,
     IconButton,
+    Link,
     ListItemIcon,
     Menu,
     MenuItem,
@@ -17,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux"
 import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt"
 import { Logout, PersonAdd, Settings } from "@mui/icons-material"
 import { FormatFullName } from "~/helper/format"
-import { Link } from "react-router-dom"
+import { Link as LinkRouter } from "react-router-dom"
 import { modalLogin, selectorCurrentUser } from "~/redux/authSlice"
 import refreshPage from "~/utils/refreshPage"
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"
@@ -118,7 +119,7 @@ const AccountMenu = () => {
                             vertical: "bottom",
                         }}
                     >
-                        <Link to="/profile" className="link">
+                        <LinkRouter to="/profile" className="link">
                             <MenuItem onClick={handleClose}>
                                 <Avatar src={currentUser?.user?.avatar} />{" "}
                                 <Typography variant="span" color="var(--color-text) !important" fontWeight={500}>
@@ -129,7 +130,7 @@ const AccountMenu = () => {
                                     )}
                                 </Typography>
                             </MenuItem>
-                        </Link>
+                        </LinkRouter>
 
                         <Divider />
 
@@ -139,7 +140,10 @@ const AccountMenu = () => {
                             </ListItemIcon>
                             Thêm một tài khoản khác
                         </MenuItem>
-                        <Link to={window.location.pathname.includes("/admin") ? "/" : "/admin"} className="link">
+                        <Link
+                            href={window.location.pathname.includes("/admin") ? "/" : "/admin"}
+                            sx={{ color: "inherit" }}
+                        >
                             <MenuItem>
                                 <ListItemIcon>
                                     <AdminPanelSettingsIcon fontSize="small" />

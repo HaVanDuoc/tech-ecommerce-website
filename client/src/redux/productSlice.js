@@ -31,8 +31,27 @@ export const productSlice = createSlice({
             refetch: false,
             payload: {},
         },
+        search: {
+            isPending: false,
+            refetch: false,
+            payload: {},
+        },
     },
     reducers: {
+        setSearch: (state, action) => {
+            state.search.payload = action.payload
+        },
+        isPendingSearch: (state) => {
+            state.search.isPending = !state.search.isPending
+        },
+        resetSearch: (state) => {
+            state.search = {
+                isPending: false,
+                refetch: false,
+                payload: {},
+            }
+        },
+
         setLatestProduct: (state, action) => {
             state.home.latest["limit"] = action.payload.limitOfPage
             state.home.latest["currentPage"] = action.payload.currentPage
@@ -144,6 +163,9 @@ export const {
     endSetProduct,
     setBrands,
     refetchBrands,
+    setSearch,
+    isPendingSearch,
+    resetSearch,
 } = productSlice.actions
 
 export const selectorProductByCategory = (state) => state.product.productsByCategory
@@ -153,5 +175,6 @@ export const selectorUrlParamsProductPage = (state) => state.product.urlParamsPr
 export const selectorProduct = (state) => state.product.product
 
 export const selectorProducts = (state) => state.product
+export const selectorSearch = (state) => state.product.search
 
 export default productSlice.reducer

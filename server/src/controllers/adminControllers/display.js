@@ -7,15 +7,15 @@ const {
 } = require("../../middleware/handleError");
 const displayServices = require("../../services/adminServices/display");
 
-exports.listCategories = async (req, res) => {
-  try {
-    const response = await displayServices.listCategories();
+// exports.listCategories = async (req, res) => {
+//   try {
+//     const response = await displayServices.listCategories();
 
-    res.status(200).json(response);
-  } catch (error) {
-    return intervalServerError(res);
-  }
-};
+//     res.status(200).json(response);
+//   } catch (error) {
+//     return intervalServerError(res);
+//   }
+// };
 
 // Create new product
 exports.createNewCategory = async (req, res) => {
@@ -109,15 +109,15 @@ exports.createNewBrand = async (req, res) => {
   }
 };
 
-exports.listBrand = async (req, res) => {
-  try {
-    const response = await displayServices.listBrand();
+// exports.listBrand = async (req, res) => {
+//   try {
+//     const response = await displayServices.listBrand();
 
-    res.status(200).json(response);
-  } catch (error) {
-    return intervalServerError(res);
-  }
-};
+//     res.status(200).json(response);
+//   } catch (error) {
+//     return intervalServerError(res);
+//   }
+// };
 
 exports.setBrandForCategories = async (req, res) => {
   try {

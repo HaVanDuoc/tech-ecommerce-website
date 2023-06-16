@@ -11,11 +11,11 @@ router.post("/getProducts", productController.getProducts)
 router.post("/getProduct", productController.getProduct)
 router.post("/admin/getProducts", productController.getProductsAdmin)
 router.put("/updateView", productController.updateView)
+router.post("/search", productController.searchProduct)
 
 router.use(verifyToken)
 
 router.post("/addCart", productController.addCart)
-router.post("/order", productController.order)
 router.post("/checkNameProduct", productController.checkNameProduct)
 
 router.use(verifyRole)

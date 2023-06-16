@@ -1,12 +1,13 @@
 import { formatCost, formatDiscount, formatPrice, formatVND } from "~/helper/format"
-import { Box, Checkbox, Container, Grid, styled, Typography } from "@mui/material"
+import { Box, Checkbox, CircularProgress, Container, Grid, styled, Typography } from "@mui/material"
 import React, { Fragment, useEffect, useState } from "react"
 import { Footer } from "~/components"
 import { useDispatch, useSelector } from "react-redux"
 import { useSnackbar } from "notistack"
 import { refetchCart, selectorCartProducts } from "~/redux/productSlice"
-import axiosInstance, {
+import {
     requestCartProduct,
+    requestCreateOrder,
     requestDecreaseProductCart,
     requestDeleteProductCart,
     requestIncreaseProductCart,
@@ -14,6 +15,8 @@ import axiosInstance, {
 import CartEmpty from "./components/CartEmpty"
 import Loading from "./components/Loading"
 import HeaderCart from "./components/HeaderCart"
+import { selectorCurrentUser } from "~/redux/authSlice"
+import { resetCreateOrder, selectorCreateOrder } from "~/redux/orderSlice"
 
 const Cart = () => {
     const [payment, setPayment] = useState(0) // số tiền thanh toán
@@ -25,8 +28,8 @@ const Cart = () => {
     const cart = useSelector(selectorCartProducts)
     const products = useSelector(selectorCartProducts)?.data?.products
     const cart_session_id = useSelector(selectorCartProducts)?.data?.cart_session_id
-
-    console.log("cart", cart)
+    const user_id = useSelector(selectorCurrentUser)?.user?.id
+    const responseOrder = useSelector(selectorCreateOrder)
 
     useEffect(() => {
         requestCartProduct(dispatch)
@@ -47,6 +50,15 @@ const Cart = () => {
             })
         }
     }
+
+    useEffect(() => {
+        if (responseOrder?.response) {
+            handleSnackBar(responseOrder?.response)
+            dispatch(resetCreateOrder())
+            dispatch(refetchCart())
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [responseOrder.response])
 
     const handleIncrease = (index) => {
         const product_id = products[index].id
@@ -155,21 +167,11 @@ const Cart = () => {
         selectedProduct.map((index) => {
             const product_id = products[index].id
             const quantity = products[index].quantity
-
             orders.push({ product_id, quantity })
-
             return orders
         })
 
-        const request = async () => {
-            const response = await axiosInstance("post", "/product/order", { orders })
-
-            dispatch(refetchCart())
-
-            handleSnackBar(response) // xuất thông báo
-        }
-
-        request()
+        requestCreateOrder(dispatch, { user_id, orders })
     }
 
     return (
@@ -374,29 +376,15 @@ const Cart = () => {
                                                     </Typography>
                                                 </Typography>
 
-                                                <Box
-                                                    sx={{
-                                                        marginLeft: 3,
-                                                        backgroundColor: "crimson",
-                                                        border: "1px solid crimson",
-                                                        borderRadius: "5px",
-                                                        color: "#fff",
-                                                        display: "flex",
-                                                        justifyContent: "center",
-                                                        alignItems: "center",
-                                                        padding: "10px 30px",
-                                                        cursor: "pointer",
-                                                        boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
-                                                        transition: "all .2s ease-in-out",
-
-                                                        ":hover": {
-                                                            boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
-                                                        },
-                                                    }}
-                                                    onClick={handleOrder}
-                                                >
-                                                    Đặt hàng
-                                                </Box>
+                                                {responseOrder?.isPending ? (
+                                                    <Box sx={style1}>
+                                                        <CircularProgress size={20} sx={{ color: "#fff" }} />
+                                                    </Box>
+                                                ) : (
+                                                    <Box sx={style1} onClick={handleOrder}>
+                                                        Đặt hàng
+                                                    </Box>
+                                                )}
                                             </Box>
                                         </Box>
                                     </Payment>
@@ -547,5 +535,25 @@ const styles = {
         flex: 1,
         borderLeft: "1px solid #ccc",
         borderRight: "1px solid #ccc",
+    },
+}
+
+const style1 = {
+    width: "128px",
+    marginLeft: 3,
+    backgroundColor: "crimson",
+    border: "1px solid crimson",
+    borderRadius: "5px",
+    color: "#fff",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "10px 0",
+    cursor: "pointer",
+    boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
+    transition: "all .2s ease-in-out",
+
+    ":hover": {
+        boxShadow: "0 1px 5px 5px rgba(0, 0, 0, 0.25)",
     },
 }

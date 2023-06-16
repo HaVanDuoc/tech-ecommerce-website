@@ -8,6 +8,7 @@ const {
     deleteUser,
     getRoles,
     getGender,
+    searchUser,
 } = require("../services/userService")
 const { createUser: joiCreateUser, updateUser: joiUpdateUser } = require("../helper/joiSchema")
 const Joi = require("joi")
@@ -131,6 +132,15 @@ exports.deleteUser = async (req, res) => {
 
         const response = await deleteUser(userId)
 
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.searchUser = async (req, res) => {
+    try {
+        const response = await searchUser(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)

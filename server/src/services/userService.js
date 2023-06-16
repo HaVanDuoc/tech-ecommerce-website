@@ -65,7 +65,8 @@ exports.getUsers = async (req) => {
 
 exports.getUser = async (req) => {
     try {
-        const userId = req.params.userId
+        const user_id = req.body.user_id
+        const userId = req.body.userId
 
         const query = `SELECT
                         users.id,
@@ -73,6 +74,17 @@ exports.getUser = async (req) => {
                         firstName,
                         middleName,
                         lastName,
+                        rtrim(
+                            ltrim(
+                                CONCAT(
+                                    IFNULL(users.firstName, ''),
+                                    ' ',
+                                    IFNULL(users.middleName, ''),
+                                    ' ',
+                                    users.lastName
+                                )
+                            )
+                        ) as fullName,
                         userName,
                         email,
                         password,
@@ -90,7 +102,9 @@ exports.getUser = async (req) => {
                         left join roles on users.roleId = roles.roleId
                         left join genders on users.genderCode = genders.code
                     WhERE
-                        userId = "${userId}"
+                        users.id > -1
+                        ${user_id ? 'and users.id = "' + user_id + '"' : ""}
+                        ${userId ? 'and users.userId = "' + userId + '"' : ""}
                     LIMIT
                         1;`
 
@@ -217,6 +231,69 @@ exports.deleteUser = async (userId) => {
         return {
             err: response ? 0 : 1,
             msg: response ? "Đã xóa" : "Xóa thất bại",
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.searchUser = async (req) => {
+    try {
+        const key = req.body.key
+        const limit = req.body.limit || 3
+
+        if (!key) return { err: 0, msg: "Vui lòng nhập thông tin người dùng muốn tìm kiếm!" }
+
+        const [find] = await db.sequelize.query(`
+            select
+                *
+            from
+                (
+                    select
+                        users.id as 'user_id',
+                        users.userId,
+                        users.firstName,
+                        users.middleName,
+                        users.lastName,
+                        rtrim(
+                            ltrim(
+                                CONCAT(
+                                    IFNULL(users.firstName, ''),
+                                    ' ',
+                                    IFNULL(users.middleName, ''),
+                                    ' ',
+                                    users.lastName
+                                )
+                            )
+                        ) as fullName,
+                        users.phoneNumber,
+                        users.address,
+                        users.dateOfBirth,
+                        genders.name as 'gender',
+                        users.createdAt
+                    from
+                        users
+                        left join genders on genders.code = users.genderCode
+                ) as u
+            where
+                u.userId like N'%${key || ""}%'
+                or u.firstName like N'%${key || ""}%'
+                or u.middleName like N'%${key || ""}%'
+                or u.lastName like N'%${key || ""}%'
+                or u.fullName like N'%${key || ""}%'
+                or u.phoneNumber like N'%${key || ""}%'
+                or u.address like N'%${key || ""}%'
+                or u.gender like N'%${key || ""}%'
+            order by 
+                u.createdAt desc
+            limit 
+                ${limit};
+        `)
+
+        return {
+            err: find ? 0 : 1,
+            msg: find ? "Get data successfully" : "Get data failure",
+            data: find ? find : [],
         }
     } catch (error) {
         return error

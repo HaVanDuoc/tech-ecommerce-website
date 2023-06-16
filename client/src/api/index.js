@@ -31,10 +31,21 @@ import {
     startFetchCardProduct,
     startProductByCategory,
     startSetProduct,
+    isPendingSearch as isPendingSearchProduct,
+    setSearch as setSearchProduct,
 } from "~/redux/productSlice"
 import { setBrandByCategory } from "~/redux/brandSlice"
-import { refetch, setTabs } from "~/redux/orderSlice"
-import { isPendingGetUsers, setGender, setRoles, setStatus, setUser, setUsers } from "~/redux/userSlice"
+import { isPending, isPendingCreateOrder, refetch, setCreateOrder, setOrders, setTabs } from "~/redux/orderSlice"
+import {
+    isPendingGetUsers,
+    isPendingSearch,
+    setGender,
+    setRoles,
+    setSearch,
+    setStatus,
+    setUser,
+    setUsers,
+} from "~/redux/userSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -54,6 +65,13 @@ const axiosInstance = async (method, url, data) => {
 export default axiosInstance
 
 // USER
+export const requestSearchUser = async (dispatch, key, limit) => {
+    dispatch(isPendingSearch())
+    const response = await axiosInstance("post", "/user/search", { key, limit })
+    dispatch(setSearch(response.data.data))
+    dispatch(isPendingSearch())
+}
+
 export const requestGenderUser = async (dispatch) => {
     const response = await axiosInstance("get", "/user/getGender")
     dispatch(setGender(response.data.data))
@@ -69,8 +87,8 @@ export const requestStatusUser = async (dispatch) => {
     dispatch(setStatus(response.data.data))
 }
 
-export const requestUser = async (dispatch, userId) => {
-    const response = await axiosInstance("get", `/user/getUser/${userId}`)
+export const requestUser = async (dispatch, { user_id, userId }) => {
+    const response = await axiosInstance("post", `/user/getUser`, { user_id, userId })
     dispatch(setUser(response.data.data))
 }
 
@@ -82,11 +100,30 @@ export const requestUsers = async (dispatch, page) => {
 }
 
 // ORDER
-export const requestOrders = async (dispatch, config) => {
-    try {
-        const response = await axiosInstance("post", "/client/profile/order", config)
+export const requestCreateOrder = (dispatch, { user_id, orders, status_id }) => {
+    dispatch(isPendingCreateOrder())
+    setTimeout(async () => {
+        const response = await axiosInstance("post", "/order/createOrder", { user_id, orders, status_id })
+        dispatch(setCreateOrder(response))
+        dispatch(isPendingCreateOrder())
+    }, 2000)
+}
 
-        dispatch(setLatestProduct(response.data.data))
+export const requestCreateOrderAdmin = (dispatch, { user_id, orders, status_id }) => {
+    dispatch(isPendingCreateOrder())
+    setTimeout(async () => {
+        const response = await axiosInstance("post", "/order/admin/createOrder", { user_id, orders, status_id })
+        dispatch(setCreateOrder(response))
+        dispatch(isPendingCreateOrder())
+    }, 2000)
+}
+
+export const requestOrders = async (dispatch, type, page, user_id) => {
+    try {
+        dispatch(isPending())
+        const response = await axiosInstance("post", "/order/getOrders", { type, page, user_id })
+        dispatch(setOrders({ type, page, payload: response.data.data }))
+        dispatch(isPending())
     } catch (error) {
         console.log(error)
     }
@@ -113,6 +150,13 @@ export const requestDestroyOrder = async (dispatch, order_details_id) => {
 }
 
 // PRODUCT
+export const requestSearchProduct = async (dispatch, key, limit) => {
+    dispatch(isPendingSearchProduct())
+    const response = await axiosInstance("post", "/product/search", { key, limit })
+    dispatch(setSearchProduct(response.data.data))
+    dispatch(isPendingSearchProduct())
+}
+
 export const requestCheckNewNameProduct = async (key) => {
     return await axiosInstance("post", "/product/checkNameProduct", { key })
 }
@@ -228,6 +272,7 @@ export const requestRegister = (dispatch, values) => {
 }
 
 // SEARCH
+
 export const requestSearchHeaderSuggest = async (dispatch, e) => {
     const data = {
         key: e.target.value,

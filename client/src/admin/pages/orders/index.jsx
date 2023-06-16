@@ -1,6 +1,6 @@
 import { Box, Button, IconButton } from "@mui/material"
 import { useSnackbar } from "notistack"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Link } from "react-router-dom"
 import { formatVND } from "~/helper/format"
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined"
@@ -10,44 +10,25 @@ import { DataGrid } from "@mui/x-data-grid"
 import { actionConfirm, handleButtonConfirm } from "./components/handleConfirm"
 import ButtonCreateOrder from "./components/ButtonCreateOrder"
 import axiosInstance from "~/utils/axiosInstance"
-import { getOrdersAdmin, selectorOrdersAdmin } from "~/redux/adminSlice"
-import refreshPage from "~/utils/refreshPage"
+import { refetch, selectorOrders } from "~/redux/orderSlice"
+import { requestOrders } from "~/api"
 
 export default function Orders() {
-    const [data, setData] = useState([])
-    const [page, setPage] = useState(Number(new URLSearchParams(window.location.search).get("page") || 1))
-    const [isPending, setPending] = useState(false)
-    const [reset, setReset] = useState(true)
     const { enqueueSnackbar } = useSnackbar()
-    const dispatch = useDispatch()
-    const reduxOrders = useSelector(selectorOrdersAdmin)
 
-    console.log("orders", reduxOrders)
+    const orders = useSelector(selectorOrders)
+
+    const type = new URLSearchParams(window.location.search).get("type")
+    const page = Number(new URLSearchParams(window.location.search).get("page")) || 1
+    const products = orders?.payload && orders.payload[`${type}`] && orders.payload[`${type}`][`page-${page}`]
+    const sumPages = orders?.payload && orders.payload[`${type}`] && orders.payload[`${type}`]?.sumPages
+    const isPending = orders?.isPending
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        const fetch = async () => {
-            setPending(true)
-
-            const response = await axiosInstance({
-                method: "post",
-                url: "/admin/orders/getOrders",
-                data: { page },
-            })
-
-            dispatch(
-                getOrdersAdmin({
-                    countOrders: response.data.all,
-                    currentPage: page,
-                    limit: response.data.limit,
-                    payload: response.data.data,
-                })
-            )
-
-            setPending(false)
-        }
-
-        ;(reduxOrders.isFetch && reduxOrders.payload[`page-${page}`]) || fetch()
-    }, [page, dispatch, reduxOrders, reset])
+        if (!products) requestOrders(dispatch, type, page)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [orders.refetch])
 
     const handleSnackBar = (res) => {
         if (res.data.err === 0) {
@@ -65,20 +46,6 @@ export default function Orders() {
         }
     }
 
-    const handleDelete = (productId) => {
-        setTimeout(async () => {
-            const response = await axiosInstance({
-                method: "delete",
-                url: `/admin/product/${productId}`,
-            })
-
-            if (response.data.err === 0) {
-                handleSnackBar(response)
-                setData(data.filter((item) => item.productId !== productId))
-            }
-        })
-    }
-
     const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
         const request = async () => {
             const response = await axiosInstance({
@@ -91,10 +58,6 @@ export default function Orders() {
         }
 
         request()
-
-        setReset(!reset)
-
-        refreshPage()
     }
 
     const columns = [
@@ -126,7 +89,7 @@ export default function Orders() {
                             <ButtonEdit>Chi tiết</ButtonEdit>
                         </Link>
 
-                        <IconButton sx={{ color: "red" }} onClick={() => handleDelete(params.row.id)}>
+                        <IconButton sx={{ color: "red" }}>
                             <DeleteOutlineOutlinedIcon />
                         </IconButton>
                     </>
@@ -160,11 +123,7 @@ export default function Orders() {
             <ButtonCreateOrder />
 
             <DataGrid
-                rows={
-                    reduxOrders.isFetch && reduxOrders?.payload[`page-${page}`]
-                        ? reduxOrders?.payload[`page-${page}`]
-                        : []
-                }
+                rows={products || []}
                 disableSelectionOnClick
                 columns={columns}
                 pageSize={8}
@@ -176,12 +135,7 @@ export default function Orders() {
                 loading={isPending}
             />
 
-            <PaginationCustomize
-                page={page}
-                setPage={setPage}
-                countProducts={reduxOrders.countOrders}
-                limit={reduxOrders.limit}
-            />
+            <PaginationCustomize counterPage={sumPages} refetch={refetch()} />
         </Box>
     )
 }

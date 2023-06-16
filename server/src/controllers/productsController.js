@@ -72,15 +72,6 @@ exports.addCart = async (req, res) => {
     }
 }
 
-exports.order = async (req, res) => {
-    try {
-        const response = await productService.order(req)
-        res.status(200).json(response)
-    } catch (error) {
-        return intervalServerError(res)
-    }
-}
-
 exports.updateView = async (req, res) => {
     try {
         const response = await productService.updateView(req)
@@ -118,6 +109,15 @@ exports.checkNameProduct = async (req, res) => {
 
         const response = await productService.checkNameProduct(key)
 
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.searchProduct = async (req, res) => {
+    try {
+        const response = await productService.searchProduct(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)

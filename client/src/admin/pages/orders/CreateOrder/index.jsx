@@ -1,4 +1,4 @@
-import { Avatar, Box, Checkbox, Container, Grid, Stack, Typography, styled } from "@mui/material"
+import { Avatar, Box, CircularProgress, Container, Grid, Stack, Typography, styled } from "@mui/material"
 import { formatCost, formatDiscount, formatPhoneNumber, formatPrice, formatVND } from "~/helper/format"
 import dayjs from "dayjs"
 import { PF } from "~/utils/__variables"
@@ -6,30 +6,26 @@ import { useSnackbar } from "notistack"
 import { useParams } from "react-router-dom"
 import { AdminTitle } from "~/admin/Styled"
 import React, { Fragment, useEffect, useState } from "react"
-import ButtonAddProductInCreateOrder from "./components/ButtonAddProductInCreateOrder"
-import axiosInstance from "~/utils/axiosInstance"
-import refreshPage from "~/utils/refreshPage"
+import ButtonAddProductInCreateOrder from "../components/ButtonAddProductInCreateOrder"
+import { requestCreateOrderAdmin, requestUser } from "~/api"
+import { useDispatch, useSelector } from "react-redux"
+import { selectorUser } from "~/redux/userSlice"
+import { resetCreateOrder, selectorCreateOrder } from "~/redux/orderSlice"
 
 const CreateOrder = () => {
     const [orders, setOrders] = useState([])
-    const [user, setUser] = useState([])
     const [payment, setPayment] = useState(0) // số tiền thanh toán
     const [reset, setReset] = useState(true) // số sản phẩm đã chọn
     const user_id = useParams().user_id
+    const dispatch = useDispatch()
+
+    const user = useSelector(selectorUser)?.data
+    const responseOrder = useSelector(selectorCreateOrder)
 
     useEffect(() => {
-        const getUsers = async () => {
-            const response = await axiosInstance({
-                method: "post",
-                url: "/admin/orders/createOrder/getUser",
-                data: { user_id },
-            })
-
-            setUser(response.data.data)
-        }
-
-        getUsers()
-    }, [user_id, reset])
+        requestUser(dispatch, { user_id })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     useEffect(() => {
         let totalPayment = 0
@@ -42,6 +38,32 @@ const CreateOrder = () => {
 
         setPayment(totalPayment)
     }, [orders])
+
+    const { enqueueSnackbar } = useSnackbar()
+
+    const handleSnackBar = (res) => {
+        if (res.data.err === 0) {
+            enqueueSnackbar(res.data.msg, {
+                variant: "success",
+                anchorOrigin: { vertical: "top", horizontal: "center" },
+                autoHideDuration: 4000,
+            })
+        } else {
+            enqueueSnackbar(res.data.msg, {
+                variant: "error",
+                anchorOrigin: { vertical: "top", horizontal: "center" },
+                autoHideDuration: 4000,
+            })
+        }
+    }
+
+    useEffect(() => {
+        if (responseOrder?.response) {
+            handleSnackBar(responseOrder?.response)
+            dispatch(resetCreateOrder())
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [responseOrder.response])
 
     const personal = [
         {
@@ -66,24 +88,6 @@ const CreateOrder = () => {
             value: user.email,
         },
     ]
-
-    const { enqueueSnackbar } = useSnackbar()
-
-    const handleSnackBar = (res) => {
-        if (res.data.err === 0) {
-            enqueueSnackbar(res.data.msg, {
-                variant: "success",
-                anchorOrigin: { vertical: "top", horizontal: "center" },
-                autoHideDuration: 4000,
-            })
-        } else {
-            enqueueSnackbar(res.data.msg, {
-                variant: "error",
-                anchorOrigin: { vertical: "top", horizontal: "center" },
-                autoHideDuration: 4000,
-            })
-        }
-    }
 
     const handleIncrease = (index, price, discount) => {
         // get value current quantity
@@ -133,17 +137,9 @@ const CreateOrder = () => {
     }
 
     const handleComplete = () => {
-        const complete = async () => {
-            const response = await axiosInstance({
-                method: "post",
-                url: "/admin/orders/createOrder/create",
-                data: { orders, user_id, payment },
-            })
-            handleSnackBar(response)
-        }
-        complete()
-
-        refreshPage()
+        const status_id = 4
+        requestCreateOrderAdmin(dispatch, { user_id, orders, status_id })
+        setOrders([])
     }
 
     return (
@@ -186,7 +182,6 @@ const CreateOrder = () => {
                                 <Typography>Gọi điện</Typography>
                             </Stack>
                         </CallCustomer>
-                        ``
                     </Stack>
                 </Contact>
             </Information>
@@ -194,19 +189,9 @@ const CreateOrder = () => {
             <ListOrders>
                 <Container maxWidth="lg" disableGutters>
                     <Fragment>
-                        <Box
-                            sx={{
-                                borderRadius: "5px",
-                                backgroundColor: "#fff",
-                                margin: "30px 24px",
-                            }}
-                        >
+                        <Box sx={style1}>
                             <Option>
-                                {/* title */}
                                 <Box className="title col">
-                                    <Box className="col-0">
-                                        <Checkbox />
-                                    </Box>
                                     <Box className="col-1">
                                         <Typography>Sản phẩm</Typography>
                                     </Box>
@@ -224,26 +209,19 @@ const CreateOrder = () => {
                                     </Box>
                                 </Box>
 
-                                {/* Content */}
                                 <Box className="content">
                                     {orders.length ? (
                                         orders.map((item, index) => {
                                             return (
                                                 <Box className={`item col cart-item-${index}`} key={index}>
-                                                    {/* CheckBox */}
-                                                    <CheckBox index={index} id={item.id} />
-
-                                                    {/* Sản phẩm */}
                                                     <Product
                                                         name={item.name}
                                                         category={item.category}
                                                         image={item.image}
                                                     />
 
-                                                    {/* Đơn giá */}
                                                     <UnitPrice price={item.price} discount={item.discount} />
 
-                                                    {/* Số lượng */}
                                                     <Count
                                                         index={index}
                                                         price={item.price}
@@ -253,7 +231,6 @@ const CreateOrder = () => {
                                                         handleIncrease={handleIncrease}
                                                     />
 
-                                                    {/* Số tiền */}
                                                     <AmountOfMoney
                                                         index={index}
                                                         price={item.price}
@@ -261,7 +238,6 @@ const CreateOrder = () => {
                                                         quantity={item.quantity}
                                                     />
 
-                                                    {/* Thao tác */}
                                                     <Action onClick={() => handleDelete(item)} />
                                                 </Box>
                                             )
@@ -271,7 +247,6 @@ const CreateOrder = () => {
                                     )}
                                 </Box>
 
-                                {/*  */}
                                 <Payment>
                                     <Stack
                                         justifyContent="space-between"
@@ -291,7 +266,13 @@ const CreateOrder = () => {
                                         <Stack flex={1} justifyContent="end" alignItems="center" flexDirection="row">
                                             <TongTien payment={payment} />
 
-                                            <ButtonComplete onClick={handleComplete}>Hoàn tất</ButtonComplete>
+                                            {responseOrder?.isPending ? (
+                                                <ButtonComplete>
+                                                    <CircularProgress size={23} sx={{ color: "#fff" }} />
+                                                </ButtonComplete>
+                                            ) : (
+                                                <ButtonComplete onClick={handleComplete}>Hoàn tất</ButtonComplete>
+                                            )}
                                         </Stack>
                                     </Stack>
                                 </Payment>
@@ -454,16 +435,6 @@ const Payment = styled(Box)(() => ({
     zIndex: 2,
 }))
 
-const CheckBox = ({ index, id }) => (
-    <Box className="col-0">
-        <Checkbox className={`box-select-${index}`} />
-
-        <Box sx={{ display: "none" }} className={`box-product-id-${index}`}>
-            {id}
-        </Box>
-    </Box>
-)
-
 const Product = ({ name, category, image }) => (
     <Box className="col-1">
         <Grid container spacing={1} flexDirection="row">
@@ -617,6 +588,7 @@ const ButtonComplete = ({ children, onClick }) => {
     return (
         <Box
             sx={{
+                width: "123px",
                 marginLeft: 3,
                 backgroundColor: "crimson",
                 border: "1px solid crimson",
@@ -625,7 +597,7 @@ const ButtonComplete = ({ children, onClick }) => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: "10px 30px",
+                padding: "10px 0",
                 cursor: "pointer",
                 boxShadow: "0 1px 5px 1px rgba(0, 0, 0, 0.25)",
                 transition: "all .2s ease-in-out",
@@ -639,4 +611,10 @@ const ButtonComplete = ({ children, onClick }) => {
             {children}
         </Box>
     )
+}
+
+const style1 = {
+    borderRadius: "5px",
+    backgroundColor: "#fff",
+    margin: "30px 24px",
 }

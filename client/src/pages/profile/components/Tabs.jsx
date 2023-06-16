@@ -23,10 +23,8 @@ const Tabs = () => {
         })
     }
 
-    // console.log("tabs", tabs)
-
     useEffect(() => {
-        requestTabs(dispatch)
+        if (!tabs.length) requestTabs(dispatch)
         defineTab()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orders.refetch])
