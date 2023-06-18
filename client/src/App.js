@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux"
 import ModalLogin from "./components/Auth/ModalLogin"
 import { useSnackbar } from "notistack"
 import { selectorResponse } from "./redux/alertSlice"
-// import GoToAdminPage from "./components/GoToAdminPage"
 
 const App = () => {
     const dispatch = useDispatch()
@@ -34,7 +33,6 @@ const App = () => {
         }
     }
     const response = useSelector(selectorResponse)
-    console.log("response", response)
 
     useEffect(() => {
         if (response.payload) handleSnackBar(response.payload)
@@ -57,7 +55,6 @@ const App = () => {
                                 <div className="__havanduoc">
                                     <Layout>
                                         <Page />
-                                        {/* <GoToAdminPage /> */}
                                         <ModalLogin />
                                     </Layout>
                                 </div>
@@ -79,7 +76,6 @@ const App = () => {
                                 <div className="__havanduoc__admin">
                                     <Layout>
                                         <Page />
-                                        {/* <GoToAdminPage /> */}
                                         <ModalLogin />
                                     </Layout>
                                 </div>

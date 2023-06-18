@@ -1,7 +1,7 @@
 import "./styles.scss";
 import { Box, Typography } from "@mui/material";
 import React from "react";
-import { default as BannerHome } from "~/trash/Home_v3/Banner";
+// import { default as BannerHome } from "~/trash/Home_v3/Banner";
 
 const Preview = ({ children }) => {
   return (
@@ -18,7 +18,7 @@ const Banner = () => {
   return (
     <Box className="editBanner">
       <Preview>
-        <BannerHome />
+        {/* <BannerHome /> */}
       </Preview>
     </Box>
   );

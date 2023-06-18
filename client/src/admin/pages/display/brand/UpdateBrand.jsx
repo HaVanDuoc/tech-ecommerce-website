@@ -31,10 +31,9 @@ const UpdateBrand = () => {
     const brand = useSelector(selectorBrand)
 
     const name = brand?.payload?.name
-    const logo = brand?.payload?.logo
+    const logo = brand?.payload?.image && brand?.payload?.image[0].path
     const link = brand?.payload?.link
     const view = brand?.payload?.view
-    // const image = brand?.payload?.image
 
     useEffect(() => {
         requestBrand(dispatch, { brandId })
