@@ -40,7 +40,7 @@ exports.createNewCategory = async (req, res) => {
   }
 };
 
-// Create new product
+// // Create new product
 exports.getCategory = async (req, res) => {
   try {
     const categoryId = req.params.categoryId;
@@ -143,30 +143,30 @@ exports.selectedBrands = async (req, res) => {
   }
 };
 
-exports.getBrand = async (req, res) => {
-  try {
-    const brandId = req.params.brandId;
-    const response = await displayServices.getBrand(brandId);
-    res.status(200).json(response);
-  } catch (error) {
-    return intervalServerError(res);
-  }
-};
+// exports.getBrand = async (req, res) => {
+//   try {
+//     const brandId = req.params.brandId;
+//     const response = await displayServices.getBrand(brandId);
+//     res.status(200).json(response);
+//   } catch (error) {
+//     return intervalServerError(res);
+//   }
+// };
 
-exports.updateBrand = async (req, res) => {
-  try {
-    name = Joi.string();
-    link = Joi.string();
-    logo = Joi.string();
+// exports.updateBrand = async (req, res) => {
+//   try {
+//     name = Joi.string();
+//     link = Joi.string();
+//     logo = Joi.string();
 
-    const { error } = Joi.object({ name, link, logo }).validate(req.body);
-    if (error) return badRequest(error.details[0].message, res);
+//     const { error } = Joi.object({ name, link, logo }).validate(req.body);
+//     if (error) return badRequest(error.details[0].message, res);
 
-    const brandId = req.params.brandId;
-    const response = await displayServices.updateBrand(brandId, req.body);
+//     const brandId = req.params.brandId;
+//     const response = await displayServices.updateBrand(brandId, req.body);
 
-    return res.status(200).json(response);
-  } catch (error) {
-    return intervalServerError(res);
-  }
-};
+//     return res.status(200).json(response);
+//   } catch (error) {
+//     return intervalServerError(res);
+//   }
+// };

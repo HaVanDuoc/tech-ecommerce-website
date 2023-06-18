@@ -4,7 +4,6 @@ import SupportAgentOutlinedIcon from "@mui/icons-material/SupportAgentOutlined"
 import PercentOutlinedIcon from "@mui/icons-material/PercentOutlined"
 import PaymentOutlinedIcon from "@mui/icons-material/PaymentOutlined"
 import { Box, Container, Stack, Typography } from "@mui/material"
-import { selectorProducts } from "~/redux/productSlice"
 import { useDispatch, useSelector } from "react-redux"
 import { requestCategories } from "~/api"
 import { NextArrow } from "~/styles/slider"
@@ -12,6 +11,7 @@ import { PrevArrow } from "~/styles/slider"
 import React, { useEffect } from "react"
 import { Link } from "react-router-dom"
 import Slider from "react-slick"
+import { selectorCategories } from "~/redux/categorySlice"
 
 const offers = [
     {
@@ -47,11 +47,11 @@ const offers = [
 ]
 
 const Categories = () => {
-    const category = useSelector(selectorProducts)?.categories
+    const category = useSelector(selectorCategories)?.payload
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!category.length) requestCategories(dispatch)
+        if (!category) requestCategories(dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -88,14 +88,19 @@ const Categories = () => {
                             prevArrow={<PrevArrow />}
                             className="custom-slider"
                         >
-                            {category.length &&
+                            {category &&
                                 category.map((item, index) => {
+                                    const alias = item.alias
+                                    const image = item.image[0].path
+                                    const name = item.name
+                                    const sumProducts = item.sumProducts
+
                                     return (
                                         <Box key={index}>
-                                            <Link to={`/${item.alias}`} className="link">
+                                            <Link to={`/${alias}`} className="link">
                                                 <Stack padding={2} sx={style6}>
                                                     <Stack width="65px">
-                                                        <img src={item.image} alt="" width="100%" />
+                                                        <img src={image} alt="" width="100%" />
                                                     </Stack>
 
                                                     <Stack
@@ -107,7 +112,7 @@ const Categories = () => {
                                                         paddingLeft={2}
                                                     >
                                                         <Stack fontSize="16px" fontWeight={500} width="100%">
-                                                            {item.categoryName}
+                                                            {name}
                                                         </Stack>
 
                                                         <Stack
@@ -119,7 +124,7 @@ const Categories = () => {
                                                             color="#aaa"
                                                             width="100%"
                                                         >
-                                                            <span>{item.count_product || 0} sản phẩm</span>
+                                                            <span>{sumProducts || 0} sản phẩm</span>
                                                         </Stack>
                                                     </Stack>
                                                 </Stack>

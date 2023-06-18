@@ -1,4 +1,4 @@
-import { selectorProducts } from "~/redux/productSlice"
+import { selectorCategories } from "~/redux/categorySlice"
 import { Box, Container, Typography } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import { requestCategories } from "~/api"
@@ -8,25 +8,27 @@ import styled from "@emotion/styled"
 import Slider from "react-slick"
 
 const Nav = () => {
-    const nav = useSelector(selectorProducts)?.categories
+    const nav = useSelector(selectorCategories)?.payload
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!nav.length) requestCategories(dispatch)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+        if (!nav) requestCategories(dispatch)
+    }, [dispatch, nav])
 
     return (
         <Styled>
             <Container maxWidth="lg" disableGutters>
                 <Box sx={style1}>
                     <Slider dots={false} infinite={false} speed={500} slidesToShow={8} slidesToScroll={8}>
-                        {nav.length &&
+                        {nav &&
                             nav.map((item, index) => {
+                                const alias = item.alias
+                                const name = item.name
+
                                 return (
                                     <Box key={index} sx={{ paddingLeft: "10px", paddingRight: "10px" }}>
                                         <Link
-                                            to={`/${item.alias}`}
+                                            to={`/${alias}`}
                                             style={{ display: "flex", justifyContent: "center", alignItems: "center" }}
                                         >
                                             <Typography
@@ -37,7 +39,7 @@ const Nav = () => {
                                                 fontWeight={500}
                                                 justifyContent="center"
                                             >
-                                                {item.categoryName}
+                                                {name}
                                             </Typography>
                                         </Link>
                                     </Box>

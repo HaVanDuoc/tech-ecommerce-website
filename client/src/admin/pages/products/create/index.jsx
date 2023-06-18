@@ -27,9 +27,10 @@ import {
     Typography,
 } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
-import { refetchBrands, selectorProducts } from "~/redux/productSlice"
 import axiosInstance, { requestBrands, requestCategories, requestCheckNewNameProduct } from "~/api"
 import addOrUpdateURLParams from "~/utils/addURLParams"
+import { selectorCategories } from "~/redux/categorySlice"
+import { refetchBrands, selectorBrands } from "~/redux/brandSlice"
 
 export default function CreateNewProduct() {
     const [isSubmitting, setSubmitting] = React.useState(false)
@@ -145,7 +146,7 @@ export default function CreateNewProduct() {
 }
 
 const Categories = ({ props, name }) => {
-    const categories = useSelector(selectorProducts)?.categories
+    const categories = useSelector(selectorCategories)?.payload
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -204,18 +205,19 @@ const Categories = ({ props, name }) => {
 }
 
 const Brands = ({ props, name }) => {
-    const fetch = useSelector(selectorProducts)?.brands
+    const fetch = useSelector(selectorBrands)
+
     const brands = fetch?.payload
     const category = new URLSearchParams(window.location.search).get("category")
     const dispatch = useDispatch()
 
+    console.log("fetch", fetch)
+
     useEffect(() => {
-        if (category) {
-            if (brands[`${category}`]) return
-            requestBrands(dispatch, { category })
-        }
+        requestBrands(dispatch, { category })
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetch.refetch])
+    }, [])
 
     const [value, setValue] = useState("")
 

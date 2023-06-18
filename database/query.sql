@@ -1,5 +1,15 @@
 USE TECH;
 
+select
+    brands.name as 'brands'
+from
+    categorybrands
+    left join categories on categorybrands.categoryId = categories.id
+    left join brands on categorybrands.brandId = brands.id
+where
+    categorybrands.id > -1
+    and categories.id = 9;
+
 -- get brands
 select
     brands.id,
@@ -14,7 +24,7 @@ from
     left join brands on brands.id = categorybrands.brandId
     left join categories on categories.id = categorybrands.categoryId
 where
-    categorybrands.id > -1 
+    categorybrands.id > -1
     and categories.name = "Điện thoại"
     and categories.alias = "dien-thoai"
 order by

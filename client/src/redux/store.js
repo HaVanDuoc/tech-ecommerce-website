@@ -6,6 +6,8 @@ import adminReducer from "./adminSlice"
 import brandReducer from "./brandSlice"
 import orderReducer from "./orderSlice"
 import userReducer from "./userSlice"
+import categoryReducer from "./categorySlice"
+import alertReducer from "./alertSlice"
 
 const store = configureStore({
     reducer: {
@@ -16,6 +18,8 @@ const store = configureStore({
         brand: brandReducer,
         order: orderReducer,
         user: userReducer,
+        category: categoryReducer,
+        alert: alertReducer,
     },
 })
 

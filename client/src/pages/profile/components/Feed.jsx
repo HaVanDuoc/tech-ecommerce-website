@@ -28,8 +28,6 @@ const Feed = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orders.refetch])
 
-    console.log("orders", orders)
-
     const handleDestroyOrder = (order_details_id) => {
         requestDestroyOrder(dispatch, order_details_id)
     }
@@ -92,8 +90,10 @@ const Feed = () => {
                                                             <Stack key={index} flexDirection="row" sx={style3}>
                                                                 <Box sx={style4}>
                                                                     <img
-                                                                        src={item.files[0].path}
-                                                                        alt={item.files[0].originalname}
+                                                                        src={item.files ? item.files[0].path : ""}
+                                                                        alt={
+                                                                            item.files ? item.files[0].originalname : ""
+                                                                        }
                                                                     />
                                                                 </Box>
 

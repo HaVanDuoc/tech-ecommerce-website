@@ -4,8 +4,10 @@ import React, { useEffect } from "react"
 import AdminLayout from "./admin/layouts"
 import { DefaultLayout } from "./layouts"
 import { requestGetCurrentUser } from "./api"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import ModalLogin from "./components/Auth/ModalLogin"
+import { useSnackbar } from "notistack"
+import { selectorResponse } from "./redux/alertSlice"
 // import GoToAdminPage from "./components/GoToAdminPage"
 
 const App = () => {
@@ -14,6 +16,30 @@ const App = () => {
     useEffect(() => {
         requestGetCurrentUser(dispatch)
     }, [dispatch])
+
+    const { enqueueSnackbar } = useSnackbar()
+    const handleSnackBar = (res) => {
+        if (res.data.err === 0) {
+            enqueueSnackbar(res.data.msg, {
+                variant: "success",
+                anchorOrigin: { vertical: "top", horizontal: "center" },
+                autoHideDuration: 4000,
+            })
+        } else {
+            enqueueSnackbar(res.data.msg, {
+                variant: "error",
+                anchorOrigin: { vertical: "top", horizontal: "center" },
+                autoHideDuration: 4000,
+            })
+        }
+    }
+    const response = useSelector(selectorResponse)
+    console.log("response", response)
+
+    useEffect(() => {
+        if (response.payload) handleSnackBar(response.payload)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [response.export])
 
     return (
         <BrowserRouter>

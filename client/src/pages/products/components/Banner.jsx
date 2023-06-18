@@ -65,7 +65,7 @@ const Banner = () => {
             array = dienThoai
             break
 
-        case "tablet":
+        case "may-tinh-bang":
             array = tablet
             break
 

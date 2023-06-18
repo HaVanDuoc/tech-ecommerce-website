@@ -1,59 +1,37 @@
 import { DataGrid } from "@mui/x-data-grid"
 import { Link } from "react-router-dom"
-import React, { useEffect, useState } from "react"
+import React, { useEffect } from "react"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import { ButtonCreate, StackButtons } from "~/admin/Styled"
 import { Box } from "@mui/material"
-import { useSnackbar } from "notistack"
-import { deleteBrand, getListBrand } from "~/api"
+import { requestBrands } from "~/api"
+import { useDispatch, useSelector } from "react-redux"
+import { selectorBrands } from "~/redux/brandSlice"
 
 export default function DisplayBrand() {
-    const [data, setData] = useState([])
+    const dispatch = useDispatch()
+    const category = new URLSearchParams(window.location.search).get("category")
+    const brands = useSelector(selectorBrands)
+    const payload = brands?.payload && brands.payload[`${category}`]
 
-    const { enqueueSnackbar } = useSnackbar()
-
-    const handleSnackBar = (res) => {
-        if (res.data.err === 0) {
-            enqueueSnackbar(res.data.msg, {
-                variant: "success",
-                anchorOrigin: { vertical: "top", horizontal: "center" },
-                autoHideDuration: 4000,
-            })
-        } else {
-            enqueueSnackbar(res.data.msg, {
-                variant: "error",
-                anchorOrigin: { vertical: "top", horizontal: "center" },
-                autoHideDuration: 4000,
-            })
-        }
-    }
-
-    // Fetch list product
     useEffect(() => {
-        const fetch = async () => {
-            const response = await getListBrand()
-            setData(response.data.data)
-        }
-
-        fetch()
-    }, [])
-    //
+        requestBrands(dispatch, { category })
+    }, [dispatch, category])
 
     const handleDelete = (brandId) => {
         setTimeout(async () => {
-            const response = await deleteBrand(brandId)
-
-            if (response.data.err === 0) {
-                handleSnackBar(response)
-                setData(data.filter((item) => item.brandId !== brandId))
-            }
+            // const response = await deleteBrand(brandId)
+            // if (response.data.err === 0) {
+            //     handleSnackBar(response)
+            //     setData(data.filter((item) => item.brandId !== brandId))
+            // }
         })
     }
 
     const columns = [
         { field: "brandId", headerName: "ID", width: 100 },
         {
-            field: "logo",
+            field: "image",
             headerName: "Logo",
             width: 250,
             renderCell: (params) => {
@@ -65,7 +43,7 @@ export default function DisplayBrand() {
                             alignItems: "center",
                         }}
                     >
-                        {params.row.logo && <img src={params.row.logo} alt="" style={{ width: "100px" }} />}
+                        {params.row.image && <img src={params.row.image[0].path} alt="" style={{ width: "100px" }} />}
                     </Box>
                 )
             },
@@ -126,7 +104,7 @@ export default function DisplayBrand() {
                 <ButtonCreate href="/admin/display/brand/newBrand" />
             </StackButtons>
             <DataGrid
-                rows={data}
+                rows={payload || []}
                 disableSelectionOnClick
                 columns={columns}
                 pageSize={10}

@@ -51,11 +51,11 @@ const SortBy = () => {
                     <Box>
                         {products.isPending ? (
                             <Fragment />
-                        ) : products[`/${category}`] && products[`/${category}`].counterProduct > 0 ? (
+                        ) : products[`${category}`] && products[`${category}`].counterProduct > 0 ? (
                             <Typography sx={{ fontWeight: 500 }}>
-                                {products[`/${category}`]?.counterProduct}{" "}
-                                {products[`/${category}`] && products[`/${category}`]["page-1"]
-                                    ? products[`/${category}`]["page-1"][0].product_category
+                                {products[`${category}`]?.counterProduct}{" "}
+                                {products[`${category}`] && products[`${category}`]["page-1"]
+                                    ? products[`${category}`]["page-1"][0].product_category
                                     : "Sản phẩm"}
                             </Typography>
                         ) : (

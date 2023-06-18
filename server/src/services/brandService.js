@@ -1,4 +1,5 @@
 const db = require("../models")
+const destroyUpload = require("../utils/destroyUpload")
 
 exports.getBrands = async (req) => {
     try {
@@ -28,6 +29,67 @@ exports.getBrands = async (req) => {
             err: response ? 0 : 1,
             msg: response ? "Get successfully" : "Get failure",
             data: response ? response : null,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.getBrand = async (req) => {
+    try {
+        const brand_id = req.body.brand_id
+        const brandId = req.body.brandId
+
+        const response = await db.Brand.findOne({
+            where: { brandId },
+            attributes: {
+                exclude: ["createdAt", "updatedAt"],
+            },
+        })
+
+        return {
+            err: response ? 0 : 1,
+            msg: response ? "Successfully" : "Failure",
+            data: response,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.updateBrand = async (req) => {
+    try {
+        const brandId = req.body.brandId
+        const name = req.body.name
+        const alias = req.body.alias
+        const image = req.files
+
+        console.log("brandId", brandId)
+        console.log("name", name)
+        console.log("alias", alias)
+        console.log("image", image)
+
+        // Check name brand is exists?
+        if (name) {
+            let response = await db.Brand.findOne({ where: { name } })
+            if (response) {
+                destroyUpload(image) // delete images in cloud
+                return {
+                    err: 1,
+                    msg: "Thương hiệu này đã tồn tại!",
+                }
+            }
+        }
+
+        // update
+        let response = await db.Brand.update({ name, alias, image }, { where: { brandId } })
+
+        // If update fail, delete image in cloud
+        if (!response) destroyUpload(image)
+
+        return {
+            err: response ? 0 : 1,
+            msg: response ? "Cập nhật thành công!" : "Cập nhật thất bại!",
         }
     } catch (error) {
         return error

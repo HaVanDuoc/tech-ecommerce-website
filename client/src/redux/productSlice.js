@@ -26,11 +26,6 @@ export const productSlice = createSlice({
             isPending: false,
             data: null,
         },
-        categories: {},
-        brands: {
-            refetch: false,
-            payload: {},
-        },
         search: {
             isPending: false,
             refetch: false,
@@ -128,17 +123,6 @@ export const productSlice = createSlice({
         endSetProduct: (state) => {
             state.product.isPending = false
         },
-
-        setCategories: (state, action) => {
-            state.categories = action.payload
-        },
-
-        setBrands: (state, action) => {
-            state.brands.payload[`${action.payload.type}`] = action.payload.payload
-        },
-        refetchBrands: (state) => {
-            state.brands.refetch = !state.brands.refetch
-        },
     },
 })
 
@@ -156,13 +140,10 @@ export const {
     endFetchCardProduct,
     setCounterCartProduct,
     refetchCounterCartProduct,
-    setCategories,
     startSetProduct,
     setProduct,
     reFetchProduct,
     endSetProduct,
-    setBrands,
-    refetchBrands,
     setSearch,
     isPendingSearch,
     resetSearch,
@@ -170,7 +151,6 @@ export const {
 
 export const selectorProductByCategory = (state) => state.product.productsByCategory
 export const selectorCartProducts = (state) => state.product.cart
-export const selectorCategories = (state) => state.product.categories
 export const selectorUrlParamsProductPage = (state) => state.product.urlParamsProductPage
 export const selectorProduct = (state) => state.product.product
 

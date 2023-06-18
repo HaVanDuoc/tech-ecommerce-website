@@ -22,17 +22,16 @@ exports.getProducts = async (req) => {
                 products.price as product_price,
                 products.discount as product_discount,
                 products.stock as product_stock,
+                products.files as product_image,
                 brands.name as product_brand,
-                categories.name as product_category,
-                categories.link as category_link,
-                products.files as product_image
+                categories.name as product_category
             from
                 products
                 left join categories on categories.categoryId = products.categoryId
                 left join brands on brands.brandId = products.brandId
             where
                 products.id > 0
-                ${category ? 'and categories.link = "' + category + '"' : ""}
+                ${category ? 'and categories.alias = "' + category + '"' : ""}
                 ${brand ? 'and brands.name = "' + brand + '"' : ""}
             order by 
                 products.${sortBy} desc
@@ -51,7 +50,7 @@ exports.getProducts = async (req) => {
                 left join brands on brands.brandId = products.brandId
             where
                 products.id > 0
-                ${category ? 'and categories.link = "' + category + '"' : ""}
+                ${category ? 'and categories.alias = "' + category + '"' : ""}
                 ${brand ? 'and brands.name = "' + brand + '"' : ""};
         `)
 
@@ -92,7 +91,6 @@ exports.getProduct = async (req) => {
                 products.isActive as status,
                 brands.name as brand,
                 categories.name as category,
-                categories.link as category_link,
                 products.files as images
             from
                 products

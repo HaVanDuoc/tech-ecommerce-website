@@ -21,9 +21,7 @@ import {
     endFetchCardProduct,
     endProductByCategory,
     endSetProduct,
-    setBrands,
     setCardProduct,
-    setCategories,
     setCounterCartProduct,
     setLatestProduct,
     setProduct,
@@ -34,7 +32,7 @@ import {
     isPendingSearch as isPendingSearchProduct,
     setSearch as setSearchProduct,
 } from "~/redux/productSlice"
-import { setBrandByCategory } from "~/redux/brandSlice"
+import { isPendingUpdateBrand, resetBrand, setBrand, setBrands } from "~/redux/brandSlice"
 import { isPending, isPendingCreateOrder, refetch, setCreateOrder, setOrders, setTabs } from "~/redux/orderSlice"
 import {
     isPendingGetUsers,
@@ -46,6 +44,8 @@ import {
     setUser,
     setUsers,
 } from "~/redux/userSlice"
+import { isPendingUpdateCategory, responseUpdateCategory, setCategories, setCategory } from "~/redux/categorySlice"
+import { exportResponse, setResponse } from "~/redux/alertSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -186,11 +186,7 @@ export const requestGetProducts = async (dispatch, config) => {
             products: response.data.data,
         }
 
-        // if (config.category) {
         dispatch(setProductByCategory(payload))
-        // }
-
-        // dispatch(setLatestProduct(response.data.data))
 
         dispatch(endProductByCategory())
     } catch (error) {
@@ -328,39 +324,49 @@ export const requestDeleteProductCart = async (product_id, cart_session_id) => {
 }
 
 // CATEGORY
+
+export const requestUpdateCategory = (dispatch, formData) => {
+    dispatch(isPendingUpdateCategory())
+    setTimeout(async () => {
+        const response = await axiosInstance("put", "/category/updateCategory", formData)
+        dispatch(responseUpdateCategory(response))
+        dispatch(isPendingUpdateCategory())
+    }, 1500)
+}
+
+export const requestCategory = async (dispatch, { category_id, categoryId }) => {
+    const response = await axiosInstance("post", "/category/getCategory", { category_id, categoryId })
+    dispatch(setCategory(response.data.data))
+}
+
 export const requestCategories = async (dispatch) => {
     const response = await axiosInstance("get", "/category/getCategories")
     dispatch(setCategories(response.data.data))
 }
 
 // BRAND
-export const requestBrands = async (dispatch, config) => {
-    const response = await axiosInstance("post", "/brand/getBrands", config)
+export const requestBrands = async (dispatch, { category, alias }) => {
+    const response = await axiosInstance("post", "/brand/getBrands", { category, alias })
     dispatch(
         setBrands({
-            type: config.category,
+            type: category || alias || null,
             payload: response.data.data,
         })
     )
 }
 
-export const requestGetBrandsByCategory = async (dispatch, link) => {
-    let response = await axiosInstance("post", "/brand/getBrandsByCategory", { link })
-
-    const config = {
-        link: response.data.data[0].categoryLink,
-        brands: response.data.data,
-    }
-
-    dispatch(setBrandByCategory(config))
+export const requestBrand = async (dispatch, { brand_id, brandId }) => {
+    dispatch(resetBrand())
+    const response = await axiosInstance("post", "/brand/getBrand", { brand_id, brandId })
+    dispatch(setBrand(response.data.data))
 }
 
-// path: client\src\admin\pages\display\brand\index.jsx
-export const getListBrand = () => {
-    return axiosInstance("get", "/admin/display/brand")
-}
-
-// path: client\src\admin\pages\display\brand\index.jsx
-export const deleteBrand = (brandId) => {
-    return axiosInstance("delete", `/admin/product/${brandId}`)
+export const requestUpdateBrand = (dispatch, formData) => {
+    dispatch(isPendingUpdateBrand())
+    setTimeout(async () => {
+        const response = await axiosInstance("put", "/brand/updateBrand", formData)
+        dispatch(isPendingUpdateBrand())
+        dispatch(setResponse(response))
+        dispatch(exportResponse())
+    })
 }

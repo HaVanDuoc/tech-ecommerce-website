@@ -30,17 +30,18 @@ const Products = () => {
         window.scrollTo(0, 357)
 
         // Stop handle when data available
-        if (products[`/${category}`] && products[`/${category}`][`page-${page}`]) return
+        if (products[`${category}`] && products[`${category}`][`page-${page}`]) return
 
         const config = {
-            category: `/${category}`,
+            category,
             page,
             brand,
             sortBy,
         }
 
         requestGetProducts(dispatch, removeEmpty(config))
-    }, [dispatch, category, page, brand, sortBy, products])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, category, page, brand, sortBy])
 
     return (
         <Wrapper>
@@ -60,13 +61,13 @@ const Products = () => {
                         <Grid item xs={2.5}>
                             <SectionCategories />
 
-                            <Box className="box filter">
+                            {/* <Box className="box filter">
                                 <Typography className="title">Bộ lọc</Typography>
                                 <Box sx={{ padding: "0 16px" }}>
                                     <Typography sx={{ fontWeight: 500 }}>Giá</Typography>
                                     <SliderPrice />
                                 </Box>
-                            </Box>
+                            </Box> */}
                         </Grid>
 
                         <Grid item xs>
@@ -78,8 +79,8 @@ const Products = () => {
                                 <ListProduct>
                                     <Grid container spacing={1}>
                                         {products &&
-                                            products[`/${category}`] &&
-                                            products[`/${category}`][`page-${page}`]?.map((item, index) => {
+                                            products[`${category}`] &&
+                                            products[`${category}`][`page-${page}`]?.map((item, index) => {
                                                 return (
                                                     <Grid item xs={3} key={index}>
                                                         <Card product={item} />
@@ -88,10 +89,10 @@ const Products = () => {
                                             })}
                                     </Grid>
 
-                                    {products[`/${category}`]?.counterPage > 1 && (
+                                    {products[`${category}`]?.counterPage > 1 && (
                                         <Stack alignItems="center" justifyContent="center" marginTop={5}>
                                             <PaginationCustomize
-                                                counterPage={products[`/${category}`]?.counterPage}
+                                                counterPage={products[`${category}`]?.counterPage}
                                                 refetch={reFetchProductPage()}
                                             />
                                         </Stack>

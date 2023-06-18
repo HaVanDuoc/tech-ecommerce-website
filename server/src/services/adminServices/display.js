@@ -286,60 +286,60 @@ exports.selectedBrands = (categoryId) =>
     }
   });
 
-exports.getBrand = (brandId) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const response = await db.Brand.findOne({
-        where: { brandId },
-        attributes: {
-          exclude: ["createdAt", "updatedAt"],
-        },
-      });
+// exports.getBrand = (brandId) =>
+//   new Promise(async (resolve, reject) => {
+//     try {
+//       const response = await db.Brand.findOne({
+//         where: { brandId },
+//         attributes: {
+//           exclude: ["createdAt", "updatedAt"],
+//         },
+//       });
 
-      resolve({
-        err: response ? 0 : 1,
-        msg: response ? "Get data successfully" : "Get data failure",
-        data: response,
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
+//       resolve({
+//         err: response ? 0 : 1,
+//         msg: response ? "Get data successfully" : "Get data failure",
+//         data: response,
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
 
-exports.updateBrand = (brandId, data) =>
-  new Promise(async (resolve, reject) => {
-    try {
-      console.log("data", data);
+// exports.updateBrand = (brandId, data) =>
+//   new Promise(async (resolve, reject) => {
+//     try {
+//       console.log("data", data);
 
-      const { name, link, logo } = data;
+//       const { name, link, logo } = data;
 
-      // Check name brand is exists?
-      if (name) {
-        let response = await db.Brand.findOne({ where: { name: data.name } });
-        if (response)
-          resolve({
-            err: 1,
-            msg: "Thương hiệu này đã tồn tại!",
-            data: null,
-          });
-      }
+//       // Check name brand is exists?
+//       if (name) {
+//         let response = await db.Brand.findOne({ where: { name: data.name } });
+//         if (response)
+//           resolve({
+//             err: 1,
+//             msg: "Thương hiệu này đã tồn tại!",
+//             data: null,
+//           });
+//       }
 
-      // update
-      let response = await db.Brand.update(
-        {
-          name,
-          link,
-          logo,
-        },
-        { where: { brandId } }
-      );
+//       // update
+//       let response = await db.Brand.update(
+//         {
+//           name,
+//           link,
+//           logo,
+//         },
+//         { where: { brandId } }
+//       );
 
-      resolve({
-        err: response ? 0 : 1,
-        msg: response ? "Cập nhật thành công!" : "Cập nhật thất bại!",
-        data: response,
-      });
-    } catch (error) {
-      reject(error);
-    }
-  });
+//       resolve({
+//         err: response ? 0 : 1,
+//         msg: response ? "Cập nhật thành công!" : "Cập nhật thất bại!",
+//         data: response,
+//       });
+//     } catch (error) {
+//       reject(error);
+//     }
+//   });
