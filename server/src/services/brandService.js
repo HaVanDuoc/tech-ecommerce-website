@@ -64,11 +64,6 @@ exports.updateBrand = async (req) => {
         const alias = req.body.alias
         const image = req.files
 
-        console.log("brandId", brandId)
-        console.log("name", name)
-        console.log("alias", alias)
-        console.log("image", image)
-
         // Check name brand is exists?
         if (name) {
             let response = await db.Brand.findOne({ where: { name } })

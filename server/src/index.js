@@ -4,28 +4,30 @@ const morgan = require("morgan")
 const dotenv = require("dotenv")
 const initRoute = require("./routes")
 const bodyParser = require("body-parser")
-
-const app = express()
+var cookieParser = require("cookie-parser")
+const ConnectionDatabase = require("./utils/connectDB")
 
 // Middleware
 dotenv.config()
+
+const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(express.json({ limit: "250mb" }))
+app.use(cookieParser())
+app.use(morgan("common"))
+app.use(express.json())
 app.use(
     cors({
-        credentials: true,
-        origin: ["http://localhost:9000"],
+        origin: [process.env.CLIENT_URL],
     })
 )
-app.use(morgan("common"))
 
 // Connect to DB
-require("./utils/connectDB")
+ConnectionDatabase()
 
 // Routes
 initRoute(app)
 
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)

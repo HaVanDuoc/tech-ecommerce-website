@@ -13,10 +13,13 @@ const {
     getGender,
     searchUser,
 } = require("../controllers/userControllers")
+const { test } = require("../controllers/testController")
 
 const router = express.Router()
 
 router.use(decryptToken)
+
+router.get("/test", test)
 
 router.post("/getUsers", getUsers)
 router.post("/getUser", getUser)
