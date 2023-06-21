@@ -28,7 +28,7 @@ const validationSchema = Yup.object({
         .required("*Bắt buộc"),
 })
 
-const SignUpForm = () => {
+const ForgotPassword = () => {
     const dispatch = useDispatch()
     const stateRegister = useSelector(selectorStatusRegister)
 
@@ -41,41 +41,7 @@ const SignUpForm = () => {
             >
                 {(props) => (
                     <Form>
-                        <Title>Đăng ký</Title>
-                        <Box sx={style1}>
-                            <Field
-                                as={TextField}
-                                label="Họ"
-                                variant="outlined"
-                                sx={{ marginBottom: "15px", width: "30%" }}
-                                id="firstName"
-                                name="firstName"
-                                type="text"
-                                helperText={<ErrorMessage name="firstName" />}
-                            />
-
-                            <Field
-                                as={TextField}
-                                label="Tên đệm"
-                                variant="outlined"
-                                sx={{ marginBottom: "15px", width: "30%" }}
-                                id="middleName"
-                                name="middleName"
-                                type="text"
-                                helperText={<ErrorMessage name="middleName" />}
-                            />
-
-                            <Field
-                                as={TextField}
-                                label="Tên"
-                                variant="outlined"
-                                sx={{ marginBottom: "15px", width: "30%" }}
-                                id="lastName"
-                                name="lastName"
-                                type="text"
-                                helperText={<ErrorMessage name="lastName" />}
-                            />
-                        </Box>
+                        <Title>Thay đổi mật khẩu</Title>
 
                         <Field
                             as={TextField}
@@ -158,7 +124,7 @@ const SignUpForm = () => {
     )
 }
 
-export default SignUpForm
+export default ForgotPassword
 
 const Styled = styled(Box)(() => ({
     width: 400,
@@ -194,9 +160,4 @@ const LinkBackToLogin = () => {
             </Link>
         </Box>
     )
-}
-
-const style1 = {
-    display: "flex",
-    justifyContent: "space-between",
 }

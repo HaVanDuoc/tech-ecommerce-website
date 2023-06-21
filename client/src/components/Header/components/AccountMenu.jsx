@@ -19,7 +19,7 @@ import SentimentSatisfiedAltIcon from "@mui/icons-material/SentimentSatisfiedAlt
 import { Logout, PersonAdd, Settings } from "@mui/icons-material"
 import { FormatFullName } from "~/helper/format"
 import { Link as LinkRouter } from "react-router-dom"
-import { modalLogin, selectorCurrentUser } from "~/redux/authSlice"
+import { openSignIn, selectorCurrentUser } from "~/redux/authSlice"
 import refreshPage from "~/utils/refreshPage"
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings"
 
@@ -176,7 +176,7 @@ const AccountMenu = () => {
                 //
                 // chưa đăng nhập
                 //
-                <Button onClick={() => dispatch(modalLogin())} sx={{ color: "var(--color-secondary)" }}>
+                <Button onClick={() => dispatch(openSignIn())} sx={{ color: "var(--color-secondary)" }}>
                     <Typography textTransform="none">Đăng nhập</Typography>
                     <SentimentSatisfiedAltIcon sx={{ marginLeft: 1 }} />
                 </Button>

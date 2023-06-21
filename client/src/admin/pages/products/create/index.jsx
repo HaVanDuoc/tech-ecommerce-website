@@ -31,10 +31,12 @@ import axiosInstance, { requestBrands, requestCategories, requestCheckNewNamePro
 import addOrUpdateURLParams from "~/utils/addURLParams"
 import { selectorCategories } from "~/redux/categorySlice"
 import { refetchBrands, selectorBrands } from "~/redux/brandSlice"
+import { exportResponse, setResponse } from "~/redux/alertSlice"
 
 export default function CreateNewProduct() {
     const [isSubmitting, setSubmitting] = React.useState(false)
     const { enqueueSnackbar } = useSnackbar()
+    const dispatch = useDispatch()
 
     const handleSnackBar = (res) => {
         if (res.data.err === 0) {
@@ -87,7 +89,8 @@ export default function CreateNewProduct() {
                     setSubmitting(true)
                     const response = await axiosInstance("post", "/product/createProduct", formData)
                     setSubmitting(false)
-                    handleSnackBar(response)
+                    dispatch(setResponse(response))
+                    dispatch(exportResponse())
 
                     if (response.data.err === 0) refreshPage()
                 })
@@ -150,7 +153,7 @@ const Categories = ({ props, name }) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!categories.length) requestCategories(dispatch)
+        if (!categories) requestCategories(dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -176,16 +179,16 @@ const Categories = ({ props, name }) => {
                         onChange={handleChange}
                         sx={{ "& .MuiRadio-root ": { display: "none" } }}
                     >
-                        {categories.length &&
+                        {categories &&
                             categories.map((item) => (
                                 <FormControlLabel
-                                    key={item.category_id}
-                                    name={item.categoryName}
+                                    key={item.id}
+                                    name={item.name}
                                     value={item.categoryId}
                                     control={<Radio />}
                                     label={
                                         <Chip
-                                            label={formatCapitalization(item.categoryName)}
+                                            label={item.name && formatCapitalization(item.name)}
                                             variant={value === item.categoryId ? "contained" : "outlined"}
                                             color={value === item.categoryId ? "primary" : "default"}
                                             sx={{ marginLeft: 1, marginBottom: 1 }}
@@ -205,19 +208,16 @@ const Categories = ({ props, name }) => {
 }
 
 const Brands = ({ props, name }) => {
-    const fetch = useSelector(selectorBrands)
-
-    const brands = fetch?.payload
     const category = new URLSearchParams(window.location.search).get("category")
     const dispatch = useDispatch()
 
-    console.log("fetch", fetch)
+    const fetch = useSelector(selectorBrands)
+    const brands = category && fetch?.payload && fetch?.payload[`${category}`]
 
     useEffect(() => {
-        requestBrands(dispatch, { category })
-
+        if (!brands) requestBrands(dispatch, { category })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [fetch.refetch])
 
     const [value, setValue] = useState("")
 
@@ -228,7 +228,7 @@ const Brands = ({ props, name }) => {
 
     return (
         <Fragment>
-            {brands[`${category}`] ? (
+            {brands ? (
                 <Box>
                     <FormControl>
                         <FormLabel sx={{ marginBottom: 1 }}>Chọn thương hiệu</FormLabel>
@@ -240,22 +240,24 @@ const Brands = ({ props, name }) => {
                             onChange={handleChange}
                             sx={{ "& .MuiRadio-root ": { display: "none" } }}
                         >
-                            {brands[`${category}`].map((item) => (
-                                <FormControlLabel
-                                    key={item.id}
-                                    name={item.name}
-                                    value={item.brandId}
-                                    control={<Radio />}
-                                    label={
-                                        <Chip
-                                            label={formatCapitalization(item.name)}
-                                            variant={value === item.brandId ? "contained" : "outlined"}
-                                            color={value === item.brandId ? "primary" : "default"}
-                                            sx={{ marginLeft: 1, marginBottom: 1 }}
-                                        />
-                                    }
-                                />
-                            ))}
+                            {brands.map((item) => {
+                                return (
+                                    <FormControlLabel
+                                        key={item.id}
+                                        name={item.name}
+                                        value={item.brandId}
+                                        control={<Radio />}
+                                        label={
+                                            <Chip
+                                                label={formatCapitalization(item?.name)}
+                                                variant={value === item.brandId ? "contained" : "outlined"}
+                                                color={value === item.brandId ? "primary" : "default"}
+                                                sx={{ marginLeft: 1, marginBottom: 1 }}
+                                            />
+                                        }
+                                    />
+                                )
+                            })}
                         </Field>
                     </FormControl>
 
@@ -270,7 +272,6 @@ const Brands = ({ props, name }) => {
     )
 }
 
-//
 const UploadImage = ({ props, name }) => {
     const [selected, setSelected] = useState([])
     const [files, setFiles] = useState(null)

@@ -16,7 +16,7 @@ import * as Yup from "yup"
 import { useDispatch, useSelector } from "react-redux"
 import GoogleIcon from "@mui/icons-material/Google"
 import { ErrorMessage, Field, Form, Formik } from "formik"
-import { modalRegister, selectorStatusLogin } from "~/redux/authSlice"
+import { openForgotPassword, openSignUp, selectorStatusLogin } from "~/redux/authSlice"
 import { requestLogin } from "~/api"
 
 const LoginForm = () => {
@@ -112,8 +112,10 @@ const Title = styled(Box)(() => ({
 }))
 
 const LinkForgotPassword = ({ children }) => {
+    const dispatch = useDispatch()
+
     return (
-        <Box textAlign="right">
+        <Box textAlign="right" onClick={() => dispatch(openForgotPassword())}>
             <Link>{children}</Link>
         </Box>
     )
@@ -124,7 +126,7 @@ const LinkSignUp = ({ children }) => {
 
     return (
         <Box textAlign="center">
-            Bạn chưa có tài khoản? <Link onClick={() => dispatch(modalRegister())}>{children}</Link>
+            Bạn chưa có tài khoản? <Link onClick={() => dispatch(openSignUp())}>{children}</Link>
         </Box>
     )
 }

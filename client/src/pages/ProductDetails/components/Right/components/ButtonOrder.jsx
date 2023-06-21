@@ -60,6 +60,9 @@ const ButtonOrder = () => {
         const product_id = product?.data?.id
         orders.push({ product_id, quantity })
         requestCreateOrder(dispatch, { user_id, orders })
+        setTimeout(() => {
+            handleClose()
+        }, 2000)
     }
 
     return (

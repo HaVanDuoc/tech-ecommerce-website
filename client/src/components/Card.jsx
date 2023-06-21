@@ -10,28 +10,31 @@ import { requestUpdateViewProduct } from "~/api"
 const Card = ({ product }) => {
     const navigate = useNavigate()
 
+    const product_id = product?.product_id
+    const product_name = product?.product_name ? product?.product_name : ""
+    const category_alias = product.category_alias
+    const product_image = product?.product_image ? product?.product_image[0].path : ""
+    const product_category = product?.product_category ? product?.product_category : ""
+    const product_price = product?.product_price
+    const product_discount = product?.product_discount
+
     const handleClick = () => {
-        requestUpdateViewProduct(product.product_id)
-        navigate(`${product?.category_link}/${product?.product_name}`)
+        requestUpdateViewProduct(product_id)
+        navigate(`/${category_alias}/${product_name}`)
     }
 
     return (
         <Box className="card" sx={styles1} onClick={handleClick}>
             <Stack flexDirection="column">
                 <Box sx={styles2}>
-                    <img
-                        src={product?.product_image ? product?.product_image[0].path : ""}
-                        alt=""
-                        width="100%"
-                        className="image"
-                    />
+                    <img src={product_image} alt="" width="100%" className="image" />
                 </Box>
 
                 <Stack flexDirection="column" sx={{ height: 180, zIndex: 2 }}>
-                    <Typography sx={styles3}>{product?.product_category ? product?.product_category : ""}</Typography>
+                    <Typography sx={styles3}>{product_category}</Typography>
 
                     <Typography className="name-product" sx={styles4}>
-                        {product?.product_name ? product?.product_name : ""}
+                        {product_name}
                     </Typography>
 
                     <Stack flexDirection="row" alignItems="center" paddingBottom={1} height={35}>
@@ -42,17 +45,13 @@ const Card = ({ product }) => {
                     </Stack>
 
                     <Stack flexDirection="row" alignItems="center">
-                        {product?.product_price ? (
-                            <Typography sx={styles6}>
-                                {formatPrice(product.product_price, product.product_discount)}
-                            </Typography>
+                        {product_price ? (
+                            <Typography sx={styles6}>{formatPrice(product_price, product_discount)}</Typography>
                         ) : (
                             <Fragment />
                         )}
 
-                        {product?.discount && (
-                            <Typography sx={styles7}>{formatCost(product?.product_price)}</Typography>
-                        )}
+                        {product_discount && <Typography sx={styles7}>{formatCost(product_price)}</Typography>}
                     </Stack>
                 </Stack>
             </Stack>
@@ -71,10 +70,10 @@ const Card = ({ product }) => {
                 </Stack>
             </Box>
 
-            {product?.product_discount !== 0 && (
+            {product_discount !== 0 && (
                 <Box sx={styles9}>
                     <Typography fontSize={12} fontWeight={600}>
-                        {formatDiscount(product?.product_discount)}
+                        {formatDiscount(product_discount)}
                     </Typography>
                 </Box>
             )}

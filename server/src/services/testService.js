@@ -4,7 +4,7 @@ exports.test = async (req) => {
     try {
         console.log("1")
 
-        const response = await Gender.findAll({ raw: true })
+        const response = await Gender.update({ name: "Nam" }, { where: { id: 1 } }, { raw: true })
 
         console.log("response", response)
 

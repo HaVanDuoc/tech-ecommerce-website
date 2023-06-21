@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
     try {
         const { error } = Joi.object({
             firstName: Joi.string().min(1).required(),
-            middleName: Joi.string().min(1).required(),
+            middleName: Joi.string().min(1),
             lastName: Joi.string().min(1).required(),
             email: Joi.string()
                 .min(1)
@@ -42,7 +42,6 @@ exports.register = async (req, res) => {
         const response = await authService.register(req.body)
 
         return res.status(200).json(response)
-        //
     } catch (error) {
         return intervalServerError(res)
     }

@@ -134,7 +134,7 @@ const Wrapper = styled(Box)(() => ({
         paddingBottom: "16px",
 
         ".list": {
-            maxHeight: "300px",
+            // maxHeight: "300px",
             overflowY: "scroll",
         },
 

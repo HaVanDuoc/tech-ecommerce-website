@@ -1,19 +1,28 @@
-import React from "react"
+import React, { Fragment } from "react"
 import { Box, Modal, styled } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import LoginForm from "~/components/Auth/LoginForm"
 import SignUpForm from "~/components/Auth/SignupForm"
-import { isOpenModalLogin, loginFail, registerFail, selectorModalLogin } from "~/redux/authSlice"
+import { closeModalLogin, formForgotPassword, formSignIn, formSignUp, selectorModalLogin } from "~/redux/authSlice"
+import ForgotPassword from "../ForgotPassword"
 
 const ModalLogin = () => {
     const modal = useSelector(selectorModalLogin)
-
     const dispatch = useDispatch()
 
+    const form =
+        modal.form === formSignIn ? (
+            <LoginForm />
+        ) : modal.form === formSignUp ? (
+            <SignUpForm />
+        ) : modal.form === formForgotPassword ? (
+            <ForgotPassword />
+        ) : (
+            <Fragment />
+        )
+
     const handleClose = () => {
-        dispatch(loginFail(null))
-        dispatch(registerFail(null))
-        dispatch(isOpenModalLogin())
+        dispatch(closeModalLogin())
     }
 
     return (
@@ -24,7 +33,7 @@ const ModalLogin = () => {
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box sx={style}>{modal?.isForm ? <LoginForm /> : <SignUpForm />}</Box>
+                <Box sx={style}>{form}</Box>
             </Modal>
         </Styled>
     )

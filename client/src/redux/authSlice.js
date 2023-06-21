@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
 
+export const formSignIn = "Sign In"
+export const formSignUp = "Sign Up"
+export const formForgotPassword = "Forgot Password"
+
 export const authSlice = createSlice({
     name: "auth",
     initialState: {
@@ -7,11 +11,10 @@ export const authSlice = createSlice({
             isLogged: false,
             user: null,
         },
-        modalAuth: {
+        modalLogin: {
             isOpen: false,
-            isForm: true, // default true is form login & false is form register
+            form: formSignIn,
         },
-        modalForm: true,
         login: {
             isPending: false,
             error: null,
@@ -27,24 +30,6 @@ export const authSlice = createSlice({
             state.currentUser.user = action.payload
         },
 
-        isOpenModalLogin: (state) => {
-            state.modalAuth.isOpen = !state.modalAuth.isOpen
-        },
-        modalLogin: (state) => {
-            state.modalAuth.isOpen = true
-            state.modalAuth.isForm = true
-        },
-        modalRegister: (state) => {
-            state.modalAuth.isOpen = true
-            state.modalAuth.isForm = false
-        },
-
-        modalLoginForm: (state) => {
-            state.modalForm = true
-        },
-        modalSignUpForm: (state) => {
-            state.modalForm = false
-        },
         startLogin: (state) => {
             state.login.isPending = true
         },
@@ -63,6 +48,23 @@ export const authSlice = createSlice({
         endRegister: (state) => {
             state.register.isPending = false
         },
+
+        // Open modal
+        openSignIn: (state) => {
+            state.modalLogin.isOpen = true
+            state.modalLogin.form = formSignIn
+        },
+        openSignUp: (state) => {
+            state.modalLogin.isOpen = true
+            state.modalLogin.form = formSignUp
+        },
+        openForgotPassword: (state) => {
+            state.modalLogin.isOpen = true
+            state.modalLogin.form = formForgotPassword
+        },
+        closeModalLogin: (state) => {
+            state.modalLogin.isOpen = false
+        },
     },
 })
 
@@ -79,12 +81,15 @@ export const {
     startRegister,
     registerFail,
     endRegister,
+    openSignIn,
+    openSignUp,
+    openForgotPassword,
+    closeModalLogin,
 } = authSlice.actions
 
 export const selectorCurrentUser = (state) => state.auth.currentUser
-export const selectorModalForm = (state) => state.auth.modalForm
 export const selectorStatusLogin = (state) => state.auth.login
 export const selectorStatusRegister = (state) => state.auth.register
-export const selectorModalLogin = (state) => state.auth.modalAuth
+export const selectorModalLogin = (state) => state.auth.modalLogin
 
 export default authSlice.reducer

@@ -57,7 +57,11 @@ exports.getCurrentUser = async (user_id) => {
 
 exports.register = async (data) => {
     try {
-        const { firstName, middleName, lastName, email, password } = data
+        const firstName = data.firstName
+        const middleName = data.middleName
+        const lastName = data.lastName
+        const email = data.email
+        const password = data.password
 
         // Create User Id
         const query = `select userId from users order by id desc limit 1;`

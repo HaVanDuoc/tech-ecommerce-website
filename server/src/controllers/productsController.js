@@ -2,7 +2,6 @@ const Joi = require("joi")
 const { intervalServerError } = require("../middleware/handleError")
 const productService = require("../services/productService")
 const destroyUpload = require("../utils/destroyUpload")
-const cloudinary = require("cloudinary").v2
 
 exports.getProducts = async (req, res) => {
     try {

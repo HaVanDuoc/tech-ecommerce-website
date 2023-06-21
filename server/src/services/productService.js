@@ -24,7 +24,8 @@ exports.getProducts = async (req) => {
                 products.stock as product_stock,
                 products.files as product_image,
                 brands.name as product_brand,
-                categories.name as product_category
+                categories.name as product_category,
+                categories.alias as category_alias
             from
                 products
                 left join categories on categories.categoryId = products.categoryId

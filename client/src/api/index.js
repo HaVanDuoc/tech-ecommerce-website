@@ -244,8 +244,6 @@ export const requestRegister = (dispatch, values) => {
 
     const { firstName, middleName, lastName, email, password } = values
 
-    // return console.log('values', values)
-
     setTimeout(async () => {
         // get data from DB
         const response = await axiosInstance("post", "/auth/register", {
@@ -268,7 +266,6 @@ export const requestRegister = (dispatch, values) => {
 }
 
 // SEARCH
-
 export const requestSearchHeaderSuggest = async (dispatch, e) => {
     const data = {
         key: e.target.value,
