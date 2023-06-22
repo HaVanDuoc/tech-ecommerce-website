@@ -21,8 +21,15 @@ export const userSlice = createSlice({
             refetch: false,
             payload: {},
         },
+        updateInfoUser: {
+            isPending: false,
+        },
     },
     reducers: {
+        isPendingUpdateInfoUser: (state) => {
+            state.updateInfoUser.isPending = !state.updateInfoUser.isPending
+        },
+
         isPendingGetUsers: (state) => {
             state.users.isPending = !state.users.isPending
         },
@@ -78,6 +85,8 @@ export const userSlice = createSlice({
 export const selectorUsers = (state) => state.user.users
 export const selectorUser = (state) => state.user.user
 export const selectorSearchUser = (state) => state.user.search
+export const selectorGenders = (state) => state.user.user.gender
+export const selectorUpdateInfoUser = (state) => state.user.updateInfoUser
 
 export const {
     isPendingGetUsers,
@@ -92,6 +101,7 @@ export const {
     setSearch,
     isPendingSearch,
     resetSearch,
+    isPendingUpdateInfoUser
 } = userSlice.actions
 
 export default userSlice.reducer

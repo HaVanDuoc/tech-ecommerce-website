@@ -86,23 +86,24 @@ exports.getGender = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     try {
-        const { error } = Joi.object({
-            firstName: joiUpdateUser.firstName,
-            middleName: joiUpdateUser.middleName,
-            lastName: joiUpdateUser.lastName,
-            userName: joiUpdateUser.userName,
-            email: joiUpdateUser.email,
-            password: joiUpdateUser.password,
-            phoneNumber: joiUpdateUser.phoneNumber,
-            address: joiUpdateUser.address,
-            dateOfBirth: joiUpdateUser.dateOfBirth,
-            avatar: joiUpdateUser.avatar,
-            genderCode: joiUpdateUser.genderCode,
-            roleId: joiUpdateUser.roleId,
-            statusId: joiUpdateUser.statusId,
-        }).validate(req.body)
+        // const { error } = Joi.object({
+        //     firstName: joiUpdateUser.firstName,
+        //     middleName: joiUpdateUser.middleName,
+        //     lastName: joiUpdateUser.lastName,
+        //     userName: joiUpdateUser.userName,
+        //     email: joiUpdateUser.email,
+        //     password: joiUpdateUser.password,
+        //     phoneNumber: joiUpdateUser.phoneNumber,
+        //     address: joiUpdateUser.address,
+        //     dateOfBirth: joiUpdateUser.dateOfBirth,
+        //     avatar: joiUpdateUser.avatar,
+        //     genderCode: joiUpdateUser.genderCode,
+        //     roleId: joiUpdateUser.roleId,
+        //     statusId: joiUpdateUser.statusId,
+        //     userId,
+        // }).validate(req.body)
 
-        if (error) return badRequest(error.details[0]?.message, res)
+        // if (error) return badRequest(error.details[0]?.message, res)
 
         // Check Email Exists
         if (req.body.email) {

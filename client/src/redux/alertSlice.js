@@ -1,5 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit"
 
+export const timeout = 4000
+
 export const alertSlice = createSlice({
     name: "alert",
     initialState: {

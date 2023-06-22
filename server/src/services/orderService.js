@@ -5,7 +5,7 @@ const { getOffset, calculatePayment } = require("../utils/calculator")
 exports.getOrder = async (req) => {
     try {
         const user_id = req.body.user_id
-        const type = req.body.type
+        const type = req.body.type === "Tất cả" ? null : req.body.type
         const page = req.body.page || 1
         const limit = 10
         const offset = getOffset(page, limit)

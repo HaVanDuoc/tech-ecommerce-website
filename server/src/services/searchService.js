@@ -9,7 +9,7 @@ exports.headerSuggest = async (key, limit) => {
                           products.discount,
                           products.files,
                           categories.name as 'category',
-                          categories.link as 'categoryLink'
+                          categories.alias
                       FROM
                           products
                       LEFT JOIN
@@ -47,7 +47,7 @@ exports.headerRecent = async (req) => {
                                 products.price,
                                 products.discount,
                                 products.files,
-                                categories.link as 'categoryLink'
+                                categories.alias
                             from
                                 products
                                 left join categories on categories.categoryId = products.categoryId

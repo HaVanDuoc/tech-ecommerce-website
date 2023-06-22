@@ -101,7 +101,7 @@ const AutoComplete = ({ user_id }) => {
                                     }}
                                     onClick={handleClick}
                                 >
-                                    <Link to={`${item.categoryLink}/${item.name}`} className="link">
+                                    <Link to={`${item.alias}/${item.name}`} className="link">
                                         <Stack flexDirection="row" justifyContent="center" alignItems="center">
                                             <Stack justifyContent="center" alignItems="center" width={80}>
                                                 <img
@@ -174,7 +174,7 @@ const AutoComplete = ({ user_id }) => {
                                         },
                                     }}
                                 >
-                                    <Link to={`${item.categoryLink}/${item.name}`} className="link">
+                                    <Link to={`${item.alias}/${item.name}`} className="link">
                                         <Stack flexDirection="row" justifyContent="center" alignItems="center">
                                             <Stack justifyContent="center" alignItems="center" width={80}>
                                                 <img

@@ -37,6 +37,7 @@ import { isPending, isPendingCreateOrder, refetch, setCreateOrder, setOrders, se
 import {
     isPendingGetUsers,
     isPendingSearch,
+    isPendingUpdateInfoUser,
     setGender,
     setRoles,
     setSearch,
@@ -65,6 +66,16 @@ const axiosInstance = async (method, url, data) => {
 export default axiosInstance
 
 // USER
+export const requestUpdateInfoUser = (dispatch, { data }) => {
+    setTimeout(async () => {
+        dispatch(isPendingUpdateInfoUser())
+        const response = await axiosInstance("put", `/user/updateUser/${data.userId}`, data)
+        dispatch(setResponse(response))
+        dispatch(exportResponse())
+    }, 2000)
+    dispatch(isPendingUpdateInfoUser())
+}
+
 export const requestSearchUser = async (dispatch, key, limit) => {
     dispatch(isPendingSearch())
     const response = await axiosInstance("post", "/user/search", { key, limit })
