@@ -1,86 +1,72 @@
 import { Box, Checkbox, CircularProgress, Grid, Stack, Typography } from "@mui/material"
 import { useSnackbar } from "notistack"
 import React, { Fragment } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import axiosInstance from "~/api"
 import { formatCost, formatDiscount, formatPrice, formatVND } from "~/helper/format"
-import axiosInstance from "~/utils/axiosInstance"
+import { refetchOrder, selectorOrder } from "~/redux/orderSlice"
+import { selectorAdminOrder, setPendingCount } from "~/redux/pageAdminOrderSlice"
+import { calculatePayment } from "~/utils/calculate"
 
 const SectionProducts = ({ order_list, order_status, payment, setPayment }) => {
-    const handleIncrease = (index, price, discount, order_items_id) => {
-        // get value current quantity
-        const currentValue = document.querySelector(`.box-quantity-${index} .count`).innerHTML
+    const order = useSelector(selectorOrder)
+    const dispatch = useDispatch()
+    const pendingCount = useSelector(selectorAdminOrder)?.isPendingCount
 
-        // Increase it by 1 then render
-        document.querySelector(`.box-quantity-${index} .count`).innerHTML = Number(currentValue) + 1
+    const handleIncrease = (index) => {
+        const order_detail_id = order.payload.order_list[index].order_detail_id
+        const order_items_id = order.payload.order_list[index].order_items_id
+        const price = order.payload.order_list[index].price
+        const discount = order.payload.order_list[index].discount
+        const quantity = 1
+        const pay = calculatePayment(price, quantity, discount)
 
-        // and render price
-        document.querySelector(`.box-price-${index}`).innerHTML = formatVND(
-            (price - price * ((discount ? discount : 0) / 100)) * (Number(currentValue) + 1)
-        )
-
-        // set tổng tiền
-        setPayment(Number(payment) + Number(price - price * ((discount ? discount : 0) / 100)))
-
-        // update quantity
-        const fetch = async () => {
-            await axiosInstance({
-                method: "post",
-                url: "/admin/orders/orderDetails/increase",
-                headers: { Authorization: localStorage.getItem("access_token") },
-                data: { order_items_id },
+        dispatch(setPendingCount(true))
+        setTimeout(async () => {
+            await axiosInstance("post", "/order/orderDetails/increase", {
+                order_items_id,
+                pay,
+                order_detail_id,
             })
-        }
-
-        fetch()
+            dispatch(setPendingCount(false))
+            dispatch(refetchOrder())
+        }, 700)
     }
 
-    const handleDecrease = (index, price, discount, order_items_id) => {
-        // get value current quantity
-        const currentValue = document.querySelector(`.box-quantity-${index} .count`).innerHTML
+    const handleDecrease = (index) => {
+        const currentCount = document.querySelector(`.box-quantity-${index} .count`).innerHTML
+        if (currentCount === "1") return
 
-        // if value = 1 then stop
-        if (currentValue === "1") return
+        const order_detail_id = order.payload.order_list[index].order_detail_id
+        const order_items_id = order.payload.order_list[index].order_items_id
+        const price = order.payload.order_list[index].price
+        const discount = order.payload.order_list[index].discount
+        const quantity = 1
+        const pay = calculatePayment(price, quantity, discount)
 
-        // Increase it by 1 then render
-        document.querySelector(`.box-quantity-${index} .count`).innerHTML = Number(currentValue) - 1
-
-        // and render price
-        document.querySelector(`.box-price-${index}`).innerHTML = formatVND(
-            (price - price * ((discount ? discount : 0) / 100)) * (Number(currentValue) - 1)
-        )
-
-        // set tổng tiền
-        setPayment(Number(payment) - Number(price - price * ((discount ? discount : 0) / 100)))
-
-        // update quantity
-        const fetch = async () => {
-            await axiosInstance({
-                method: "post",
-                url: "/admin/orders/orderDetails/decrease",
-                headers: { Authorization: localStorage.getItem("access_token") },
-                data: { order_items_id },
+        dispatch(setPendingCount(true))
+        setTimeout(async () => {
+            await axiosInstance("post", "/order/orderDetails/decrease", {
+                order_items_id,
+                pay,
+                order_detail_id,
             })
-        }
-
-        fetch()
+            dispatch(setPendingCount(false))
+            dispatch(refetchOrder())
+        }, 700)
     }
 
-    const handleDelete = (order_items_id, order_detail_id, product_id) => {
-        // Request to server delete product
+    const handleDelete = (index) => {
         const deleteProduct = async () => {
-            const response = await axiosInstance({
-                method: "post",
-                url: "/admin/orders/orderDetails/delete",
-                headers: { Authorization: localStorage.getItem("access_token") },
-                data: {
-                    order_detail_id,
-                    order_items_id,
-                    product_id,
-                },
+            const order_detail_id = order.payload.order_list[index].order_detail_id
+            const order_items_id = order.payload.order_list[index].order_items_id
+
+            const response = await axiosInstance("delete", "/order/orderDetails/delete", {
+                order_detail_id,
+                order_items_id,
             })
-
             handleSnackBar(response)
-
-            // setReset(!reset) // Refresh data
+            dispatch(refetchOrder())
         }
 
         deleteProduct()
@@ -108,76 +94,76 @@ const SectionProducts = ({ order_list, order_status, payment, setPayment }) => {
         <Box className="content">
             {order_list ? (
                 order_list.map((item, index) => {
+                    const id = item.id
+                    const image = item.files[0].path
+                    const nameImage = item.files[0].originalName
+                    const category = item.category
+                    const product = item.name_product
+                    const discount = item?.discount
+                    const price = item?.price
+                    const quantity = item.quantity
+
                     return (
                         <Box className={`item col cart-item-${index}`} key={index}>
                             <Box className="col-0">
                                 <Checkbox className={`box-select-${index}`} />
 
                                 <Box sx={{ display: "none" }} className={`box-product-id-${index}`}>
-                                    {item.id}
+                                    {id}
                                 </Box>
                             </Box>
 
                             <Box className="col-1">
                                 <Grid container spacing={1} flexDirection="row">
                                     <Grid item xs={4}>
-                                        <img src={item.files[0].path} alt={item.files[0].originalName} width="100%" />
+                                        <img src={image} alt={nameImage} width="100%" />
                                     </Grid>
                                     <Grid item xs>
                                         <Box sx={style1}>
-                                            <Typography>{`${item.category} ${item.name_product}`}</Typography>
+                                            <Typography>{`${category} ${product}`}</Typography>
                                         </Box>
                                     </Grid>
                                 </Grid>
                             </Box>
 
                             <Box className="col-2 field-bill">
-                                {item?.discount !== 0 ? (
+                                {discount !== 0 ? (
                                     <Typography sx={style2}>
                                         <Typography variant="span" color="#666" fontSize="14px">
-                                            {formatCost(item.price)}
+                                            {formatCost(price)}
                                         </Typography>
                                         <Typography variant="span" color="crimson" fontWeight={500} fontSize="14px">
-                                            {formatDiscount(item.discount)}
+                                            {formatDiscount(discount)}
                                         </Typography>
                                     </Typography>
                                 ) : (
                                     <Fragment />
                                 )}
-                                <Typography>{formatPrice(item.price, item.discount)}</Typography>
+                                <Typography>{formatPrice(price, discount)}</Typography>
                             </Box>
 
                             {order_status === "Chờ xác nhận" ? (
                                 <Box className={`col-3 box-quantity-${index}`}>
                                     <Box sx={styles}>
-                                        <Box
-                                            className="btn"
-                                            onClick={() =>
-                                                handleDecrease(index, item.price, item.discount, item.order_items_id)
-                                            }
-                                        >
+                                        <Box className="btn" onClick={() => handleDecrease(index)}>
                                             -
                                         </Box>
-                                        <Box className={`count get-quantity-${index}`}>{item.quantity}</Box>
-                                        <Box
-                                            className="btn"
-                                            onClick={() =>
-                                                handleIncrease(index, item.price, item.discount, item.order_items_id)
-                                            }
-                                        >
+                                        <Box className={`count get-quantity-${index}`}>{quantity}</Box>
+                                        <Box className="btn" onClick={() => handleIncrease(index)}>
                                             +
                                         </Box>
                                     </Box>
                                 </Box>
                             ) : (
-                                <Box className={`col-3 count get-quantity-${index}`}>{item.quantity}</Box>
+                                <Box className={`col-3 count get-quantity-${index}`}>{quantity}</Box>
                             )}
 
                             <Box className="col-4">
                                 <Typography className={`box-price-${index}`} sx={{ color: "crimson" }}>
-                                    {formatVND(
-                                        (item.price - item.price * ((item.discount ? item.discount : 0) / 100)) *
-                                            item.quantity
+                                    {pendingCount ? (
+                                        <CircularProgress size={18} />
+                                    ) : (
+                                        formatVND(calculatePayment(price, quantity, discount))
                                     )}
                                 </Typography>
                             </Box>
@@ -186,9 +172,7 @@ const SectionProducts = ({ order_list, order_status, payment, setPayment }) => {
                                 <Box className="col-5">
                                     <Typography
                                         sx={{ color: "crimson", cursor: "pointer" }}
-                                        onClick={() =>
-                                            handleDelete(item.order_items_id, item.order_detail_id, item.product_id)
-                                        }
+                                        onClick={() => handleDelete(index)}
                                     >
                                         Xóa
                                     </Typography>

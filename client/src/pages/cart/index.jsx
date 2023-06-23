@@ -166,7 +166,7 @@ const Cart = () => {
 
         selectedProduct.map((index) => {
             const product_id = products[index].id
-            const quantity = products[index].quantity
+            const quantity = Number(document.querySelector(`.count.get-quantity-${index}`).innerHTML)
             orders.push({ product_id, quantity })
             return orders
         })

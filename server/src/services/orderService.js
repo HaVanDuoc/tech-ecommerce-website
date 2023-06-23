@@ -475,243 +475,116 @@ exports.handleOrderStatus = (actionConfirm, actionConfirmed, codeOrder) =>
         }
     })
 
-exports.handleIncrease = (order_items_id) =>
-    new Promise(async (resolve, reject) => {
-        try {
-            // Tăng số lượng trong order_items
-            const getCurrentQuantity = await db.Order_Item.findOne({
-                where: {
-                    id: order_items_id,
-                },
-                attributes: ["quantity"],
-                raw: true,
-            })
+exports.handleIncrease = async (req) => {
+    try {
+        const order_detail_id = req.body.order_detail_id
+        const order_items_id = req.body.order_items_id
+        const pay = req.body.pay
 
-            const response = await db.Order_Item.update(
-                { quantity: Number(getCurrentQuantity.quantity) + 1 },
-                {
-                    where: {
-                        id: order_items_id,
-                    },
-                }
-            )
+        const updateCount = await db.sequelize.query(
+            `update order_items set quantity = quantity + 1, pay = pay + ${pay} where id = ${order_items_id}`
+        )
 
-            // Tăng tổng tiền
-            const [increase_data] = await db.sequelize.query(`
-          select
-              order_items.id as 'order_items_id',
-              order_details.id as 'order_details_id',
-              order_details.total as 'total_money',
-              products.price as 'price_product',
-              products.discount as 'discount_product'
-          from
-              order_items
-              left join products on products.id = order_items.product_id
-              left join order_details on order_details.id = order_items.order_detail_id
-          where
-              order_items.id = ${order_items_id};
-      `)
+        const updateSumOrder = await db.sequelize.query(
+            `update order_details set total = total + ${pay} where id = ${order_detail_id}`
+        )
 
-            const order_details_id = increase_data[0].order_details_id
-            const total = increase_data[0].total_money
-            const price = increase_data[0].price_product
-            const discount = increase_data[0].discount_product
-
-            const newTotalMoney = total + (price - price * ((discount ? discount : 0) / 100))
-
-            const updateTotal = await db.Order_Detail.update(
-                { total: newTotalMoney },
-                {
-                    where: { id: order_details_id },
-                }
-            )
-
-            resolve({
-                err: updateTotal ? 0 : 1,
-                msg: updateTotal ? "Update data successfully" : "Update data failed",
-            })
-        } catch (error) {
-            reject(error)
+        return {
+            err: updateSumOrder ? 0 : 1,
+            msg: updateSumOrder ? "Successfully" : "Failed",
         }
-    })
+    } catch (error) {
+        return error
+    }
+}
 
-exports.handleDecrease = (order_items_id) =>
-    new Promise(async (resolve, reject) => {
-        try {
-            const getCurrentQuantity = await db.Order_Item.findOne({
-                where: {
-                    id: order_items_id,
-                },
-                attributes: ["quantity"],
-                raw: true,
-            })
+exports.handleDecrease = async (req) => {
+    try {
+        const order_detail_id = req.body.order_detail_id
+        const order_items_id = req.body.order_items_id
+        const pay = req.body.pay
 
-            const response = await db.Order_Item.update(
-                { quantity: Number(getCurrentQuantity.quantity) - 1 },
-                {
-                    where: {
-                        id: order_items_id,
-                    },
-                }
-            )
+        const updateCount = await db.sequelize.query(
+            `update order_items set quantity = quantity - 1, pay = pay - ${pay} where id = ${order_items_id}`
+        )
 
-            // Giảm tổng tiền
-            const [decrease_money] = await db.sequelize.query(`
-          select
-              order_items.id as 'order_items_id',
-              order_details.id as 'order_details_id',
-              order_details.total as 'total_money',
-              products.price as 'price_product',
-              products.discount as 'discount_product'
-          from
-              order_items
-              left join products on products.id = order_items.product_id
-              left join order_details on order_details.id = order_items.order_detail_id
-          where
-              order_items.id = ${order_items_id};
-      `)
+        const updateSumOrder = await db.sequelize.query(
+            `update order_details set total = total - ${pay} where id = ${order_detail_id}`
+        )
 
-            const order_details_id = decrease_money[0].order_details_id
-            const total = decrease_money[0].total_money
-            const price = decrease_money[0].price_product
-            const discount = decrease_money[0].discount_product
-
-            const newTotalMoney = total - (price - price * ((discount ? discount : 0) / 100))
-
-            const updateTotal = await db.Order_Detail.update(
-                { total: newTotalMoney },
-                {
-                    where: { id: order_details_id },
-                }
-            )
-
-            resolve({
-                err: updateTotal ? 0 : 1,
-                msg: updateTotal ? "Update data successfully" : "Update data failed",
-            })
-        } catch (error) {
-            reject(error)
+        return {
+            err: updateSumOrder ? 0 : 1,
+            msg: updateSumOrder ? "Successfully" : "Failed",
         }
-    })
+    } catch (error) {
+        reject(error)
+    }
+}
 
-exports.handleAddProduct = (order_detail_id, product_id, quantity) =>
-    new Promise(async (resolve, reject) => {
-        try {
-            // Add product to order
-            const [add, created] = await db.Order_Item.findOrCreate({
-                where: {
-                    order_detail_id,
-                    product_id,
-                },
-                defaults: {
-                    order_detail_id,
-                    product_id,
-                    quantity,
-                },
-            })
+exports.handleAddProduct = async (order_detail_id, product_id, quantity) => {
+    try {
+        // find price and discount of new product
+        const infoProduct = await db.Product.findOne({
+            where: { id: product_id },
+            attributes: ["price", "discount"],
+            raw: true,
+        })
 
-            if (created) {
-                // current total in order_detail
-                const total = await db.Order_Detail.findOne({
-                    where: { id: order_detail_id },
-                    attributes: ["total"],
-                    raw: true,
-                })
+        const price = infoProduct.price
+        const discount = infoProduct.discount
+        const priceOfProduct = calculatePayment(price, quantity, discount)
 
-                // find price and discount of new product
-                const infoProduct = await db.Product.findOne({
-                    where: { id: product_id },
-                    attributes: ["price", "discount"],
-                    raw: true,
-                })
+        // Add product to order
+        const [add, created] = await db.Order_Item.findOrCreate({
+            where: {
+                order_detail_id,
+                product_id,
+            },
+            defaults: {
+                order_detail_id,
+                product_id,
+                quantity,
+                pay: priceOfProduct,
+            },
+        })
 
-                const price = infoProduct.price
-                const discount = infoProduct.discount
-
-                // calculator money of new product
-                const priceOfProduct = price - price * ((discount ? discount : 0) / 100)
-
-                // new total order
-                const newTotalOrder = Number(total.total) + Number(priceOfProduct) * Number(quantity)
-
-                // update
-                const update = await db.Order_Detail.update(
-                    {
-                        total: newTotalOrder,
-                    },
-                    {
-                        where: { id: order_detail_id },
-                    }
-                )
-            }
-
-            resolve({
-                err: created ? 0 : 1,
-                msg: created ? "Đã thêm sản phẩm mới!" : "Sản phẩm này đã có trong đơn hàng!",
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
-
-exports.handleDelete = (order_detail_id, order_items_id, product_id) =>
-    new Promise(async (resolve, reject) => {
-        try {
-            // *
-            // Subtract the money of product from the total payment (total in table order_details)
-            // *
-            // current total in order_detail
-            const total = await db.Order_Detail.findOne({
-                where: { id: order_detail_id },
-                attributes: ["total"],
-                raw: true,
-            })
-
-            // find price and discount of new product
-            const infoProduct = await db.Product.findOne({
-                where: { id: product_id },
-                attributes: ["price", "discount"],
-                raw: true,
-            })
-
-            const price = infoProduct.price
-            const discount = infoProduct.discount
-
-            // calculator money of new product
-            const priceOfProduct = price - price * ((discount ? discount : 0) / 100)
-
-            // find quantity ordered
-            const quantity = await db.Order_Item.findOne({
-                where: { id: order_items_id },
-                attributes: ["quantity"],
-                raw: true,
-            })
-
-            // new total order
-            const newTotalOrder = Number(total.total) - Number(priceOfProduct) * Number(quantity.quantity)
-
-            // update
-            const update = await db.Order_Detail.update(
-                {
-                    total: newTotalOrder,
-                },
-                {
-                    where: { id: order_detail_id },
-                }
+        if (created) {
+            const update = await db.sequelize.query(
+                `update order_details set total = total + ${priceOfProduct} where id = ${order_detail_id}`
             )
-
-            // Finally, delete product in table order_items
-            const deleteItem = await db.Order_Item.destroy({
-                where: {
-                    id: order_items_id,
-                },
-            })
-
-            resolve({
-                err: deleteItem ? 0 : 1,
-                msg: deleteItem ? "Đã xóa sản phẩm ra khỏi hóa đơn!" : "Đã xảy ra lỗi!",
-            })
-        } catch (error) {
-            reject(error)
         }
-    })
+
+        return {
+            err: created ? 0 : 1,
+            msg: created ? "Đã thêm sản phẩm mới!" : "Sản phẩm này đã có trong đơn hàng!",
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.handleDelete = async (req) => {
+    try {
+        const order_detail_id = req.body.order_detail_id
+        const order_items_id = req.body.order_items_id
+
+        const payOfProduct = await db.Order_Item.findOne({
+            where: { id: order_items_id },
+            raw: true,
+        })
+
+        const updateTotalPaymentOfOrder = await db.sequelize.query(
+            `update order_details set total = total - ${payOfProduct.pay} where id = ${order_detail_id}`
+        )
+
+        // Finally, delete product in table order_items
+        const deleteItem = await db.Order_Item.destroy({ where: { id: order_items_id } })
+
+        return {
+            err: deleteItem ? 0 : 1,
+            msg: deleteItem ? "Đã xóa sản phẩm ra khỏi hóa đơn!" : "Đã xảy ra lỗi!",
+        }
+    } catch (error) {
+        return error
+    }
+}

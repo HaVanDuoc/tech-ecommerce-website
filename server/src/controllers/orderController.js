@@ -11,6 +11,7 @@ const {
     handleAddProduct,
     handleDelete,
     createOrderAdmin,
+    updateCount,
 } = require("../services/orderService")
 
 exports.getOrder = async (req, res) => {
@@ -87,9 +88,7 @@ exports.handleOrderStatus = async (req, res) => {
 
 exports.handleIncrease = async (req, res) => {
     try {
-        const order_items_id = req.body.order_items_id
-
-        const response = await handleIncrease(order_items_id)
+        const response = await handleIncrease(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)
@@ -98,9 +97,7 @@ exports.handleIncrease = async (req, res) => {
 
 exports.handleDecrease = async (req, res) => {
     try {
-        const order_items_id = req.body.order_items_id
-
-        const response = await handleDecrease(order_items_id)
+        const response = await handleDecrease(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)
@@ -123,11 +120,7 @@ exports.handleAddProduct = async (req, res) => {
 
 exports.handleDelete = async (req, res) => {
     try {
-        const order_detail_id = req.body.order_detail_id
-        const order_items_id = req.body.order_items_id
-        const product_id = req.body.product_id
-
-        const response = await handleDelete(order_detail_id, order_items_id, product_id)
+        const response = await handleDelete(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { AdminTitle } from "~/admin/Styled"
 import React, { Fragment, useEffect, useState } from "react"
-import axiosInstance from "~/api"
+import axiosInstance, { requestOrder } from "~/api"
 import InfoCustomer from "./components/InfoCustomer"
 import InfoContact from "./components/InfoContact"
 import Contact from "./components/Contact"
@@ -11,40 +11,37 @@ import SectionProducts from "./components/SectionProducts"
 import LineSumPayment from "./components/LineSumPayment"
 import { Box, Container, Stack } from "@mui/material"
 import styled from "@emotion/styled"
+import { useDispatch, useSelector } from "react-redux"
+import { selectorOrder } from "~/redux/orderSlice"
 
 const OrderDetails = () => {
-    const [orders, setOrders] = useState([])
     const [payment, setPayment] = useState(0) // số tiền thanh toán
-    const [reset, setReset] = useState(true) // số sản phẩm đã chọn
     const codeOrder = useParams().codeOrder
+    const dispatch = useDispatch()
+
+    const refetch = useSelector(selectorOrder)?.refetch
+    const isPending = useSelector(selectorOrder)?.isPending
+
+    const order = useSelector(selectorOrder)?.payload
+    const order_id = order?.order_id
+    const firstName = order?.firstName
+    const middleName = order?.middleName
+    const lastName = order?.lastName
+    const dateOfBirth = order?.dateOfBirth
+    const gender = order?.gender
+    const address = order?.address
+    const phoneNumber = order?.phoneNumber
+    const email = order?.email
+    const avatar = order?.avatar
+    const order_code = order?.order_code
+    const createdAt = order?.createdAt
+    const order_status = order?.order_status
+    const totalPayment = order?.total
+    const order_list = order?.order_list
 
     useEffect(() => {
-        const getOrders = async () => {
-            const response = await axiosInstance("post", "/order/getOrderDetails", { codeOrder })
-            setOrders(response.data.data)
-            setPayment(response.data.data.total)
-        }
-
-        getOrders()
-    }, [codeOrder, reset])
-
-    console.log('orders', orders)
-
-    const order_id = orders?.order_id
-    const firstName = orders?.firstName
-    const middleName = orders?.middleName
-    const lastName = orders?.lastName
-    const dateOfBirth = orders?.dateOfBirth
-    const gender = orders?.gender
-    const address = orders?.address
-    const phoneNumber = orders?.phoneNumber
-    const email = orders?.email
-    const avatar = orders?.avatar
-    const order_code = orders?.order_code
-    const createdAt = orders?.createdAt
-    const order_status = orders?.order_status
-
-    const order_list = orders?.order_list
+        requestOrder(dispatch, { codeOrder })
+    }, [refetch, dispatch, codeOrder])
 
     return (
         <Styled>
@@ -90,9 +87,7 @@ const OrderDetails = () => {
                                     order_id={order_id}
                                     order_list={order_list}
                                     order_status={order_status}
-                                    payment={payment}
-                                    reset={reset}
-                                    setReset={setReset}
+                                    payment={totalPayment}
                                 />
                             </Option>
                         </Box>

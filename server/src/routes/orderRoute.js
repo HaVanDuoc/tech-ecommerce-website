@@ -33,6 +33,6 @@ router.post("/handleOrderStatus", handleOrderStatus)
 router.post("/orderDetails/increase", handleIncrease)
 router.post("/orderDetails/decrease", handleDecrease)
 router.post("/orderDetails/addProduct", handleAddProduct)
-router.post("/orderDetails/delete", handleDelete)
+router.delete("/orderDetails/delete", handleDelete)
 
 module.exports = router

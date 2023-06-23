@@ -9,6 +9,12 @@ export const orderSlice = createSlice({
             refetch: false,
             payload: {},
         },
+        order: {
+            isPending: false,
+            isFetch: false,
+            refetch: false,
+            payload: null,
+        },
         tabs: {
             isFetch: false,
             data: {},
@@ -19,6 +25,26 @@ export const orderSlice = createSlice({
         },
     },
     reducers: {
+        // Order
+        isPendingOrder: (state) => {
+            state.order.isPending = !state.order.isPending
+        },
+        setOrder: (state, action) => {
+            state.order.payload = action.payload
+        },
+        refetchOrder: (state) => {
+            state.order.refetch = !state.order.refetch
+        },
+        resetOrder: (state) => {
+            state.order.isPending = {
+                isPending: false,
+                isFetch: false,
+                refetch: false,
+                payload: null,
+            }
+        },
+
+        //
         isPending: (state) => {
             state.orders.isPending = !state.orders.isPending
         },
@@ -59,11 +85,23 @@ export const orderSlice = createSlice({
     },
 })
 
-export const { isPending, refetch, setOrders, setTabs, setCreateOrder, isPendingCreateOrder, resetCreateOrder } =
-    orderSlice.actions
+export const {
+    isPending,
+    refetch,
+    setOrders,
+    setTabs,
+    setCreateOrder,
+    isPendingCreateOrder,
+    resetCreateOrder,
+    isPendingOrder,
+    setOrder,
+    refetchOrder,
+    resetOrder,
+} = orderSlice.actions
 
 export const selectorOrders = (state) => state.order.orders
 export const selectorTabs = (state) => state.order.tabs
 export const selectorCreateOrder = (state) => state.order.createOrder
+export const selectorOrder = (state) => state.order.order
 
 export default orderSlice.reducer

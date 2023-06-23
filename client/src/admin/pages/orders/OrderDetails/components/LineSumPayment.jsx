@@ -1,12 +1,15 @@
 import React from "react"
-import { Box, Typography, styled } from "@mui/material"
+import { Box, CircularProgress, Typography, styled } from "@mui/material"
 import ButtonAddProduct from "../../components/ButtonAddProduct"
 import { formatVND } from "~/helper/format"
 import { actionConfirm, handleButtonConfirm } from "../../components/handleConfirm"
 import axiosInstance from "~/api"
+import { useSelector } from "react-redux"
+import { selectorAdminOrder } from "~/redux/pageAdminOrderSlice"
 
 const LineSumPayment = ({ order_status, order_list, order_id, reset, setReset, payment, order_code }) => {
     const buttonConfirm = handleButtonConfirm(order_status)
+    const pendingCount = useSelector(selectorAdminOrder)?.isPendingCount
 
     const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
         setTimeout(async () => {
@@ -30,7 +33,11 @@ const LineSumPayment = ({ order_status, order_list, order_id, reset, setReset, p
                     <Typography>
                         Tổng tiền ({order_list ? order_list.length : 0} sản phẩm):{" "}
                         <Typography id="total-money" variant="span" sx={style3}>
-                            {formatVND(payment)}
+                            {pendingCount ? (
+                                <CircularProgress size={20} sx={{ margin: "0 48.4px" }} />
+                            ) : (
+                                formatVND(payment)
+                            )}
                         </Typography>
                     </Typography>
 

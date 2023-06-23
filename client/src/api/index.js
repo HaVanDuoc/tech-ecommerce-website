@@ -33,7 +33,17 @@ import {
     setSearch as setSearchProduct,
 } from "~/redux/productSlice"
 import { isPendingUpdateBrand, resetBrand, setBrand, setBrands } from "~/redux/brandSlice"
-import { isPending, isPendingCreateOrder, refetch, setCreateOrder, setOrders, setTabs } from "~/redux/orderSlice"
+import {
+    isPending,
+    isPendingCreateOrder,
+    isPendingOrder,
+    refetch,
+    resetOrder,
+    setCreateOrder,
+    setOrder,
+    setOrders,
+    setTabs,
+} from "~/redux/orderSlice"
 import {
     isPendingGetUsers,
     isPendingSearch,
@@ -111,6 +121,16 @@ export const requestUsers = async (dispatch, page) => {
 }
 
 // ORDER
+export const requestOrder = (dispatch, {codeOrder}) => {
+    dispatch(resetOrder())
+    dispatch(isPendingOrder())
+    setTimeout(async () => {
+        const response = await axiosInstance("post", "/order/getOrderDetails", { codeOrder })
+        dispatch(setOrder(response.data.data))
+        dispatch(isPendingOrder())
+    }, 1000)
+}
+
 export const requestCreateOrder = (dispatch, { user_id, orders, status_id }) => {
     dispatch(isPendingCreateOrder())
     setTimeout(async () => {

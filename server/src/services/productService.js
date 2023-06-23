@@ -390,7 +390,7 @@ exports.searchProduct = async (req) => {
                           products.discount,
                           products.files,
                           categories.name as 'category',
-                          categories.link as 'categoryLink'
+                          categories.alias
                       FROM
                           products
                       LEFT JOIN
