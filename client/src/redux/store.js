@@ -9,6 +9,7 @@ import userReducer from "./userSlice"
 import categoryReducer from "./categorySlice"
 import alertReducer from "./alertSlice"
 import adminOrderReducer from "./pageAdminOrderSlice"
+import pageHomeReducer from "./pageHomeSlice"
 
 const store = configureStore({
     reducer: {
@@ -23,6 +24,7 @@ const store = configureStore({
         alert: alertReducer,
 
         // pages
+        home: pageHomeReducer,
         adminOrder: adminOrderReducer,
     },
 })

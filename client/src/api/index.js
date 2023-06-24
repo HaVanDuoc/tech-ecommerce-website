@@ -57,6 +57,7 @@ import {
 } from "~/redux/userSlice"
 import { isPendingUpdateCategory, responseUpdateCategory, setCategories, setCategory } from "~/redux/categorySlice"
 import { exportResponse, setResponse } from "~/redux/alertSlice"
+import { setPendingSuggestToday, setSuggestToday } from "~/redux/pageHomeSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -121,7 +122,7 @@ export const requestUsers = async (dispatch, page) => {
 }
 
 // ORDER
-export const requestOrder = (dispatch, {codeOrder}) => {
+export const requestOrder = (dispatch, { codeOrder }) => {
     dispatch(resetOrder())
     dispatch(isPendingOrder())
     setTimeout(async () => {
@@ -181,6 +182,15 @@ export const requestDestroyOrder = async (dispatch, order_details_id) => {
 }
 
 // PRODUCT
+export const requestSuggestToday = (dispatch, { limit }) => {
+    dispatch(setPendingSuggestToday(true))
+    setTimeout(async () => {
+        const response = await axiosInstance("post", "/product/getProducts", { limit })
+        dispatch(setSuggestToday(response.data.data))
+        dispatch(setPendingSuggestToday(false))
+    }, 1000)
+}
+
 export const requestSearchProduct = async (dispatch, key, limit) => {
     dispatch(isPendingSearchProduct())
     const response = await axiosInstance("post", "/product/search", { key, limit })

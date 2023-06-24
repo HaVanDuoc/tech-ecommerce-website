@@ -18,6 +18,7 @@ const SectionCategories = () => {
     }, [])
 
     const handleClick = () => {
+        window.scrollTo(0, 357)
         addOrUpdateURLParams()
         dispatch(reFetchProductPage())
     }

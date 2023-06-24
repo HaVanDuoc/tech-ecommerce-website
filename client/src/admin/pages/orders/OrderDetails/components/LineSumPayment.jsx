@@ -1,25 +1,30 @@
-import React from "react"
+import React, { Fragment, useState } from "react"
 import { Box, CircularProgress, Typography, styled } from "@mui/material"
 import ButtonAddProduct from "../../components/ButtonAddProduct"
 import { formatVND } from "~/helper/format"
 import { actionConfirm, handleButtonConfirm } from "../../components/handleConfirm"
 import axiosInstance from "~/api"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { selectorAdminOrder } from "~/redux/pageAdminOrderSlice"
+import { refetchOrder } from "~/redux/orderSlice"
 
 const LineSumPayment = ({ order_status, order_list, order_id, reset, setReset, payment, order_code }) => {
     const buttonConfirm = handleButtonConfirm(order_status)
     const pendingCount = useSelector(selectorAdminOrder)?.isPendingCount
+    const dispatch = useDispatch()
+    const [isPending, setPending] = useState(false)
 
     const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
+        setPending(true)
         setTimeout(async () => {
             await axiosInstance("post", "/order/handleOrderStatus", {
                 actionConfirm,
                 actionConfirmed,
                 codeOrder,
             })
-            setReset(!reset)
-        }, 1000)
+            setPending(false)
+            dispatch(refetchOrder())
+        }, 2000)
     }
 
     return (
@@ -43,9 +48,21 @@ const LineSumPayment = ({ order_status, order_list, order_id, reset, setReset, p
 
                     {buttonConfirm?.action.map((item, index) => {
                         return (
-                            <Box key={index} sx={style4} onClick={() => handleClick(actionConfirm, item, order_code)}>
-                                {item}
-                            </Box>
+                            <Fragment>
+                                {isPending ? (
+                                    <Box key={index} sx={style4}>
+                                        <CircularProgress size={20} sx={{ color: "#fff", margin: "0 20px" }} />
+                                    </Box>
+                                ) : (
+                                    <Box
+                                        key={index}
+                                        sx={style4}
+                                        onClick={() => handleClick(actionConfirm, item, order_code)}
+                                    >
+                                        {item}
+                                    </Box>
+                                )}
+                            </Fragment>
                         )
                     })}
                 </Box>

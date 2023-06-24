@@ -27,8 +27,6 @@ const Products = () => {
     const sortBy = new URLSearchParams(window.location.search).get("sortBy")
 
     useEffect(() => {
-        window.scrollTo(0, 357)
-
         // Stop handle when data available
         if (products[`${category}`] && products[`${category}`][`page-${page}`]) return
 

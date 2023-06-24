@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux"
 import ModalLogin from "./components/Auth/ModalLogin"
 import { useSnackbar } from "notistack"
 import { selectorResponse } from "./redux/alertSlice"
+import GoToTop from "./components/GoToTop"
 
 const App = () => {
     const dispatch = useDispatch()
@@ -56,6 +57,7 @@ const App = () => {
                                     <Layout>
                                         <Page />
                                         <ModalLogin />
+                                        <GoToTop />
                                     </Layout>
                                 </div>
                             }
@@ -77,6 +79,7 @@ const App = () => {
                                     <Layout>
                                         <Page />
                                         <ModalLogin />
+                                        <GoToTop />
                                     </Layout>
                                 </div>
                             }

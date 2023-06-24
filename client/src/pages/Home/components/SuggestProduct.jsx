@@ -1,32 +1,34 @@
-import { Box, Container, Grid, Typography } from "@mui/material"
+import { Box, CircularProgress, Container, Grid, Typography } from "@mui/material"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { requestLatestProducts } from "~/api"
+import { requestSuggestToday } from "~/api"
 import Card from "~/components/Card"
 import SkeletonCard from "~/components/skeleton"
-import { selectorProducts } from "~/redux/productSlice"
 import Title from "./Title"
+import { refetchSuggestToday, selectorSuggestToday } from "~/redux/pageHomeSlice"
+import addOrUpdateURLParams from "~/utils/addURLParams"
 
 const SuggestProduct = () => {
     const dispatch = useDispatch()
-    const products = useSelector(selectorProducts)?.home?.latest
-    const more = new URLSearchParams(window.location.search).get("more") || 1
+    const page = Number(new URLSearchParams(window.location.search).get("page") || 1)
+    const limit = 20 * page
+
+    const products = useSelector(selectorSuggestToday)
+    const list = products?.payload?.list
+    const currentPage = products?.payload?.currentPage
+    const counterProduct = products?.payload?.counterProduct
+    const limitOfPage = products?.payload?.limitOfPage
+    const refetch = products?.refetch
+    const isPending = products?.isPending
 
     useEffect(() => {
-        if (products && products.payload[`${more}`]) return
-        const config = { limit: 20 }
-        requestLatestProducts(dispatch, config)
+        requestSuggestToday(dispatch, { limit })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [refetch])
 
     const handleSeeMore = () => {
-        // if (offset === 0) {
-        //   setOffset(limit);
-        //   setLimit(10);
-        //   return;
-        // }
-        // setOffset(offset + 10);
-        // setLimit(10);
+        addOrUpdateURLParams("page", Number(page) + Number(1))
+        dispatch(refetchSuggestToday())
     }
 
     return (
@@ -38,15 +40,16 @@ const SuggestProduct = () => {
                     </Box>
 
                     <Box>
-                        {products && products.payload[`${more}`] ? (
+                        {products && products.payload ? (
                             <Grid container spacing={2}>
-                                {products.payload[`${more}`].map((item, index) => {
-                                    return (
-                                        <Grid item xs={2.4} key={index}>
-                                            <Card product={item} />
-                                        </Grid>
-                                    )
-                                })}
+                                {list &&
+                                    list.map((item, index) => {
+                                        return (
+                                            <Grid item xs={2.4} key={index}>
+                                                <Card product={item} />
+                                            </Grid>
+                                        )
+                                    })}
                             </Grid>
                         ) : (
                             <Grid container spacing={2}>
@@ -59,13 +62,15 @@ const SuggestProduct = () => {
                         )}
 
                         <Box sx={styles1}>
-                            {products?.currentPage !== products?.sumPages ? (
+                            {list?.length !== counterProduct ? (
                                 <Box onClick={handleSeeMore} sx={styles2}>
-                                    <Typography sx={styles3}>
-                                        {`Xem thêm ${
-                                            products?.sumProducts - products?.currentPage * products?.limit
-                                        } sản phẩm`}
-                                    </Typography>
+                                    {isPending ? (
+                                        <CircularProgress size={25} />
+                                    ) : (
+                                        <Typography sx={styles3}>
+                                            {`Xem thêm ${counterProduct - currentPage * limitOfPage} sản phẩm`}
+                                        </Typography>
+                                    )}
                                 </Box>
                             ) : (
                                 <Typography fontSize="13px" fontStyle="italic">
