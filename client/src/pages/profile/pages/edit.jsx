@@ -26,6 +26,8 @@ import Background from "../components/Background"
 import { selectorGenders, selectorUpdateInfoUser } from "~/redux/userSlice"
 import { requestGenderUser, requestUpdateInfoUser } from "~/api"
 import removeEmpty from "~/helper/removeEmpty"
+import ModalEditAvatar from "../components/ModalEditAvatar"
+import { setOpenModalEditAvatar } from "~/redux/pageProfileSlice"
 
 const Edit = () => {
     return (
@@ -41,6 +43,7 @@ export default Edit
 
 const SectionEdit = () => {
     const currentUser = useSelector(selectorCurrentUser)
+    const dispatch = useDispatch()
 
     return (
         <Box sx={{ position: "relative", top: -100 }}>
@@ -60,9 +63,15 @@ const SectionEdit = () => {
 
                         <Stack flexDirection="row" justifyContent="center" alignItems="center">
                             <Box sx={style7}>
-                                <Typography fontSize={14} color="#555">
+                                <Typography
+                                    fontSize={14}
+                                    color="#555"
+                                    onClick={() => dispatch(setOpenModalEditAvatar(true))}
+                                >
                                     Đổi ảnh đại diện
                                 </Typography>
+
+                                <ModalEditAvatar />
                             </Box>
                             <Box sx={style8}>
                                 <Typography fontSize={14} color="#555">

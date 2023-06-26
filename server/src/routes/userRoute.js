@@ -12,6 +12,7 @@ const {
     getRoles,
     getGender,
     searchUser,
+    updateAvatar,
 } = require("../controllers/userControllers")
 const { test } = require("../controllers/testController")
 
@@ -28,11 +29,12 @@ router.get("/getRoles", getRoles)
 router.get("/getGender", getGender)
 router.post("/search", searchUser)
 
-router.use(verifyToken)
 router.use(verifyRole)
+router.use(verifyToken)
 
 router.post("/createUser", createUser)
 router.put("/updateUser/:userId", updateUser)
 router.delete("/:userId", deleteUser)
+router.put("/updateAvatar", updateAvatar)
 
 module.exports = router

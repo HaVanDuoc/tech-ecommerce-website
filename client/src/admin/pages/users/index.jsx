@@ -16,12 +16,15 @@ import React, { useEffect, useState } from "react"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import { DataGrid } from "@mui/x-data-grid"
 import { FormatFullName, formatVND } from "~/helper/format"
-import { ButtonCreate, StackButtons } from "~/admin/Styled"
 import { useSnackbar } from "notistack"
 import { useDispatch, useSelector } from "react-redux"
 import { refetch, selectorUsers } from "~/redux/userSlice"
 import axiosInstance, { requestUsers } from "~/api"
 import PaginationCustomize from "~/components/Pagination"
+import LineOption from "~/admin/components/LineOption/LineOption"
+import ButtonRefresh from "~/admin/components/LineOption/components/ButtonRefresh"
+import CallMadeIcon from "@mui/icons-material/CallMade"
+import { ButtonCreate, StackButtons } from "~/admin/Styled"
 
 export default function UserList() {
     const [data, setData] = useState([])
@@ -170,9 +173,16 @@ export default function UserList() {
 
     return (
         <Box sx={{ flex: 4 }}>
-            <StackButtons>
-                <ButtonCreate to="/admin/user/newUser">Tạo mới</ButtonCreate>
-            </StackButtons>
+            <LineOption>
+                <Stack flexDirection="row" alignItems="center" justifyContent="center">
+                    <SortBy />
+                    <ButtonRefresh />
+                </Stack>
+
+                <Stack>
+                    <ButtonCreate to="/admin/user/newUser">Tạo mới</ButtonCreate>
+                </Stack>
+            </LineOption>
 
             {users.isPending ? (
                 <Stack flexDirection="row" justifyContent="center" alignItems="center" height="70vh">
@@ -223,5 +233,42 @@ export default function UserList() {
 
             <PaginationCustomize counterPage={users?.data?.sumPages} refetch={refetch()} />
         </Box>
+    )
+}
+
+const SortBy = () => {
+    const dispatch = useDispatch()
+
+    const handleClick = () => {
+        dispatch(refetch())
+    }
+
+    const styles = {
+        "& button": {
+            textTransform: "none",
+            ml: 1,
+            fontSize: 16,
+            fontWeight: 400,
+        },
+
+        "& svg": {
+            fontSize: 16,
+            ml: 1,
+        },
+    }
+
+    return (
+        <Stack flexDirection="row" alignItems="center" justifyContent="center" sx={styles}>
+            <Typography fontWeight={500} fontSize={15}>
+                Xếp theo:
+            </Typography>
+
+            <Button onClick={handleClick}>Mới nhất</Button>
+
+            <Button>
+                <Typography>Tổng thanh toán</Typography>
+                <CallMadeIcon />
+            </Button>
+        </Stack>
     )
 }

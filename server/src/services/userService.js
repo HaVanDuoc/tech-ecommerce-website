@@ -221,6 +221,22 @@ exports.updateUser = async (userId, data) => {
     }
 }
 
+exports.updateAvatar = async (req) => {
+    try {
+        const userId = req.body.userId
+        const avatar = req.body.avatar
+
+        const response = await db.User.update({ avatar }, { where: { userId }, raw: true })
+
+        return {
+            err: response ? 0 : 1,
+            msg: response ? "Cập nhật thành công" : "Cập nhật thất bại",
+        }
+    } catch (error) {
+        return error
+    }
+}
+
 exports.deleteUser = async (userId) => {
     try {
         const response = await db.User.destroy({

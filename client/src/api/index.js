@@ -58,6 +58,7 @@ import {
 import { isPendingUpdateCategory, responseUpdateCategory, setCategories, setCategory } from "~/redux/categorySlice"
 import { exportResponse, setResponse } from "~/redux/alertSlice"
 import { setPendingSuggestToday, setSuggestToday } from "~/redux/pageHomeSlice"
+import { setPendingUpdateAvatar } from "~/redux/pageProfileSlice"
 
 const token = localStorage.getItem("access_token")
 
@@ -77,6 +78,16 @@ const axiosInstance = async (method, url, data) => {
 export default axiosInstance
 
 // USER
+export const requestUpdateAvatar = (dispatch, { userId, avatar }) => {
+    dispatch(setPendingUpdateAvatar(true))
+    setTimeout(async () => {
+        const response = await axiosInstance("put", "/user/updateAvatar", { userId, avatar })
+        dispatch(setResponse(response))
+        dispatch(exportResponse())
+        dispatch(setPendingUpdateAvatar(false))
+    }, 2000)
+}
+
 export const requestUpdateInfoUser = (dispatch, { data }) => {
     setTimeout(async () => {
         dispatch(isPendingUpdateInfoUser())

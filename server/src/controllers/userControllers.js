@@ -9,6 +9,7 @@ const {
     getRoles,
     getGender,
     searchUser,
+    updateAvatar,
 } = require("../services/userService")
 const { createUser: joiCreateUser, updateUser: joiUpdateUser } = require("../helper/joiSchema")
 const Joi = require("joi")
@@ -121,6 +122,15 @@ exports.updateUser = async (req, res) => {
 
         const response = await updateUser(userId, req.body)
 
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.updateAvatar = async (req, res) => {
+    try {
+        const response = await updateAvatar(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)
