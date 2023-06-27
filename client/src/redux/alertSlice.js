@@ -17,11 +17,17 @@ export const alertSlice = createSlice({
         exportResponse: (state) => {
             state.response.export = !state.response.export
         },
+        resetResponse: (state) => {
+            state.response = {
+                export: false,
+                payload: null,
+            }
+        },
     },
 })
 
 export const selectorResponse = (state) => state.alert.response
 
-export const { setResponse, exportResponse } = alertSlice.actions
+export const { setResponse, exportResponse, resetResponse } = alertSlice.actions
 
 export default alertSlice.reducer

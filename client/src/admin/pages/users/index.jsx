@@ -24,7 +24,7 @@ import PaginationCustomize from "~/components/Pagination"
 import LineOption from "~/admin/components/LineOption/LineOption"
 import ButtonRefresh from "~/admin/components/LineOption/components/ButtonRefresh"
 import CallMadeIcon from "@mui/icons-material/CallMade"
-import { ButtonCreate, StackButtons } from "~/admin/Styled"
+import { ButtonCreate } from "~/admin/Styled"
 
 export default function UserList() {
     const [data, setData] = useState([])

@@ -19,7 +19,6 @@ export default function ProductDetails() {
 
     useEffect(() => {
         window.scrollTo(0, 0) // Set position for scroll when access page
-
         requestGetProduct(dispatch, { nameProduct })
     }, [nameProduct, currentUser, dispatch, product.reFetch])
 

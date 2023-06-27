@@ -31,6 +31,8 @@ import {
     startSetProduct,
     isPendingSearch as isPendingSearchProduct,
     setSearch as setSearchProduct,
+    reFetchProduct,
+    refetchCounterCartProduct,
 } from "~/redux/productSlice"
 import { isPendingUpdateBrand, resetBrand, setBrand, setBrands } from "~/redux/brandSlice"
 import {
@@ -345,6 +347,16 @@ export const requestSearchHeaderSaveRecent = async (product_id, user_id) => {
 }
 
 // CART
+export const requestAddCart = async (dispatch, { product_id }) => {
+    const response = await axiosInstance("post", "/product/addCart", { product_id })
+    if (response.data.err === 0) {
+        dispatch(setResponse(response))
+        dispatch(exportResponse())
+    }
+    dispatch(reFetchProduct())
+    dispatch(refetchCounterCartProduct())
+}
+
 export const requestCounterCart = async (dispatch) => {
     const response = await axiosInstance("get", "/cart/counter")
     dispatch(setCounterCartProduct(response.data.data))
@@ -373,7 +385,6 @@ export const requestDeleteProductCart = async (product_id, cart_session_id) => {
 }
 
 // CATEGORY
-
 export const requestUpdateCategory = (dispatch, formData) => {
     dispatch(isPendingUpdateCategory())
     setTimeout(async () => {

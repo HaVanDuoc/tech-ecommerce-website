@@ -7,7 +7,7 @@ import { requestGetCurrentUser } from "./api"
 import { useDispatch, useSelector } from "react-redux"
 import ModalLogin from "./components/Auth/ModalLogin"
 import { useSnackbar } from "notistack"
-import { selectorResponse } from "./redux/alertSlice"
+import { resetResponse, selectorResponse } from "./redux/alertSlice"
 import GoToTop from "./components/GoToTop"
 
 const App = () => {
@@ -37,6 +37,10 @@ const App = () => {
 
     useEffect(() => {
         if (response.payload) handleSnackBar(response.payload)
+
+        setTimeout(() => {
+            dispatch(resetResponse())
+        }, 4000)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [response.export])
 

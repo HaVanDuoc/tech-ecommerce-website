@@ -11,6 +11,7 @@ exports.getProducts = async (req) => {
         const page = req.body.page || 1
         const sortBy = req.body.sortBy || "createdAt"
         const limit = req.body.limit || 12
+        const user_id = req?.user?.id
 
         const offset = limit * (page - 1)
 
@@ -41,6 +42,31 @@ exports.getProducts = async (req) => {
             offset
                 ${offset};
         `)
+
+        // Check product in Cart
+        if (user_id) {
+            list.map(async (item) => {
+                const product_id = item.product_id
+
+                const [response] = await db.sequelize.query(`
+                    select
+                        *
+                    from
+                        cart_sessions
+                        left join cart_items on cart_sessions.id = cart_items.cart_session_id
+                        left join users on users.id = cart_sessions.user_id
+                    where
+                        users.id = ${user_id}
+                        and cart_items.product_id = ${product_id};
+                `)
+
+                if (response && response.length) {
+                    item["inCart"] = true // has in cart
+                } else {
+                    item["inCart"] = false // no has in cart
+                }
+            })
+        }
 
         const [counter] = await db.sequelize.query(`
             select
