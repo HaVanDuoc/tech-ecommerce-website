@@ -19,6 +19,7 @@
     "react-avatar-edit": "^1.2.0",
     "react-countdown": "^2.3.5",
     "react-dom": "^18.2.0",
+    "react-jwt": "^1.2.0",
     "react-redux": "^8.0.5",
     "react-responsive-carousel": "^3.2.23",
     "react-scripts": "5.0.1",

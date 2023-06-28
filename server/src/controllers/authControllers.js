@@ -1,6 +1,7 @@
 const { intervalServerError, badRequest } = require("../middleware/handleError")
 const authService = require("../services/authService")
 const Joi = require("joi")
+const jwt = require("jsonwebtoken")
 
 exports.getCurrentUser = async (req, res) => {
     try {
@@ -26,6 +27,10 @@ exports.getCurrentUser = async (req, res) => {
 
 exports.register = async (req, res) => {
     try {
+        // verify password
+        const verifyPassword = jwt.verify(req.body.password, process.env.JWT_SECRET)
+        req.body.password = verifyPassword.password
+
         const { error } = Joi.object({
             firstName: Joi.string().min(1).required(),
             middleName: Joi.string().min(1),
@@ -35,6 +40,7 @@ exports.register = async (req, res) => {
                 .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
                 .required(),
             password: Joi.string().min(5).pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).required(),
+            isVerify: Joi.boolean(),
         }).validate(req.body)
 
         if (error) return badRequest(error.details[0]?.message, res)

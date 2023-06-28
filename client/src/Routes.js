@@ -24,6 +24,8 @@ import Edit from "./pages/profile/pages/edit"
 import CreateUser from "./admin/pages/users/CreateUser"
 import CreateOrder from "./admin/pages/orders/CreateOrder"
 import OrderDetails from "./admin/pages/orders/OrderDetails"
+import VerifyEmail from "./pages/verifyEmail"
+import NoneLayout from "./layouts/NoneLayout"
 
 export const publicRoutes = [
     { path: "/", page: Home },
@@ -36,6 +38,7 @@ export const publicRoutes = [
         page: ProductDetails,
         layout: ProductDetailsLayout,
     },
+    { path: "/verifyEmail", page: VerifyEmail, layout: NoneLayout },
 ]
 
 export const privateRoutes = [

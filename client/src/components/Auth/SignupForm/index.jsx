@@ -1,4 +1,15 @@
-import { Alert, Box, Button, Checkbox, CircularProgress, Link, styled, TextField, Typography } from "@mui/material"
+import {
+    Alert,
+    Box,
+    Button,
+    Checkbox,
+    CircularProgress,
+    Link,
+    Stack,
+    styled,
+    TextField,
+    Typography,
+} from "@mui/material"
 import { openSignIn, selectorStatusRegister } from "~/redux/authSlice"
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
@@ -142,12 +153,20 @@ const SignUpForm = () => {
                             variant="contained"
                             fullWidth
                             type="submit"
+                            disabled={stateRegister.isPending}
                             sx={{
                                 margin: "15px 0",
                                 height: "50px",
                             }}
                         >
-                            {stateRegister.isPending ? <CircularProgress color="inherit" /> : "Đăng ký"}
+                            {stateRegister.isPending ? (
+                                <Stack flexDirection="row" alignItems="center">
+                                    <CircularProgress color="inherit" size={18} sx={{ mr: 2 }} />
+                                    <Typography sx={{ textTransform: "none" }}>Vui lòng kiểm tra hộp thư...</Typography>
+                                </Stack>
+                            ) : (
+                                "Đăng ký"
+                            )}
                         </Button>
 
                         <LinkBackToLogin />
