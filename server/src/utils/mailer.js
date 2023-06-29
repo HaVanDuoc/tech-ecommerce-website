@@ -13,7 +13,10 @@ exports.sendMail = (to, subject, htmlContent) => {
     })
 
     const mailOptions = {
-        from: mailConfig.USERNAME,
+        from: {
+            name: "Tech",
+            address: mailConfig.USERNAME,
+        },
         to: to,
         subject: subject,
         html: htmlContent,

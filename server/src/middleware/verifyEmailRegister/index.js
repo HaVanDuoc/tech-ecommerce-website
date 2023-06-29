@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
-const mailer = require("../utils/mailer")
+const mailer = require("../../utils/mailer")
+const MailVerifyRegister = require("./mail")
 
 const verifyEmailRegister = (req, res, next) => {
     const firstName = req.body.firstName
@@ -27,8 +28,8 @@ const verifyEmailRegister = (req, res, next) => {
         // Send mail verify to email is registered
         return mailer.sendMail(
             email,
-            "Xác thực Email",
-            `<a href="${process.env.CLIENT_URL}/verifyEmail?token=${newToken}"><b>BẤM VÀO ĐÂY ĐỂ XÁC NHẬN!!!</b></a>`
+            "Kích hoạt tài khoản!",
+            MailVerifyRegister({ client_host: process.env.CLIENT_URL, token: newToken })
         )
     }
 

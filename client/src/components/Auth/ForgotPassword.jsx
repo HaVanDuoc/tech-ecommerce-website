@@ -34,11 +34,7 @@ const ForgotPassword = () => {
 
     return (
         <Styled>
-            <Formik
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-                onSubmit={(values, props) => requestRegister(dispatch, removeEmpty(values))}
-            >
+            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values, props) => {}}>
                 {(props) => (
                     <Form>
                         <Title>Thay đổi mật khẩu</Title>
@@ -55,54 +51,11 @@ const ForgotPassword = () => {
                             helperText={<ErrorMessage name="email" />}
                         />
 
-                        <Field
-                            as={TextField}
-                            label="Mật khẩu"
-                            variant="outlined"
-                            fullWidth
-                            sx={{ marginBottom: "15px" }}
-                            id="password"
-                            name="password"
-                            type="password"
-                            helperText={<ErrorMessage name="password" />}
-                        />
-
-                        <Field
-                            as={TextField}
-                            label="Xác nhận mật khẩu"
-                            variant="outlined"
-                            fullWidth
-                            sx={{ marginBottom: "15px" }}
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            type="password"
-                            helperText={<ErrorMessage name="confirmPassword" />}
-                        />
-
                         {stateRegister.error && (
                             <Alert severity="error" sx={{ marginTop: 1 }}>
                                 {stateRegister.error}
                             </Alert>
                         )}
-
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                margin: "10px 0",
-                                fontSize: 13,
-                                color: "#666",
-                                "& .MuiSvgIcon-root": { fontSize: 17 },
-                                "& .MuiLink-root": { textDecoration: "none" },
-                            }}
-                        >
-                            <Checkbox name="eula" defaultChecked />
-                            <Box component="span">
-                                Đã đọc và đồng ý <Link href="#">Điều khoản dịch vụ</Link> &{" "}
-                                <Link href="#">Chính Sách Về Quyền Riêng Tư</Link>
-                            </Box>
-                        </Box>
 
                         <Button
                             variant="contained"
