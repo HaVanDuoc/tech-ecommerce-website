@@ -1,6 +1,6 @@
 const db = require("../models")
 
-const checkEmail = async (req, res, next) => {
+const checkExistEmail = async (req, res, next) => {
     const email = req.body.email
 
     const requestCheck = async () => {
@@ -13,10 +13,10 @@ const checkEmail = async (req, res, next) => {
     if (email) {
         const response = await requestCheck()
 
-        if (response) {
+        if (!response) {
             return res.status(200).json({
                 err: 1,
-                msg: "Email này đã được đăng ký!",
+                msg: "Email chưa được đăng ký!",
             })
         }
     }
@@ -24,4 +24,4 @@ const checkEmail = async (req, res, next) => {
     next()
 }
 
-module.exports = checkEmail
+module.exports = checkExistEmail

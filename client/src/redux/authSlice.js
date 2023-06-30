@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit"
 export const formSignIn = "Sign In"
 export const formSignUp = "Sign Up"
 export const formForgotPassword = "Forgot Password"
+export const formVerifyCode = "Verify Code"
+export const formChangePassword = "Change Password"
 
 export const authSlice = createSlice({
     name: "auth",
@@ -62,6 +64,16 @@ export const authSlice = createSlice({
             state.modalLogin.isOpen = true
             state.modalLogin.form = formForgotPassword
         },
+        openVerifyCode: (state, action) => {
+            state.modalLogin.isOpen = true
+            state.modalLogin.form = formVerifyCode
+            state.modalLogin["data"] = action.payload
+        },
+        openChangePassword: (state, action) => {
+            state.modalLogin.isOpen = true
+            state.modalLogin.form = formChangePassword
+            state.modalLogin["data"] = action.payload
+        },
         closeModalLogin: (state) => {
             state.modalLogin.isOpen = false
         },
@@ -84,6 +96,8 @@ export const {
     openSignIn,
     openSignUp,
     openForgotPassword,
+    openVerifyCode,
+    openChangePassword,
     closeModalLogin,
 } = authSlice.actions
 

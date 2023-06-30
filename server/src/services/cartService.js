@@ -131,7 +131,7 @@ exports.counterProducts = async (req) => {
                             cart_items
                             left join cart_sessions on cart_sessions.id = cart_items.cart_session_id
                         where
-                            user_id = 26;`
+                            user_id = ${user_id};`
 
         const [response] = await db.sequelize.query(query)
 

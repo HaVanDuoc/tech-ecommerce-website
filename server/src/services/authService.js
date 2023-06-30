@@ -5,6 +5,9 @@ const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { padUserId } = require("../helper/padLeft")
 const { hashPassword } = require("../helper/hashPassword")
+const generateSequenceRandomInteger = require("../helper/generateSequenceRandomInteger")
+const mailer = require("../utils/mailer")
+const mailVerifyCode = require("../helper/mail/mailVerifyCode")
 
 exports.getCurrentUser = async (user_id) => {
     try {
@@ -165,6 +168,79 @@ exports.login = async (data) => {
             err: token ? 0 : 1,
             msg: token ? "Đăng nhập thành công" : response ? "Sai mật khẩu" : "Email chưa được đăng ký",
             access_token: token ? `Bearer ${token}` : null,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.getCode = async (req) => {
+    try {
+        const email = req.body.email
+        const code = generateSequenceRandomInteger(6)
+        const hashCode = jwt.sign({ code }, process.env.JWT_SECRET, { expiresIn: "10m" })
+
+        const updateCode = await db.User.update(
+            { code_verify: hashCode },
+            {
+                where: { email },
+                raw: true,
+            }
+        )
+
+        if (updateCode) {
+            mailer.sendMail(email, `${code} là mã khôi phục tài khoản Tech của bạn`, mailVerifyCode({ code }))
+        }
+
+        return {
+            err: updateCode ? 0 : 1,
+            msg: updateCode ? "Successfully" : "Failure",
+            email: email,
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.changePassword = async (req) => {
+    try {
+        const email = req.body.email
+        const password = req.body.password
+        const hashPass = hashPassword(password)
+
+        const updatePassword = await db.User.update(
+            {
+                password: hashPass,
+            },
+            { where: { email } }
+        )
+
+        return {
+            err: updatePassword ? 0 : 1,
+            msg: updatePassword ? "Thành công!" : "Lỗi!",
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.verifyCode = async (req) => {
+    try {
+        const email = req.body.email
+        const code = req.body.code
+
+        const getCode = await db.User.findOne({ where: { email }, attributes: ["code_verify"], raw: true })
+        const decoded = jwt.verify(getCode.code_verify, process.env.JWT_SECRET, (err, decoded) => {
+            if (err) return err
+            return decoded
+        })
+        if (decoded.name === "TokenExpiredError") return { err: 1, msg: "Mã xác nhận đã quá hạn!" }
+
+        if (Number(code) !== Number(decoded.code)) return { err: 1, msg: "Mã xác nhận không chính xác!" }
+
+        return {
+            err: 0,
+            msg: "Verify successfully",
         }
     } catch (error) {
         return error

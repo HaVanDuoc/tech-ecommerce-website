@@ -73,3 +73,30 @@ exports.login = async (req, res) => {
         return intervalServerError(res)
     }
 }
+
+exports.getCode = async (req, res) => {
+    try {
+        const response = await authService.getCode(req)
+        return res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.verifyCode = async (req, res) => {
+    try {
+        const response = await authService.verifyCode(req)
+        return res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.changePassword = async (req, res) => {
+    try {
+        const response = await authService.changePassword(req)
+        return res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}

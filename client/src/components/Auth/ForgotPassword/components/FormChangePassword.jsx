@@ -1,61 +1,80 @@
-import { Alert, Box, Button, Checkbox, CircularProgress, Link, styled, TextField, Typography } from "@mui/material"
-import { openSignIn, selectorStatusRegister } from "~/redux/authSlice"
+import { Box, Button, CircularProgress, Link, styled, TextField, Typography } from "@mui/material"
+import { closeModalLogin, openSignIn, selectorModalLogin } from "~/redux/authSlice"
 import { ErrorMessage, Field, Form, Formik } from "formik"
 import ArrowBackIcon from "@mui/icons-material/ArrowBack"
 import { useDispatch, useSelector } from "react-redux"
-import { requestRegister } from "~/api"
 import * as Yup from "yup"
-import React from "react"
-import removeEmpty from "~/helper/removeEmpty"
+import React, { useState } from "react"
+import axiosInstance from "~/api"
+import { exportResponse, setResponse } from "~/redux/alertSlice"
 
 const initialValues = {
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    email: "",
     password: "",
     confirmPassword: "",
 }
 
 const validationSchema = Yup.object({
-    firstName: Yup.string().max(15, "*Tối đa 15 ký tự").required("*Bắt buộc"),
-    middleName: Yup.string().max(15, "*Tối đa 15 ký tự"),
-    lastName: Yup.string().max(20, "Tối đa 20 ký tự").required("*Bắt buộc"),
-    email: Yup.string().email("*Định dạng email không chính xác").required("*Bắt buộc"),
     password: Yup.string().min(6).required("*Bắt buộc"),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref("password"), null], "*Mật khẩu không trùng khớp")
         .required("*Bắt buộc"),
 })
 
-const ForgotPassword = () => {
+const FormChangePassword = () => {
+    const [isPending, setPending] = useState(false)
+    const email = useSelector(selectorModalLogin)?.data?.email
     const dispatch = useDispatch()
-    const stateRegister = useSelector(selectorStatusRegister)
 
     return (
         <Styled>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={(values, props) => {}}>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={(values, props) => {
+                    setPending(true)
+                    setTimeout(async () => {
+                        const response = await axiosInstance("put", "/auth/changePassword", {
+                            email: email,
+                            password: values.password,
+                        })
+
+                        if (response.data.err === 0) {
+                            dispatch(setResponse(response))
+                            dispatch(exportResponse())
+                            dispatch(closeModalLogin())
+                        }
+
+                        setPending(false)
+                    }, 2000)
+                }}
+            >
                 {(props) => (
                     <Form>
                         <Title>Thay đổi mật khẩu</Title>
 
                         <Field
                             as={TextField}
-                            label="Email"
+                            label="Mật khẩu mới"
                             variant="outlined"
                             fullWidth
                             sx={{ marginBottom: "15px" }}
-                            id="email"
-                            name="email"
-                            type="email"
-                            helperText={<ErrorMessage name="email" />}
+                            id="password"
+                            name="password"
+                            type="password"
+                            helperText={<ErrorMessage name="password" />}
                         />
 
-                        {stateRegister.error && (
-                            <Alert severity="error" sx={{ marginTop: 1 }}>
-                                {stateRegister.error}
-                            </Alert>
-                        )}
+                        <Field
+                            as={TextField}
+                            label="Nhập lại mật khẩu"
+                            variant="outlined"
+                            fullWidth
+                            sx={{ marginBottom: "15px" }}
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            helperText={<ErrorMessage name="confirmPassword" />}
+                        />
 
                         <Button
                             variant="contained"
@@ -66,7 +85,7 @@ const ForgotPassword = () => {
                                 height: "50px",
                             }}
                         >
-                            {stateRegister.isPending ? <CircularProgress color="inherit" /> : "Đăng ký"}
+                            {isPending ? <CircularProgress size={30} color="inherit" /> : "Thay đổi"}
                         </Button>
 
                         <LinkBackToLogin />
@@ -77,7 +96,7 @@ const ForgotPassword = () => {
     )
 }
 
-export default ForgotPassword
+export default FormChangePassword
 
 const Styled = styled(Box)(() => ({
     width: 400,

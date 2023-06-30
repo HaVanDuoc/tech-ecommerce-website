@@ -3,8 +3,18 @@ import { Box, Modal, styled } from "@mui/material"
 import { useDispatch, useSelector } from "react-redux"
 import LoginForm from "~/components/Auth/LoginForm"
 import SignUpForm from "~/components/Auth/SignupForm"
-import { closeModalLogin, formForgotPassword, formSignIn, formSignUp, selectorModalLogin } from "~/redux/authSlice"
+import {
+    closeModalLogin,
+    formChangePassword,
+    formForgotPassword,
+    formSignIn,
+    formSignUp,
+    formVerifyCode,
+    selectorModalLogin,
+} from "~/redux/authSlice"
 import ForgotPassword from "../ForgotPassword"
+import FormVerifyCode from "../ForgotPassword/components/FormVerifyCode"
+import FormChangePassword from "../ForgotPassword/components/FormChangePassword"
 
 const ModalLogin = () => {
     const modal = useSelector(selectorModalLogin)
@@ -17,6 +27,10 @@ const ModalLogin = () => {
             <SignUpForm />
         ) : modal.form === formForgotPassword ? (
             <ForgotPassword />
+        ) : modal.form === formVerifyCode ? (
+            <FormVerifyCode />
+        ) : modal.form === formChangePassword ? (
+            <FormChangePassword />
         ) : (
             <Fragment />
         )
