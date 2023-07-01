@@ -14,6 +14,7 @@ const NameProduct = () => {
                     textAlign: "center",
                     fontSize: 40,
                     marginBottom: 3,
+                    pointerEvents: "none",
                 }}
             >
                 {name}

@@ -12,6 +12,7 @@ const Category = () => {
                     fontFamily: "'Saira Condensed', sans-serif",
                     textTransform: "uppercase",
                     fontSize: 25,
+                    pointerEvents: "none",
                 }}
             >
                 {category}

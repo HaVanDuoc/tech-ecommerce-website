@@ -9,48 +9,62 @@ const MainImage = () => {
     const [nav2, setNav2] = useState()
 
     const product = useSelector(selectorProduct)
-
-    if (product?.data?.images) var images = product?.data?.images
+    const images = product?.data?.images
+    const length = product?.data?.images?.length
 
     return (
-        <Box position="relative" sx={styles1}>
-            <Box sx={styles2}>
-                <Box sx={styles3}>
-                    <Slider
-                        asNavFor={nav2}
-                        ref={(slider1) => setNav1(slider1)}
-                        arrows={false}
-                        infinite={true}
-                        className="main-slider"
-                    >
-                        {images &&
-                            images.map((item, index) => {
-                                return <img src={item.path} alt={item.originalname} key={index} />
+        images && (
+            <Box position="relative" sx={styles1}>
+                <Box sx={styles2}>
+                    <Box sx={styles3}>
+                        <Slider
+                            asNavFor={nav2}
+                            ref={(slider1) => setNav1(slider1)}
+                            arrows={false}
+                            infinite={true}
+                            className="main-slider"
+                        >
+                            {images.map((item, index) => {
+                                return (
+                                    <img
+                                        src={item.path}
+                                        alt={item.originalname}
+                                        key={index}
+                                        style={{ pointerEvents: "none" }}
+                                    />
+                                )
                             })}
+                        </Slider>
+                    </Box>
+                </Box>
+
+                <Box sx={styles4}>
+                    <Slider
+                        arrows={false}
+                        asNavFor={nav1}
+                        ref={(slider2) => setNav2(slider2)}
+                        slidesToShow={length < 5 ? length : 5}
+                        swipeToSlide={true}
+                        focusOnSelect={true}
+                        infinite={true}
+                        autoplay={true}
+                        autoplaySpeed={length * 1000}
+                        className="option-slider"
+                    >
+                        {images.map((item, index) => {
+                            return (
+                                <img
+                                    src={item.path}
+                                    alt={item.originalname}
+                                    key={index}
+                                    style={{ pointerEvents: "none" }}
+                                />
+                            )
+                        })}
                     </Slider>
                 </Box>
             </Box>
-
-            <Box sx={styles4}>
-                <Slider
-                    arrows={false}
-                    asNavFor={nav1}
-                    ref={(slider2) => setNav2(slider2)}
-                    slidesToShow={5}
-                    swipeToSlide={true}
-                    focusOnSelect={true}
-                    infinite={true}
-                    autoplay={true}
-                    autoplaySpeed={3000}
-                    className="option-slider"
-                >
-                    {images &&
-                        images.map((item, index) => {
-                            return <img src={item.path} alt={item.originalname} key={index} />
-                        })}
-                </Slider>
-            </Box>
-        </Box>
+        )
     )
 }
 
@@ -66,6 +80,8 @@ const styles1 = {
     },
 
     ".option-slider": {
+        padding: "0 10px",
+
         ".slick-slide": {
             padding: "8px",
         },
@@ -82,6 +98,7 @@ const styles1 = {
 
         "& img": {
             display: "flex !important",
+            width: "auto",
             height: "80px",
         },
     },

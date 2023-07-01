@@ -36,6 +36,7 @@ const styles2 = {
     fontWeight: 400,
     color: "#000",
     textDecorationLine: "line-through",
+    pointerEvents: "none",
 }
 
 const styles3 = {
@@ -43,6 +44,7 @@ const styles3 = {
     fontSize: 40,
     fontWeight: 500,
     color: "crimson",
+    pointerEvents: "none",
 }
 
 const styles4 = {
@@ -50,4 +52,5 @@ const styles4 = {
     fontSize: 23,
     fontWeight: 500,
     color: "crimson",
+    pointerEvents: "none",
 }

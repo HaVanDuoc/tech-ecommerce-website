@@ -16,6 +16,7 @@ const styles1 = {
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+    pointerEvents: "none",
 }
 
 const styles2 = {
