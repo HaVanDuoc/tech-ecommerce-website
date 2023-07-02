@@ -52,6 +52,7 @@ npx sequelize-cli seed:generate --name brand
 > Running Seeds
 
 npx sequelize-cli db:seed:all
+npx sequelize-cli db:seed --seed ratinglevel.js
 
 > Undoing Seeds
 

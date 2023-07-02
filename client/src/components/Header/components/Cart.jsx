@@ -11,7 +11,7 @@ const Cart = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!cart.counter) requestCounterCart(dispatch)
+        requestCounterCart(dispatch)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart.refetchCounter])
 

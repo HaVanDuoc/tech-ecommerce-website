@@ -24,7 +24,7 @@ const Tabs = () => {
     }
 
     useEffect(() => {
-        if (!tabs.length) requestTabs(dispatch)
+        requestTabs(dispatch)
         defineTab()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orders.refetch])
@@ -32,7 +32,6 @@ const Tabs = () => {
     const clickTab = (e, tab) => {
         addOrUpdateURLParams("tab", tab)
         addOrUpdateURLParams("page", 1)
-
         dispatch(refetch())
     }
 

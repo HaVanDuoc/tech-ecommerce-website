@@ -186,9 +186,10 @@ export const requestTabs = async (dispatch) => {
 
 export const requestDestroyOrder = async (dispatch, order_details_id) => {
     try {
-        await axiosInstance("post", "/order/destroyOrder", { order_details_id })
-
+        const response = await axiosInstance("post", "/order/destroyOrder", { order_details_id })
         dispatch(refetch())
+        dispatch(setResponse(response))
+        dispatch(exportResponse())
     } catch (error) {
         return error
     }

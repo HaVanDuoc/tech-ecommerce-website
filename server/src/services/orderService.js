@@ -40,7 +40,8 @@ exports.getOrder = async (req) => {
                 order_details.code,
                 order_details.total,
                 order_statuses.status,
-                order_details.createdAt
+                order_details.createdAt,
+                order_details.updatedAt
             from
                 order_details
                 left join order_statuses on order_statuses.id = order_details.status_id
@@ -135,7 +136,7 @@ exports.destroyOrder = async (data) => {
 
             return {
                 err: 0,
-                msg: "Mua lại thành công!",
+                msg: "Đã đặt mua lại đơn hàng!",
             }
         }
 

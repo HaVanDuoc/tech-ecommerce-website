@@ -24,13 +24,9 @@ const Feed = () => {
 
     useEffect(() => {
         setPositionWindow(0, 200)
-        if (!products) requestOrders(dispatch, tab, page, user_id)
+        requestOrders(dispatch, tab, page, user_id)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orders.refetch])
-
-    const handleDestroyOrder = (order_details_id) => {
-        requestDestroyOrder(dispatch, order_details_id)
-    }
 
     return (
         <Box sx={{ position: "relative", margin: 2 }}>
@@ -47,6 +43,14 @@ const Feed = () => {
                     ) : products?.length ? (
                         <OrderList>
                             {products.map((item, index) => {
+                                const code = item?.code
+                                const createdAt = item?.createdAt
+                                const status = item?.status
+                                const orderItem = item?.orderItem
+                                const count = item?.orderItem?.length
+                                const sumPay = item?.total
+                                const id = item?.id
+
                                 return (
                                     <OrderItem key={index}>
                                         <Box sx={style1}>
@@ -56,75 +60,11 @@ const Feed = () => {
                                                 alignItems="center"
                                                 marginBottom={2}
                                             >
-                                                <Box>
-                                                    <Typography variant="span" color="#666" fontSize={14}>
-                                                        Đơn hàng
-                                                    </Typography>{" "}
-                                                    <Typography
-                                                        variant="span"
-                                                        sx={{ color: "dodgerblue", cursor: "pointer" }}
-                                                    >
-                                                        {item?.code}
-                                                    </Typography>
-                                                </Box>
-
-                                                <Box sx={style2}>
-                                                    <Typography variant="span">Đặt ngày</Typography>{" "}
-                                                    <Typography variant="span">
-                                                        {String(dayjs(item?.createdAt).format("DD/MM/YYYY h:mm"))}
-                                                    </Typography>{" "}
-                                                    <Typography
-                                                        variant="span"
-                                                        color="crimson !important"
-                                                        fontWeight={500}
-                                                    >
-                                                        {item.status}
-                                                    </Typography>
-                                                </Box>
+                                                <Code code={code} />
+                                                <OrderAt createdAt={createdAt} status={status} />{" "}
                                             </Stack>
 
-                                            <Box display="flex" flexWrap="wrap">
-                                                {item.orderItem &&
-                                                    item.orderItem.map((item, index) => {
-                                                        return (
-                                                            <Stack key={index} flexDirection="row" sx={style3}>
-                                                                <Box sx={style4}>
-                                                                    <img
-                                                                        src={item.files ? item.files[0].path : ""}
-                                                                        alt={
-                                                                            item.files ? item.files[0].originalname : ""
-                                                                        }
-                                                                    />
-                                                                </Box>
-
-                                                                <Stack
-                                                                    flexDirection="column"
-                                                                    marginLeft={2}
-                                                                    sx={{ color: "#666" }}
-                                                                >
-                                                                    <Typography>{item.name_product}</Typography>
-                                                                    <Typography>{`x${item.quantity}`}</Typography>
-                                                                    <Stack
-                                                                        flexDirection="row"
-                                                                        justifyContent="start"
-                                                                        alignItems="center"
-                                                                    >
-                                                                        <Typography variant="span" marginRight={1}>
-                                                                            {formatCost(item.price)}
-                                                                        </Typography>
-                                                                        <Typography
-                                                                            variant="span"
-                                                                            color="crimson"
-                                                                            fontWeight={500}
-                                                                        >
-                                                                            {formatPrice(item.price, item.discount)}
-                                                                        </Typography>
-                                                                    </Stack>
-                                                                </Stack>
-                                                            </Stack>
-                                                        )
-                                                    })}
-                                            </Box>
+                                            <Items orderItem={orderItem} />
 
                                             <Stack
                                                 sx={{
@@ -134,9 +74,9 @@ const Feed = () => {
                                                     borderTop: "1px solid #ddd",
                                                     borderBottom: "1px solid",
                                                     borderBottomColor: `${
-                                                        item.status === "Chờ xác nhận" ||
-                                                        item.status === "Đã hủy" ||
-                                                        item.status === "Đã giao"
+                                                        status === "Chờ xác nhận" ||
+                                                        status === "Đã hủy" ||
+                                                        status === "Đã giao"
                                                             ? "#ddd"
                                                             : "#fff"
                                                     }`,
@@ -145,61 +85,14 @@ const Feed = () => {
                                                     lineHeight: "40px",
                                                 }}
                                             >
-                                                <Box>
-                                                    <Typography variant="span">{item.orderItem.length}</Typography>{" "}
-                                                    <Typography variant="span">sản phẩm</Typography>
-                                                </Box>
-
-                                                <Box>
-                                                    <Typography variant="span">Tổng thanh toán: </Typography>{" "}
-                                                    <Typography
-                                                        variant="span"
-                                                        color="crimson"
-                                                        fontSize="16px"
-                                                        fontWeight={500}
-                                                    >
-                                                        {formatVND(item.total)}
-                                                    </Typography>
-                                                </Box>
+                                                <CountProducts count={count} />
+                                                <SumPayment sumPay={sumPay} />
                                             </Stack>
 
-                                            {item.status === "Chờ xác nhận" || item.status === "Đã hủy" ? (
-                                                <Stack justifyContent="center" alignItems="center">
-                                                    <Box
-                                                        onClick={() => handleDestroyOrder(item.id)}
-                                                        sx={{
-                                                            display: "flex",
-                                                            justifyContent: "center",
-                                                            alignItems: "center",
-                                                            border: "1px solid",
-                                                            borderColor: `${item.status !== "Đã hủy" ? "#ccc" : "red"}`,
-                                                            backgroundColor: `${
-                                                                item.status !== "Đã hủy" ? "#ccc" : "red"
-                                                            }`,
-                                                            color: "#fff",
-                                                            margin: 1,
-                                                            padding: "5px 50px",
-                                                            borderRadius: "5px",
-                                                            cursor: "pointer",
-                                                            transition: "all .3s ease",
-
-                                                            ":hover": {
-                                                                backgroundColor: `${
-                                                                    item.status !== "Đã hủy" ? "#aaa" : "#d40a0a"
-                                                                }`,
-                                                            },
-                                                        }}
-                                                    >
-                                                        {item.status !== "Đã hủy" ? "Xác nhận hủy" : "Mua lại"}
-                                                    </Box>
-                                                </Stack>
+                                            {status === "Chờ xác nhận" || status === "Đã hủy" ? (
+                                                <BtnAction id={id} status={status} />
                                             ) : (
-                                                // Tab Đã giao sẽ có button đánh giá
-                                                item.status === "Đã giao" && (
-                                                    <Stack justifyContent="center" alignItems="center">
-                                                        <Box sx={style5}>Đánh giá</Box>
-                                                    </Stack>
-                                                )
+                                                status === "Đã giao" && <BtnRating />
                                             )}
                                         </Box>
                                     </OrderItem>
@@ -218,6 +111,127 @@ const Feed = () => {
 }
 
 export default Feed
+
+const BtnRating = () => {
+    return (
+        <Stack justifyContent="center" alignItems="center">
+            <Box sx={style5}>Đánh giá</Box>
+        </Stack>
+    )
+}
+
+const BtnAction = ({ id, status }) => {
+    const dispatch = useDispatch()
+
+    const handleDestroyOrder = (order_details_id) => {
+        requestDestroyOrder(dispatch, order_details_id)
+    }
+
+    return (
+        <Stack justifyContent="center" alignItems="center">
+            <Box
+                onClick={() => handleDestroyOrder(id)}
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    border: "1px solid",
+                    borderColor: `${status !== "Đã hủy" ? "#ccc" : "red"}`,
+                    backgroundColor: `${status !== "Đã hủy" ? "#ccc" : "red"}`,
+                    color: "#fff",
+                    margin: 1,
+                    padding: "5px 50px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    transition: "all .3s ease",
+
+                    ":hover": {
+                        backgroundColor: `${status !== "Đã hủy" ? "#aaa" : "#d40a0a"}`,
+                    },
+                }}
+            >
+                {status !== "Đã hủy" ? "Xác nhận hủy" : "Mua lại"}
+            </Box>
+        </Stack>
+    )
+}
+
+const SumPayment = ({ sumPay }) => {
+    return (
+        <Box>
+            <Typography variant="span">Tổng thanh toán: </Typography>{" "}
+            <Typography variant="span" color="crimson" fontSize="16px" fontWeight={500}>
+                {formatVND(sumPay)}
+            </Typography>
+        </Box>
+    )
+}
+
+const CountProducts = ({ count }) => {
+    return (
+        <Box>
+            <Typography variant="span">{count}</Typography> <Typography variant="span">sản phẩm</Typography>
+        </Box>
+    )
+}
+
+const Items = ({ orderItem }) => {
+    return (
+        <Box display="flex" flexWrap="wrap">
+            {orderItem &&
+                orderItem.map((item, index) => {
+                    return (
+                        <Stack key={index} flexDirection="row" sx={style3}>
+                            <Box sx={style4}>
+                                <img
+                                    src={item.files ? item.files[0].path : ""}
+                                    alt={item.files ? item.files[0].originalname : ""}
+                                />
+                            </Box>
+
+                            <Stack flexDirection="column" marginLeft={2} sx={{ color: "#666" }}>
+                                <Typography>{item.name_product}</Typography>
+                                <Typography>{`x${item.quantity}`}</Typography>
+                                <Stack flexDirection="row" justifyContent="start" alignItems="center">
+                                    <Typography variant="span" marginRight={1}>
+                                        {formatCost(item.price)}
+                                    </Typography>
+                                    <Typography variant="span" color="crimson" fontWeight={500}>
+                                        {formatPrice(item.price, item.discount)}
+                                    </Typography>
+                                </Stack>
+                            </Stack>
+                        </Stack>
+                    )
+                })}
+        </Box>
+    )
+}
+
+const OrderAt = ({ createdAt, status }) => {
+    return (
+        <Box sx={style2}>
+            <Typography variant="span">Đặt ngày</Typography>{" "}
+            <Typography variant="span">{String(dayjs(createdAt).format("DD/MM/YYYY h:mm"))}</Typography>{" "}
+            <Typography variant="span" color="crimson !important" fontWeight={500}>
+                {status}
+            </Typography>
+        </Box>
+    )
+}
+
+const Code = ({ code }) => {
+    return (
+        <Box>
+            <Typography variant="span" color="#666" fontSize={14}>
+                Đơn hàng
+            </Typography>{" "}
+            <Typography variant="span" sx={{ color: "dodgerblue", cursor: "pointer" }}>
+                {code}
+            </Typography>
+        </Box>
+    )
+}
 
 const Search = () => {
     return (
