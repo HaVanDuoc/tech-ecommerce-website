@@ -18,6 +18,9 @@ module.exports = {
             liked: {
                 type: Sequelize.JSON,
             },
+            images: {
+                type: Sequelize.JSON,
+            },
             quantity: {
                 type: Sequelize.INTEGER,
                 references: {

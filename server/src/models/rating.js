@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
             feature: DataTypes.INTEGER,
             review: DataTypes.STRING,
             liked: DataTypes.JSON,
+            images: DataTypes.JSON,
         },
         {
             sequelize,

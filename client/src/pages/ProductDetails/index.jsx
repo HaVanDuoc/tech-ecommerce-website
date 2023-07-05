@@ -1,6 +1,6 @@
 import "./style.css"
 import { useParams } from "react-router-dom"
-import ResponseRating from "./ResponseRating"
+import ResponseRating from "./components/ResponseRating"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { selectorCurrentUser } from "~/redux/authSlice"
@@ -34,7 +34,6 @@ export default function ProductDetails() {
                 </Grid>
             </Grid>
 
-            {/* Section Rating */}
             <ResponseRating />
         </Section>
     )
