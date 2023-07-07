@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             sequelize,
-            modelName: "RatingLevel",
+            modelName: "ratinglevels",
         }
     )
     return RatingLevel

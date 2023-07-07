@@ -24,7 +24,7 @@ import PaginationCustomize from "~/components/Pagination"
 import LineOption from "~/admin/components/LineOption/LineOption"
 import ButtonRefresh from "~/admin/components/LineOption/components/ButtonRefresh"
 import CallMadeIcon from "@mui/icons-material/CallMade"
-import { ButtonCreate } from "~/admin/Styled"
+import { AdminTitle, ButtonCreate } from "~/admin/Styled"
 
 export default function UserList() {
     const [data, setData] = useState([])
@@ -32,10 +32,8 @@ export default function UserList() {
     const [userDelete, setUserDelete] = useState(null)
 
     const page = new URLSearchParams(window.location.search).get("page") || 1
-
     const users = useSelector(selectorUsers)
     const currentPage = users && users?.data[`page-${page}`]
-
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -173,6 +171,8 @@ export default function UserList() {
 
     return (
         <Box sx={{ flex: 4 }}>
+            <AdminTitle>Danh sách khách hàng</AdminTitle>
+
             <LineOption>
                 <Stack flexDirection="row" alignItems="center" justifyContent="center">
                     <SortBy />
@@ -193,7 +193,7 @@ export default function UserList() {
                     rows={currentPage ? currentPage : []}
                     disableSelectionOnClick
                     columns={columns}
-                    pageSize={10}
+                    pageSize={8}
                     checkboxSelection
                     autoHeight
                     hideFooter

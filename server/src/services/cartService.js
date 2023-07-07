@@ -4,7 +4,7 @@ exports.getCart = async (req) => {
     try {
         const user_id = req.user.id
 
-        const cart_session_id = await db.Cart_Session.findOne({
+        const cart_session_id = await db.cart_sessions.findOne({
             where: { user_id },
             attributes: ["id"],
             raw: true,
@@ -42,7 +42,7 @@ exports.getCart = async (req) => {
 
 exports.increaseQuantity = async (data) => {
     try {
-        const getCurrentQuantity = await db.Cart_Item.findOne({
+        const getCurrentQuantity = await db.cart_items.findOne({
             where: {
                 product_id: data.product_id,
                 cart_session_id: data.cart_session_id,
@@ -51,7 +51,7 @@ exports.increaseQuantity = async (data) => {
             raw: true,
         })
 
-        const response = await db.Cart_Item.update(
+        const response = await db.cart_items.update(
             { quantity: Number(getCurrentQuantity.quantity) + 1 },
             {
                 where: {
@@ -73,7 +73,7 @@ exports.increaseQuantity = async (data) => {
 
 exports.decreaseQuantity = async (data) => {
     try {
-        const getCurrentQuantity = await db.Cart_Item.findOne({
+        const getCurrentQuantity = await db.cart_items.findOne({
             where: {
                 product_id: data.product_id,
                 cart_session_id: data.cart_session_id,
@@ -82,7 +82,7 @@ exports.decreaseQuantity = async (data) => {
             raw: true,
         })
 
-        const response = await db.Cart_Item.update(
+        const response = await db.cart_items.update(
             { quantity: Number(getCurrentQuantity.quantity) - 1 },
             {
                 where: {
@@ -104,7 +104,7 @@ exports.decreaseQuantity = async (data) => {
 
 exports.deleteCartItem = async (data) => {
     try {
-        const response = await db.Cart_Item.destroy({
+        const response = await db.cart_items.destroy({
             where: {
                 product_id: data.product_id,
                 cart_session_id: data.cart_session_id,

@@ -91,12 +91,12 @@ exports.headerSaveRecent = async (product_id, user_id) => {
             var [lastSearch] = await db.sequelize.query(`select id from searches order by createdAt limit 1`)
 
             // delete
-            await db.Search.destroy({ where: { id: lastSearch[0].id } })
+            await db.searches.destroy({ where: { id: lastSearch[0].id } })
 
             // update
-            var updateRecent = await db.Search.create({ user_id, product_id })
+            var updateRecent = await db.searches.create({ user_id, product_id })
         } else {
-            var updateRecent = await db.Search.create({ user_id, product_id })
+            var updateRecent = await db.searches.create({ user_id, product_id })
         }
 
         return {

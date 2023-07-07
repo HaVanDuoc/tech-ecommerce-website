@@ -132,7 +132,7 @@ exports.destroyOrder = async (data) => {
 
         // Nếu response đang là hủy thì chuyển thành Chờ xác nhận
         if (response[0].status === "Đã hủy") {
-            await db.Order_Detail.update({ status_id: 1 }, { where: { id: data.order_details_id } })
+            await db.order_details.update({ status_id: 1 }, { where: { id: data.order_details_id } })
 
             return {
                 err: 0,
@@ -142,7 +142,7 @@ exports.destroyOrder = async (data) => {
 
         // Ngược lại Chờ xác nhận thì chuyển thành Hủy
         if (response[0].status === "Chờ xác nhận") {
-            await db.Order_Detail.update({ status_id: 5 }, { where: { id: data.order_details_id } })
+            await db.order_details.update({ status_id: 5 }, { where: { id: data.order_details_id } })
             return {
                 err: 0,
                 msg: "Đã hủy đơn hàng!",
@@ -267,7 +267,7 @@ exports.createOrder = async (req) => {
         if (!user_id || !orders) return { err: 1, msg: "Lỗi!" }
 
         // First, create order
-        const [createOrder, created] = await db.Order_Detail.findOrCreate({
+        const [createOrder, created] = await db.order_details.findOrCreate({
             where: { code: uuid },
             defaults: {
                 user_id,
@@ -282,14 +282,14 @@ exports.createOrder = async (req) => {
 
         // Tạo order_item vào đơn hàng trên
         orders.map(async (item) => {
-            const product = await db.Product.findOne({
+            const product = await db.products.findOne({
                 where: { id: item.product_id },
                 attributes: ["id", "price", "discount"],
                 raw: true,
             })
 
             // create order item of order
-            await db.Order_Item.create({
+            await db.order_items.create({
                 order_detail_id: createOrder.dataValues.id,
                 product_id: item.product_id,
                 quantity: item.quantity,
@@ -316,7 +316,7 @@ exports.createOrder = async (req) => {
                 `)
 
             if (user.cart_sessions_id && item.product_id) {
-                await db.Cart_Item.destroy({
+                await db.cart_items.destroy({
                     where: {
                         cart_session_id: user.cart_sessions_id,
                         product_id: item.product_id,
@@ -344,7 +344,7 @@ exports.createOrderAdmin = async (req) => {
         if (!user_id || !orders) return { err: 1, msg: "Lỗi!" }
 
         // First, create order
-        const [createOrder, created] = await db.Order_Detail.findOrCreate({
+        const [createOrder, created] = await db.order_details.findOrCreate({
             where: { code: uuid },
             defaults: {
                 user_id,
@@ -359,14 +359,14 @@ exports.createOrderAdmin = async (req) => {
 
         // Tạo order_item vào đơn hàng trên
         orders.map(async (item) => {
-            const product = await db.Product.findOne({
+            const product = await db.products.findOne({
                 where: { id: item.id },
                 attributes: ["id", "price", "discount"],
                 raw: true,
             })
 
             // create order item of order
-            await db.Order_Item.create({
+            await db.order_items.create({
                 order_detail_id: createOrder.dataValues.id,
                 product_id: item.id,
                 quantity: item.quantity,
@@ -393,7 +393,7 @@ exports.createOrderAdmin = async (req) => {
                 `)
 
             if (user.cart_sessions_id && item.id) {
-                await db.Cart_Item.destroy({
+                await db.cart_items.destroy({
                     where: {
                         cart_session_id: user.cart_sessions_id,
                         product_id: item.id,
@@ -443,9 +443,9 @@ exports.handleOrderStatus = (actionConfirm, actionConfirmed, codeOrder) =>
             }
 
             // Change new status for order
-            const updateStatus = await db.Order_Detail.update({ status_id }, { where: { code: codeOrder } })
+            const updateStatus = await db.order_details.update({ status_id }, { where: { code: codeOrder } })
 
-            const order_details_info = await db.Order_Detail.findOne({
+            const order_details_info = await db.order_details.findOne({
                 where: { code: codeOrder },
                 attributes: ["user_id", "total"],
                 raw: true,
@@ -525,7 +525,7 @@ exports.handleDecrease = async (req) => {
 exports.handleAddProduct = async (order_detail_id, product_id, quantity) => {
     try {
         // find price and discount of new product
-        const infoProduct = await db.Product.findOne({
+        const infoProduct = await db.products.findOne({
             where: { id: product_id },
             attributes: ["price", "discount"],
             raw: true,
@@ -536,7 +536,7 @@ exports.handleAddProduct = async (order_detail_id, product_id, quantity) => {
         const priceOfProduct = calculatePayment(price, quantity, discount)
 
         // Add product to order
-        const [add, created] = await db.Order_Item.findOrCreate({
+        const [add, created] = await db.order_items.findOrCreate({
             where: {
                 order_detail_id,
                 product_id,
@@ -569,7 +569,7 @@ exports.handleDelete = async (req) => {
         const order_detail_id = req.body.order_detail_id
         const order_items_id = req.body.order_items_id
 
-        const payOfProduct = await db.Order_Item.findOne({
+        const payOfProduct = await db.order_items.findOne({
             where: { id: order_items_id },
             raw: true,
         })
@@ -579,7 +579,7 @@ exports.handleDelete = async (req) => {
         )
 
         // Finally, delete product in table order_items
-        const deleteItem = await db.Order_Item.destroy({ where: { id: order_items_id } })
+        const deleteItem = await db.order_items.destroy({ where: { id: order_items_id } })
 
         return {
             err: deleteItem ? 0 : 1,

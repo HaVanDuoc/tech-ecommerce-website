@@ -3,7 +3,7 @@ const db = require("../models");
 exports.CheckUserNameExists = (userName) =>
   new Promise(async (resolve, reject) => {
     try {
-      const { count, data } = await db.User.findAndCountAll({
+      const { count, data } = await db.user.findAndCountAll({
         where: { userName },
         attributes: ["id", "userName"],
         raw: true,
@@ -25,7 +25,7 @@ exports.CheckUserNameExists = (userName) =>
 exports.CheckEmailExists = (email) =>
   new Promise(async (resolve, reject) => {
     try {
-      const { count, data } = await db.User.findAndCountAll({
+      const { count, data } = await db.user.findAndCountAll({
         where: { email },
         attributes: ["id", "email"],
         raw: true,

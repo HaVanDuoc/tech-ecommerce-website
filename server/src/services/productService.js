@@ -165,7 +165,7 @@ exports.getProduct = async (req) => {
 
 exports.updateImage = async (productId, files, deleted) => {
     try {
-        const response = await db.Product.findOne({
+        const response = await db.products.findOne({
             where: { productId },
             attributes: ["files"],
             raw: true,
@@ -190,7 +190,7 @@ exports.updateImage = async (productId, files, deleted) => {
 
         if (files) available = addImages(available, files)
 
-        const update = await db.Product.update({ files: available }, { where: { productId } })
+        const update = await db.products.update({ files: available }, { where: { productId } })
 
         return {
             err: update !== 0 ? 0 : 1,
@@ -230,7 +230,7 @@ exports.updateInfo = async (data) => {
             newData.stock = Number(response[0]?.stock) + Number(stock)
         }
 
-        const response = await db.Product.update(newData, {
+        const response = await db.products.update(newData, {
             where: { productId },
         })
 
@@ -289,14 +289,14 @@ exports.addCart = async (req) => {
         if (!user_id && !product_id) return
 
         // First, find `cart_session_id`
-        const cart_session_id = await db.Cart_Session.findOne({
+        const cart_session_id = await db.cart_sessions.findOne({
             where: { user_id },
             attributes: ["id"],
             raw: true,
         })
 
         // get info product
-        const product = await db.Product.findOne({
+        const product = await db.products.findOne({
             where: { id: product_id },
             attributes: ["id", "price", "discount"],
             raw: true,
@@ -304,7 +304,7 @@ exports.addCart = async (req) => {
 
         // Second, check to see if the product is already in shopping cart
         // if yes, delete it otherwise, add it
-        const checkAdd = await db.Cart_Item.findOrCreate({
+        const checkAdd = await db.cart_items.findOrCreate({
             where: { cart_session_id: cart_session_id.id, product_id },
             defaults: {
                 cart_session_id: cart_session_id.id,
@@ -315,7 +315,7 @@ exports.addCart = async (req) => {
         })
 
         if (!checkAdd[1]) {
-            const destroy = await db.Cart_Item.destroy({
+            const destroy = await db.cart_items.destroy({
                 where: { cart_session_id: cart_session_id.id, product_id },
             })
 
@@ -361,7 +361,7 @@ exports.createProduct = async (req) => {
         const sliceId = lastId[0].productId.slice(-8) // get 8 char final to result e.g '00000006'
         const productId = padProductId(parseInt(sliceId) + 1) // parseInt is convert 00000006 to 6
 
-        const response = await db.Product.findOrCreate({
+        const response = await db.products.findOrCreate({
             where: { name },
             defaults: {
                 productId,
@@ -391,7 +391,7 @@ exports.createProduct = async (req) => {
 
 exports.checkNameProduct = async (key) => {
     try {
-        const response = await db.Product.findOne({ where: { name: key } })
+        const response = await db.products.findOne({ where: { name: key } })
 
         return {
             err: response ? 1 : 0,

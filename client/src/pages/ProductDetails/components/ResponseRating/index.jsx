@@ -1,7 +1,7 @@
 import { Avatar, Box, Container, Grid, Rating, styled, Typography } from "@mui/material"
 import React, { useEffect, useState } from "react"
 import FormRating from "./components/FormRating"
-import Statistic from "./components/Statistic"
+// import Statistic from "./components/Statistic"
 import Like from "./components/Like"
 import RatingHeader from "./components/RatingHeader"
 
@@ -30,7 +30,7 @@ const ResponseRating = () => {
                     <FormRating />
 
                     <RatingContent>
-                        <Statistic />
+                        {/* <Statistic /> */}
 
                         <ListRating>
                             {dummyRating.slice(0, numberOfRating).map((rating, index) => {

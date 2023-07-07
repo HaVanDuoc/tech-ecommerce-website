@@ -5,7 +5,7 @@ import { Box, IconButton } from "@mui/material"
 import React, { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import PaginationCustomize from "~/components/Pagination"
-import { ButtonCreate, StackButtons } from "~/admin/Styled"
+import { AdminTitle, ButtonCreate, StackButtons } from "~/admin/Styled"
 import { formatStatusProduct, formatVND } from "~/helper/format"
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline"
 import { endSetProduct, refetchProduct, selectorProductsAdmin, setProducts, startSetProduct } from "~/redux/adminSlice"
@@ -131,10 +131,12 @@ export default function ProductList() {
 
     return (
         <Box flex={4}>
+            <AdminTitle>Danh sách sản phẩm</AdminTitle>
+
             <StackButtons>
                 <ButtonCreate to="/admin/product/newProduct">Tạo mới</ButtonCreate>
             </StackButtons>
-            
+
             <DataGrid
                 rows={products.isFetch && products?.payload[`page-${page}`] ? products?.payload[`page-${page}`] : []}
                 disableSelectionOnClick
@@ -143,7 +145,7 @@ export default function ProductList() {
                 checkboxSelection
                 autoHeight
                 autoPageSize
-                rowHeight={150}
+                rowHeight={145}
                 loading={products.isPending}
                 hideFooter
             />

@@ -249,8 +249,10 @@ const Input = styled(Stack)(() => ({
 
 const AutoComplete = styled(Stack)(() => ({
     position: "relative",
-    justifyContent: "center",
+    justifyContent: "start",
     alignItems: "center",
+    maxHeight: 460,
+    overflowY: "scroll",
 }))
 
 const style3 = {

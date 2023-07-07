@@ -40,7 +40,7 @@ exports.getBrand = async (req) => {
         const brand_id = req.body.brand_id
         const brandId = req.body.brandId
 
-        const response = await db.Brand.findOne({
+        const response = await db.brands.findOne({
             where: { brandId },
             attributes: {
                 exclude: ["createdAt", "updatedAt"],
@@ -66,7 +66,7 @@ exports.updateBrand = async (req) => {
 
         // Check name brand is exists?
         if (name) {
-            let response = await db.Brand.findOne({ where: { name } })
+            let response = await db.brands.findOne({ where: { name } })
             if (response) {
                 destroyUpload(image) // delete images in cloud
                 return {
@@ -77,7 +77,7 @@ exports.updateBrand = async (req) => {
         }
 
         // update
-        let response = await db.Brand.update({ name, alias, image }, { where: { brandId } })
+        let response = await db.brands.update({ name, alias, image }, { where: { brandId } })
 
         // If update fail, delete image in cloud
         if (!response) destroyUpload(image)

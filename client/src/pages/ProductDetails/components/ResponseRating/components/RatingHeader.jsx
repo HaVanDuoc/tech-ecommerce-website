@@ -40,7 +40,7 @@ const RatingHeader = () => {
     ]
 
     return (
-        <Stack flexDirection="row" alignItems="center" justifyContent="space-between">
+        <Stack flexDirection="row" alignItems="center" justifyContent="space-between" mb={2}>
             <Typography sx={{ color: "var(--color-text)", fontSize: "27px" }}>Đánh giá sản phẩm</Typography>
 
             <Stack flexDirection="row" alignItems="center" justifyContent="center">

@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom"
 import { AdminTitle } from "~/admin/Styled"
 import React, { Fragment, useEffect, useState } from "react"
-import axiosInstance, { requestOrder } from "~/api"
+import { requestOrder } from "~/api"
 import InfoCustomer from "./components/InfoCustomer"
 import InfoContact from "./components/InfoContact"
 import Contact from "./components/Contact"
@@ -20,7 +20,7 @@ const OrderDetails = () => {
     const dispatch = useDispatch()
 
     const refetch = useSelector(selectorOrder)?.refetch
-    const isPending = useSelector(selectorOrder)?.isPending
+    // const isPending = useSelector(selectorOrder)?.isPending
 
     const order = useSelector(selectorOrder)?.payload
     const order_id = order?.order_id

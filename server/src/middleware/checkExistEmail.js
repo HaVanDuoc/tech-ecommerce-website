@@ -4,7 +4,7 @@ const checkExistEmail = async (req, res, next) => {
     const email = req.body.email
 
     const requestCheck = async () => {
-        return await db.User.findOne({
+        return await db.user.findOne({
             where: { email },
             raw: true,
         })

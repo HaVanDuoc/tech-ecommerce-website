@@ -7,6 +7,8 @@ import { selectorUser } from "~/redux/userSlice"
 const Gender = () => {
     const gender = useSelector(selectorUser)?.gender
 
+    console.log("gender", gender)
+
     return (
         <Box>
             <FormControl>
@@ -17,7 +19,8 @@ const Gender = () => {
                     name="row-radio-buttons-group"
                     size="small"
                 >
-                    {gender.length &&
+                    {gender &&
+                        gender.length &&
                         gender.map((item) => (
                             <Field
                                 as={FormControlLabel}

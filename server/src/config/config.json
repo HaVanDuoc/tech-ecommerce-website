@@ -8,7 +8,7 @@
         "logging": false,
         "timezone": "+07:00"
     },
-    "clevercloud": {
+    "production": {
         "username": "u0h2coc3xvb7fbwv",
         "password": "fgq0foIDxYjYJtMFG7Yh",
         "database": "bguks33vuljvhmsp5ruw",

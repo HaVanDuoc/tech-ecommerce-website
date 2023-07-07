@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         {
             sequelize,
-            modelName: "Gender",
+            modelName: "genders",
         }
     )
     return Gender

@@ -6,7 +6,7 @@ const db = require("../../models");
 // exports.listCategories = () =>
 //   new Promise(async (resolve, reject) => {
 //     try {
-//       const response = await db.Category.findAll({
+//       const response = await db.categories.findAll({
 //         attributes: {
 //           exclude: ["createdAt", "updatedAt"],
 //         },
@@ -34,7 +34,7 @@ exports.createNewCategory = (data) =>
       const sliceId = idCategoryFinal[0].categoryId.slice(-3);
       const categoryId = padCategoryId(parseInt(sliceId) + 1);
 
-      const response = await db.Category.findOrCreate({
+      const response = await db.categories.findOrCreate({
         where: { name },
         defaults: {
           categoryId,
@@ -60,7 +60,7 @@ exports.createNewCategory = (data) =>
 exports.getCategory = (categoryId) =>
   new Promise(async (resolve, reject) => {
     try {
-      const response = await db.Category.findOne({
+      const response = await db.categories.findOne({
         attributes: {
           exclude: ["createdAt", "updatedAt"],
         },
@@ -104,7 +104,7 @@ exports.updateCategory = (categoryId, data) =>
 
         // Remove all brands
         const remove = async () => {
-          await db.categorybrand.destroy({
+          await db.categorybrands.destroy({
             where: {
               categoryId: idCategory,
             },
@@ -120,7 +120,7 @@ exports.updateCategory = (categoryId, data) =>
           );
           const idBrand = responseIdBrand[0].id;
 
-          await db.categorybrand.findOrCreate({
+          await db.categorybrands.findOrCreate({
             where: { categoryId: idCategory, brandId: idBrand },
             defaults: {
               categoryId: idCategory,
@@ -132,7 +132,7 @@ exports.updateCategory = (categoryId, data) =>
 
       if (name) {
         // Check name is exists
-        const { count } = await db.Category.findAndCountAll({
+        const { count } = await db.categories.findAndCountAll({
           where: { name: data.name },
           attributes: ["id", "name"],
           raw: true,
@@ -147,7 +147,7 @@ exports.updateCategory = (categoryId, data) =>
           });
       }
 
-      response = await db.Category.update(data, {
+      response = await db.categories.update(data, {
         where: { categoryId },
         raw: true,
       });
@@ -178,7 +178,7 @@ exports.createNewBrand = (data) =>
 
       const brandId = padBrandId(parseInt(sliceId) + 1);
 
-      const response = await db.Brand.findOrCreate({
+      const response = await db.brands.findOrCreate({
         where: { name },
         defaults: {
           brandId,
@@ -234,7 +234,7 @@ exports.setBrandForCategories = (categoryId, data) =>
       );
       const idBrand = responseIdBrand[0].id; //
 
-      const response = await db.categorybrand.findOrCreate({
+      const response = await db.categorybrands.findOrCreate({
         where: {
           categoryId: idCategory,
           brandId: idBrand,

@@ -1,10 +1,10 @@
-const { Gender } = require("../models")
+const db = require("../models")
 
 exports.test = async (req) => {
     try {
         console.log("1")
 
-        const response = await Gender.update({ name: "Nam" }, { where: { id: 1 } }, { raw: true })
+        const response = await db.genders.update({ name: "Nam" }, { where: { id: 1 } })
 
         console.log("response", response)
 

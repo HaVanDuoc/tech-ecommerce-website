@@ -9,7 +9,7 @@ export const Wrap = ({ children }) => {
 }
 
 export const AdminTitle = ({ children }) => (
-    <Typography fontSize={28} textTransform="uppercase" marginBottom={2} marginTop={2}>
+    <Typography fontSize={28} textTransform="uppercase" mx={2} my={1}>
         {children}
     </Typography>
 )

@@ -12,10 +12,10 @@ import ButtonCreateOrder from "./components/ButtonCreateOrder"
 import axiosInstance from "~/utils/axiosInstance"
 import { refetch, selectorOrders } from "~/redux/orderSlice"
 import { requestOrders } from "~/api"
+import { AdminTitle } from "~/admin/Styled"
 
 export default function Orders() {
     const { enqueueSnackbar } = useSnackbar()
-
     const orders = useSelector(selectorOrders)
 
     const type = new URLSearchParams(window.location.search).get("type")
@@ -26,7 +26,7 @@ export default function Orders() {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if (!products) requestOrders(dispatch, type, page)
+        requestOrders(dispatch, type, page)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [orders.refetch])
 
@@ -50,7 +50,7 @@ export default function Orders() {
         const request = async () => {
             const response = await axiosInstance({
                 method: "post",
-                url: "/admin/orders/handleOrderStatus",
+                url: "/order/handleOrderStatus",
                 data: { actionConfirm, actionConfirmed, codeOrder },
             })
 
@@ -58,6 +58,7 @@ export default function Orders() {
         }
 
         request()
+        dispatch(refetch())
     }
 
     const columns = [
@@ -120,13 +121,15 @@ export default function Orders() {
 
     return (
         <Box flex={4}>
+            <AdminTitle>Danh sách đơn hàng</AdminTitle>
+
             <ButtonCreateOrder />
 
             <DataGrid
                 rows={products || []}
                 disableSelectionOnClick
                 columns={columns}
-                pageSize={8}
+                pageSize={7}
                 checkboxSelection
                 autoHeight
                 autoPageSize

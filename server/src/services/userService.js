@@ -131,7 +131,7 @@ exports.createUser = async (data) => {
         const userId = padUserId(parseInt(sliceId) + 1) // parseInt is convert 00000006 to 6
 
         // kết quả trả về một array [data: object, created: boolean]
-        const response = await db.User.findOrCreate({
+        const response = await db.users.findOrCreate({
             where: { email }, // tìm thấy email created=false -> Tài khoản đã tồn tại
             // Ko tìm thấy dữ liệu -> created=true -> tạo dữ liệu mới theo defaults -> Đăng ký thành công
             defaults: {
@@ -162,7 +162,7 @@ exports.createUser = async (data) => {
 
 exports.getStatus = async () => {
     try {
-        const response = await db.Status.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } }, { raw: true })
+        const response = await db.statuses.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } }, { raw: true })
 
         return {
             err: response ? 0 : 1,
@@ -176,7 +176,7 @@ exports.getStatus = async () => {
 
 exports.getRoles = async () => {
     try {
-        const response = await db.Role.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } }, { raw: true })
+        const response = await db.roles.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } }, { raw: true })
 
         return {
             err: response ? 0 : 1,
@@ -190,7 +190,7 @@ exports.getRoles = async () => {
 
 exports.getGender = async () => {
     try {
-        const response = await db.Gender.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } }, { raw: true })
+        const response = await db.genders.findAll({ attributes: { exclude: ["createdAt", "updatedAt"] } }, { raw: true })
 
         return {
             err: response ? 0 : 1,
@@ -206,7 +206,7 @@ exports.updateUser = async (userId, data) => {
     try {
         if (data.password) data.password = hashPassword(data.password)
 
-        response = await db.User.update(data, {
+        response = await db.users.update(data, {
             where: { userId },
             raw: true,
         })
@@ -226,7 +226,7 @@ exports.updateAvatar = async (req) => {
         const userId = req.body.userId
         const avatar = req.body.avatar
 
-        const response = await db.User.update({ avatar }, { where: { userId }, raw: true })
+        const response = await db.users.update({ avatar }, { where: { userId }, raw: true })
 
         return {
             err: response ? 0 : 1,
@@ -239,7 +239,7 @@ exports.updateAvatar = async (req) => {
 
 exports.deleteUser = async (userId) => {
     try {
-        const response = await db.User.destroy({
+        const response = await db.user.destroy({
             where: { userId },
             raw: true,
         })
@@ -256,7 +256,7 @@ exports.deleteUser = async (userId) => {
 exports.searchUser = async (req) => {
     try {
         const key = req.body.key
-        const limit = req.body.limit || 3
+        // const limit = req.body.limit || 3
 
         if (!key) return { err: 0, msg: "Vui lòng nhập thông tin người dùng muốn tìm kiếm!" }
 
@@ -282,6 +282,7 @@ exports.searchUser = async (req) => {
                                 )
                             )
                         ) as fullName,
+                        users.avatar,
                         users.phoneNumber,
                         users.address,
                         users.dateOfBirth,
@@ -301,9 +302,7 @@ exports.searchUser = async (req) => {
                 or u.address like N'%${key || ""}%'
                 or u.gender like N'%${key || ""}%'
             order by 
-                u.createdAt desc
-            limit 
-                ${limit};
+                u.createdAt desc;
         `)
 
         return {

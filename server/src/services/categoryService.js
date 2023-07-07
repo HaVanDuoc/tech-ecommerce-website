@@ -110,7 +110,7 @@ exports.updateCategory = async (req) => {
 
         //     // Remove all brands
         //     const remove = async () => {
-        //         await db.categorybrand.destroy({
+        //         await db.categorybrands.destroy({
         //             where: {
         //                 categoryId: idCategory,
         //             },
@@ -124,7 +124,7 @@ exports.updateCategory = async (req) => {
         //         const [responseIdBrand] = await sequelize.query(`select id from brands where name = "${name}"`)
         //         const idBrand = responseIdBrand[0].id
 
-        //         await db.categorybrand.findOrCreate({
+        //         await db.categorybrands.findOrCreate({
         //             where: { categoryId: idCategory, brandId: idBrand },
         //             defaults: {
         //                 categoryId: idCategory,
@@ -136,7 +136,7 @@ exports.updateCategory = async (req) => {
 
         if (name) {
             // Check name is exists
-            const { count } = await db.Category.findAndCountAll({
+            const { count } = await db.categories.findAndCountAll({
                 where: { name: data.name },
                 attributes: ["id", "name"],
                 raw: true,
@@ -152,7 +152,7 @@ exports.updateCategory = async (req) => {
             }
         }
 
-        const response = await db.Category.update(
+        const response = await db.categories.update(
             { name, alias, image },
             {
                 where: { categoryId },
