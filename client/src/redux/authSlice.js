@@ -12,6 +12,7 @@ export const authSlice = createSlice({
         currentUser: {
             isLogged: false,
             user: null,
+            refetch: false,
         },
         modalLogin: {
             isOpen: false,
@@ -30,6 +31,9 @@ export const authSlice = createSlice({
         currentUser: (state, action) => {
             state.currentUser.isLogged = true
             state.currentUser.user = action.payload
+        },
+        refetchCurrentUser: (state) => {
+            state.currentUser.refetch = !state.currentUser.refetch
         },
 
         startLogin: (state) => {
@@ -82,6 +86,7 @@ export const authSlice = createSlice({
 
 export const {
     currentUser,
+    refetchCurrentUser,
     isOpenModalLogin,
     modalLogin,
     modalRegister,

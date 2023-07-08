@@ -1,8 +1,11 @@
 const databaseControllers = require("../controllers/adminControllers/databaseControllers")
 const displayControllers = require("../controllers/adminControllers/display")
+const { getRevenue } = require("../controllers/adminControllers/home")
 const router = require("express").Router()
 
 router.post("/", (req, res) => res.status(200).json({ msg: "Admin Page" }))
+
+router.get("/getRevenue", getRevenue)
 
 // ---- Display
 router.post("/display/category/newCategory", displayControllers.createNewCategory)

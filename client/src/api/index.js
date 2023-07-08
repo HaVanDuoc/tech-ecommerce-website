@@ -67,7 +67,7 @@ const token = localStorage.getItem("access_token")
 const axiosInstance = async (method, url, data) => {
     return await axios({
         baseURL: process.env.REACT_APP_AXIOS_BASE_URL,
-        timeout: 10000,
+        timeout: 0,
         headers: {
             Authorization: token,
         },
@@ -83,7 +83,7 @@ export default axiosInstance
 export const requestUpdateAvatar = (dispatch, { userId, avatar }) => {
     dispatch(setPendingUpdateAvatar(true))
     setTimeout(async () => {
-        const response = await axiosInstance("put", "/user/updateAvatar", { userId, avatar })
+        const response = await axiosInstance("put", "/user/client/updateAvatar", { userId, avatar })
         dispatch(setResponse(response))
         dispatch(exportResponse())
         dispatch(setPendingUpdateAvatar(false))
@@ -93,7 +93,7 @@ export const requestUpdateAvatar = (dispatch, { userId, avatar }) => {
 export const requestUpdateInfoUser = (dispatch, { data }) => {
     setTimeout(async () => {
         dispatch(isPendingUpdateInfoUser())
-        const response = await axiosInstance("put", `/user/updateUser/${data.userId}`, data)
+        const response = await axiosInstance("put", `/user/client/updateUser/${data.userId}`, data)
         dispatch(setResponse(response))
         dispatch(exportResponse())
     }, 2000)
@@ -202,7 +202,7 @@ export const requestSuggestToday = (dispatch, { limit }) => {
         const response = await axiosInstance("post", "/product/getProducts", { limit })
         dispatch(setSuggestToday(response.data.data))
         dispatch(setPendingSuggestToday(false))
-    }, 1000)
+    })
 }
 
 export const requestSearchProduct = async (dispatch, key, limit) => {
@@ -291,7 +291,7 @@ export const requestLogin = (dispatch, values) => {
         }
 
         dispatch(endLogin())
-    }, 2000)
+    }, 1000)
 }
 
 export const requestRegister = (dispatch, values) => {

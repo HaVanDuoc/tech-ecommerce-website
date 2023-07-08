@@ -12,7 +12,6 @@ const verifyToken = (req, res, next) => {
 
     jwt.verify(accessToken, process.env.JWT_SECRET, (err, user) => {
         if (err) return unauthorized("Phiên đăng nhập hết hạn. Yêu cầu đăng nhập lại", res)
-
         req.user = user
     })
 

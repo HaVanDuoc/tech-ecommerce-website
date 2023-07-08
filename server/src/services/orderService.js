@@ -41,10 +41,15 @@ exports.getOrder = async (req) => {
                 order_details.total,
                 order_statuses.status,
                 order_details.createdAt,
-                order_details.updatedAt
+                order_details.updatedAt,
+                users.firstName,
+                users.middleName,
+                users.lastName,
+                users.avatar
             from
                 order_details
                 left join order_statuses on order_statuses.id = order_details.status_id
+                left join users on users.id = order_details.user_id
             where
                 order_details.id > -1
                 ${user_id ? 'and order_details.user_id = "' + user_id + '"' : ""}

@@ -239,7 +239,7 @@ exports.updateAvatar = async (req) => {
 
 exports.deleteUser = async (userId) => {
     try {
-        const response = await db.user.destroy({
+        const response = await db.users.destroy({
             where: { userId },
             raw: true,
         })

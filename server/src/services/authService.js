@@ -116,6 +116,7 @@ exports.register = async (data) => {
                       middleName: response[0].middleName,
                       lastName: response[0].lastName,
                       email: response[0].email,
+                      roleId: response[0].roleId,
                   },
                   process.env.JWT_SECRET,
                   {

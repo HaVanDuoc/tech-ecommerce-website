@@ -123,7 +123,13 @@ exports.deleteCartItem = async (data) => {
 
 exports.counterProducts = async (req) => {
     try {
-        const user_id = req.user.id
+        const user_id = req?.user?.id
+
+        if (!user_id)
+            return {
+                err: 1,
+                msg: "Failure",
+            }
 
         const query = `select
                             count(*) as counter

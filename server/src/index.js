@@ -14,7 +14,7 @@ const app = express()
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(morgan("common"))
-app.use(express.json({ limit: "20mb" }))
+app.use(express.json({ limit: "200mb" }))
 app.use(
     cors({
         origin: [process.env.CLIENT_URL],

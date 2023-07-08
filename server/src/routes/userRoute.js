@@ -29,8 +29,12 @@ router.get("/getRoles", getRoles)
 router.get("/getGender", getGender)
 router.post("/search", searchUser)
 
-router.use(verifyRole)
 router.use(verifyToken)
+
+router.put("/client/updateUser/:userId", updateUser)
+router.put("/client/updateAvatar", updateAvatar)
+
+router.use(verifyRole)
 
 router.post("/createUser", createUser)
 router.put("/updateUser/:userId", updateUser)

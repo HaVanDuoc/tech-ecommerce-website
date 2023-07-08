@@ -19,6 +19,4 @@ router.post("/verifyCode", authController.verifyCode)
 
 router.put("/changePassword", authController.changePassword)
 
-
-
 module.exports = router

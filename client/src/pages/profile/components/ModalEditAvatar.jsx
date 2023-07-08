@@ -17,7 +17,7 @@ import {
     setOpenModalEditAvatar,
 } from "~/redux/pageProfileSlice"
 import { selectorCurrentUser } from "~/redux/authSlice"
-import { requestUpdateAvatar } from "~/api"
+import { requestGetCurrentUser, requestUpdateAvatar } from "~/api"
 import refreshPage from "~/utils/refreshPage"
 
 const ModalEditAvatar = () => {
@@ -44,8 +44,13 @@ const ModalEditAvatar = () => {
     const handleSave = () => {
         requestUpdateAvatar(dispatch, { userId, avatar: preview })
         setTimeout(() => {
-            refreshPage()
-        }, 2000)
+            handleClose()
+            requestGetCurrentUser(dispatch)
+
+            setTimeout(() => {
+                refreshPage()
+            }, 1500)
+        }, 1000)
     }
 
     return (

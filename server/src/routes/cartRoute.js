@@ -13,12 +13,12 @@ const router = require("express").Router()
 router.use(decryptToken)
 
 router.post("/getCartProduct", getCart)
+router.get("/counter", counterProducts)
 
 router.use(verifyToken)
 
 router.post("/increase", increaseQuantity)
 router.post("/decrease", decreaseQuantity)
 router.delete("/delete", deleteCartItem)
-router.get("/counter", counterProducts)
 
 module.exports = router
