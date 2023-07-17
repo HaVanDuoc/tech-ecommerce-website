@@ -7,6 +7,7 @@ import axiosInstance from "~/api"
 import { useDispatch, useSelector } from "react-redux"
 import { selectorAdminOrder } from "~/redux/pageAdminOrderSlice"
 import { refetchOrder } from "~/redux/orderSlice"
+import { exportResponse, setResponse } from "~/redux/alertSlice"
 
 const LineSumPayment = ({ order_status, order_list, order_id, reset, setReset, payment, order_code }) => {
     const buttonConfirm = handleButtonConfirm(order_status)
@@ -17,14 +18,16 @@ const LineSumPayment = ({ order_status, order_list, order_id, reset, setReset, p
     const handleClick = (actionConfirm, actionConfirmed, codeOrder) => {
         setPending(true)
         setTimeout(async () => {
-            await axiosInstance("post", "/order/handleOrderStatus", {
+            const response = await axiosInstance("post", "/order/admin/handleOrderStatus", {
                 actionConfirm,
                 actionConfirmed,
                 codeOrder,
             })
             setPending(false)
             dispatch(refetchOrder())
-        }, 2000)
+            dispatch(setResponse(response))
+            dispatch(exportResponse())
+        }, 1000)
     }
 
     return (

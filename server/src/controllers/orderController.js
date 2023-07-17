@@ -12,6 +12,7 @@ const {
     handleDelete,
     createOrderAdmin,
     updateCount,
+    paymentOrder,
 } = require("../services/orderService")
 
 exports.getOrder = async (req, res) => {
@@ -57,6 +58,15 @@ exports.getOrderDetails = async (req, res) => {
 exports.createOrder = async (req, res) => {
     try {
         const response = await createOrder(req)
+        res.status(200).json(response)
+    } catch (error) {
+        return intervalServerError(res)
+    }
+}
+
+exports.paymentOrder = async (req, res) => {
+    try {
+        const response = await paymentOrder(req)
         res.status(200).json(response)
     } catch (error) {
         return intervalServerError(res)

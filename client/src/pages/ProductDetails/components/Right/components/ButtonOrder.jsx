@@ -7,17 +7,21 @@ import React, { useEffect } from "react"
 import { useState } from "react"
 import { Fragment } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { selectorProduct } from "~/redux/productSlice"
+import { reFetchProduct, selectorProduct } from "~/redux/productSlice"
 import { CircularProgress } from "@mui/material"
 import { calculatePayment } from "~/utils/calculate"
-import { selectorCurrentUser } from "~/redux/authSlice"
+import { openSignIn, selectorCurrentUser } from "~/redux/authSlice"
 import { resetCreateOrder, selectorCreateOrder } from "~/redux/orderSlice"
+import { exportResponse, setResponse } from "~/redux/alertSlice"
 
 const ButtonOrder = () => {
     const product = useSelector(selectorProduct)
     const user_id = useSelector(selectorCurrentUser)?.user?.id
     const responseOrder = useSelector(selectorCreateOrder)
+    const currentUser = useSelector(selectorCurrentUser)
     const dispatch = useDispatch()
+
+    const stock = product?.data?.stock
 
     const { enqueueSnackbar } = useSnackbar()
     const [open, setOpen] = React.useState(false)
@@ -48,6 +52,7 @@ const ButtonOrder = () => {
     }, [responseOrder.response])
 
     const handleClickOpen = () => {
+        if (currentUser?.isLogged === false) return dispatch(openSignIn())
         setOpen(true)
     }
 
@@ -56,12 +61,19 @@ const ButtonOrder = () => {
     }
 
     const handleOrder = () => {
+        if (quantity > stock) {
+            dispatch(setResponse({ data: { err: 0, msg: `Xin lỗi quý khách, Số lượng còn lại là ${stock}!` } }))
+            dispatch(exportResponse())
+            return
+        }
+
         let orders = []
         const product_id = product?.data?.id
         orders.push({ product_id, quantity })
         requestCreateOrder(dispatch, { user_id, orders })
         setTimeout(() => {
             handleClose()
+            dispatch(reFetchProduct())
         }, 2000)
     }
 
@@ -110,7 +122,7 @@ const ButtonOrder = () => {
                                 <Stack width="100%">
                                     <Divider />
 
-                                    <BoxCount quantity={quantity} setQuantity={setQuantity} />
+                                    <BoxCount quantity={quantity} setQuantity={setQuantity} stock={stock} />
 
                                     <SelectColor />
 
@@ -190,7 +202,7 @@ const SelectColor = () => {
     )
 }
 
-const BoxCount = ({ quantity, setQuantity }) => {
+const BoxCount = ({ quantity, setQuantity, stock }) => {
     const handleDecrease = () => {
         if (quantity === 1) return
         setQuantity(quantity - 1)
@@ -248,6 +260,16 @@ const BoxCount = ({ quantity, setQuantity }) => {
                     </Box>
                 </Box>
             </Box>
+
+            {stock && stock > 0 ? (
+                <Stack ml={2} flex={1} textAlign="right">
+                    <Typography color="green">Kho: {stock}</Typography>
+                </Stack>
+            ) : (
+                <Stack ml={2} flex={1} textAlign="right">
+                    <Typography color="crimson">Hết hàng</Typography>
+                </Stack>
+            )}
         </Stack>
     )
 }

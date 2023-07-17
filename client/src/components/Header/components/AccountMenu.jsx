@@ -5,7 +5,6 @@ import {
     Button,
     Divider,
     IconButton,
-    Link,
     ListItemIcon,
     Menu,
     MenuItem,
@@ -140,10 +139,7 @@ const AccountMenu = () => {
                             </ListItemIcon>
                             Thêm một tài khoản khác
                         </MenuItem>
-                        <Link
-                            href={window.location.pathname.includes("/admin") ? "/" : "/admin"}
-                            sx={{ color: "inherit" }}
-                        >
+                        <LinkRouter to={window.location.pathname.includes("/admin") ? "/" : "/admin"} className="link">
                             <MenuItem>
                                 <ListItemIcon>
                                     <AdminPanelSettingsIcon fontSize="small" />
@@ -152,7 +148,7 @@ const AccountMenu = () => {
                                     ? "Quay lại trang chủ"
                                     : "Đến trang quản trị"}
                             </MenuItem>
-                        </Link>
+                        </LinkRouter>
                         <MenuItem onClick={handleClose}>
                             <ListItemIcon>
                                 <Settings fontSize="small" />

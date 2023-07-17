@@ -39,6 +39,7 @@ exports.getOrder = async (req) => {
                 order_details.id,
                 order_details.code,
                 order_details.total,
+                order_details.isPay,
                 order_statuses.status,
                 order_details.createdAt,
                 order_details.updatedAt,
@@ -308,6 +309,11 @@ exports.createOrder = async (req) => {
                 update order_details set total = total + ${Number(pay) || 0} where id = ${createOrder.dataValues.id};
             `)
 
+            // Decrease quantity product
+            const [decreaseQuantity] = await db.sequelize.query(`
+                update products set stock = stock - ${Number(item.quantity) || 0} where id = ${item.product_id};
+            `)
+
             // Đặt hàng rồi thì vô giỏ hàng xóa nó đi
             const [[user]] = await db.sequelize.query(`
                     select
@@ -318,7 +324,7 @@ exports.createOrder = async (req) => {
                         left join cart_sessions on cart_sessions.user_id = users.id
                     where
                         users.id = ${user_id};
-                `)
+            `)
 
             if (user.cart_sessions_id && item.product_id) {
                 await db.cart_items.destroy({
@@ -333,6 +339,21 @@ exports.createOrder = async (req) => {
         return {
             err: createOrder ? 0 : 1,
             msg: createOrder ? "Cảm ơn quý khách (づ￣ 3￣)づ" : "Đặt hàng thất bại!",
+        }
+    } catch (error) {
+        return error
+    }
+}
+
+exports.paymentOrder = async (req) => {
+    try {
+        const id = req.body.id
+
+        const [update] = await db.sequelize.query(`update order_details set isPay = true where id = ${id}`)
+
+        return {
+            err: update ? 0 : 1,
+            msg: update ? "Thanh toán thành công!" : "Thanh toán thất bại!",
         }
     } catch (error) {
         return error

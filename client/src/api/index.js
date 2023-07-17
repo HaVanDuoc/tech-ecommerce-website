@@ -151,7 +151,7 @@ export const requestCreateOrder = (dispatch, { user_id, orders, status_id }) => 
         const response = await axiosInstance("post", "/order/createOrder", { user_id, orders, status_id })
         dispatch(setCreateOrder(response))
         dispatch(isPendingCreateOrder())
-    }, 2000)
+    }, 1000)
 }
 
 export const requestCreateOrderAdmin = (dispatch, { user_id, orders, status_id }) => {

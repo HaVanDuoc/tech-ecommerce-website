@@ -4,7 +4,7 @@ import AddShoppingCartOutlinedIcon from "@mui/icons-material/AddShoppingCartOutl
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined"
 import { useDispatch, useSelector } from "react-redux"
 import { selectorProduct } from "~/redux/productSlice"
-import { modalLogin, selectorCurrentUser } from "~/redux/authSlice"
+import { openSignIn, selectorCurrentUser } from "~/redux/authSlice"
 import { requestAddCart } from "~/api"
 
 const ButtonAddCart = () => {
@@ -14,7 +14,7 @@ const ButtonAddCart = () => {
     const dispatch = useDispatch()
 
     const handleAddCart = async () => {
-        if (currentUser.isLogged === false) return dispatch(modalLogin())
+        if (currentUser?.isLogged === false) return dispatch(openSignIn())
         requestAddCart(dispatch, { product_id })
     }
 

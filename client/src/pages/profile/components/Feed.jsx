@@ -1,16 +1,38 @@
-import { Box, CircularProgress, Container, Stack, Typography, styled } from "@mui/material"
-import React, { Fragment, useEffect } from "react"
+import {
+    Avatar,
+    Box,
+    Button,
+    CircularProgress,
+    Container,
+    Dialog,
+    DialogTitle,
+    List,
+    ListItem,
+    ListItemAvatar,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Stack,
+    TextField,
+    Typography,
+    styled,
+} from "@mui/material"
+import React, { Fragment, useEffect, useState } from "react"
 import { formatCost, formatPrice, formatVND } from "~/helper/format"
 import dayjs from "dayjs"
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined"
 import { useDispatch, useSelector } from "react-redux"
 import { PF } from "~/utils/__variables"
 import Tabs from "./Tabs"
-import { refetch, selectorOrders } from "~/redux/orderSlice"
-import { requestDestroyOrder, requestOrders } from "~/api"
+import { refetch, refetchOrder, selectorOrders } from "~/redux/orderSlice"
+import axiosInstance, { requestDestroyOrder, requestOrders } from "~/api"
 import PaginationCustomize from "~/components/Pagination"
 import { setPositionWindow } from "~/utils/calculate"
 import { selectorCurrentUser } from "~/redux/authSlice"
+import AtmIcon from "@mui/icons-material/Atm"
+import WalletIcon from "@mui/icons-material/Wallet"
+import AddIcon from "@mui/icons-material/Add"
+import { exportResponse, setResponse } from "~/redux/alertSlice"
 
 const Feed = () => {
     const orders = useSelector(selectorOrders)
@@ -50,6 +72,7 @@ const Feed = () => {
                                 const count = item?.orderItem?.length
                                 const sumPay = item?.total
                                 const id = item?.id
+                                const isPay = item?.isPay
 
                                 return (
                                     <OrderItem key={index}>
@@ -61,7 +84,7 @@ const Feed = () => {
                                                 marginBottom={2}
                                             >
                                                 <Code code={code} />
-                                                <OrderAt createdAt={createdAt} status={status} />{" "}
+                                                <OrderAt createdAt={createdAt} status={status} isPay={isPay} />{" "}
                                             </Stack>
 
                                             <Items orderItem={orderItem} />
@@ -89,11 +112,18 @@ const Feed = () => {
                                                 <SumPayment sumPay={sumPay} />
                                             </Stack>
 
-                                            {status === "Chờ xác nhận" || status === "Đã hủy" ? (
-                                                <BtnAction id={id} status={status} />
-                                            ) : (
-                                                status === "Đã giao" && <BtnRating />
-                                            )}
+                                            <Stack flexDirection="row" alignItems="center" justifyContent="center">
+                                                {status === "Chờ xác nhận" || status === "Đã hủy" ? (
+                                                    <BtnAction id={id} status={status} />
+                                                ) : (
+                                                    status === "Đã giao" && <BtnRating />
+                                                )}
+
+                                                {(status === "Chờ xác nhận" ||
+                                                    status === "Chờ lấy hàng" ||
+                                                    status === "Đang giao") &&
+                                                    isPay === 0 && <BtnPay id={id} />}
+                                            </Stack>
                                         </Box>
                                     </OrderItem>
                                 )
@@ -111,6 +141,158 @@ const Feed = () => {
 }
 
 export default Feed
+
+const BtnPay = ({ id }) => {
+    const [open, setOpen] = React.useState(false)
+    const [open2, setOpen2] = React.useState(false)
+    const [pending, setPending] = useState(false)
+    const dispatch = useDispatch()
+
+    const handleClickOpen = () => {
+        setOpen(true)
+    }
+
+    const handleClickOpen2 = () => {
+        setOpen2(true)
+    }
+
+    const handleClose = () => {
+        setOpen(false)
+    }
+
+    const handleClose2 = () => {
+        setOpen2(false)
+    }
+
+    const methods = [
+        { name: "Ví TechPay", icon: <WalletIcon /> },
+        { name: "Thẻ ngân hàng", icon: <AtmIcon /> },
+    ]
+
+    const handleClickMethod = (method) => {
+        if (method === "Thẻ ngân hàng") {
+            handleClickOpen2()
+        }
+        handleClose()
+    }
+
+    const atm = [
+        { name: "atm", img: `${PF + "/assets/Visa_Inc._logo.svg.jpg"}` },
+        { name: "master card", img: `${PF + "/assets/MasterCard_Logo.svg.png"}` },
+        { name: "visa", img: `${PF + "/assets/Visa_Inc._logo.svg.jpg"}` },
+        { name: "jcb", img: `${PF + "/assets/196559.png"}` },
+    ]
+
+    const handleClickPayment = () => {
+        setPending(true)
+        setTimeout(async () => {
+            const response = await axiosInstance("post", "/order/payment", { id })
+            setPending(false)
+            if (response.data.err === 0) handleClose2()
+            dispatch(setResponse(response))
+            dispatch(exportResponse())
+            dispatch(refetch())
+        }, 1500)
+    }
+
+    return (
+        <Stack justifyContent="center" alignItems="center">
+            <Box
+                onClick={handleClickOpen}
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    border: "1px solid",
+                    borderColor: "#056dd2",
+                    backgroundColor: "#056dd2",
+                    color: "#fff",
+                    margin: 1,
+                    padding: "5px 50px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    transition: "all .3s ease",
+
+                    ":hover": {
+                        backgroundColor: "#0863bc",
+                    },
+                }}
+            >
+                Thanh toán
+            </Box>
+
+            <Dialog onClose={handleClose} open={open}>
+                <DialogTitle>Chọn phương thức thanh toán</DialogTitle>
+                <List sx={{ pt: 0 }}>
+                    {methods.map((item) => (
+                        <ListItem disableGutters onClick={() => handleClickMethod(item.name)}>
+                            <ListItemButton>
+                                <ListItemIcon>{item.icon}</ListItemIcon>
+                                <ListItemText primary={item.name} />
+                            </ListItemButton>
+                        </ListItem>
+                    ))}
+                    <ListItem disableGutters>
+                        <ListItemButton>
+                            <ListItemAvatar>
+                                <Avatar>
+                                    <AddIcon fontSize="small" />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary="Thêm phương thức thanh toán" />
+                        </ListItemButton>
+                    </ListItem>
+                </List>
+            </Dialog>
+
+            <Dialog onClose={handleClose2} open={open2}>
+                <List sx={{ pt: 0, padding: 3 }}>
+                    <Stack flexDirection="row" justifyContent="center" alignItems="center" padding="20px 10px 5px">
+                        {atm.map((item, index) => {
+                            return (
+                                <Stack
+                                    key={index}
+                                    justifyContent="center"
+                                    alignItems="center"
+                                    height={40}
+                                    sx={{
+                                        border: "1px solid lightgrey",
+                                        // my: 1,
+                                        mx: 0.5,
+                                        p: 1,
+                                    }}
+                                >
+                                    <img src={item.img} alt="item.name" height="100%" />
+                                </Stack>
+                            )
+                        })}
+                    </Stack>
+
+                    <TextField id="outlined-basic" fullWidth label="Số thẻ" variant="outlined" sx={{ mt: 3 }} />
+                    <TextField
+                        id="outlined-basic"
+                        fullWidth
+                        label="Tên chủ thẻ (Không dấu)"
+                        variant="outlined"
+                        sx={{ my: 3 }}
+                    />
+
+                    <Stack flexDirection="row" alignItems="center" justifyContent="center">
+                        {pending ? (
+                            <Button variant="contained" fullWidth size="large">
+                                <CircularProgress size={25} sx={{ color: "#fff" }} />
+                            </Button>
+                        ) : (
+                            <Button variant="contained" fullWidth size="large" onClick={handleClickPayment}>
+                                Thanh toán
+                            </Button>
+                        )}
+                    </Stack>
+                </List>
+            </Dialog>
+        </Stack>
+    )
+}
 
 const BtnRating = () => {
     return (
@@ -208,9 +390,17 @@ const Items = ({ orderItem }) => {
     )
 }
 
-const OrderAt = ({ createdAt, status }) => {
+const OrderAt = ({ createdAt, status, isPay }) => {
     return (
         <Box sx={style2}>
+            {isPay === 1 && (
+                <Typography
+                    variant="span"
+                    sx={{ mr: 1, backgroundColor: "#3cd53c", padding: "1px 8px", borderRadius: "45px" }}
+                >
+                    Đã thanh toán
+                </Typography>
+            )}
             <Typography variant="span">Đặt ngày</Typography>{" "}
             <Typography variant="span">{String(dayjs(createdAt).format("DD/MM/YYYY h:mm"))}</Typography>{" "}
             <Typography variant="span" color="crimson !important" fontWeight={500}>
