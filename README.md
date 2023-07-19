@@ -47,13 +47,13 @@ Developed entirly by me
 
 ## Deploying
 
-Products are deployed at Google Cloud Platform
+Project demo are deployed at https://tech-havanduoc.onrender.com/
 
-Status: FAIL
+Divided into 4 independent deployment parts
 
-Error: SequelizeConnectionRefusedError (Haven't found a fix yet)
-
-Website: https://tech2-387808.as.r.appspot.com/
+  - Front-end and Back-end are deploying at Render platform
+  - Database is deploying at Clever Cloud
+  - Finally, images and video are deploying at Cloudinary
 
 ## Demo
 
