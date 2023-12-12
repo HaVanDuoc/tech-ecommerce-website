@@ -15,9 +15,8 @@ import CartLayout from "./layouts/CartLayout"
 import CreateNewProduct from "./admin/pages/products/create"
 import Products from "./pages/products"
 import ProductsLayout from "./layouts/products"
-import ProductDetails from "./pages/productDetails"
+import ProductDetails from "./pages/ProductDetails"
 import ProductDetailsLayout from "./layouts/productDetails"
-import Profile from "./pages/profile"
 import ProfileLayout from "./layouts/profile"
 import Orders from "./admin/pages/orders"
 import Edit from "./pages/profile/pages/edit"
@@ -26,6 +25,7 @@ import CreateOrder from "./admin/pages/orders/CreateOrder"
 import OrderDetails from "./admin/pages/orders/OrderDetails"
 import VerifyEmail from "./pages/verifyEmail"
 import NoneLayout from "./layouts/NoneLayout"
+import Profile from "./pages/profile"
 
 export const publicRoutes = [
     { path: "/", page: Home },
