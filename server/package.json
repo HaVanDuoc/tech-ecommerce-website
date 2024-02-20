@@ -4,7 +4,9 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --inspect src/index.js"
+    "start": "nodemon --inspect src/index.js",
+    "build-src": "babel src -d build --copy-files",
+    "build": "node build/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -31,6 +33,7 @@
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
+    "@babel/cli": "^7.23.4",
     "sequelize-cli": "^6.6.0"
   }
 }
