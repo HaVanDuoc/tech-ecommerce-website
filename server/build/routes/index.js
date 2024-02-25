@@ -2,7 +2,7 @@ const {
   notFound
 } = require("../middleware/handleError");
 const adminRoute = require("./adminRoute");
-const authRoute = require("./authRoute");
+const authRoute = require("./auth.route");
 const searchRoute = require("./searchRoute");
 const cartRoute = require("./cartRoute");
 const categoryRoute = require("./categoryRoute");

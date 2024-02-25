@@ -1,0 +1,10 @@
+FROM node:18-alpine
+WORKDIR /client
+COPY package*.json .
+RUN npm i
+COPY . .
+EXPOSE 9000
+CMD [ "npm", "start" ]
+
+# Build image: -- docker build -t tech-client-dev .
+# Run container: -- 

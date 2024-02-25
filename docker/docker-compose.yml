@@ -1,0 +1,51 @@
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    volumes:
+      - tech-mysql-data:/var/lib/mysql
+      - ../data.sql:/docker-entrypoint-initdb.d/data.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: tech
+    ports:
+      - 3308:3306
+    expose:
+      - 3306
+
+  server:
+    depends_on:
+      - db
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - CLIENT_URL=http://localhost:9000
+      - CLIENT_PORT=9000
+    ports:
+      - 5000:5000
+    expose:
+      - 5000
+
+  client:
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+    volumes:
+      - ../client/build:/usr/share/nginx/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "9000:9000"
+    expose:
+      - 9000
+    environment:
+      - PUBLIC_FOLDER=http://localhost:9000
+      - AXIOS_BASE_URL=http://localhost:5000/api/v1
+
+volumes:
+  tech-mysql-data:
+
+    # docker compose -p tech up -d

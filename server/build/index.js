@@ -5,9 +5,7 @@ const dotenv = require("dotenv");
 const initRoute = require("./routes");
 const bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
-const ConnectionDatabase = require("./utils/connectDB");
-// const env = process.env.NODE_ENV || "development"
-// const config = require(__dirname + "config/config.js")[env]
+const ConnectionDatabase = require("./config/db.config");
 
 // Middleware
 dotenv.config();
@@ -31,5 +29,5 @@ ConnectionDatabase();
 initRoute(app);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`[server] Server is running on port ${PORT}`);
 });

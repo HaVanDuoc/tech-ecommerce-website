@@ -1,0 +1,42 @@
+-- CLIENT
+
+    -- obj.hasOwnProperty('name'): check exists of props in ojb
+
+    -- array.map is not function: lỗi xảy ra khi array rỗng 
+        --> Đầu tiền check array có phải là mảng hay ko 
+            bằng cách Array.isArray(thêm cái mảng vào đây) rồi check 3 ngôi
+
+    -- validationSchema thuộc tính vừa đủ ko được thiếu ko dược thừa
+
+    -- Formik: DOMException: Failed to set the 'value' property on 'HTMLInputElement': 
+            This input element accepts a filename, which may only be programmatically set to the empty string.
+            ---> Ko dùng Field là được
+
+    -- Sử dụng form thì cần dùng bodyParser()
+
+    -- handle upload file 
+            const handleChange = (e) => {
+            let reader = new FileReader();
+            let file = e.target.files[0];
+            reader.readAsDataURL(file);
+
+            if (file) {
+            reader.onload = (e) => {
+                setImage({
+                file: e.target.result,
+                imagePreviewUrl: e.target.result,
+                });
+                props.setFieldValue(name, e.target.result); // return file name
+            };
+            }
+
+
+-- SERVER
+
+    -- Tên model nhớ thêm 's' số nhiều
+
+    -- client dùng `async/await` nhưng bên server dùng `new Promise` nhớ
+
+    -- Bug 413 Payload Too Large: vào index.js --> app.use(express.json({ limit: "25mb" })) --> mở giới hạn
+
+    -- Khi request có data buộc phải dùng POST

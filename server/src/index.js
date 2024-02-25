@@ -5,7 +5,7 @@ const dotenv = require("dotenv")
 const initRoute = require("./routes")
 const bodyParser = require("body-parser")
 var cookieParser = require("cookie-parser")
-const ConnectionDatabase = require("./utils/connectDB")
+const ConnectionDatabase = require("./config/db.config")
 
 // Middleware
 dotenv.config()
@@ -15,11 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser())
 app.use(morgan("common"))
 app.use(express.json({ limit: "200mb" }))
-app.use(
-    cors({
-        origin: [process.env.CLIENT_URL],
-    })
-)
+app.use(cors())
 
 // Connect to DB
 ConnectionDatabase()
@@ -30,5 +26,5 @@ initRoute(app)
 const PORT = process.env.PORT || 8080
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`)
+    console.log(`[server] Server is running on port ${PORT}`)
 })
