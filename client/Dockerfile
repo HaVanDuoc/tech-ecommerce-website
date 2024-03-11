@@ -5,5 +5,6 @@ RUN npm i
 COPY . .
 RUN npm run build
 
-FROM nginx
+FROM nginx:latest
+COPY --from=builder /client/build /usr/share/nginx/html
 EXPOSE 9000
