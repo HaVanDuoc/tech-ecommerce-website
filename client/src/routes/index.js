@@ -15,7 +15,7 @@ import CartLayout from "../layouts/CartLayout"
 import CreateNewProduct from "../admin/pages/products/create"
 import Products from "../pages/products"
 import ProductsLayout from "../layouts/products"
-import ProductDetails from "../pages/productDetails"
+import ProdDetails from "../pages/prodDetails"
 import ProductDetailsLayout from "../layouts/productDetails"
 import Profile from "../pages/profile"
 import ProfileLayout from "../layouts/profile"
@@ -35,7 +35,7 @@ export const publicRoutes = [
     { path: "/:category", page: Products, layout: ProductsLayout },
     {
         path: "/:category/:nameProduct",
-        page: ProductDetails,
+        page: ProdDetails,
         layout: ProductDetailsLayout,
     },
     { path: "/verifyEmail", page: VerifyEmail, layout: NoneLayout },

@@ -10,7 +10,7 @@ import MainImage from "./components/MainImage"
 import Right from "./components/Right"
 import { Box, Grid, styled } from "@mui/material"
 
-const ProductDetails = () => {
+const ProdDetails = () => {
     const currentUser = useSelector(selectorCurrentUser)
 
     const dispatch = useDispatch()
@@ -39,7 +39,7 @@ const ProductDetails = () => {
     )
 }
 
-export default ProductDetails
+export default ProdDetails
 
 const Section = styled(Box)(() => ({
     backgroundColor: "#fff",
