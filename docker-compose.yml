@@ -3,8 +3,8 @@ services:
     image: mysql:latest
     restart: always
     volumes:
+      - ./data.sql:/docker-entrypoint-initdb.d/data.sql
       - tech-mysql-data:/var/lib/mysql
-      - ../data.sql:/docker-entrypoint-initdb.d/data.sql
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: tech
@@ -17,14 +17,18 @@ services:
     depends_on:
       - db
     build:
-      context: ../server
+      context: ./server
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
+      - NODE_ENV=production
       - DB_HOST=db
       - DB_PORT=3306
-      - CLIENT_URL=http://localhost:9000
-      - CLIENT_PORT=9000
+      - DB_DATABASE=tech
+      - DB_USERNAME=root
+      - DB_PASSWORD=123456
+      - CLIENT_URL=http://localhost
+      - CLIENT_PORT=80
     ports:
       - 5000:5000
     expose:
@@ -32,17 +36,14 @@ services:
 
   client:
     build:
-      context: ../client
+      context: ./client
       dockerfile: Dockerfile
-    volumes:
-      - ../client/build:/usr/share/nginx/html
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "9000:9000"
+      - 80:80
     expose:
-      - 9000
+      - 80
     environment:
-      - PUBLIC_FOLDER=http://localhost:9000
+      - PUBLIC_FOLDER=http://localhost
       - AXIOS_BASE_URL=http://localhost:5000/api/v1
 
 volumes:
