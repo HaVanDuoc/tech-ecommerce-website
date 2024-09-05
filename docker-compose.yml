@@ -42,9 +42,6 @@ services:
       - 80:80
     expose:
       - 80
-    environment:
-      - PUBLIC_FOLDER=http://localhost
-      - AXIOS_BASE_URL=http://localhost:5000/api/v1
 
 volumes:
   tech-mysql-data:
