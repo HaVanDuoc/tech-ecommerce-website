@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "engines": {
-    "node": "14.x"
+    "node": "20.x"
   },
   "scripts": {
     "start": "nodemon --inspect src/index.js",
